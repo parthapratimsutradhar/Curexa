@@ -8,7 +8,7 @@ class InventoryLog(BaseModel):
         on_delete=models.CASCADE, 
         related_name='fk_inventory_logs_medicine_medicine_id'
     )
-    quantity_change  = models.PositiveIntegerField(default=0)
+    quantity_change = models.PositiveIntegerField(default=0)
     action = models.IntegerField(
         choices=[(action.value, action.name) for action in InventoryAction],
         null=False, blank=False

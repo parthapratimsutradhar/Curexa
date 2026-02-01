@@ -1,12 +1,11 @@
 import os
 import hashlib
 from django.conf import settings
+from django.core.files.uploadedfile import UploadedFile
 
-def save_uploaded_file(uploaded_file, subfolder=""):
+def save_uploaded_file(uploaded_files, subfolder=None):
     """
-    Saves an uploaded file to a designated subfolder under static/images
-    If subfolder is not provided (or empty), the file is saved directly under /static/images/.
-    
+    Saves one or multiple uploaded files to static/images/<subfolder>/
     Args:
         uploaded_file: In-memory uploaded file.
         subfolder (str): The folder name where the file will be saved.
@@ -14,38 +13,48 @@ def save_uploaded_file(uploaded_file, subfolder=""):
     Returns:
         str: The relative URL path to the saved file.
     """
-    if not uploaded_file:
-        return ''
+    if not uploaded_files:
+        return []
 
-    # Determine the target directory based on whether a subfolder is provided.
-    if subfolder:
-        target_dir = os.path.join(settings.BASE_DIR, 'static', 'images', subfolder)
-    else:
-        target_dir = os.path.join(settings.BASE_DIR, 'static', 'images')
-    
-    if not os.path.exists(target_dir):
-        os.makedirs(target_dir)
+    # Normalize to list
+    if isinstance(uploaded_files, UploadedFile):
+        uploaded_files = [uploaded_files]
 
-    # Generate an MD5 hash for the file content.
-    md5_hash = hashlib.md5()
-    for chunk in uploaded_file.chunks():
-        md5_hash.update(chunk)
-    file_hash = md5_hash.hexdigest()
+    base_dir = os.path.join(settings.BASE_DIR, 'static', 'images')
 
-    # Get file extension and create a new file name.
-    _, ext = os.path.splitext(uploaded_file.name)
-    new_file_name = f"{file_hash}{ext}"
-    file_path = os.path.join(target_dir, new_file_name)
+    target_dir = os.path.join(base_dir, subfolder) if subfolder else base_dir
+    os.makedirs(target_dir, exist_ok=True)
 
-    # Write file if it doesn't exist yet.
-    if not os.path.exists(file_path):
-        uploaded_file.seek(0)
-        with open(file_path, 'wb+') as destination:
-            for chunk in uploaded_file.chunks():
-                destination.write(chunk)
+    saved_paths = []
 
-    # Return the relative path for use in your models or templates.
-    if subfolder:
-        return f'/static/images/{subfolder}/{new_file_name}'
-    else:
-        return f'/static/images/{new_file_name}'
+    for uploaded_file in uploaded_files:
+
+        # Skip already-saved paths
+        if isinstance(uploaded_file, str):
+            saved_paths.append(uploaded_file)
+            continue
+
+        md5_hash = hashlib.md5()
+        for chunk in uploaded_file.chunks():
+            md5_hash.update(chunk)
+
+        file_hash = md5_hash.hexdigest()
+        _, ext = os.path.splitext(uploaded_file.name)
+        new_file_name = f"{file_hash}{ext}"
+        file_path = os.path.join(target_dir, new_file_name)
+
+        if not os.path.exists(file_path):
+            uploaded_file.seek(0)
+            with open(file_path, 'wb+') as f:
+                for chunk in uploaded_file.chunks():
+                    f.write(chunk)
+
+        relative_path = (
+            f'/static/images/{subfolder}/{new_file_name}'
+            if subfolder
+            else f'/static/images/{new_file_name}'
+        )
+
+        saved_paths.append(relative_path)
+
+    return saved_paths

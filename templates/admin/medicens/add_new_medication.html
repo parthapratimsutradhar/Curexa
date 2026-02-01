@@ -268,33 +268,54 @@
                     </div>
 
                     <!-- Section 4: Image Upload -->
-                    <div class="form-section">
-                        <div class="section-header mb-4">
-                            <h6 class="section-title"><i class="fas fa-image me-2"></i>Product Images</h6>
-                            <p class="section-subtitle">Upload medicine images (Multiple images supported)</p>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="image-upload-container">
-                                    <div id="imageUploadArea" class="image-drop-zone">
-                                        <div class="upload-icon">
-                                            <i class="fas fa-cloud-upload-alt"></i>
-                                        </div>
-                                        <div class="upload-text">
-                                            <h6 class="mb-2">Drop images here or click to upload</h6>
-                                            <p class="text-sm text-white-60 mb-0">Supports PNG, JPG up to 5MB each</p>
-                                        </div>
-                                        <button type="button" class="btn btn-sm btn-outline-light mt-3">
-                                            <i class="fas fa-folder-open me-1"></i> Browse Files
-                                        </button>
-                                    </div>
-                                    <input type="file" id="medicine_images" name="medicine_images" accept="image/*" class="d-none" multiple />
-                                    <div id="imagePreview" class="image-preview mt-3"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<div class="form-section">
+  <div class="section-header mb-4">
+    <h6 class="section-title">
+      <i class="fas fa-image me-2"></i>Product Images
+    </h6>
+    <p class="section-subtitle">
+      Upload medicine images (Multiple images supported)
+    </p>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="image-upload-container">
+
+        <!-- Drop / Click Area -->
+        <div id="imageUploadArea" class="image-drop-zone text-center">
+          <div class="upload-icon">
+            <i class="fas fa-cloud-upload-alt"></i>
+          </div>
+          <div class="upload-text">
+            <h6 class="mb-2">Drop images here or click to upload</h6>
+            <p class="text-sm text-white-60 mb-0">
+              Supports PNG, JPG up to 5MB each
+            </p>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-light mt-3">
+            <i class="fas fa-folder-open me-1"></i> Browse Files
+          </button>
+        </div>
+
+        <!-- REAL FILE INPUT -->
+        <input
+          type="file"
+          id="medicine_images"
+          name="images"
+          accept="image/*"
+          class="d-none"
+          multiple
+        />
+
+        <!-- Preview -->
+        <div id="imagePreview" class="image-preview mt-3 d-flex flex-wrap"></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 
                     <!-- Form Actions -->
                     <div class="form-actions mt-5 pt-4 border-top border-white-10">
@@ -928,4 +949,29 @@
         });
     });
 </script>
+
+<script>
+  const uploadArea = document.getElementById("imageUploadArea");
+  const fileInput = document.getElementById("medicine_images");
+  const preview = document.getElementById("imagePreview");
+
+  // Open file picker on click
+  uploadArea.addEventListener("click", () => {
+    fileInput.click();
+  });
+
+  // Preview images
+  fileInput.addEventListener("change", () => {
+    preview.innerHTML = "";
+    Array.from(fileInput.files).forEach(file => {
+      const img = document.createElement("img");
+      img.src = URL.createObjectURL(file);
+      img.style.height = "90px";
+      img.style.margin = "6px";
+      img.classList.add("rounded", "shadow-sm");
+      preview.appendChild(img);
+    });
+  });
+</script>
+
 {% endblock content %}

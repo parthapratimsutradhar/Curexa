@@ -43,4 +43,4 @@ class Medicine(BaseModel):
         db_table = 'medicines'
         
     def __str__(self):
-        return f"{self.name} | Price: ₹{self.price} | Active: {self.is_active}"
+        return f"{self.name} | Retail: ₹{self.retail_price} | Active: {self.is_active}"
