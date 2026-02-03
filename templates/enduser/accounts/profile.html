@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthPortal | Patient Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #2A7DE1;
+            --primary-dark: #1A5DB6;
+            --primary-light: #E8F2FF;
+            --accent-teal: #00B8A9;
+            --accent-light: #E6F7F6;
+            --neutral-dark: #2D3748;
+            --neutral-medium: #4A5568;
+            --neutral-light: #718096;
+            --neutral-bg: #F7FAFC;
+            --neutral-border: #E2E8F0;
+            --card-bg: #FFFFFF;
+            --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --card-shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --success: #38A169;
+            --warning: #D69E2E;
+            --danger: #E53E3E;
+            --info: #4299E1;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--neutral-bg);
+            color: var(--neutral-dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Header Styles */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--neutral-border);
+        }
+
+        .header-title h1 {
+            font-weight: 700;
+            font-size: 28px;
+            color: var(--neutral-dark);
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            color: var(--neutral-medium);
+            font-size: 14px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            border: 1px solid var(--neutral-border);
+            background: var(--card-bg);
+            color: var(--neutral-medium);
+        }
+
+        .action-btn:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+            transform: translateY(-1px);
+        }
+
+        .action-btn.primary {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .action-btn.primary:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        /* Main Content Layout */
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 1200px) {
+            .dashboard-content {
+                grid-template-columns: 360px 1fr;
+            }
+        }
+
+        /* Profile Card - Left Side */
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--neutral-border);
+        }
+
+        .patient-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-teal));
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+            font-weight: 600;
+            border: 4px solid white;
+            box-shadow: 0 4px 12px rgba(42, 125, 225, 0.15);
+        }
+
+        .patient-name {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px;
+            color: var(--neutral-dark);
+        }
+
+        .patient-demographics {
+            text-align: center;
+            color: var(--neutral-medium);
+            margin-bottom: 24px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .patient-badge {
+            background: var(--primary-light);
+            color: var(--primary-blue);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+
+        /* Health Stats Grid */
+        .health-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 24px 0;
+            padding: 20px;
+            background: var(--neutral-bg);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--neutral-border);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 12px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--neutral-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        /* Contact Info */
+        .contact-info {
+            margin: 24px 0;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--neutral-border);
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-item i {
+            width: 32px;
+            height: 32px;
+            background: var(--neutral-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: var(--primary-blue);
+            font-size: 14px;
+        }
+
+        .contact-details {
+            flex: 1;
+        }
+
+        .contact-label {
+            font-size: 12px;
+            color: var(--neutral-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .contact-value {
+            font-size: 14px;
+            color: var(--neutral-dark);
+            font-weight: 500;
+        }
+
+        /* Right Side - Tabs Container */
+        .tabs-container {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--neutral-border);
+        }
+
+        .tabs-header {
+            display: flex;
+            background: var(--neutral-bg);
+            border-bottom: 1px solid var(--neutral-border);
+            padding: 0;
+        }
+
+        .tab-btn {
+            padding: 18px 24px;
+            background: none;
+            border: none;
+            font-weight: 600;
+            color: var(--neutral-medium);
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-blue);
+            background: rgba(42, 125, 225, 0.05);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-blue);
+            border-bottom-color: var(--primary-blue);
+            background: white;
+        }
+
+        .tab-content {
+            padding: 32px;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Tab Titles */
+        .tab-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--neutral-dark);
+        }
+
+        /* Grid Layout for Details */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-item {
+            background: var(--neutral-bg);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            border-left: 3px solid var(--primary-blue);
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--neutral-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            color: var(--neutral-dark);
+            font-weight: 500;
+        }
+
+        /* Tags */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .tag {
+            background: var(--accent-light);
+            color: var(--accent-teal);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .tag.warning {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        /* Appointments & Orders Cards */
+        .data-card {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--neutral-border);
+            transition: var(--transition);
+        }
+
+        .data-card:hover {
+            box-shadow: var(--card-shadow-hover);
+            border-color: var(--primary-blue);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .doctor-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .doctor-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-teal));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .doctor-details h4 {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--neutral-dark);
+            margin-bottom: 4px;
+        }
+
+        .doctor-details p {
+            color: var(--neutral-medium);
+            font-size: 12px;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-upcoming {
+            background: #EBF8FF;
+            color: var(--info);
+        }
+
+        .status-completed {
+            background: #F0FFF4;
+            color: var(--success);
+        }
+
+        .status-cancelled {
+            background: #FFF5F5;
+            color: var(--danger);
+        }
+
+        .status-delivered {
+            background: #F0FFF4;
+            color: var(--success);
+        }
+
+        .status-pending {
+            background: #FEF3C7;
+            color: var(--warning);
+        }
+
+        .card-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+            padding: 16px;
+            background: var(--neutral-bg);
+            border-radius: var(--radius-sm);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-btn {
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--neutral-border);
+            background: white;
+            color: var(--neutral-medium);
+        }
+
+        .card-btn:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .card-btn.primary {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .card-btn.primary:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        /* Settings Section */
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: var(--neutral-bg);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            border: 1px solid var(--neutral-border);
+        }
+
+        .settings-info h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--neutral-dark);
+        }
+
+        .settings-info p {
+            color: var(--neutral-medium);
+            font-size: 13px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #CBD5E0;
+            transition: var(--transition);
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary-blue);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Emergency Section */
+        .emergency-section {
+            background: #FEF2F2;
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-top: 32px;
+            border: 1px solid #FEB2B2;
+        }
+
+        .emergency-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .emergency-header i {
+            color: var(--danger);
+            margin-right: 12px;
+            font-size: 20px;
+        }
+
+        .emergency-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--danger);
+        }
+
+        .emergency-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        /* Progress Indicators */
+        .health-progress {
+            margin: 24px 0;
+        }
+
+        .progress-item {
+            margin-bottom: 16px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--neutral-dark);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--neutral-border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-teal);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard-container {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .tabs-header {
+                overflow-x: auto;
+                padding: 0;
+            }
+
+            .tab-btn {
+                padding: 16px;
+                white-space: nowrap;
+            }
+
+            .tab-content {
+                padding: 24px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .health-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .card-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-card {
+                padding: 24px;
+            }
+
+            .patient-avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 32px;
+            }
+
+            .card-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .card-actions {
+                flex-direction: column;
+            }
+
+            .card-btn {
+                width: 100%;
+            }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 500px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--neutral-dark);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--neutral-medium);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--neutral-medium);
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--neutral-border);
+            border-radius: var(--radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(42, 125, 225, 0.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 32px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-title">
+                <h1>Patient Profile</h1>
+                <p>Medical records and health management dashboard</p>
+            </div>
+            <div class="header-actions">
+                <button class="action-btn" id="printProfileBtn">
+                    <i class="fas fa-print"></i> Print Summary
+                </button>
+                <button class="action-btn primary" id="newAppointmentBtn">
+                    <i class="fas fa-plus"></i> New Appointment
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="dashboard-content">
+            <!-- Left Side - Profile Card -->
+            <div class="profile-card">
+                <div class="patient-avatar">
+                    <span>JS</span>
+                </div>
+                
+                <h2 class="patient-name">John Smith</h2>
+                <div class="patient-demographics">
+                    <span>42 years • Male • Patient ID: MED-2023-001</span>
+                </div>
+
+                <div class="patient-badge">
+                    <i class="fas fa-tint"></i> Blood Group: O+
+                </div>
+
+                <!-- Health Stats -->
+                <div class="health-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">72</div>
+                        <div class="stat-label">Heart Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">120/80</div>
+                        <div class="stat-label">Blood Pressure</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">98.6°F</div>
+                        <div class="stat-label">Temperature</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">24.8</div>
+                        <div class="stat-label">BMI</div>
+                    </div>
+                </div>
+
+                <!-- Health Progress -->
+                <div class="health-progress">
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>Medication Adherence</span>
+                            <span>92%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 92%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>Appointment Attendance</span>
+                            <span>87%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 87%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div class="contact-details">
+                            <div class="contact-label">Phone</div>
+                            <div class="contact-value">+1 (555) 123-4567</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div class="contact-details">
+                            <div class="contact-label">Email</div>
+                            <div class="contact-value">john.smith@example.com</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="contact-details">
+                            <div class="contact-label">Address</div>
+                            <div class="contact-value">New York, NY 10001</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="action-btn primary" id="editProfileBtn" style="width: 100%; margin-top: 16px;">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+            </div>
+
+            <!-- Right Side - Tabs Content -->
+            <div class="tabs-container">
+                <!-- Tabs Header -->
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="overview">
+                        <i class="fas fa-chart-line"></i> Overview
+                    </button>
+                    <button class="tab-btn" data-tab="medical">
+                        <i class="fas fa-heartbeat"></i> Medical
+                    </button>
+                    <button class="tab-btn" data-tab="appointments">
+                        <i class="fas fa-calendar-alt"></i> Appointments
+                    </button>
+                    <button class="tab-btn" data-tab="medications">
+                        <i class="fas fa-pills"></i> Medications
+                    </button>
+                    <button class="tab-btn" data-tab="settings">
+                        <i class="fas fa-cog"></i> Settings
+                    </button>
+                </div>
+
+                <!-- Overview Tab -->
+                <div class="tab-content active" id="overview">
+                    <h2 class="tab-title">Health Overview</h2>
+                    
+                    <!-- Quick Stats -->
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Last Checkup</div>
+                            <div class="detail-value">May 28, 2023</div>
+                            <div style="font-size: 13px; color: var(--success); margin-top: 8px; display: flex; align-items: center; gap: 4px;">
+                                <i class="fas fa-check-circle"></i> All Clear
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Next Appointment</div>
+                            <div class="detail-value">Tomorrow, 2:00 PM</div>
+                            <div style="font-size: 13px; color: var(--info); margin-top: 8px; display: flex; align-items: center; gap: 4px;">
+                                <i class="fas fa-bell"></i> Reminder Set
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Active Medications</div>
+                            <div class="detail-value">2 Prescriptions</div>
+                            <div style="font-size: 13px; color: var(--warning); margin-top: 8px; display: flex; align-items: center; gap: 4px;">
+                                <i class="fas fa-clock"></i> Daily Dosage
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Insurance Provider</div>
+                            <div class="detail-value">Medicare Advantage</div>
+                            <div style="font-size: 13px; color: var(--success); margin-top: 8px; display: flex; align-items: center; gap: 4px;">
+                                <i class="fas fa-shield-alt"></i> Active
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Health Events -->
+                    <div style="margin-top: 32px;">
+                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 20px; color: var(--neutral-dark); display: flex; justify-content: space-between; align-items: center;">
+                            Recent Health Events
+                            <button class="action-btn" style="font-size: 13px;">
+                                View All <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </h3>
+                        
+                        <div class="data-card">
+                            <div class="card-header">
+                                <div class="doctor-info">
+                                    <div class="doctor-avatar">
+                                        <i class="fas fa-flask"></i>
+                                    </div>
+                                    <div class="doctor-details">
+                                        <h4>Blood Test Results</h4>
+                                        <p>Comprehensive Metabolic Panel</p>
+                                    </div>
+                                </div>
+                                <span class="status-badge status-completed">Completed</span>
+                            </div>
+                            <p style="color: var(--neutral-medium); font-size: 14px; margin: 12px 0;">All values within normal range. Cholesterol levels improved by 15% since last test.</p>
+                            <div class="card-details">
+                                <div>
+                                    <div class="detail-label">Date</div>
+                                    <div class="detail-value">Aug 8, 2025</div>
+                                </div>
+                                <div>
+                                    <div class="detail-label">Lab</div>
+                                    <div class="detail-value">Quest Diagnostics</div>
+                                </div>
+                                <div>
+                                    <div class="detail-label">Results</div>
+                                    <div class="detail-value" style="color: var(--success);">Normal</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Emergency Section -->
+                    <div class="emergency-section">
+                        <div class="emergency-header">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Emergency Information</h3>
+                        </div>
+                        <div class="emergency-details">
+                            <div>
+                                <div class="detail-label">Blood Type</div>
+                                <div class="detail-value" style="color: var(--danger);">O Positive</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Allergies</div>
+                                <div class="tags-container">
+                                    <span class="tag">Penicillin</span>
+                                    <span class="tag warning">Shellfish</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Emergency Contact</div>
+                                <div class="detail-value" style="color: var(--danger);">Jane Smith</div>
+                                <div class="detail-value" style="font-size: 13px;">+1 (555) 987-6543</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medical Tab -->
+                <div class="tab-content" id="medical">
+                    <h2 class="tab-title">Medical Information</h2>
+                    
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Blood Group</div>
+                            <div class="detail-value">O+ (Positive)</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Height & Weight</div>
+                            <div class="detail-value">180 cm • 82 kg</div>
+                            <div style="font-size: 13px; color: var(--success); margin-top: 8px;">
+                                Healthy BMI: 24.8
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Known Allergies</div>
+                            <div class="tags-container">
+                                <span class="tag">Penicillin</span>
+                                <span class="tag warning">Peanuts</span>
+                                <span class="tag">Dust Mites</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Chronic Conditions</div>
+                            <div class="detail-value">Hypertension</div>
+                            <div class="detail-value" style="font-size: 14px; margin-top: 4px;">Mild Asthma</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Current Medications</div>
+                            <div class="detail-value">Lisinopril 10mg</div>
+                            <div class="detail-value" style="font-size: 14px; margin-top: 4px;">Albuterol inhaler</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Past Medical History</div>
+                            <div class="detail-value">Appendectomy (2010)</div>
+                            <div class="detail-value" style="font-size: 14px; margin-top: 4px;">Fractured wrist (2018)</div>
+                        </div>
+                    </div>
+
+                    <!-- Vaccination Records -->
+                    <div style="margin-top: 40px;">
+                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 20px; color: var(--neutral-dark);">
+                            Vaccination Records
+                        </h3>
+                        
+                        <div class="data-card">
+                            <div class="card-header">
+                                <div class="doctor-info">
+                                    <div class="doctor-avatar" style="background: linear-gradient(135deg, var(--success), #2D9D78);">
+                                        <i class="fas fa-syringe"></i>
+                                    </div>
+                                    <div class="doctor-details">
+                                        <h4>COVID-19 Vaccination</h4>
+                                        <p>Moderna • Completed Series</p>
+                                    </div>
+                                </div>
+                                <span class="status-badge status-completed">Up to Date</span>
+                            </div>
+                            <div class="card-details">
+                                <div>
+                                    <div class="detail-label">First Dose</div>
+                                    <div class="detail-value">March 15, 2023</div>
+                                </div>
+                                <div>
+                                    <div class="detail-label">Second Dose</div>
+                                    <div class="detail-value">April 12, 2023</div>
+                                </div>
+                                <div>
+                                    <div class="detail-label">Booster</div>
+                                    <div class="detail-value">October 28, 2023</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appointments Tab -->
+                <div class="tab-content" id="appointments">
+                    <h2 class="tab-title">Appointments</h2>
+                    
+                    <!-- Upcoming Appointments -->
+                    <div style="margin-bottom: 32px;">
+                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 20px; color: var(--neutral-dark);">
+                            Upcoming Appointments
+                        </h3>
+                        
+                        <div class="data-card">
+                            <div class="card-header">
+                                <div class="doctor-info">
+                                    <div class="doctor-avatar">MC</div>
+                                    <div class="doctor-details">
+                                        <h4>Dr. Michael Chen</h4>
+                                        <p>General Medicine • Annual Physical</p>
+                                    </div>
+                                </div>
+                                <span class="status-badge status-upcoming">Tomorrow</span>
+                            </div>
+                            <div class="card-details">
+                                <div>
+                                    <div class="detail-label">Date & Time</div>
+                                    <div class="detail-value">Tomorrow, 2:00 PM</div>
+                                </div>
+                                <div>
+                                    <div class="detail-label">Location</div>
+                                    <div class="detail-value">Main Hospital, Suite 304</div>
+                                </div>
+                                <div>
+                                    <div class="detail-label">Duration</div>
+                                    <div class="detail-value">45 Minutes</div>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="card-btn primary"><i class="fas fa-video"></i> Join Telehealth</button>
+                                <button class="card-btn"><i class="fas fa-calendar-plus"></i> Reschedule</button>
+                                <button class="card-btn"><i class="fas fa-times"></i> Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Past Appointments -->
+                    <div>
+                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 20px; color: var(--neutral-dark); display: flex; justify-content: space-between; align-items: center;">
+                            Recent History
+                            <button class="action-btn" style="font-size: 13px;">
+                                View All <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </h3>
+                        
+                        <div class="data-card">
+                            <div class="card-header">
+                                <div class="doctor-info">
+                                    <div class="doctor-avatar" style="background: linear-gradient(135deg, var(--danger), #C53030);">SJ</div>
+                                    <div class="doctor-details">
+                                        <h4>Dr. Sarah Johnson</h4>
+                                        <p>Cardiology • Follow-up</p>
+                                    </div>
+                                </div>
+                                <span class="status-badge status-completed">Completed</span>
+                            </div>
+                            <div class="card-details">
+                                <div>
+                                    <div class="detail-label">Date</div>
+                                    <div class="detail-value">June 15, 2023</div>
+                                </div>
+                                <div>
+                                    <div class="detail-label">Diagnosis</div>
+                                    <div class="detail-value">Hypertension controlled</div>
+                                </div>
+                                <div>
+                                    <div class="detail-label">Next Visit</div>
+                                    <div class="detail-value">6 months</div>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="card-btn"><i class="fas fa-file-medical"></i> View Report</button>
+                                <button class="card-btn"><i class="fas fa-share"></i> Share</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medications Tab -->
+                <div class="tab-content" id="medications">
+                    <h2 class="tab-title">Medications</h2>
+                    
+                    <!-- Current Medications -->
+                    <div style="margin-bottom: 32px;">
+                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 20px; color: var(--neutral-dark);">
+                            Active Prescriptions
+                        </h3>
+                        
+                        <div class="data-card">
+                            <div class="card-header">
+                                <div class="doctor-info">
+                                    <div class="doctor-avatar" style="background: linear-gradient(135deg, #805AD5, #553C9A);">
+                                        <i class="fas fa-capsules"></i>
+                                    </div>
+                                    <div class="doctor-details">
+                                        <h4>Lisinopril 10mg</h4>
+                                        <p>Hypertension • Daily</p>
+                                    </div>
+                                </div>
+                                <span class="status-badge status-completed">Active</span>
+                            </div>
+                            <div class="card-details">
+                                <div>
+                                    <div class="detail-label">Dosage</div>
+                                    <div class="detail-value">1 tablet daily</div>
+                                </div>
+                                <div>
+                                    <div class="detail-label">Refills</div>
+                                    <div class="detail-value">3 remaining</div>
+                                </div>
+                                <div>
+                                    <div class="detail-label">Next Refill</div>
+                                    <div class="detail-value">July 15, 2023</div>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="card-btn primary"><i class="fas fa-shopping-cart"></i> Request Refill</button>
+                                <button class="card-btn"><i class="fas fa-info-circle"></i> Details</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order History -->
+                    <div>
+                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 20px; color: var(--neutral-dark); display: flex; justify-content: space-between; align-items: center;">
+                            Recent Orders
+                            <button class="action-btn" style="font-size: 13px;">
+                                View All <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </h3>
+                        
+                        <div class="data-card">
+                            <div class="card-header">
+                                <div class="doctor-info">
+                                    <div>
+                                        <h4>Order #MED-45633</h4>
+                                        <p>June 10, 2023</p>
+                                    </div>
+                                </div>
+                                <span class="status-badge status-pending">Processing</span>
+                            </div>
+                            <div class="card-details">
+                                <div>
+                                    <div class="detail-label">Medications</div>
+                                    <div class="detail-value">Lisinopril 10mg (90 tablets)</div>
+                                </div>
+                                <div>
+                                    <div class="detail-label">Pharmacy</div>
+                                    <div class="detail-value">CVS Pharmacy #1234</div>
+                                </div>
+                                <div>
+                                    <div class="detail-label">Estimated Delivery</div>
+                                    <div class="detail-value">June 15, 2023</div>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="card-btn"><i class="fas fa-truck"></i> Track Order</button>
+                                <button class="card-btn"><i class="fas fa-file-invoice"></i> Invoice</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="tab-content" id="settings">
+                    <h2 class="tab-title">Account Settings</h2>
+                    
+                    <div class="settings-item">
+                        <div class="settings-info">
+                            <h4>Change Password</h4>
+                            <p>Update your password regularly for security</p>
+                        </div>
+                        <button class="action-btn" style="font-size: 13px;">
+                            <i class="fas fa-key"></i> Change
+                        </button>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="settings-info">
+                            <h4>Email Notifications</h4>
+                            <p>Receive appointment reminders and updates</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="settings-info">
+                            <h4>SMS Alerts</h4>
+                            <p>Get text alerts for important updates</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="settings-info">
+                            <h4>Data Sharing</h4>
+                            <p>Allow doctors to access your records</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--neutral-border);">
+                        <button class="action-btn" style="background: #FFF5F5; color: var(--danger); border-color: #FEB2B2; width: 100%;">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal-overlay" id="editProfileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Profile</h3>
+                <button class="modal-close" id="closeModalBtn">&times;</button>
+            </div>
+            <form id="editProfileForm">
+                <div class="form-group">
+                    <label class="form-label" for="fullName">Full Name</label>
+                    <input type="text" class="form-input" id="fullName" value="John Smith">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="phone">Phone Number</label>
+                    <input type="tel" class="form-input" id="phone" value="+1 (555) 123-4567">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" class="form-input" id="email" value="john.smith@example.com">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="action-btn" id="cancelEditBtn">Cancel</button>
+                    <button type="submit" class="action-btn primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab Switching
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    button.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // Modal Functionality
+            const editProfileBtn = document.getElementById('editProfileBtn');
+            const editProfileModal = document.getElementById('editProfileModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
+            const editProfileForm = document.getElementById('editProfileForm');
+
+            editProfileBtn.addEventListener('click', () => {
+                editProfileModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            const closeModal = () => {
+                editProfileModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            };
+
+            closeModalBtn.addEventListener('click', closeModal);
+            cancelEditBtn.addEventListener('click', closeModal);
+
+            editProfileModal.addEventListener('click', (e) => {
+                if (e.target === editProfileModal) closeModal();
+            });
+
+            editProfileForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const fullName = document.getElementById('fullName').value;
+                const phone = document.getElementById('phone').value;
+                const email = document.getElementById('email').value;
+                
+                document.querySelector('.patient-name').textContent = fullName;
+                document.querySelectorAll('.contact-value')[0].textContent = phone;
+                document.querySelectorAll('.contact-value')[1].textContent = email;
+                
+                showNotification('Profile updated successfully', 'success');
+                closeModal();
+            });
+
+            // Notification System
+            function showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 12px 20px;
+                    background: ${type === 'success' ? 'var(--success)' : 'var(--danger)'};
+                    color: white;
+                    border-radius: var(--radius-sm);
+                    font-weight: 500;
+                    font-size: 14px;
+                    box-shadow: var(--card-shadow-hover);
+                    z-index: 1001;
+                    transform: translateX(100px);
+                    opacity: 0;
+                    transition: var(--transition);
+                `;
+                
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                    notification.style.opacity = '1';
+                }, 10);
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(100px)';
+                    notification.style.opacity = '0';
+                    setTimeout(() => document.body.removeChild(notification), 300);
+                }, 3000);
+            }
+
+            // Interactive Elements
+            document.getElementById('printProfileBtn').addEventListener('click', () => {
+                showNotification('Preparing document for printing...', 'info');
+            });
+
+            document.getElementById('newAppointmentBtn').addEventListener('click', () => {
+                document.querySelector('[data-tab="appointments"]').click();
+                showNotification('Redirecting to appointment booking...', 'info');
+            });
+
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.data-card, .detail-item');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-2px)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.key === 'e') {
+                    e.preventDefault();
+                    editProfileBtn.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
