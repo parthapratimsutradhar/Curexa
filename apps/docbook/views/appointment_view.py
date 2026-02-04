@@ -1,4 +1,6 @@
 from rest_framework.views import APIView
+from django.views import View
+from django.shortcuts import redirect, render
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -40,3 +42,8 @@ class AppointmentsByDoctorAPIView(APIView):
         )
 
         return Response(result, status=status.HTTP_200_OK)
+
+
+class AppointmentsListView(View):
+    def get(swlf, request):
+        return render(request, "enduser/docbook/book_appointment.html")

@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders | MedCart Healthcare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --primary-blue: #0A7AFF;
+            --primary-teal: #00B8A9;
+            --light-blue: #E8F4FF;
+            --light-teal: #E6F7F6;
+            --dark-gray: #1A1D2B;
+            --light-gray: #F8FAFC;
+            --medium-gray: #E2E8F0;
+            --text-gray: #64748B;
+            --success-green: #10B981;
+            --warning-orange: #F59E0B;
+            --danger-red: #EF4444;
+            --white: #FFFFFF;
+            --shadow-soft: rgba(0, 0, 0, 0.04);
+            --shadow-medium: rgba(0, 0, 0, 0.08);
+            --gradient-primary: linear-gradient(135deg, #0A7AFF 0%, #00B8A9 100%);
+            --gradient-light: linear-gradient(135deg, #E8F4FF 0%, #E6F7F6 100%);
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+            color: var(--dark-gray);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 20px 40px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(10, 122, 255, 0.2);
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 20px var(--shadow-soft);
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            position: relative;
+            padding: 6px 0;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-blue);
+        }
+
+        .nav-link.active {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--dark-gray) 0%, #334155 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .page-subtitle {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        .order-count {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Tabs */
+        .order-tabs {
+            display: flex;
+            gap: 8px;
+            background: var(--white);
+            padding: 8px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px var(--shadow-soft);
+            margin-bottom: 30px;
+            max-width: max-content;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border-radius: 12px;
+            background: transparent;
+            border: none;
+            font-weight: 600;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .tab:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .tab.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(10, 122, 255, 0.2);
+        }
+
+        .tab-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* Search & Filter */
+        .search-filter-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-container {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 20px 16px 48px;
+            border-radius: 16px;
+            border: 1px solid var(--medium-gray);
+            background: var(--white);
+            font-size: 1rem;
+            color: var(--dark-gray);
+            transition: var(--transition-smooth);
+            box-shadow: 0 2px 8px var(--shadow-soft);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 4px 16px rgba(10, 122, 255, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        .filter-btn {
+            padding: 16px 24px;
+            border-radius: 16px;
+            border: 1px solid var(--medium-gray);
+            background: var(--white);
+            font-weight: 600;
+            color: var(--dark-gray);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 8px var(--shadow-soft);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        /* Order Cards */
+        .orders-container {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+
+        .order-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 4px 20px var(--shadow-soft);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .order-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px var(--shadow-medium);
+        }
+
+        .order-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .order-id {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark-gray);
+            margin-bottom: 8px;
+        }
+
+        .order-date {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .order-status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-delivered {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-green);
+        }
+
+        .status-processing {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-orange);
+        }
+
+        .status-shipped {
+            background: rgba(10, 122, 255, 0.1);
+            color: var(--primary-blue);
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-red);
+        }
+
+        .order-content {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 30px;
+        }
+
+        .medicine-preview {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .medicine-thumbnails {
+            display: flex;
+        }
+
+        .medicine-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: var(--gradient-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .medicine-thumb:not(:first-child) {
+            margin-left: -15px;
+        }
+
+        .medicine-thumb img {
+            max-width: 70%;
+            max-height: 70%;
+            object-fit: contain;
+        }
+
+        .medicine-count {
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin-left: 10px;
+        }
+
+        .order-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: 200px;
+        }
+
+        .order-amount {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--dark-gray);
+        }
+
+        .payment-mode {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        .delivery-address {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.5;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        .btn-view-details {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--primary-blue);
+            background: transparent;
+            color: var(--primary-blue);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-view-details:hover {
+            background: rgba(10, 122, 255, 0.05);
+        }
+
+        .btn-reorder {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            background: var(--gradient-primary);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(10, 122, 255, 0.2);
+        }
+
+        .btn-reorder:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(10, 122, 255, 0.3);
+        }
+
+        /* Order Details Expanded View */
+        .order-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            margin-top: 0;
+        }
+
+        .order-details.expanded {
+            max-height: 1000px;
+            margin-top: 28px;
+            padding-top: 28px;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        .details-header {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--dark-gray);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .medicines-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .medicine-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-radius: 12px;
+            background: var(--light-gray);
+            gap: 16px;
+        }
+
+        .medicine-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            background: var(--gradient-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .medicine-img img {
+            max-width: 70%;
+            max-height: 70%;
+            object-fit: contain;
+        }
+
+        .medicine-info {
+            flex: 1;
+        }
+
+        .medicine-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--dark-gray);
+        }
+
+        .medicine-dosage {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .medicine-quantity {
+            font-weight: 600;
+            color: var(--dark-gray);
+            font-size: 1.1rem;
+        }
+
+        .prescription-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .prescription-verified {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-green);
+        }
+
+        .prescription-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-orange);
+        }
+
+        .delivery-timeline {
+            background: var(--light-gray);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .timeline-header {
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--dark-gray);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .timeline-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .timeline-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--medium-gray);
+            z-index: 1;
+        }
+
+        .timeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 3px solid var(--medium-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .step-icon.active {
+            background: var(--primary-blue);
+            border-color: var(--primary-blue);
+            color: white;
+        }
+
+        .step-icon.completed {
+            background: var(--success-green);
+            border-color: var(--success-green);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            text-align: center;
+            max-width: 100px;
+        }
+
+        .step-label.active {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .details-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn-invoice {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--medium-gray);
+            background: var(--white);
+            color: var(--dark-gray);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-invoice:hover {
+            background: var(--light-gray);
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            text-align: center;
+            background: var(--white);
+            border-radius: 24px;
+            box-shadow: 0 4px 20px var(--shadow-soft);
+            margin: 40px 0;
+        }
+
+        .empty-state-icon {
+            font-size: 6rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            opacity: 0.7;
+        }
+
+        .empty-state h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: var(--dark-gray);
+        }
+
+        .empty-state p {
+            color: var(--text-gray);
+            max-width: 500px;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .btn-order-medicines {
+            padding: 18px 36px;
+            border-radius: 16px;
+            border: none;
+            background: var(--gradient-primary);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 6px 20px rgba(10, 122, 255, 0.25);
+        }
+
+        .btn-order-medicines:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(10, 122, 255, 0.3);
+        }
+
+        /* Recurring Medicines */
+        .recurring-badge {
+            position: absolute;
+            top: 28px;
+            right: 28px;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Smart Suggestions */
+        .smart-suggestions {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 4px 20px var(--shadow-soft);
+            margin-bottom: 40px;
+        }
+
+        .suggestions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .suggestions-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark-gray);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .suggestion-card {
+            background: var(--light-gray);
+            border-radius: 16px;
+            padding: 20px;
+            transition: var(--transition-smooth);
+            border: 1px solid transparent;
+        }
+
+        .suggestion-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(10, 122, 255, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 0 20px;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--medium-gray);
+            margin-top: 40px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .order-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Skeleton Loader */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 20px 30px;
+            }
+            
+            .order-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .page-title-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .search-filter-row {
+                flex-direction: column;
+            }
+            
+            .search-container {
+                min-width: 100%;
+            }
+            
+            .order-tabs {
+                overflow-x: auto;
+                max-width: 100%;
+                padding: 6px;
+            }
+            
+            .tab {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+                white-space: nowrap;
+            }
+            
+            .order-card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .timeline-steps {
+                flex-direction: column;
+                gap: 30px;
+                align-items: flex-start;
+            }
+            
+            .timeline-steps::before {
+                display: none;
+            }
+            
+            .timeline-step {
+                flex-direction: row;
+                gap: 16px;
+                width: 100%;
+            }
+            
+            .step-label {
+                text-align: left;
+            }
+            
+            .details-actions {
+                flex-direction: column;
+            }
+            
+            .suggestions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <span class="logo-text">MedCart Pro</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="nav-link">Home</a>
+                <a href="#" class="nav-link">Medicines</a>
+                <a href="#" class="nav-link">Healthcare</a>
+                <a href="#" class="nav-link">Doctors</a>
+                <a href="#" class="nav-link active">My Orders</a>
+                <a href="#" class="nav-link">Account</a>
+            </nav>
+        </header>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-title-row">
+                <div>
+                    <h1 class="page-title">My Orders</h1>
+                    <p class="page-subtitle">Track, view, and manage your medical orders and prescriptions</p>
+                </div>
+                <div class="order-count">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span id="orderCount">12 Orders</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="order-tabs">
+            <button class="tab active" data-tab="all">
+                <i class="fas fa-layer-group"></i>
+                All Orders
+                <span class="tab-count">12</span>
+            </button>
+            <button class="tab" data-tab="ongoing">
+                <i class="fas fa-sync-alt"></i>
+                Ongoing
+                <span class="tab-count">3</span>
+            </button>
+            <button class="tab" data-tab="delivered">
+                <i class="fas fa-check-circle"></i>
+                Delivered
+                <span class="tab-count">7</span>
+            </button>
+            <button class="tab" data-tab="cancelled">
+                <i class="fas fa-times-circle"></i>
+                Cancelled
+                <span class="tab-count">2</span>
+            </button>
+        </div>
+
+        <!-- Search & Filter -->
+        <div class="search-filter-row">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search by order ID, medicine, or prescription">
+            </div>
+            <button class="filter-btn">
+                <i class="fas fa-filter"></i>
+                Filter
+            </button>
+        </div>
+
+        <!-- Smart Reorder Suggestions -->
+        <div class="smart-suggestions">
+            <div class="suggestions-header">
+                <h3 class="suggestions-title">
+                    <i class="fas fa-history"></i>
+                    Recurring Medicines
+                </h3>
+                <button class="btn-reorder">
+                    <i class="fas fa-cart-plus"></i>
+                    Reorder All
+                </button>
+            </div>
+            <div class="suggestions-grid">
+                <div class="suggestion-card">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div class="medicine-img">
+                            <img src="https://cdn-icons-png.flaticon.com/512/3050/3050155.png" alt="Paracetamol">
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">Paracetamol</div>
+                            <div style="font-size: 0.9rem; color: var(--text-gray);">Last ordered 15 days ago</div>
+                        </div>
+                    </div>
+                    <button class="btn-reorder" style="width: 100%; padding: 10px; font-size: 0.9rem;">
+                        <i class="fas fa-plus"></i>
+                        Add to Cart
+                    </button>
+                </div>
+                <div class="suggestion-card">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div class="medicine-img">
+                            <img src="https://cdn-icons-png.flaticon.com/512/3022/3022560.png" alt="Vitamin D3">
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">Vitamin D3</div>
+                            <div style="font-size: 0.9rem; color: var(--text-gray);">Last ordered 30 days ago</div>
+                        </div>
+                    </div>
+                    <button class="btn-reorder" style="width: 100%; padding: 10px; font-size: 0.9rem;">
+                        <i class="fas fa-plus"></i>
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Container -->
+        <div class="orders-container" id="ordersContainer">
+            <!-- Order Card 1 -->
+            <div class="order-card" data-status="delivered">
+                <div class="recurring-badge">
+                    <i class="fas fa-redo"></i>
+                    Recurring
+                </div>
+                
+                <div class="order-card-header">
+                    <div>
+                        <div class="order-id">ORD-2023-78945</div>
+                        <div class="order-date">
+                            <i class="far fa-calendar"></i>
+                            Placed on 15 Nov 2023
+                        </div>
+                    </div>
+                    <div class="order-status-badge status-delivered">
+                        <i class="fas fa-check-circle"></i>
+                        Delivered
+                    </div>
+                </div>
+                
+                <div class="order-content">
+                    <div class="medicine-preview">
+                        <div class="medicine-thumbnails">
+                            <div class="medicine-thumb">
+                                <img src="https://cdn-icons-png.flaticon.com/512/3149/3149871.png" alt="Medicine">
+                            </div>
+                            <div class="medicine-thumb">
+                                <img src="https://cdn-icons-png.flaticon.com/512/3050/3050155.png" alt="Medicine">
+                            </div>
+                            <div class="medicine-thumb">
+                                <img src="https://cdn-icons-png.flaticon.com/512/3022/3022560.png" alt="Medicine">
+                            </div>
+                        </div>
+                        <div class="medicine-count">5 medicines</div>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <div class="order-amount">₹1,245.50</div>
+                        <div class="payment-mode">
+                            <i class="fas fa-credit-card"></i>
+                            Paid via UPI
+                        </div>
+                        <div class="delivery-address">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Home - 123, Medical Lane, Mumbai
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-actions">
+                    <button class="btn-view-details" onclick="toggleDetails('order1')">
+                        <i class="fas fa-chevron-down"></i>
+                        View Details
+                    </button>
+                    <button class="btn-reorder">
+                        <i class="fas fa-redo"></i>
+                        Reorder
+                    </button>
+                </div>
+                
+                <!-- Expanded Details -->
+                <div class="order-details" id="order1">
+                    <div class="details-header">
+                        <i class="fas fa-info-circle"></i>
+                        Order Details
+                    </div>
+                    
+                    <div class="medicines-list">
+                        <div class="medicine-item">
+                            <div class="medicine-img">
+                                <img src="https://cdn-icons-png.flaticon.com/512/3149/3149871.png" alt="Azithromycin">
+                            </div>
+                            <div class="medicine-info">
+                                <div class="medicine-name">Azithromycin</div>
+                                <div class="medicine-dosage">
+                                    <span>Tablet • 500mg</span>
+                                    <span class="prescription-status prescription-verified">
+                                        <i class="fas fa-check-circle"></i>
+                                        Prescription Verified
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="medicine-quantity">Qty: 1</div>
+                        </div>
+                        
+                        <div class="medicine-item">
+                            <div class="medicine-img">
+                                <img src="https://cdn-icons-png.flaticon.com/512/3050/3050155.png" alt="Paracetamol">
+                            </div>
+                            <div class="medicine-info">
+                                <div class="medicine-name">Paracetamol</div>
+                                <div class="medicine-dosage">
+                                    <span>Tablet • 650mg</span>
+                                </div>
+                            </div>
+                            <div class="medicine-quantity">Qty: 2</div>
+                        </div>
+                    </div>
+                    
+                    <div class="delivery-timeline">
+                        <div class="timeline-header">
+                            <span>Delivery Timeline</span>
+                            <span style="color: var(--success-green); font-size: 0.9rem;">
+                                <i class="fas fa-check-circle"></i>
+                                Delivered on 18 Nov 2023
+                            </span>
+                        </div>
+                        
+                        <div class="timeline-steps">
+                            <div class="timeline-step">
+                                <div class="step-icon completed">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="step-label">Order Placed</div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="step-icon completed">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="step-label">Processing</div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="step-icon completed">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="step-label">Shipped</div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="step-icon completed">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="step-label">Delivered</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="details-actions">
+                        <button class="btn-invoice">
+                            <i class="fas fa-download"></i>
+                            Download Invoice
+                        </button>
+                        <button class="btn-reorder">
+                            <i class="fas fa-redo"></i>
+                            Reorder All Medicines
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Card 2 -->
+            <div class="order-card" data-status="processing">
+                <div class="order-card-header">
+                    <div>
+                        <div class="order-id">ORD-2023-78946</div>
+                        <div class="order-date">
+                            <i class="far fa-calendar"></i>
+                            Placed on 18 Nov 2023
+                        </div>
+                    </div>
+                    <div class="order-status-badge status-processing">
+                        <i class="fas fa-sync-alt"></i>
+                        Processing
+                    </div>
+                </div>
+                
+                <div class="order-content">
+                    <div class="medicine-preview">
+                        <div class="medicine-thumbnails">
+                            <div class="medicine-thumb">
+                                <img src="https://cdn-icons-png.flaticon.com/512/2750/2750765.png" alt="Medicine">
+                            </div>
+                            <div class="medicine-thumb">
+                                <img src="https://cdn-icons-png.flaticon.com/512/2019/2019642.png" alt="Medicine">
+                            </div>
+                        </div>
+                        <div class="medicine-count">3 medicines</div>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <div class="order-amount">₹845.00</div>
+                        <div class="payment-mode">
+                            <i class="fas fa-money-bill-wave"></i>
+                            Cash on Delivery
+                        </div>
+                        <div class="delivery-address">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Office - 456, Business Park, Delhi
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-actions">
+                    <button class="btn-view-details" onclick="toggleDetails('order2')">
+                        <i class="fas fa-chevron-down"></i>
+                        View Details
+                    </button>
+                    <button class="btn-reorder" disabled>
+                        <i class="fas fa-clock"></i>
+                        Order in Progress
+                    </button>
+                </div>
+                
+                <!-- Expanded Details -->
+                <div class="order-details" id="order2">
+                    <div class="details-header">
+                        <i class="fas fa-info-circle"></i>
+                        Order Details
+                    </div>
+                    
+                    <div class="medicines-list">
+                        <div class="medicine-item">
+                            <div class="medicine-img">
+                                <img src="https://cdn-icons-png.flaticon.com/512/2750/2750765.png" alt="Amoxicillin">
+                            </div>
+                            <div class="medicine-info">
+                                <div class="medicine-name">Amoxicillin</div>
+                                <div class="medicine-dosage">
+                                    <span>Capsule • 500mg</span>
+                                    <span class="prescription-status prescription-pending">
+                                        <i class="fas fa-clock"></i>
+                                        Prescription Pending
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="medicine-quantity">Qty: 1</div>
+                        </div>
+                    </div>
+                    
+                    <div class="delivery-timeline">
+                        <div class="timeline-header">
+                            <span>Delivery Timeline</span>
+                            <span style="color: var(--warning-orange); font-size: 0.9rem;">
+                                <i class="fas fa-clock"></i>
+                                Expected by 22 Nov 2023
+                            </span>
+                        </div>
+                        
+                        <div class="timeline-steps">
+                            <div class="timeline-step">
+                                <div class="step-icon completed">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="step-label">Order Placed</div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="step-icon active">
+                                    <i class="fas fa-sync-alt"></i>
+                                </div>
+                                <div class="step-label active">Processing</div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-shipping-fast"></i>
+                                </div>
+                                <div class="step-label">Shipped</div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <div class="step-label">Delivered</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="details-actions">
+                        <button class="btn-invoice">
+                            <i class="fas fa-download"></i>
+                            Download Invoice
+                        </button>
+                        <button class="btn-reorder">
+                            <i class="fas fa-phone-alt"></i>
+                            Contact Support
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Card 3 -->
+            <div class="order-card" data-status="shipped">
+                <div class="order-card-header">
+                    <div>
+                        <div class="order-id">ORD-2023-78947</div>
+                        <div class="order-date">
+                            <i class="far fa-calendar"></i>
+                            Placed on 16 Nov 2023
+                        </div>
+                    </div>
+                    <div class="order-status-badge status-shipped">
+                        <i class="fas fa-shipping-fast"></i>
+                        Shipped
+                    </div>
+                </div>
+                
+                <div class="order-content">
+                    <div class="medicine-preview">
+                        <div class="medicine-thumbnails">
+                            <div class="medicine-thumb">
+                                <img src="https://cdn-icons-png.flaticon.com/512/3022/3022560.png" alt="Medicine">
+                            </div>
+                        </div>
+                        <div class="medicine-count">1 medicine</div>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <div class="order-amount">₹425.00</div>
+                        <div class="payment-mode">
+                            <i class="fas fa-credit-card"></i>
+                            Paid via Card
+                        </div>
+                        <div class="delivery-address">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Home - 123, Medical Lane, Mumbai
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-actions">
+                    <button class="btn-view-details" onclick="toggleDetails('order3')">
+                        <i class="fas fa-chevron-down"></i>
+                        View Details
+                    </button>
+                    <button class="btn-reorder">
+                        <i class="fas fa-redo"></i>
+                        Reorder
+                    </button>
+                </div>
+                
+                <!-- Expanded Details -->
+                <div class="order-details" id="order3">
+                    <div class="details-header">
+                        <i class="fas fa-info-circle"></i>
+                        Order Details
+                    </div>
+                    
+                    <div class="medicines-list">
+                        <div class="medicine-item">
+                            <div class="medicine-img">
+                                <img src="https://cdn-icons-png.flaticon.com/512/3022/3022560.png" alt="Vitamin D3">
+                            </div>
+                            <div class="medicine-info">
+                                <div class="medicine-name">Vitamin D3</div>
+                                <div class="medicine-dosage">
+                                    <span>Capsule • 60k IU</span>
+                                </div>
+                            </div>
+                            <div class="medicine-quantity">Qty: 1</div>
+                        </div>
+                    </div>
+                    
+                    <div class="delivery-timeline">
+                        <div class="timeline-header">
+                            <span>Delivery Timeline</span>
+                            <span style="color: var(--primary-blue); font-size: 0.9rem;">
+                                <i class="fas fa-shipping-fast"></i>
+                                Out for Delivery
+                            </span>
+                        </div>
+                        
+                        <div class="timeline-steps">
+                            <div class="timeline-step">
+                                <div class="step-icon completed">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="step-label">Order Placed</div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="step-icon completed">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="step-label">Processing</div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="step-icon active">
+                                    <i class="fas fa-shipping-fast"></i>
+                                </div>
+                                <div class="step-label active">Shipped</div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <div class="step-label">Delivered</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="details-actions">
+                        <button class="btn-invoice">
+                            <i class="fas fa-download"></i>
+                            Download Invoice
+                        </button>
+                        <button class="btn-reorder">
+                            <i class="fas fa-redo"></i>
+                            Track Package
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State (Hidden by default) -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-state-icon">
+                <i class="fas fa-shopping-bag"></i>
+            </div>
+            <h3>No Orders Yet</h3>
+            <p>You haven't placed any orders yet. Browse our extensive collection of medicines, healthcare products, and doctor consultations.</p>
+            <button class="btn-order-medicines">
+                <i class="fas fa-pills"></i>
+                Order Medicines
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2023 MedCart Pro. All rights reserved. Lic. No: MH-DRUGS-LIC-12345</p>
+            <p style="margin-top: 8px; font-size: 0.8rem;">For medical emergencies, contact your nearest hospital or call emergency services.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Order data
+        const orders = [
+            { id: 'order1', status: 'delivered' },
+            { id: 'order2', status: 'processing' },
+            { id: 'order3', status: 'shipped' }
+        ];
+
+        // Toggle order details
+        function toggleDetails(orderId) {
+            const detailsElement = document.getElementById(orderId);
+            const button = document.querySelector(`[onclick="toggleDetails('${orderId}')"]`);
+            const icon = button.querySelector('i');
+            
+            if (detailsElement.classList.contains('expanded')) {
+                detailsElement.classList.remove('expanded');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+                button.innerHTML = `<i class="fas fa-chevron-down"></i> View Details`;
+            } else {
+                detailsElement.classList.add('expanded');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+                button.innerHTML = `<i class="fas fa-chevron-up"></i> Hide Details`;
+            }
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                const tabType = this.getAttribute('data-tab');
+                filterOrders(tabType);
+            });
+        });
+
+        // Filter orders by status
+        function filterOrders(status) {
+            const ordersContainer = document.getElementById('ordersContainer');
+            const emptyState = document.getElementById('emptyState');
+            const orderCards = document.querySelectorAll('.order-card');
+            
+            let visibleCount = 0;
+            
+            orderCards.forEach(card => {
+                if (status === 'all' || card.getAttribute('data-status') === status) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Show empty state if no orders match
+            if (visibleCount === 0) {
+                ordersContainer.style.display = 'none';
+                emptyState.style.display = 'flex';
+            } else {
+                ordersContainer.style.display = 'block';
+                emptyState.style.display = 'none';
+            }
+            
+            // Update order count
+            document.getElementById('orderCount').textContent = `${visibleCount} Orders`;
+        }
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const orderCards = document.querySelectorAll('.order-card');
+            
+            orderCards.forEach(card => {
+                const orderId = card.querySelector('.order-id').textContent.toLowerCase();
+                const medicines = card.querySelector('.medicine-count').textContent.toLowerCase();
+                
+                if (orderId.includes(searchTerm) || medicines.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Reorder button functionality
+        document.querySelectorAll('.btn-reorder').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (!this.disabled) {
+                    e.stopPropagation(); // Prevent triggering parent click events
+                    
+                    // Show loading state
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+                    this.disabled = true;
+                    
+                    // Simulate API call
+                    setTimeout(() => {
+                        alert('Medicines added to cart successfully!');
+                        this.innerHTML = originalText;
+                        this.disabled = false;
+                    }, 1000);
+                }
+            });
+        });
+
+        // Download invoice
+        document.querySelectorAll('.btn-invoice').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                // Show loading state
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
+                this.disabled = true;
+                
+                // Simulate download
+                setTimeout(() => {
+                    alert('Invoice downloaded successfully!');
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                }, 800);
+            });
+        });
+
+        // Order medicines button
+        document.querySelector('.btn-order-medicines').addEventListener('click', function() {
+            window.location.href = '#';
+            alert('Redirecting to medicines catalog...');
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Count orders by status
+            const statusCounts = {
+                all: document.querySelectorAll('.order-card').length,
+                ongoing: document.querySelectorAll('.order-card[data-status="processing"], .order-card[data-status="shipped"]').length,
+                delivered: document.querySelectorAll('.order-card[data-status="delivered"]').length,
+                cancelled: document.querySelectorAll('.order-card[data-status="cancelled"]').length
+            };
+            
+            // Update tab counts
+            document.querySelectorAll('.tab').forEach(tab => {
+                const tabType = tab.getAttribute('data-tab');
+                const countElement = tab.querySelector('.tab-count');
+                if (countElement) {
+                    countElement.textContent = statusCounts[tabType];
+                }
+            });
+        });
+
+        // Filter button functionality
+        document.querySelector('.filter-btn').addEventListener('click', function() {
+            alert('Filter options would open here. You could filter by date range, order amount, payment method, etc.');
+        });
+    </script>
+</body>
+</html>

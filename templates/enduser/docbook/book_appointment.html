@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedCare - Book Appointment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #2a86ff;
+            --primary-blue-dark: #1a75ff;
+            --soft-blue: #e8f2ff;
+            --light-green: #e7f7ef;
+            --dark-green: #28a745;
+            --text-dark: #1a202c;
+            --text-light: #718096;
+            --white: #ffffff;
+            --gray-bg: #f8f9fa;
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 15px 35px rgba(42, 134, 255, 0.1);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --gradient-primary: linear-gradient(135deg, #2a86ff 0%, #1a75ff 100%);
+            --gradient-success: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(42, 134, 255, 0.2);
+        }
+
+        .logo-icon i {
+            font-size: 24px;
+            color: white;
+        }
+
+        .logo h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 36px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 17px;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* NEW: Horizontal Booking Journey */
+        .booking-journey-container {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0 50px 0;
+            position: relative;
+        }
+
+        .booking-journey {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 30px 40px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .journey-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .journey-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 22px;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .journey-header i {
+            color: var(--primary-blue);
+            font-size: 20px;
+        }
+
+        .step-indicator-horizontal {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .step-indicator-horizontal::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gray-bg);
+            transform: translateY(-50%);
+            z-index: 1;
+            border-radius: 3px;
+        }
+
+        .step-horizontal {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .step-horizontal:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-number-container {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 3px solid var(--gray-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .step-horizontal.active .step-number-container {
+            background: var(--gradient-primary);
+            border-color: var(--primary-blue);
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(42, 134, 255, 0.3);
+        }
+
+        .step-horizontal.completed .step-number-container {
+            background: var(--gradient-success);
+            border-color: var(--dark-green);
+        }
+
+        .step-number {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .step-horizontal.active .step-number {
+            color: var(--white);
+        }
+
+        .step-horizontal.completed .step-number {
+            color: var(--white);
+        }
+
+        .step-info-horizontal {
+            text-align: center;
+            max-width: 120px;
+        }
+
+        .step-info-horizontal h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 4px;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .step-horizontal.active .step-info-horizontal h3 {
+            color: var(--primary-blue);
+            font-weight: 700;
+        }
+
+        .step-info-horizontal p {
+            font-size: 12px;
+            color: var(--text-light);
+            opacity: 0.8;
+        }
+
+        .step-horizontal.completed .step-info-horizontal h3 {
+            color: var(--dark-green);
+        }
+
+        /* Connection lines between steps */
+        .step-horizontal:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 60%;
+            right: -40%;
+            height: 3px;
+            background: var(--gray-bg);
+            z-index: 1;
+            transition: var(--transition);
+        }
+
+        .step-horizontal.active:not(:last-child)::after {
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--gray-bg) 100%);
+        }
+
+        .step-horizontal.completed:not(:last-child)::after {
+            background: var(--dark-green);
+        }
+
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .step-section {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            display: none;
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px) scale(0.98); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+
+        .step-section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 35px;
+        }
+
+        .section-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 28px;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-header p {
+            color: var(--text-light);
+            font-size: 17px;
+            max-width: 700px;
+        }
+
+        /* Doctor Cards */
+        .doctor-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .doctor-card {
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .doctor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-blue);
+        }
+
+        .doctor-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .doctor-card.selected {
+            border-color: var(--primary-blue);
+            background-color: var(--soft-blue);
+            box-shadow: 0 15px 35px rgba(42, 134, 255, 0.15);
+        }
+
+        .doctor-card.selected::before {
+            transform: scaleX(1);
+        }
+
+        .doctor-avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 4px solid var(--soft-blue);
+            transition: var(--transition);
+        }
+
+        .doctor-card:hover .doctor-avatar {
+            border-color: var(--primary-blue);
+            transform: scale(1.05);
+        }
+
+        .doctor-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .doctor-info h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .doctor-specialty {
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 10px;
+            padding: 6px 16px;
+            background: var(--soft-blue);
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .doctor-experience {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 15px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .doctor-rating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: #ffc107;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .doctor-availability {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: var(--dark-green);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .doctor-availability i {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .select-btn {
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 140px;
+            box-shadow: 0 4px 12px rgba(42, 134, 255, 0.25);
+        }
+
+        .select-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(42, 134, 255, 0.35);
+        }
+
+        .doctor-card.selected .select-btn {
+            background: var(--gradient-success);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.25);
+        }
+
+        /* Patient Details Form */
+        .patient-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        label {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .required {
+            color: #ff4757;
+            font-size: 20px;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 18px;
+        }
+
+        input, select, textarea {
+            padding: 16px 20px 16px 50px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            transition: var(--transition);
+            background-color: var(--white);
+            width: 100%;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px rgba(42, 134, 255, 0.15);
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+
+        .character-count {
+            text-align: right;
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 5px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--gray-bg);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .checkbox-item:hover {
+            background: var(--soft-blue);
+            transform: translateY(-2px);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-blue);
+            cursor: pointer;
+        }
+
+        .form-note {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 6px;
+            padding: 12px;
+            background: var(--soft-blue);
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .symptoms-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .symptom-tag {
+            padding: 10px 18px;
+            background-color: var(--gray-bg);
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .symptom-tag:hover {
+            background-color: var(--soft-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .symptom-tag.selected {
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-color: var(--primary-blue);
+            box-shadow: 0 4px 12px rgba(42, 134, 255, 0.2);
+        }
+
+        .symptom-tag i {
+            font-size: 12px;
+        }
+
+        /* Date & Time Selector */
+        .date-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+
+        .calendar-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .calendar-nav-btn:hover {
+            border-color: var(--primary-blue);
+            background: var(--soft-blue);
+            transform: scale(1.1);
+        }
+
+        .calendar-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--text-dark);
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .calendar-header {
+            font-weight: 600;
+            text-align: center;
+            padding: 15px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .calendar-day {
+            padding: 18px 0;
+            text-align: center;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            font-weight: 500;
+            border: 2px solid transparent;
+        }
+
+        .calendar-day:hover {
+            background-color: var(--soft-blue);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .calendar-day.selected {
+            background: var(--gradient-primary);
+            color: var(--white);
+            box-shadow: 0 6px 20px rgba(42, 134, 255, 0.25);
+        }
+
+        .calendar-day.today {
+            border: 2px solid var(--primary-blue);
+            background: var(--soft-blue);
+        }
+
+        .calendar-day.disabled {
+            color: #cbd5e0;
+            cursor: not-allowed;
+            background: var(--gray-bg);
+        }
+
+        .calendar-day.disabled:hover {
+            background: var(--gray-bg);
+            transform: none;
+            box-shadow: none;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .time-slot {
+            padding: 16px;
+            text-align: center;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-slot:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .time-slot.selected {
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-color: var(--primary-blue);
+            box-shadow: 0 6px 20px rgba(42, 134, 255, 0.25);
+        }
+
+        .time-slot.booked {
+            background: var(--gray-bg);
+            color: var(--text-light);
+            cursor: not-allowed;
+            position: relative;
+        }
+
+        .time-slot.booked::after {
+            content: 'Booked';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            background: rgba(0,0,0,0.1);
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Consultation Types */
+        .consultation-types {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .consultation-types {
+                flex-direction: row;
+            }
+        }
+
+        .consultation-type {
+            flex: 1;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 35px 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .consultation-type::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .consultation-type:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-blue);
+        }
+
+        .consultation-type:hover::before {
+            transform: scaleX(1);
+        }
+
+        .consultation-type.selected {
+            border-color: var(--primary-blue);
+            background-color: var(--soft-blue);
+            box-shadow: 0 15px 35px rgba(42, 134, 255, 0.15);
+        }
+
+        .consultation-type.selected::before {
+            transform: scaleX(1);
+        }
+
+        .consultation-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--primary-blue);
+            transition: var(--transition);
+        }
+
+        .consultation-type:hover .consultation-icon {
+            transform: scale(1.1);
+        }
+
+        .consultation-type h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        .consultation-type p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .price {
+            font-weight: 800;
+            color: var(--dark-green);
+            font-size: 24px;
+            margin-top: 15px;
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(40, 167, 69, 0.1);
+            border-radius: 50px;
+        }
+
+        /* Summary */
+        .summary-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        @media (min-width: 768px) {
+            .summary-content {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .summary-details {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            background: var(--gray-bg);
+        }
+
+        .summary-item:hover {
+            background: var(--soft-blue);
+            transform: translateX(5px);
+        }
+
+        .summary-label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .summary-value {
+            font-weight: 600;
+            text-align: right;
+            max-width: 60%;
+        }
+
+        .doctor-summary {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+            background: var(--soft-blue);
+            border-radius: var(--radius);
+            border-left: 5px solid var(--primary-blue);
+        }
+
+        .price-breakdown {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .price-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid var(--border-color);
+            font-weight: 700;
+            font-size: 22px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 160px;
+            justify-content: center;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--soft-blue);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--white);
+            box-shadow: 0 6px 20px rgba(42, 134, 255, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(42, 134, 255, 0.35);
+        }
+
+        .btn-payment {
+            background: var(--gradient-success);
+            color: var(--white);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.25);
+        }
+
+        .btn-payment:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.35);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Progress Bar - REMOVED since we have horizontal journey */
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 20px 25px;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateX(150%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            border-left: 5px solid var(--primary-blue);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .notification-content h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .notification-content p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-light);
+            font-size: 15px;
+        }
+
+        /* Mobile responsiveness for horizontal journey */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .booking-journey {
+                padding: 20px;
+                overflow-x: auto;
+            }
+            
+            .step-indicator-horizontal {
+                min-width: 500px;
+            }
+            
+            .step-horizontal:not(:last-child)::after {
+                left: 55%;
+                right: -35%;
+            }
+            
+            .step-section {
+                padding: 25px;
+            }
+            
+            .doctor-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .time-slots {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            
+            .btn {
+                min-width: 120px;
+                padding: 14px 20px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h1>MedCare</h1>
+            </div>
+            <p class="subtitle">Experience seamless healthcare booking with our modern, intuitive platform. Connect with specialists in just a few clicks.</p>
+        </header>
+
+        <!-- NEW: Horizontal Booking Journey -->
+        <div class="booking-journey-container">
+            <div class="booking-journey">
+                <div class="journey-header">
+                    <i class="fas fa-road"></i>
+                    <h2>Booking Journey</h2>
+                </div>
+                <div class="step-indicator-horizontal">
+                    <div class="step-horizontal active" data-step="1">
+                        <div class="step-number-container">
+                            <div class="step-number">1</div>
+                        </div>
+                        <div class="step-info-horizontal">
+                            <h3>Select Doctor</h3>
+                            <p>Choose your specialist</p>
+                        </div>
+                    </div>
+                    <div class="step-horizontal" data-step="2">
+                        <div class="step-number-container">
+                            <div class="step-number">2</div>
+                        </div>
+                        <div class="step-info-horizontal">
+                            <h3>Patient Details</h3>
+                            <p>Share your health info</p>
+                        </div>
+                    </div>
+                    <div class="step-horizontal" data-step="3">
+                        <div class="step-number-container">
+                            <div class="step-number">3</div>
+                        </div>
+                        <div class="step-info-horizontal">
+                            <h3>Date & Time</h3>
+                            <p>Pick your slot</p>
+                        </div>
+                    </div>
+                    <div class="step-horizontal" data-step="4">
+                        <div class="step-number-container">
+                            <div class="step-number">4</div>
+                        </div>
+                        <div class="step-info-horizontal">
+                            <h3>Consultation Type</h3>
+                            <p>Online or in-clinic</p>
+                        </div>
+                    </div>
+                    <div class="step-horizontal" data-step="5">
+                        <div class="step-number-container">
+                            <div class="step-number">5</div>
+                        </div>
+                        <div class="step-info-horizontal">
+                            <h3>Confirm Booking</h3>
+                            <p>Review and pay</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Step 1: Doctor Selection -->
+            <section id="step-1" class="step-section active">
+                <div class="section-header">
+                    <h2>Find Your Specialist</h2>
+                    <p>Browse our curated list of top-rated healthcare professionals. Click on any doctor to view details and select.</p>
+                </div>
+                <div class="doctor-cards">
+                    <!-- Doctor cards will be generated here -->
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" disabled>
+                        <i class="fas fa-arrow-left"></i>
+                        Previous
+                    </button>
+                    <button id="next-1" class="btn btn-primary" disabled>
+                        Next: Patient Details
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 2: Patient Details -->
+            <section id="step-2" class="step-section">
+                <div class="section-header">
+                    <h2>Your Health Profile</h2>
+                    <p>Help us understand your needs better. All information is kept confidential and secure.</p>
+                </div>
+                <div class="patient-form">
+                    <!-- ... (rest of the patient form remains the same) ... -->
+                </div>
+                <div class="action-buttons">
+                    <button id="prev-2" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Previous
+                    </button>
+                    <button id="next-2" class="btn btn-primary" disabled>
+                        Next: Date & Time
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 3: Date & Time Selection -->
+            <section id="step-3" class="step-section">
+                <div class="section-header">
+                    <h2>Schedule Your Visit</h2>
+                    <p>Choose a convenient time for your appointment. Available slots are shown in real-time.</p>
+                </div>
+                <div class="date-selector">
+                    <!-- ... (rest of the date selector remains the same) ... -->
+                </div>
+                <div class="action-buttons">
+                    <button id="prev-3" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Previous
+                    </button>
+                    <button id="next-3" class="btn btn-primary" disabled>
+                        Next: Consultation Type
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 4: Consultation Type -->
+            <section id="step-4" class="step-section">
+                <div class="section-header">
+                    <h2>Choose Consultation Mode</h2>
+                    <p>Select how you'd prefer to consult with your doctor. Both options provide the same quality of care.</p>
+                </div>
+                <div class="consultation-types">
+                    <!-- ... (rest of consultation types remains the same) ... -->
+                </div>
+                <div class="action-buttons">
+                    <button id="prev-4" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Previous
+                    </button>
+                    <button id="next-4" class="btn btn-primary" disabled>
+                        Next: Confirm Booking
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 5: Summary & Booking -->
+            <section id="step-5" class="step-section">
+                <div class="section-header">
+                    <h2>Confirm Your Appointment</h2>
+                    <p>Review all details carefully before proceeding to secure payment.</p>
+                </div>
+                <div class="summary-content">
+                    <!-- ... (rest of summary remains the same) ... -->
+                </div>
+                <div class="action-buttons">
+                    <button id="prev-5" class="btn btn-secondary">
+                        <i class="fas fa-edit"></i>
+                        Edit Details
+                    </button>
+                    <button id="next-5" class="btn btn-payment">
+                        <i class="fas fa-lock"></i>
+                        Secure Payment
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Notification -->
+        <div class="notification" id="notification">
+            <div class="notification-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <div class="notification-content">
+                <h4>Appointment Booked!</h4>
+                <p>Your appointment has been confirmed successfully.</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2024 MedCare. All rights reserved. | <a href="#" style="color: var(--primary-blue); text-decoration: none;">Privacy Policy</a> | <a href="#" style="color: var(--primary-blue); text-decoration: none;">Terms of Service</a> | <a href="#" style="color: var(--primary-blue); text-decoration: none;">Contact Support</a></p>
+            <p style="margin-top: 10px; font-size: 13px; color: var(--text-light);">
+                <i class="fas fa-shield-alt"></i> HIPAA Compliant • Secure Data • 24/7 Support
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Enhanced Application State
+        const state = {
+            currentStep: 1,
+            selectedDoctor: null,
+            patientDetails: {
+                name: '',
+                age: '',
+                gender: '',
+                phone: '',
+                conditionTitle: '',
+                selectedSymptoms: [],
+                conditionDetails: '',
+                previousTreatment: false,
+                allergies: false,
+                currentMedication: false,
+                smoker: false,
+                chronicConditions: false,
+                surgeryHistory: false,
+                additionalNotes: ''
+            },
+            currentMonth: new Date().getMonth(),
+            currentYear: new Date().getFullYear(),
+            selectedDate: null,
+            selectedTime: null,
+            selectedConsultationType: null,
+            doctors: [
+                {
+                    id: 1,
+                    name: "Dr. Sarah Johnson",
+                    specialty: "Cardiology",
+                    experience: "12 years",
+                    rating: 4.8,
+                    availability: "Available Today",
+                    img: "https://randomuser.me/api/portraits/women/65.jpg",
+                    languages: ["English", "Spanish"],
+                    education: "Harvard Medical School"
+                },
+                {
+                    id: 2,
+                    name: "Dr. Michael Chen",
+                    specialty: "Neurology",
+                    experience: "15 years",
+                    rating: 4.9,
+                    availability: "Available Tomorrow",
+                    img: "https://randomuser.me/api/portraits/men/32.jpg",
+                    languages: ["English", "Mandarin"],
+                    education: "Johns Hopkins University"
+                },
+                {
+                    id: 3,
+                    name: "Dr. Amanda Rodriguez",
+                    specialty: "Pediatrics",
+                    experience: "8 years",
+                    rating: 4.7,
+                    availability: "Available This Week",
+                    img: "https://randomuser.me/api/portraits/women/44.jpg",
+                    languages: ["English", "Spanish", "French"],
+                    education: "Stanford University"
+                },
+                {
+                    id: 4,
+                    name: "Dr. James Wilson",
+                    specialty: "Dermatology",
+                    experience: "10 years",
+                    rating: 4.6,
+                    availability: "Available Today",
+                    img: "https://randomuser.me/api/portraits/men/75.jpg",
+                    languages: ["English", "German"],
+                    education: "Yale School of Medicine"
+                }
+            ],
+            commonSymptoms: [
+                { name: "Fever", icon: "fas fa-thermometer-full" },
+                { name: "Headache", icon: "fas fa-brain" },
+                { name: "Cough", icon: "fas fa-lungs" },
+                { name: "Fatigue", icon: "fas fa-tired" },
+                { name: "Nausea", icon: "fas fa-stomach" },
+                { name: "Dizziness", icon: "fas fa-dizzy" },
+                { name: "Chest Pain", icon: "fas fa-heartbeat" },
+                { name: "Shortness of Breath", icon: "fas fa-wind" },
+                { name: "Joint Pain", icon: "fas fa-bone" },
+                { name: "Back Pain", icon: "fas fa-spine" },
+                { name: "Abdominal Pain", icon: "fas fa-stomach" },
+                { name: "Rash", icon: "fas fa-allergies" },
+                { name: "Sore Throat", icon: "fas fa-throat" },
+                { name: "Runny Nose", icon: "fas fa-head-side-cough" },
+                { name: "Muscle Ache", icon: "fas fa-dumbbell" }
+            ],
+            bookedSlots: ['2024-01-15 10:30 AM', '2024-01-15 02:00 PM', '2024-01-16 09:00 AM']
+        };
+
+        // DOM Elements
+        const stepSections = document.querySelectorAll('.step-section');
+        const stepIndicators = document.querySelectorAll('.step-horizontal');
+        const notification = document.getElementById('notification');
+        const nextButtons = {
+            1: document.getElementById('next-1'),
+            2: document.getElementById('next-2'),
+            3: document.getElementById('next-3'),
+            4: document.getElementById('next-4'),
+            5: document.getElementById('next-5')
+        };
+        const prevButtons = {
+            2: document.getElementById('prev-2'),
+            3: document.getElementById('prev-3'),
+            4: document.getElementById('prev-4'),
+            5: document.getElementById('prev-5')
+        };
+
+        // Initialize the application
+        function init() {
+            renderDoctorCards();
+            renderSymptomsTags();
+            renderCalendar();
+            renderTimeSlots();
+            attachEventListeners();
+            updateStepIndicator();
+            
+            // Set today as default selected date
+            const today = new Date();
+            const formattedToday = today.toISOString().split('T')[0];
+            selectDate(formattedToday);
+        }
+
+        // Render doctor cards with enhanced info
+        function renderDoctorCards() {
+            const doctorCardsContainer = document.querySelector('.doctor-cards');
+            doctorCardsContainer.innerHTML = '';
+
+            state.doctors.forEach(doctor => {
+                const card = document.createElement('div');
+                card.className = 'doctor-card';
+                if (state.selectedDoctor && state.selectedDoctor.id === doctor.id) {
+                    card.classList.add('selected');
+                }
+
+                card.innerHTML = `
+                    <div class="doctor-avatar">
+                        <img src="${doctor.img}" alt="${doctor.name}">
+                    </div>
+                    <div class="doctor-info">
+                        <h3>${doctor.name}</h3>
+                        <div class="doctor-specialty">${doctor.specialty}</div>
+                        <div class="doctor-experience">
+                            <i class="far fa-clock"></i>
+                            <span>${doctor.experience} experience</span>
+                        </div>
+                        <div class="doctor-rating">
+                            ${generateStars(doctor.rating)}
+                            <span>${doctor.rating}/5.0</span>
+                        </div>
+                        <div class="doctor-availability">
+                            <i class="fas fa-circle"></i>
+                            <span>${doctor.availability}</span>
+                        </div>
+                        <button class="select-btn">
+                            ${state.selectedDoctor && state.selectedDoctor.id === doctor.id ? 
+                                '<i class="fas fa-check"></i> Selected' : 
+                                '<i class="fas fa-plus"></i> Select Doctor'}
+                        </button>
+                    </div>
+                `;
+
+                card.addEventListener('click', () => selectDoctor(doctor));
+                doctorCardsContainer.appendChild(card);
+            });
+
+            nextButtons[1].disabled = !state.selectedDoctor;
+        }
+
+        // Generate star rating
+        function generateStars(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            
+            for (let i = 0; i < 5; i++) {
+                if (i < fullStars) {
+                    stars += '<i class="fas fa-star"></i>';
+                } else if (i === fullStars && hasHalfStar) {
+                    stars += '<i class="fas fa-star-half-alt"></i>';
+                } else {
+                    stars += '<i class="far fa-star"></i>';
+                }
+            }
+            return stars;
+        }
+
+        // Render symptoms tags with icons
+        function renderSymptomsTags() {
+            const symptomsContainer = document.getElementById('symptoms-tags');
+            symptomsContainer.innerHTML = '';
+            
+            state.commonSymptoms.forEach(symptom => {
+                const tag = document.createElement('div');
+                tag.className = 'symptom-tag';
+                if (state.patientDetails.selectedSymptoms.includes(symptom.name)) {
+                    tag.classList.add('selected');
+                }
+                tag.innerHTML = `
+                    <i class="${symptom.icon}"></i>
+                    <span>${symptom.name}</span>
+                `;
+                tag.dataset.symptom = symptom.name;
+                
+                tag.addEventListener('click', () => toggleSymptom(symptom.name));
+                symptomsContainer.appendChild(tag);
+            });
+        }
+
+        // Render calendar with navigation
+        function renderCalendar() {
+            const calendarContainer = document.getElementById('calendar');
+            const titleElement = document.getElementById('calendar-title');
+            calendarContainer.innerHTML = '';
+
+            // Set title
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+            titleElement.textContent = `${monthNames[state.currentMonth]} ${state.currentYear}`;
+
+            // Add day headers
+            const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+            days.forEach(day => {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-header';
+                dayElement.textContent = day;
+                calendarContainer.appendChild(dayElement);
+            });
+
+            // Get first day of month
+            const firstDay = new Date(state.currentYear, state.currentMonth, 1);
+            const startingDay = firstDay.getDay();
+            const daysInMonth = new Date(state.currentYear, state.currentMonth + 1, 0).getDate();
+            const today = new Date();
+            const isCurrentMonth = state.currentMonth === today.getMonth() && state.currentYear === today.getFullYear();
+
+            // Add empty cells for previous month
+            for (let i = 0; i < startingDay; i++) {
+                const emptyElement = document.createElement('div');
+                emptyElement.className = 'calendar-day disabled';
+                calendarContainer.appendChild(emptyElement);
+            }
+
+            // Add days of current month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(state.currentYear, state.currentMonth, day);
+                const dateString = date.toISOString().split('T')[0];
+                
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                dayElement.dataset.date = dateString;
+                
+                // Check if today
+                if (isCurrentMonth && day === today.getDate()) {
+                    dayElement.classList.add('today');
+                }
+                
+                // Check if selected
+                if (state.selectedDate === dateString) {
+                    dayElement.classList.add('selected');
+                }
+                
+                // Disable past dates
+                if (date < today.setHours(0, 0, 0, 0)) {
+                    dayElement.classList.add('disabled');
+                }
+                
+                if (!dayElement.classList.contains('disabled')) {
+                    dayElement.addEventListener('click', () => selectDate(dateString));
+                }
+                
+                calendarContainer.appendChild(dayElement);
+            }
+        }
+
+        // Render time slots with booking status
+        function renderTimeSlots() {
+            const timeSlotsContainer = document.getElementById('time-slots');
+            const dateDisplay = document.getElementById('selected-date-display');
+            timeSlotsContainer.innerHTML = '';
+
+            if (!state.selectedDate) return;
+
+            // Format date display
+            const dateObj = new Date(state.selectedDate);
+            const formattedDate = dateObj.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            dateDisplay.textContent = formattedDate;
+
+            const timeSlots = [
+                '08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM',
+                '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM',
+                '04:00 PM', '05:00 PM'
+            ];
+            
+            timeSlots.forEach(time => {
+                const timeElement = document.createElement('div');
+                timeElement.className = 'time-slot';
+                timeElement.textContent = time;
+                
+                // Check if slot is booked
+                const slotKey = `${state.selectedDate} ${time}`;
+                if (state.bookedSlots.includes(slotKey)) {
+                    timeElement.classList.add('booked');
+                } else if (state.selectedTime === time) {
+                    timeElement.classList.add('selected');
+                }
+                
+                if (!timeElement.classList.contains('booked')) {
+                    timeElement.addEventListener('click', () => selectTime(time));
+                }
+                
+                timeSlotsContainer.appendChild(timeElement);
+            });
+        }
+
+        // Attach event listeners
+        function attachEventListeners() {
+            // Next button listeners
+            nextButtons[1].addEventListener('click', () => navigateToStep(2));
+            nextButtons[2].addEventListener('click', () => {
+                if (validatePatientDetails()) {
+                    navigateToStep(3);
+                }
+            });
+            nextButtons[3].addEventListener('click', () => navigateToStep(4));
+            nextButtons[4].addEventListener('click', () => navigateToStep(5));
+            
+            // Previous button listeners
+            prevButtons[2].addEventListener('click', () => navigateToStep(1));
+            prevButtons[3].addEventListener('click', () => navigateToStep(2));
+            prevButtons[4].addEventListener('click', () => navigateToStep(3));
+            prevButtons[5].addEventListener('click', () => navigateToStep(4));
+            
+            // Payment button
+            nextButtons[5].addEventListener('click', proceedToPayment);
+            
+            // Calendar navigation
+            document.getElementById('prev-month').addEventListener('click', () => {
+                state.currentMonth--;
+                if (state.currentMonth < 0) {
+                    state.currentMonth = 11;
+                    state.currentYear--;
+                }
+                renderCalendar();
+            });
+            
+            document.getElementById('next-month').addEventListener('click', () => {
+                state.currentMonth++;
+                if (state.currentMonth > 11) {
+                    state.currentMonth = 0;
+                    state.currentYear++;
+                }
+                renderCalendar();
+            });
+            
+            // Consultation type selection
+            document.querySelectorAll('.consultation-type').forEach(type => {
+                type.addEventListener('click', () => {
+                    const consultationType = type.dataset.type;
+                    selectConsultationType(consultationType);
+                });
+            });
+            
+            // Character count for condition details
+            const conditionTextarea = document.getElementById('condition-details');
+            const charCount = document.getElementById('char-count');
+            conditionTextarea.addEventListener('input', (e) => {
+                const count = e.target.value.length;
+                charCount.textContent = count;
+                if (count > 500) {
+                    charCount.style.color = '#ff4757';
+                } else {
+                    charCount.style.color = 'var(--text-light)';
+                }
+            });
+            
+            // Form validation
+            const patientFormInputs = ['patient-name', 'patient-age', 'patient-gender', 'patient-phone', 'condition-title', 'condition-details'];
+            patientFormInputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                input.addEventListener('input', validatePatientDetails);
+                input.addEventListener('blur', () => {
+                    if (input.value.trim()) {
+                        input.style.borderColor = 'var(--dark-green)';
+                        input.style.boxShadow = '0 0 0 4px rgba(40, 167, 69, 0.15)';
+                    }
+                });
+            });
+            
+            // Checkbox listeners
+            const checkboxes = ['previous-treatment', 'allergies', 'current-medication', 'smoker', 'chronic-conditions', 'surgery-history'];
+            checkboxes.forEach(checkboxId => {
+                const checkbox = document.getElementById(checkboxId);
+                checkbox.addEventListener('change', (e) => {
+                    state.patientDetails[checkboxId.replace('-', '')] = e.target.checked;
+                });
+            });
+            
+            // Additional notes
+            document.getElementById('additional-notes').addEventListener('input', (e) => {
+                state.patientDetails.additionalNotes = e.target.value;
+            });
+            
+            // Step indicator click listeners
+            stepIndicators.forEach(step => {
+                step.addEventListener('click', () => {
+                    const stepNumber = parseInt(step.dataset.step);
+                    if (stepNumber <= state.currentStep) {
+                        navigateToStep(stepNumber);
+                    }
+                });
+            });
+        }
+
+        // Validate patient details form
+        function validatePatientDetails() {
+            // Get form values
+            state.patientDetails.name = document.getElementById('patient-name').value.trim();
+            state.patientDetails.age = document.getElementById('patient-age').value.trim();
+            state.patientDetails.gender = document.getElementById('patient-gender').value;
+            state.patientDetails.phone = document.getElementById('patient-phone').value.trim();
+            state.patientDetails.conditionTitle = document.getElementById('condition-title').value.trim();
+            state.patientDetails.conditionDetails = document.getElementById('condition-details').value.trim();
+            
+            // Check required fields
+            const isValid = state.patientDetails.name && 
+                          state.patientDetails.age && 
+                          parseInt(state.patientDetails.age) > 0 &&
+                          parseInt(state.patientDetails.age) <= 120 &&
+                          state.patientDetails.gender && 
+                          state.patientDetails.phone && 
+                          state.patientDetails.conditionTitle && 
+                          state.patientDetails.conditionDetails &&
+                          state.patientDetails.conditionDetails.length <= 500;
+            
+            // Visual feedback
+            const inputs = ['patient-name', 'patient-age', 'patient-gender', 'patient-phone', 'condition-title', 'condition-details'];
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input.value.trim()) {
+                    input.style.borderColor = 'var(--dark-green)';
+                } else {
+                    input.style.borderColor = 'var(--border-color)';
+                }
+            });
+            
+            // Enable/disable next button
+            nextButtons[2].disabled = !isValid;
+            if (isValid) {
+                nextButtons[2].classList.add('btn-primary');
+            }
+            
+            return isValid;
+        }
+
+        // Navigation functions
+        function navigateToStep(step) {
+            // Animation out
+            const currentSection = document.getElementById(`step-${state.currentStep}`);
+            currentSection.style.opacity = '0';
+            currentSection.style.transform = 'translateY(-20px) scale(0.98)';
+            
+            setTimeout(() => {
+                // Hide current step
+                currentSection.classList.remove('active');
+                currentSection.style.opacity = '';
+                currentSection.style.transform = '';
+                
+                // Update step indicator
+                updateStepIndicator();
+                
+                // Update current step
+                state.currentStep = step;
+                
+                // Show new step
+                const newSection = document.getElementById(`step-${step}`);
+                newSection.classList.add('active');
+                
+                // Update step indicator
+                updateStepIndicator();
+                
+                // Update summary if we're on step 5
+                if (step === 5) {
+                    updateSummary();
+                }
+                
+                // Scroll to top of section
+                newSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+            }, 300);
+        }
+
+        function updateStepIndicator() {
+            stepIndicators.forEach((indicator, index) => {
+                const stepNumber = index + 1;
+                
+                // Remove all classes first
+                indicator.classList.remove('active', 'completed');
+                
+                // Mark as completed if step has been passed
+                if (stepNumber < state.currentStep) {
+                    indicator.classList.add('completed');
+                }
+                // Mark as active if it's the current step
+                else if (stepNumber === state.currentStep) {
+                    indicator.classList.add('active');
+                }
+            });
+        }
+
+        // Selection functions
+        function selectDoctor(doctor) {
+            state.selectedDoctor = doctor;
+            showNotification('Doctor Selected', `You have selected ${doctor.name}`);
+            renderDoctorCards();
+            nextButtons[1].disabled = false;
+        }
+
+        function toggleSymptom(symptom) {
+            const index = state.patientDetails.selectedSymptoms.indexOf(symptom);
+            if (index === -1) {
+                state.patientDetails.selectedSymptoms.push(symptom);
+            } else {
+                state.patientDetails.selectedSymptoms.splice(index, 1);
+            }
+            renderSymptomsTags();
+        }
+
+        function selectDate(date) {
+            state.selectedDate = date;
+            renderCalendar();
+            renderTimeSlots();
+            
+            // Enable next button if time is also selected
+            nextButtons[3].disabled = !state.selectedTime;
+        }
+
+        function selectTime(time) {
+            state.selectedTime = time;
+            renderTimeSlots();
+            
+            // Enable next button
+            nextButtons[3].disabled = false;
+            
+            showNotification('Time Slot Selected', `Appointment scheduled for ${time}`);
+        }
+
+        function selectConsultationType(type) {
+            state.selectedConsultationType = type;
+            
+            // Update UI
+            document.querySelectorAll('.consultation-type').forEach(el => {
+                el.classList.remove('selected');
+            });
+            document.querySelector(`[data-type="${type}"]`).classList.add('selected');
+            
+            // Enable next button
+            nextButtons[4].disabled = false;
+            
+            const typeText = type === 'online' ? 'Virtual Consultation' : 'In-clinic Visit';
+            showNotification('Consultation Mode Selected', `You have chosen ${typeText}`);
+        }
+
+        // Update summary section
+        function updateSummary() {
+            // Doctor info
+            if (state.selectedDoctor) {
+                document.getElementById('summary-doctor-img').src = state.selectedDoctor.img;
+                document.getElementById('summary-doctor-name').textContent = state.selectedDoctor.name;
+                document.getElementById('summary-doctor-specialty').textContent = state.selectedDoctor.specialty;
+                document.getElementById('summary-doctor-experience').textContent = `${state.selectedDoctor.experience} experience`;
+            }
+            
+            // Patient info
+            if (state.patientDetails.name) {
+                const demographics = [];
+                if (state.patientDetails.age) demographics.push(`${state.patientDetails.age} years`);
+                if (state.patientDetails.gender) demographics.push(state.patientDetails.gender);
+                document.getElementById('summary-patient-info').textContent = 
+                    `${state.patientDetails.name} (${demographics.join(', ')})`;
+            }
+            
+            if (state.patientDetails.conditionTitle) {
+                document.getElementById('summary-condition').textContent = state.patientDetails.conditionTitle;
+            }
+            
+            if (state.patientDetails.selectedSymptoms.length > 0) {
+                const symptomsText = state.patientDetails.selectedSymptoms.slice(0, 4).join(', ');
+                const moreCount = state.patientDetails.selectedSymptoms.length - 4;
+                document.getElementById('summary-symptoms').textContent = 
+                    symptomsText + (moreCount > 0 ? `, +${moreCount} more` : '');
+            }
+            
+            // Appointment details
+            if (state.selectedDate) {
+                const dateObj = new Date(state.selectedDate);
+                const formattedDate = dateObj.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                document.getElementById('summary-date').textContent = formattedDate;
+            }
+            
+            if (state.selectedTime) {
+                document.getElementById('summary-time').textContent = state.selectedTime;
+            }
+            
+            if (state.selectedConsultationType) {
+                const typeText = state.selectedConsultationType === 'online' ? 'Virtual Consultation' : 'In-clinic Visit';
+                document.getElementById('summary-consultation').textContent = typeText;
+                
+                // Update price
+                const consultationPrice = state.selectedConsultationType === 'online' ? 75 : 100;
+                document.getElementById('price-consultation').textContent = `$${consultationPrice}.00`;
+                document.getElementById('price-total').textContent = `$${consultationPrice + 8}.00`;
+            }
+        }
+
+        // Show notification
+        function showNotification(title, message) {
+            const notification = document.getElementById('notification');
+            const titleElement = notification.querySelector('h4');
+            const messageElement = notification.querySelector('p');
+            
+            titleElement.textContent = title;
+            messageElement.textContent = message;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Proceed to payment (simulated)
+        function proceedToPayment() {
+            // Simulate loading
+            const originalText = nextButtons[5].innerHTML;
+            nextButtons[5].innerHTML = '<div class="loading"></div> Processing...';
+            nextButtons[5].disabled = true;
+            
+            // Prepare appointment summary
+            const summary = `
+                APPOINTMENT CONFIRMATION
+                ========================
+                
+                DOCTOR INFORMATION:
+                • Name: ${state.selectedDoctor.name}
+                • Specialty: ${state.selectedDoctor.specialty}
+                • Experience: ${state.selectedDoctor.experience}
+                
+                PATIENT DETAILS:
+                • Name: ${state.patientDetails.name}
+                • Age & Gender: ${state.patientDetails.age} years, ${state.patientDetails.gender}
+                • Primary Concern: ${state.patientDetails.conditionTitle}
+                
+                APPOINTMENT DETAILS:
+                • Date: ${state.selectedDate}
+                • Time: ${state.selectedTime}
+                • Type: ${state.selectedConsultationType === 'online' ? 'Virtual Consultation' : 'In-clinic Visit'}
+                • Duration: 30-45 minutes
+                
+                PAYMENT:
+                • Consultation: $${state.selectedConsultationType === 'online' ? '75' : '100'}
+                • Total: $${state.selectedConsultationType === 'online' ? '83' : '108'}
+                
+                A confirmation email has been sent to your registered email address.
+                Please arrive 10 minutes before your scheduled time.
+            `;
+            
+            setTimeout(() => {
+                // Simulate payment processing
+                showNotification('Payment Successful', 'Your appointment has been confirmed!');
+                
+                // Reset button
+                nextButtons[5].innerHTML = originalText;
+                nextButtons[5].disabled = false;
+                
+                // Show success modal
+                alert(`✅ Appointment Confirmed!\n\n${summary}\n\nYou will receive a confirmation email shortly.`);
+                
+                // Reset form after delay
+                setTimeout(() => {
+                    resetForm();
+                    navigateToStep(1);
+                }, 2000);
+                
+            }, 2000);
+        }
+
+        // Reset form
+        function resetForm() {
+            state.currentStep = 1;
+            state.selectedDoctor = null;
+            state.patientDetails = {
+                name: '',
+                age: '',
+                gender: '',
+                phone: '',
+                conditionTitle: '',
+                selectedSymptoms: [],
+                conditionDetails: '',
+                previousTreatment: false,
+                allergies: false,
+                currentMedication: false,
+                smoker: false,
+                chronicConditions: false,
+                surgeryHistory: false,
+                additionalNotes: ''
+            };
+            state.selectedDate = null;
+            state.selectedTime = null;
+            state.selectedConsultationType = null;
+            
+            // Reset UI
+            stepSections.forEach(section => section.classList.remove('active'));
+            document.getElementById('step-1').classList.add('active');
+            
+            updateStepIndicator();
+            
+            // Reset buttons
+            nextButtons[1].disabled = true;
+            nextButtons[2].disabled = true;
+            nextButtons[3].disabled = true;
+            nextButtons[4].disabled = true;
+            
+            // Reset form fields
+            document.getElementById('patient-name').value = '';
+            document.getElementById('patient-age').value = '';
+            document.getElementById('patient-gender').value = '';
+            document.getElementById('patient-phone').value = '';
+            document.getElementById('condition-title').value = '';
+            document.getElementById('condition-details').value = '';
+            document.getElementById('additional-notes').value = '';
+            document.getElementById('char-count').textContent = '0';
+            
+            // Reset checkboxes
+            ['previous-treatment', 'allergies', 'current-medication', 'smoker', 'chronic-conditions', 'surgery-history'].forEach(id => {
+                document.getElementById(id).checked = false;
+            });
+            
+            // Re-render components
+            renderDoctorCards();
+            renderSymptomsTags();
+            renderCalendar();
+            renderTimeSlots();
+            
+            // Reset consultation type selection
+            document.querySelectorAll('.consultation-type').forEach(el => {
+                el.classList.remove('selected');
+            });
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
