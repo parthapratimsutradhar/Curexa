@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order #ORD-789456 | MediCare Pharmacy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-blue: #0d8aff;
+            --light-blue: #f0f9ff;
+            --teal: #0d9488;
+            --soft-green: #10b981;
+            --dark-text: #1e293b;
+            --medium-text: #64748b;
+            --light-text: #94a3b8;
+            --white: #ffffff;
+            --light-gray: #f8fafc;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+            
+            /* Status Colors */
+            --status-ordered: #0d8aff;
+            --status-packed: #8b5cf6;
+            --status-shipped: #f59e0b;
+            --status-outfordelivery: #f97316;
+            --status-delivered: #10b981;
+            --status-cancelled: #ef4444;
+        }
+
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark-text);
+            line-height: 1.6;
+            background-color: var(--light-gray);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #0a7ae6;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(13, 138, 255, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--light-blue);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--medium-text);
+            border: 1px solid var(--light-text);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 1rem 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .logo i {
+            margin-right: 8px;
+            color: var(--teal);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .header-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--medium-text);
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .header-action:hover {
+            color: var(--primary-blue);
+        }
+
+        .header-action i {
+            font-size: 1.25rem;
+            margin-bottom: 4px;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--medium-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .breadcrumb a {
+            color: var(--medium-text);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-blue);
+        }
+
+        .breadcrumb i {
+            font-size: 0.75rem;
+        }
+
+        /* Order Header */
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .order-info h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-id {
+            color: var(--medium-text);
+            font-weight: 500;
+        }
+
+        .order-date {
+            color: var(--medium-text);
+            font-size: 0.9375rem;
+        }
+
+        .order-status-badge {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-ordered {
+            background-color: rgba(13, 138, 255, 0.1);
+            color: var(--status-ordered);
+        }
+
+        .status-packed {
+            background-color: rgba(139, 92, 246, 0.1);
+            color: var(--status-packed);
+        }
+
+        .status-shipped {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--status-shipped);
+        }
+
+        .status-outfordelivery {
+            background-color: rgba(249, 115, 22, 0.1);
+            color: var(--status-outfordelivery);
+        }
+
+        .status-delivered {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--status-delivered);
+        }
+
+        .status-cancelled {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--status-cancelled);
+        }
+
+        /* Status Timeline */
+        .status-timeline {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .status-timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #e2e8f0;
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        @media (max-width: 768px) {
+            .status-timeline {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1.5rem 0;
+            }
+            
+            .status-timeline::before {
+                top: 0;
+                left: 24px;
+                right: auto;
+                bottom: 0;
+                width: 2px;
+                height: auto;
+                transform: none;
+            }
+        }
+
+        .status-step {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .status-step {
+                flex-direction: row;
+                width: 100%;
+                text-align: left;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        .status-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: var(--white);
+            border: 2px solid #e2e8f0;
+            color: var(--light-text);
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            transition: var(--transition);
+        }
+
+        @media (max-width: 768px) {
+            .status-icon {
+                margin-bottom: 0;
+                margin-right: 1rem;
+                flex-shrink: 0;
+            }
+        }
+
+        .status-step.active .status-icon {
+            border-color: var(--status-shipped);
+            background-color: var(--status-shipped);
+            color: var(--white);
+        }
+
+        .status-step.completed .status-icon {
+            border-color: var(--status-delivered);
+            background-color: var(--status-delivered);
+            color: var(--white);
+        }
+
+        .status-info {
+            max-width: 120px;
+        }
+
+        @media (max-width: 768px) {
+            .status-info {
+                max-width: none;
+                flex-grow: 1;
+            }
+        }
+
+        .status-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .status-date {
+            font-size: 0.75rem;
+            color: var(--medium-text);
+        }
+
+        .delivery-estimate {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--medium-text);
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
+            .delivery-estimate {
+                text-align: left;
+                margin-left: 64px;
+            }
+        }
+
+        /* Delivery Address */
+        .address-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .address-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .address-card {
+            position: relative;
+        }
+
+        .address-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .address-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .address-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        .address-badge i {
+            margin-right: 4px;
+        }
+
+        .address-details {
+            line-height: 1.8;
+        }
+
+        .address-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .address-phone {
+            color: var(--medium-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .address-text {
+            color: var(--medium-text);
+        }
+
+        .edit-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--medium-text);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .edit-btn:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Items List */
+        .items-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .items-count {
+            color: var(--medium-text);
+            font-size: 0.9375rem;
+        }
+
+        .items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .item-card {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .item-card:hover {
+            border-color: var(--primary-blue);
+        }
+
+        @media (max-width: 576px) {
+            .item-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .item-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .item-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-salt {
+            color: var(--medium-text);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-prescription {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            background-color: #ffebee;
+            color: #d32f2f;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            width: fit-content;
+        }
+
+        .item-prescription i {
+            margin-right: 4px;
+            font-size: 0.625rem;
+        }
+
+        .item-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            text-align: right;
+        }
+
+        .item-price {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-quantity {
+            color: var(--medium-text);
+            font-size: 0.875rem;
+        }
+
+        /* Prescription Preview */
+        .prescription-section {
+            margin-top: 1.5rem;
+        }
+
+        .prescription-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .prescription-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-verified {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--status-delivered);
+        }
+
+        .status-pending {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--status-shipped);
+        }
+
+        .prescription-preview {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .prescription-preview:hover {
+            background-color: var(--light-blue);
+        }
+
+        .prescription-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--white);
+            border-radius: 8px;
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+
+        .prescription-info h4 {
+            margin-bottom: 0.25rem;
+        }
+
+        .prescription-date {
+            color: var(--medium-text);
+            font-size: 0.875rem;
+        }
+
+        /* Payment Information */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .payment-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light-gray);
+            border-radius: 50%;
+            color: var(--primary-blue);
+            font-size: 1.25rem;
+        }
+
+        .payment-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .status-paid {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--status-delivered);
+        }
+
+        .transaction-id {
+            color: var(--medium-text);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .billing-summary {
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+        }
+
+        .billing-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .billing-row:last-child {
+            border-bottom: none;
+        }
+
+        .billing-total {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--dark-text);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 576px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+            }
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--white);
+            padding: 2.5rem 0;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 3rem;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--dark-text);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--medium-text);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .footer-disclaimer {
+            padding: 1.5rem;
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+            color: var(--medium-text);
+            font-size: 0.875rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            color: var(--light-text);
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 576px) {
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        /* Mobile Sticky Button */
+        .mobile-sticky-btn {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--white);
+            padding: 1rem;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-sticky-btn {
+                display: flex;
+            }
+        }
+
+        /* Expandable Items (CSS-only) */
+        .expandable {
+            max-height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .expandable::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(to bottom, transparent, var(--white));
+            pointer-events: none;
+        }
+
+        .expand-toggle {
+            display: none;
+        }
+
+        .expand-toggle:checked ~ .expandable {
+            max-height: none;
+        }
+
+        .expand-toggle:checked ~ .expandable::after {
+            display: none;
+        }
+
+        .expand-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-blue);
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: var(--transition);
+        }
+
+        .expand-label:hover {
+            color: #0a7ae6;
+        }
+
+        .expand-label i {
+            transition: transform 0.3s ease;
+        }
+
+        .expand-toggle:checked ~ .expand-label i {
+            transform: rotate(180deg);
+        }
+
+        /* Tooltip */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--dark-text);
+            color: var(--white);
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+            margin-bottom: 8px;
+            pointer-events: none;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--dark-text) transparent transparent transparent;
+        }
+
+        .tooltip-container:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-pills"></i>
+                <span>MediCare Pharmacy</span>
+            </div>
+            <div class="header-actions">
+                <div class="header-action">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </div>
+                <div class="header-action">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Cart</span>
+                </div>
+                <div class="header-action">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Account</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="#">Home</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="#">Orders</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Order Details</span>
+        </div>
+
+        <!-- Order Header -->
+        <div class="order-header">
+            <div class="order-info">
+                <h1>Order Details</h1>
+                <div class="order-id">Order #ORD-789456</div>
+                <div class="order-date">Placed on 15 Nov 2023, 10:30 AM</div>
+            </div>
+            <div class="order-status-badge status-shipped">
+                <i class="fas fa-shipping-fast"></i>
+                Shipped
+            </div>
+        </div>
+
+        <!-- Status Timeline -->
+        <section class="section card">
+            <h2 style="margin-bottom: 1rem;">Order Status</h2>
+            <div class="status-timeline">
+                <div class="status-step completed">
+                    <div class="status-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="status-info">
+                        <div class="status-name">Ordered</div>
+                        <div class="status-date">15 Nov, 10:30 AM</div>
+                    </div>
+                </div>
+                
+                <div class="status-step completed">
+                    <div class="status-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="status-info">
+                        <div class="status-name">Packed</div>
+                        <div class="status-date">15 Nov, 2:15 PM</div>
+                    </div>
+                </div>
+                
+                <div class="status-step active">
+                    <div class="status-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <div class="status-info">
+                        <div class="status-name">Shipped</div>
+                        <div class="status-date">16 Nov, 9:45 AM</div>
+                    </div>
+                </div>
+                
+                <div class="status-step">
+                    <div class="status-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="status-info">
+                        <div class="status-name">Out for Delivery</div>
+                        <div class="status-date">--</div>
+                    </div>
+                </div>
+                
+                <div class="status-step">
+                    <div class="status-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="status-info">
+                        <div class="status-name">Delivered</div>
+                        <div class="status-date">--</div>
+                    </div>
+                </div>
+            </div>
+            <div class="delivery-estimate">
+                <i class="fas fa-clock"></i>
+                Estimated delivery: <strong>17 Nov 2023, by 8:00 PM</strong>
+            </div>
+        </section>
+
+        <!-- Delivery Address -->
+        <section class="section">
+            <div class="address-section">
+                <div class="address-card card">
+                    <div class="address-header">
+                        <div class="address-title">Delivery Address</div>
+                        <div class="address-badge">
+                            <i class="fas fa-home"></i>
+                            Home Delivery
+                        </div>
+                    </div>
+                    <div class="address-details">
+                        <div class="address-name">Rahul Sharma</div>
+                        <div class="address-phone">+91 98765 43210</div>
+                        <div class="address-text">
+                            123, Sunshine Apartments<br>
+                            MG Road, Bangalore<br>
+                            Karnataka - 560001<br>
+                            India
+                        </div>
+                    </div>
+                    <button class="edit-btn" title="Edit Address">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="address-header">
+                        <div class="address-title">Pharmacy Details</div>
+                        <div class="address-badge">
+                            <i class="fas fa-star"></i>
+                            Verified Pharmacy
+                        </div>
+                    </div>
+                    <div class="address-details">
+                        <div class="address-name">MediCare Central Pharmacy</div>
+                        <div class="address-phone">+91 80 2567 8901</div>
+                        <div class="address-text">
+                            License: KA/PH/45678/2023<br>
+                            Pharmacist: Dr. Priya Mehta<br>
+                            Open: 8:00 AM - 10:00 PM
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Items List -->
+        <section class="section card">
+            <div class="items-header">
+                <h2>Order Items</h2>
+                <div class="items-count">3 items</div>
+            </div>
+            
+            <!-- Expandable items container -->
+            <input type="checkbox" id="expand-items" class="expand-toggle">
+            <div class="expandable">
+                <div class="items-list">
+                    <div class="item-card">
+                        <div class="item-image">
+                            <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Medicine">
+                        </div>
+                        <div class="item-info">
+                            <div class="item-name">Dolo 650 Tablet</div>
+                            <div class="item-salt">Paracetamol (650mg)</div>
+                            <div class="item-prescription">
+                                <i class="fas fa-prescription-bottle-alt"></i>
+                                Prescription Required
+                            </div>
+                        </div>
+                        <div class="item-details">
+                            <div class="item-price">₹25.99</div>
+                            <div class="item-quantity">Qty: 2 strips</div>
+                        </div>
+                    </div>
+                    
+                    <div class="item-card">
+                        <div class="item-image">
+                            <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Medicine">
+                        </div>
+                        <div class="item-info">
+                            <div class="item-name">Azithromycin 500mg</div>
+                            <div class="item-salt">Azithromycin (500mg)</div>
+                            <div class="item-prescription">
+                                <i class="fas fa-prescription-bottle-alt"></i>
+                                Prescription Required
+                            </div>
+                        </div>
+                        <div class="item-details">
+                            <div class="item-price">₹189.50</div>
+                            <div class="item-quantity">Qty: 1 strip</div>
+                        </div>
+                    </div>
+                    
+                    <div class="item-card">
+                        <div class="item-image">
+                            <img src="https://images.unsplash.com/photo-1552902865-b72c031ac5ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Medicine">
+                        </div>
+                        <div class="item-info">
+                            <div class="item-name">Vitamin C 500mg</div>
+                            <div class="item-salt">Ascorbic Acid (500mg)</div>
+                        </div>
+                        <div class="item-details">
+                            <div class="item-price">₹45.00</div>
+                            <div class="item-quantity">Qty: 1 bottle</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <label for="expand-items" class="expand-label">
+                <span>Show all items</span>
+                <i class="fas fa-chevron-down"></i>
+            </label>
+        </section>
+
+        <!-- Prescription Details -->
+        <section class="section card prescription-section">
+            <div class="prescription-header">
+                <h3>Prescription Details</h3>
+                <div class="prescription-status status-verified">
+                    <i class="fas fa-check-circle"></i>
+                    Verified
+                </div>
+            </div>
+            <div class="prescription-preview">
+                <div class="prescription-icon">
+                    <i class="fas fa-file-prescription"></i>
+                </div>
+                <div class="prescription-info">
+                    <h4>Dr. Sharma's Prescription</h4>
+                    <div class="prescription-date">Uploaded on 14 Nov 2023</div>
+                </div>
+                <div style="margin-left: auto;">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-eye"></i>
+                        View
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Payment Information -->
+        <section class="section">
+            <div class="payment-grid">
+                <div class="card">
+                    <h3 style="margin-bottom: 1.5rem;">Payment Information</h3>
+                    
+                    <div class="payment-method">
+                        <div class="payment-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">Credit Card</div>
+                            <div style="color: var(--medium-text); font-size: 0.875rem;">Visa ending in 1234</div>
+                            <div class="payment-status status-paid">
+                                <i class="fas fa-check-circle"></i>
+                                Paid
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="transaction-id">
+                        Transaction ID: TXN-789456123
+                    </div>
+                </div>
+                
+                <div class="billing-summary">
+                    <h3 style="margin-bottom: 1.5rem;">Order Summary</h3>
+                    
+                    <div class="billing-row">
+                        <span>Items Total</span>
+                        <span>₹285.48</span>
+                    </div>
+                    
+                    <div class="billing-row">
+                        <span>Discount</span>
+                        <span style="color: var(--soft-green);">-₹28.55</span>
+                    </div>
+                    
+                    <div class="billing-row">
+                        <span>Delivery Fee</span>
+                        <span>₹25.00</span>
+                    </div>
+                    
+                    <div class="billing-row">
+                        <span>Taxes</span>
+                        <span>₹15.23</span>
+                    </div>
+                    
+                    <div class="billing-row" style="padding-top: 1rem; border-top: 2px solid var(--dark-text);">
+                        <span class="billing-total">Grand Total</span>
+                        <span class="billing-total">₹297.16</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <section class="section">
+            <div class="action-buttons">
+                <button class="btn btn-primary">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Track Order
+                </button>
+                <button class="btn btn-secondary">
+                    <i class="fas fa-file-invoice"></i>
+                    Download Invoice
+                </button>
+                <button class="btn btn-outline">
+                    <i class="fas fa-redo"></i>
+                    Reorder All Items
+                </button>
+                <button class="btn btn-outline">
+                    <i class="fas fa-headset"></i>
+                    Contact Support
+                </button>
+            </div>
+        </section>
+
+        <!-- Return Info -->
+        <section class="section card">
+            <h3 style="margin-bottom: 1rem;">Return & Cancellation</h3>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 200px;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <i class="fas fa-undo" style="color: var(--teal);"></i>
+                        <div style="font-weight: 600;">Return Eligible</div>
+                    </div>
+                    <div style="color: var(--medium-text); font-size: 0.875rem;">
+                        You can return medicines within 7 days of delivery if seal is intact.
+                    </div>
+                </div>
+                
+                <div style="flex: 1; min-width: 200px;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <i class="fas fa-times-circle" style="color: var(--medium-text);"></i>
+                        <div style="font-weight: 600;">Cancellation Status</div>
+                    </div>
+                    <div style="color: var(--medium-text); font-size: 0.875rem;">
+                        Cancellation not available as order is already shipped.
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Sticky Button -->
+    <div class="mobile-sticky-btn">
+        <button class="btn btn-primary" style="flex-grow: 1;">
+            <i class="fas fa-map-marker-alt"></i>
+            Track Order
+        </button>
+        <button class="btn btn-secondary">
+            <i class="fas fa-headset"></i>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div>
+                    <h3>MediCare Pharmacy</h3>
+                    <div class="footer-links">
+                        <a href="#">About Us</a>
+                        <a href="#">Contact Us</a>
+                        <a href="#">Careers</a>
+                        <a href="#">Blog</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Our Services</h3>
+                    <div class="footer-links">
+                        <a href="#">Order Medicines</a>
+                        <a href="#">Book Lab Tests</a>
+                        <a href="#">Consult Doctors</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Policy</h3>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Use</a>
+                        <a href="#">Return Policy</a>
+                        <a href="#">Cancellation Policy</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Need Help?</h3>
+                    <div class="footer-links">
+                        <a href="#">FAQ</a>
+                        <a href="#">Prescription Help</a>
+                        <a href="#">Shipping Info</a>
+                        <a href="#">Support Center</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-disclaimer">
+                <p><strong>Medical Disclaimer:</strong> Medicines sold on MediCare Pharmacy are sourced from verified pharmacies and licensed sellers. Always consult your doctor before taking any medication. Do not self-medicate. Keep medicines out of reach of children.</p>
+                <p style="margin-top: 0.5rem;">For any issues with your order, contact our customer support at support@medicarepharmacy.com or call +91 1800 123 4567 (9 AM - 9 PM, 7 days a week).</p>
+            </div>
+            
+            <div class="footer-bottom">
+                <div>
+                    <p>&copy; 2023 MediCare Pharmacy. All rights reserved.</p>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <i class="fab fa-facebook" style="cursor: pointer;"></i>
+                    <i class="fab fa-twitter" style="cursor: pointer;"></i>
+                    <i class="fab fa-instagram" style="cursor: pointer;"></i>
+                    <i class="fab fa-linkedin" style="cursor: pointer;"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile sticky button visibility
+        window.addEventListener('scroll', () => {
+            const stickyBtn = document.querySelector('.mobile-sticky-btn');
+            if (window.innerWidth <= 768) {
+                if (window.scrollY > 300) {
+                    stickyBtn.style.display = 'flex';
+                } else {
+                    stickyBtn.style.display = 'none';
+                }
+            }
+        });
+
+        // Action buttons functionality
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const btnText = e.target.closest('.btn').textContent.trim();
+                
+                if (btnText.includes('Track Order')) {
+                    alert('Opening order tracking...');
+                } else if (btnText.includes('Download Invoice')) {
+                    alert('Invoice download will start shortly...');
+                } else if (btnText.includes('Reorder')) {
+                    alert('All items added to cart for reorder!');
+                } else if (btnText.includes('Contact Support')) {
+                    alert('Redirecting to customer support...');
+                } else if (btnText.includes('View')) {
+                    alert('Opening prescription preview...');
+                }
+            });
+        });
+
+        // Tooltip functionality
+        const tooltipContainers = document.querySelectorAll('.tooltip-container');
+        tooltipContainers.forEach(container => {
+            container.addEventListener('mouseenter', function() {
+                const tooltip = this.querySelector('.tooltip');
+                tooltip.style.opacity = '1';
+                tooltip.style.visibility = 'visible';
+            });
+            
+            container.addEventListener('mouseleave', function() {
+                const tooltip = this.querySelector('.tooltip');
+                tooltip.style.opacity = '0';
+                tooltip.style.visibility = 'hidden';
+            });
+        });
+
+        // Expandable items label text toggle
+        const expandToggle = document.getElementById('expand-items');
+        const expandLabel = expandToggle.nextElementSibling.nextElementSibling;
+        
+        expandToggle.addEventListener('change', function() {
+            if (this.checked) {
+                expandLabel.querySelector('span').textContent = 'Show fewer items';
+            } else {
+                expandLabel.querySelector('span').textContent = 'Show all items';
+            }
+        });
+    </script>
+</body>
+</html>

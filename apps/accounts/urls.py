@@ -13,6 +13,7 @@ urlpatterns = [
     path('verify-otp/', views.verify_otp_view, name='verify_otp'),
     
     # Account
-    path('profile/', views.ProfileView.as_view(), name='profile')
+    path('profile/', views.ProfileView.as_view(), name='profile'),
+    path('profile/edit/', views.EditProfileView.as_view(), name='profile_edit')
 
 ]

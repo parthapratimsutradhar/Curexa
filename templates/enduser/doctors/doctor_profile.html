@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Sarah Chen - Cardiology Specialist | HealthCare Plus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Variables for Theme Colors */
+        :root {
+            --primary-blue: #0d8aff;
+            --light-blue: #f0f9ff;
+            --teal: #0d9488;
+            --soft-green: #10b981;
+            --dark-text: #1e293b;
+            --medium-text: #64748b;
+            --light-text: #94a3b8;
+            --white: #ffffff;
+            --light-gray: #f8fafc;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --box-shadow-hover: 0 8px 24px rgba(13, 138, 255, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark-text);
+            line-height: 1.6;
+            background-color: var(--light-gray);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark-text);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 60px;
+            height: 4px;
+            background-color: var(--teal);
+            border-radius: 2px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #0a7ae6;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(13, 138, 255, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--light-blue);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--medium-text);
+            border: 1px solid var(--light-text);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .icon {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--box-shadow-hover);
+        }
+
+        .chip {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .rating {
+            display: inline-flex;
+            align-items: center;
+            background-color: #fff8e1;
+            color: #ff9800;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .rating i {
+            margin-right: 4px;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: #e8f5e9;
+            color: var(--soft-green);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .logo i {
+            margin-right: 8px;
+            color: var(--teal);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            color: var(--medium-text);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .nav-links a.active {
+            color: var(--primary-blue);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-blue);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dark-text);
+            cursor: pointer;
+        }
+
+        /* Main Content Styles */
+        main {
+            padding: 2rem 0;
+        }
+
+        /* Doctor Profile Card */
+        .doctor-profile-card {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .doctor-image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .doctor-image {
+            width: 100%;
+            max-width: 280px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid var(--white);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .doctor-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .doctor-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .doctor-name {
+            font-size: 2.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark-text);
+        }
+
+        .doctor-specialization {
+            font-size: 1.5rem;
+            color: var(--teal);
+            margin-bottom: 1rem;
+        }
+
+        .doctor-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            color: var(--medium-text);
+        }
+
+        .meta-item i {
+            margin-right: 8px;
+            color: var(--primary-blue);
+        }
+
+        .doctor-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .doctor-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: auto;
+        }
+
+        /* About Section */
+        .about-section {
+            margin-bottom: 3rem;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .education-list li {
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .education-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--soft-green);
+            font-weight: bold;
+        }
+
+        .registration-info {
+            background-color: var(--light-blue);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        /* Specializations Section */
+        .specializations-section {
+            margin-bottom: 3rem;
+        }
+
+        .specializations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Availability Section */
+        .availability-section {
+            margin-bottom: 3rem;
+        }
+
+        .availability-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .day-slot {
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+            border-radius: 8px;
+            background-color: var(--light-gray);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .day-slot:hover {
+            background-color: var(--light-blue);
+        }
+
+        .day-slot.active {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .day-slot.unavailable {
+            background-color: #f5f5f5;
+            color: var(--light-text);
+            cursor: not-allowed;
+        }
+
+        .fees-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .fee-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+        }
+
+        .fee-type {
+            font-weight: 600;
+        }
+
+        .fee-amount {
+            color: var(--primary-blue);
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .next-slot {
+            background-color: #e8f5e9;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--soft-green);
+        }
+
+        /* Experience Section */
+        .experience-section {
+            margin-bottom: 3rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--primary-blue);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 5px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            border: 3px solid var(--white);
+            box-shadow: 0 0 0 3px var(--light-blue);
+        }
+
+        .timeline-year {
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            margin-bottom: 3rem;
+        }
+
+        .reviews-summary {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: var(--light-blue);
+            border-radius: var(--border-radius);
+        }
+
+        .overall-rating {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .reviews-stats {
+            flex-grow: 1;
+        }
+
+        .review-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .review-bar span {
+            width: 40px;
+            margin-right: 0.5rem;
+        }
+
+        .bar-container {
+            flex-grow: 1;
+            height: 8px;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 100%;
+            background-color: #ffc107;
+            border-radius: 4px;
+        }
+
+        .reviews-container {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-blue) var(--light-gray);
+        }
+
+        .review-card {
+            min-width: 300px;
+            padding: 1.5rem;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .review-patient {
+            font-weight: 600;
+        }
+
+        .review-date {
+            color: var(--light-text);
+            font-size: 0.875rem;
+        }
+
+        /* Clinic Info Section */
+        .clinic-section {
+            margin-bottom: 3rem;
+        }
+
+        .clinic-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .clinic-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .clinic-detail-item {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .clinic-detail-item i {
+            margin-right: 12px;
+            color: var(--teal);
+            margin-top: 4px;
+        }
+
+        .map-placeholder {
+            background-color: var(--light-blue);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 250px;
+            color: var(--medium-text);
+        }
+
+        .map-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-blue);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--white);
+            padding: 3rem 0 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-disclaimer {
+            text-align: center;
+            color: var(--medium-text);
+            max-width: 800px;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--medium-text);
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .copyright {
+            color: var(--light-text);
+            font-size: 0.875rem;
+        }
+
+        /* Mobile Sticky Button */
+        .mobile-sticky-btn {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--white);
+            padding: 1rem;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .doctor-profile-card {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .doctor-actions {
+                justify-content: center;
+            }
+            
+            .doctor-stats {
+                justify-content: center;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .availability-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .clinic-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .mobile-sticky-btn {
+                display: flex;
+            }
+            
+            .schedule-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .specializations-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .doctor-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .doctor-actions .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .doctor-name {
+                font-size: 1.75rem;
+            }
+            
+            .doctor-specialization {
+                font-size: 1.25rem;
+            }
+            
+            .doctor-meta {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+            
+            .schedule-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .reviews-summary {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+
+        /* Skeleton Loading Animation */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* Smooth Scroll Behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>HealthCare Plus</span>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#">Doctors</a></li>
+                    <li><a href="#">Appointments</a></li>
+                    <li><a href="#">Profile</a></li>
+                </ul>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Doctor Profile Card -->
+        <section class="doctor-profile-card card">
+            <div class="doctor-image-container">
+                <div class="doctor-image">
+                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Dr. Sarah Chen">
+                </div>
+                <div class="rating">
+                    <i class="fas fa-star"></i>
+                    <span>4.8</span>
+                    <span>(1,247 reviews)</span>
+                </div>
+            </div>
+            <div class="doctor-info">
+                <h1 class="doctor-name">Dr. Sarah Chen</h1>
+                <h2 class="doctor-specialization">Senior Cardiologist</h2>
+                
+                <div class="doctor-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>15+ years experience</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-hospital"></i>
+                        <span>MediCare General Hospital</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>New York, NY</span>
+                    </div>
+                </div>
+                
+                <p class="doctor-bio">Board-certified cardiologist with extensive experience in diagnosing and treating cardiovascular diseases. Specializes in interventional cardiology, heart failure management, and preventive cardiology.</p>
+                
+                <div class="verified-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Verified & Licensed</span>
+                </div>
+                
+                <div class="doctor-actions">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-calendar-check icon"></i>
+                        Book Appointment
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-comment-medical icon"></i>
+                        Message Doctor
+                    </button>
+                    <button class="btn btn-outline">
+                        <i class="far fa-heart icon"></i>
+                        Save Doctor
+                    </button>
+                </div>
+                
+                <div class="doctor-stats">
+                    <div class="meta-item">
+                        <i class="fas fa-user-friends"></i>
+                        <span>10,000+ Patients</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Usually responds in 2 hours</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Doctor Section -->
+        <section class="about-section">
+            <h2 class="section-title">About Doctor</h2>
+            <div class="about-content card">
+                <div>
+                    <h3>Professional Bio</h3>
+                    <p>Dr. Sarah Chen is a highly skilled cardiologist with over 15 years of experience in the field of cardiovascular medicine. She completed her residency at Johns Hopkins Hospital and fellowship in interventional cardiology at Cleveland Clinic. Dr. Chen is passionate about providing personalized care to her patients and believes in a holistic approach to heart health.</p>
+                    <p>She has published numerous research papers in prestigious medical journals and regularly participates in international cardiology conferences. Her areas of expertise include coronary artery disease, heart valve disorders, arrhythmias, and preventive cardiology.</p>
+                </div>
+                <div>
+                    <h3>Education & Qualifications</h3>
+                    <ul class="education-list">
+                        <li>MD - Harvard Medical School</li>
+                        <li>Board Certified in Cardiology</li>
+                        <li>Fellowship - Interventional Cardiology, Cleveland Clinic</li>
+                        <li>Residency - Internal Medicine, Johns Hopkins Hospital</li>
+                        <li>PhD in Cardiovascular Sciences, Stanford University</li>
+                    </ul>
+                    
+                    <div class="registration-info">
+                        <h4>Medical Registration</h4>
+                        <p><strong>License No:</strong> NY-1234567</p>
+                        <p><strong>Valid Until:</strong> December 2026</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Specializations & Services -->
+        <section class="specializations-section">
+            <h2 class="section-title">Specializations & Services</h2>
+            <div class="specializations-grid">
+                <div class="chip">Coronary Artery Disease</div>
+                <div class="chip">Heart Failure Management</div>
+                <div class="chip">Hypertension</div>
+                <div class="chip">Interventional Cardiology</div>
+                <div class="chip">Cardiac Rehabilitation</div>
+                <div class="chip">Preventive Cardiology</div>
+                <div class="chip">Cholesterol Management</div>
+                <div class="chip">Cardiac Imaging</div>
+                <div class="chip">Arrhythmia Treatment</div>
+                <div class="chip">Heart Valve Disorders</div>
+            </div>
+        </section>
+
+        <!-- Availability & Fees -->
+        <section class="availability-section">
+            <h2 class="section-title">Availability & Fees</h2>
+            <div class="availability-container">
+                <div class="card">
+                    <h3>Weekly Schedule</h3>
+                    <p>Next available slot: <strong>Today, 4:30 PM</strong></p>
+                    <div class="schedule-grid">
+                        <div class="day-slot">
+                            <div>Mon</div>
+                            <small>9 AM - 5 PM</small>
+                        </div>
+                        <div class="day-slot">
+                            <div>Tue</div>
+                            <small>9 AM - 5 PM</small>
+                        </div>
+                        <div class="day-slot">
+                            <div>Wed</div>
+                            <small>9 AM - 1 PM</small>
+                        </div>
+                        <div class="day-slot active">
+                            <div>Thu</div>
+                            <small>9 AM - 5 PM</small>
+                        </div>
+                        <div class="day-slot">
+                            <div>Fri</div>
+                            <small>9 AM - 5 PM</small>
+                        </div>
+                        <div class="day-slot unavailable">
+                            <div>Sat</div>
+                            <small>Unavailable</small>
+                        </div>
+                        <div class="day-slot unavailable">
+                            <div>Sun</div>
+                            <small>Unavailable</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fees-card card">
+                    <h3>Consultation Fees</h3>
+                    <div class="fee-item">
+                        <div class="fee-type">In-Clinic Consultation</div>
+                        <div class="fee-amount">$200</div>
+                    </div>
+                    <div class="fee-item">
+                        <div class="fee-type">Video Consultation</div>
+                        <div class="fee-amount">$150</div>
+                    </div>
+                    <div class="fee-item">
+                        <div class="fee-type">Follow-up Visit</div>
+                        <div class="fee-amount">$120</div>
+                    </div>
+                    
+                    <div class="next-slot">
+                        <h4>Next Available Slot</h4>
+                        <p><strong>Today, 4:30 PM</strong> - Video Consultation</p>
+                        <button class="btn btn-primary" style="margin-top: 1rem;">
+                            <i class="fas fa-calendar-alt icon"></i>
+                            Book This Slot
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience & Achievements -->
+        <section class="experience-section">
+            <h2 class="section-title">Experience & Achievements</h2>
+            <div class="card">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-year">2020 - Present</div>
+                        <h4>Senior Cardiologist</h4>
+                        <p>MediCare General Hospital, New York</p>
+                        <p>Lead the cardiology department and oversee patient care protocols.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2015 - 2020</div>
+                        <h4>Consultant Cardiologist</h4>
+                        <p>Mount Sinai Hospital, New York</p>
+                        <p>Specialized in interventional cardiology procedures.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2012 - 2015</div>
+                        <h4>Cardiology Fellow</h4>
+                        <p>Cleveland Clinic, Ohio</p>
+                        <p>Completed fellowship in interventional cardiology.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">Awards & Recognition</h4>
+                        <ul class="education-list">
+                            <li>Best Cardiologist Award 2022 - NY Medical Association</li>
+                            <li>Excellence in Patient Care 2021</li>
+                            <li>Research Innovation Award 2019</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Clinic / Hospital Info -->
+        <section class="clinic-section">
+            <h2 class="section-title">Clinic Information</h2>
+            <div class="clinic-container">
+                <div class="clinic-details card">
+                    <h3>MediCare General Hospital</h3>
+                    <div class="clinic-detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <p><strong>Address:</strong> 123 Medical Center Drive, Suite 500</p>
+                            <p>New York, NY 10001</p>
+                        </div>
+                    </div>
+                    <div class="clinic-detail-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <p><strong>Contact:</strong> (212) 555-7890</p>
+                            <p>Emergency: (212) 555-1122</p>
+                        </div>
+                    </div>
+                    <div class="clinic-detail-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <p><strong>Hours:</strong> Monday - Friday: 8:00 AM - 8:00 PM</p>
+                            <p>Saturday: 9:00 AM - 3:00 PM</p>
+                            <p>Sunday: Closed</p>
+                        </div>
+                    </div>
+                    <div class="clinic-detail-item">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <p><strong>Facilities:</strong> Free Parking, Wheelchair Accessible, Pharmacy, Diagnostic Lab</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="map-placeholder card">
+                    <div style="text-align: center;">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <h3>Location Map</h3>
+                        <p>Interactive map would be displayed here</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Sticky Button -->
+    <div class="mobile-sticky-btn">
+        <button class="btn btn-primary" style="width: 100%;">
+            <i class="fas fa-calendar-check icon"></i>
+            Book Appointment - $200
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-logo">
+                <i class="fas fa-heartbeat"></i>
+                HealthCare Plus
+            </div>
+            <p class="footer-disclaimer">
+                HealthCare Plus provides a platform for patients to connect with healthcare providers. This information is for general purposes only and should not be considered medical advice. Always consult with a qualified healthcare professional for diagnosis and treatment.
+            </p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Help Center</a>
+            </div>
+            <div class="copyright">
+                &copy; 2023 HealthCare Plus. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Update schedule grid for mobile responsiveness
+        function adjustScheduleGrid() {
+            const scheduleGrid = document.querySelector('.schedule-grid');
+            if (window.innerWidth < 768) {
+                scheduleGrid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+            } else if (window.innerWidth < 576) {
+                scheduleGrid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+            } else {
+                scheduleGrid.style.gridTemplateColumns = 'repeat(7, 1fr)';
+            }
+        }
+
+        // Initialize and add resize listener
+        window.addEventListener('DOMContentLoaded', adjustScheduleGrid);
+        window.addEventListener('resize', adjustScheduleGrid);
+
+        // Day slot selection
+        document.querySelectorAll('.day-slot:not(.unavailable)').forEach(slot => {
+            slot.addEventListener('click', function() {
+                document.querySelectorAll('.day-slot').forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update next slot information
+                const day = this.querySelector('div').textContent;
+                const time = this.querySelector('small').textContent;
+                document.querySelector('.next-slot h4').textContent = `Next Available Slot`;
+                document.querySelector('.next-slot p').innerHTML = `<strong>${day}, ${time}</strong> - Video Consultation`;
+            });
+        });
+
+        // Skeleton loading simulation (optional feature)
+        function simulateLoading() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.classList.add('skeleton');
+            });
+            
+            setTimeout(() => {
+                cards.forEach(card => {
+                    card.classList.remove('skeleton');
+                });
+            }, 1500);
+        }
+
+        // Uncomment the line below to see skeleton loading effect on page load
+        // window.addEventListener('load', simulateLoading);
+    </script>
+</body>
+</html>

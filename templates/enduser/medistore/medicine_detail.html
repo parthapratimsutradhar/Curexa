@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dolo 650 Tablet - Fever & Pain Relief | MediCare Pharmacy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-blue: #0d8aff;
+            --light-blue: #f0f9ff;
+            --teal: #0d9488;
+            --soft-green: #10b981;
+            --dark-text: #1e293b;
+            --medium-text: #64748b;
+            --light-text: #94a3b8;
+            --white: #ffffff;
+            --light-gray: #f8fafc;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark-text);
+            line-height: 1.6;
+            background-color: var(--light-gray);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #0a7ae6;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(13, 138, 255, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--light-blue);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .logo i {
+            margin-right: 8px;
+            color: var(--teal);
+        }
+
+        .breadcrumb {
+            padding: 1rem 20px;
+            background-color: var(--light-gray);
+            font-size: 0.875rem;
+            color: var(--medium-text);
+        }
+
+        .breadcrumb a {
+            color: var(--medium-text);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Medicine Hero */
+        .medicine-hero {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .medicine-hero {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .medicine-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            height: 300px;
+        }
+
+        .medicine-image img {
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .medicine-info h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .medicine-salt {
+            color: var(--teal);
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-rx {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+
+        .badge-stock {
+            background-color: #e8f5e9;
+            color: var(--soft-green);
+        }
+
+        .rating {
+            display: inline-flex;
+            align-items: center;
+            background-color: #fff8e1;
+            color: #ff9800;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin: 0.5rem 0;
+        }
+
+        .rating i {
+            margin-right: 4px;
+        }
+
+        .price-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .current-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+
+        .original-price {
+            font-size: 1.25rem;
+            color: var(--light-text);
+            text-decoration: line-through;
+        }
+
+        .discount {
+            background-color: #ffebee;
+            color: #d32f2f;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .delivery-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--medium-text);
+            margin: 0.5rem 0;
+        }
+
+        .delivery-info i {
+            color: var(--soft-green);
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--light-text);
+            border-radius: 8px;
+            width: fit-content;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .qty-btn {
+            background-color: var(--light-gray);
+            border: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .qty-input {
+            width: 60px;
+            height: 40px;
+            border: none;
+            text-align: center;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            background-color: var(--white);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 576px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+            .action-buttons .btn {
+                width: 100%;
+            }
+        }
+
+        /* Quick Info */
+        .quick-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+            border-radius: 50%;
+        }
+
+        /* Tabs for Details */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            font-weight: 600;
+            color: var(--medium-text);
+            cursor: pointer;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+        }
+
+        .tab.active {
+            color: var(--primary-blue);
+            border-bottom-color: var(--primary-blue);
+        }
+
+        .tab:hover:not(.active) {
+            color: var(--dark-text);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Key Points */
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .point-card {
+            padding: 1.5rem;
+        }
+
+        .point-card h3 {
+            margin-bottom: 1rem;
+            color: var(--dark-text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .point-card h3 i {
+            color: var(--teal);
+        }
+
+        .point-list {
+            list-style: none;
+        }
+
+        .point-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .point-list li:last-child {
+            border-bottom: none;
+        }
+
+        .point-list i {
+            color: var(--soft-green);
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Safety Section */
+        .safety-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .safety-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+        }
+
+        .safety-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.25rem;
+        }
+
+        .safe .safety-icon {
+            background-color: #e8f5e9;
+            color: var(--soft-green);
+        }
+
+        .caution .safety-icon {
+            background-color: #fff8e1;
+            color: #ff9800;
+        }
+
+        .avoid .safety-icon {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+
+        /* Reviews */
+        .review-summary {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: var(--light-blue);
+            border-radius: var(--border-radius);
+        }
+
+        .overall-rating {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .review-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .review-card {
+            padding: 1.5rem;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+        }
+
+        .review-date {
+            color: var(--light-text);
+            font-size: 0.875rem;
+        }
+
+        /* Trust Badges */
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            margin-top: 2rem;
+        }
+
+        .trust-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .trust-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light-blue);
+            color: var(--teal);
+            border-radius: 50%;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--white);
+            padding: 2rem 0;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 3rem;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .footer-disclaimer {
+            color: var(--medium-text);
+            max-width: 800px;
+            margin: 1.5rem 0;
+            font-size: 0.875rem;
+            line-height: 1.8;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: var(--medium-text);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .copyright {
+            color: var(--light-text);
+            font-size: 0.875rem;
+        }
+
+        /* Mobile Sticky Button */
+        .mobile-sticky-btn {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--white);
+            padding: 1rem;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-sticky-btn {
+                display: flex;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .medicine-info h1 {
+                font-size: 1.5rem;
+            }
+            
+            .current-price {
+                font-size: 1.75rem;
+            }
+            
+            .quick-info-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .key-points {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .quick-info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .review-summary {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-pills"></i>
+                <span>MediCare</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <i class="fas fa-search" style="color: var(--medium-text); cursor: pointer;"></i>
+                <i class="fas fa-shopping-cart" style="color: var(--medium-text); cursor: pointer;"></i>
+                <i class="fas fa-user-circle" style="color: var(--medium-text); cursor: pointer;"></i>
+            </div>
+        </div>
+        <div class="breadcrumb container">
+            <a href="#">Home</a> / <a href="#">Medicines</a> / <a href="#">Pain Relief</a> / <span>Dolo 650 Tablet</span>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Medicine Hero -->
+        <section class="medicine-hero">
+            <div class="medicine-image">
+                <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Dolo 650 Tablet">
+            </div>
+            <div class="medicine-info">
+                <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <span class="badge badge-rx">
+                        <i class="fas fa-prescription-bottle-alt"></i>
+                        Prescription Required
+                    </span>
+                    <span class="badge badge-stock">
+                        <i class="fas fa-check-circle"></i>
+                        In Stock
+                    </span>
+                </div>
+                
+                <h1>Dolo 650 Tablet</h1>
+                <p class="medicine-salt">Paracetamol (650mg)</p>
+                
+                <div class="rating">
+                    <i class="fas fa-star"></i>
+                    <span>4.5</span>
+                    <span>(2,847 reviews)</span>
+                </div>
+                
+                <p style="color: var(--medium-text); margin: 0.5rem 0;">Manufactured by Micro Labs Ltd</p>
+                
+                <div class="delivery-info">
+                    <i class="fas fa-shipping-fast"></i>
+                    <span>Delivery by tomorrow, 10 AM</span>
+                </div>
+                
+                <div class="price-container">
+                    <div class="current-price">₹25.99</div>
+                    <div class="original-price">₹35.99</div>
+                    <div class="discount">28% OFF</div>
+                </div>
+                
+                <div class="quantity-selector">
+                    <button class="qty-btn minus">−</button>
+                    <input type="text" class="qty-input" value="1" readonly>
+                    <button class="qty-btn plus">+</button>
+                    <span style="margin-left: 1rem; color: var(--medium-text);">Strip of 15 tablets</span>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-cart-plus"></i>
+                        Add to Cart
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-bolt"></i>
+                        Buy Now
+                    </button>
+                    <button class="btn" style="background: none; color: var(--medium-text);">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Info -->
+        <section class="section">
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">Key Information</h3>
+                <div class="quick-info-grid">
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-tablets"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">Form</div>
+                            <div style="color: var(--medium-text);">Tablet</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">For</div>
+                            <div style="color: var(--medium-text);">Adults & Children 12+</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">Duration</div>
+                            <div style="color: var(--medium-text);">4-6 hours relief</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">Safety</div>
+                            <div style="color: var(--medium-text);">Generally Safe</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabs for Details -->
+        <section class="section">
+            <div class="tabs">
+                <button class="tab active" data-tab="uses">Uses & Benefits</button>
+                <button class="tab" data-tab="dosage">How to Use</button>
+                <button class="tab" data-tab="safety">Safety Info</button>
+                <button class="tab" data-tab="reviews">Reviews</button>
+            </div>
+            
+            <!-- Uses & Benefits -->
+            <div id="uses" class="tab-content active">
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">What is Dolo 650 used for?</h3>
+                    <p style="color: var(--medium-text); margin-bottom: 1.5rem;">Dolo 650 is a pain reliever and fever reducer. It effectively treats headaches, body aches, fever, dental pain, and pain from cold/flu.</p>
+                    
+                    <div class="key-points">
+                        <div class="point-card">
+                            <h3><i class="fas fa-check-circle"></i> Key Benefits</h3>
+                            <ul class="point-list">
+                                <li><i class="fas fa-check"></i> Fast relief from fever</li>
+                                <li><i class="fas fa-check"></i> Effective pain relief</li>
+                                <li><i class="fas fa-check"></i> Minimal stomach irritation</li>
+                                <li><i class="fas fa-check"></i> Safe for most adults when used as directed</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="point-card">
+                            <h3><i class="fas fa-exclamation-circle"></i> Important Notes</h3>
+                            <ul class="point-list">
+                                <li><i class="fas fa-info-circle"></i> Do not exceed 4 tablets (2600mg) in 24 hours</li>
+                                <li><i class="fas fa-info-circle"></i> Consult doctor if fever persists for more than 3 days</li>
+                                <li><i class="fas fa-info-circle"></i> Avoid alcohol while taking this medicine</li>
+                                <li><i class="fas fa-info-circle"></i> Not recommended for children under 12 without doctor's advice</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- How to Use -->
+            <div id="dosage" class="tab-content">
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Dosage Instructions</h3>
+                    
+                    <div class="key-points">
+                        <div class="point-card">
+                            <h3><i class="fas fa-capsules"></i> Recommended Dose</h3>
+                            <ul class="point-list">
+                                <li><i class="fas fa-user"></i> <strong>Adults:</strong> 1 tablet every 4-6 hours</li>
+                                <li><i class="fas fa-baby"></i> <strong>Children (12+):</strong> As directed by doctor</li>
+                                <li><i class="fas fa-ban"></i> <strong>Max per day:</strong> 4 tablets (2600mg)</li>
+                                <li><i class="fas fa-clock"></i> <strong>Duration:</strong> As needed, not more than 10 days without consultation</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="point-card">
+                            <h3><i class="fas fa-utensils"></i> How to Take</h3>
+                            <ul class="point-list">
+                                <li><i class="fas fa-glass-water"></i> Swallow whole with water</li>
+                                <li><i class="fas fa-utensil-spoon"></i> Can be taken with or without food</li>
+                                <li><i class="fas fa-exclamation-triangle"></i> If stomach upset occurs, take with food</li>
+                                <li><i class="fas fa-wine-glass-alt"></i> Avoid alcohol completely</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Safety Info -->
+            <div id="safety" class="tab-content">
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Safety Information</h3>
+                    
+                    <div class="safety-grid" style="margin-bottom: 1.5rem;">
+                        <div class="safety-item safe">
+                            <div class="safety-icon">
+                                <i class="fas fa-female"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">Pregnancy</div>
+                                <div style="color: var(--medium-text); font-size: 0.875rem;">Generally safe (consult doctor)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="safety-item safe">
+                            <div class="safety-icon">
+                                <i class="fas fa-baby"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">Breastfeeding</div>
+                                <div style="color: var(--medium-text); font-size: 0.875rem;">Safe in small amounts</div>
+                            </div>
+                        </div>
+                        
+                        <div class="safety-item caution">
+                            <div class="safety-icon">
+                                <i class="fas fa-liver"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">Liver Disease</div>
+                                <div style="color: var(--medium-text); font-size: 0.875rem;">Consult doctor first</div>
+                            </div>
+                        </div>
+                        
+                        <div class="safety-item avoid">
+                            <div class="safety-icon">
+                                <i class="fas fa-wine-glass-alt"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">Alcohol</div>
+                                <div style="color: var(--medium-text); font-size: 0.875rem;">Avoid completely</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background-color: #fff8e1; padding: 1rem; border-radius: 8px; border-left: 4px solid #ff9800;">
+                        <h4 style="color: #d32f2f; margin-bottom: 0.5rem;">
+                            <i class="fas fa-exclamation-triangle"></i> Important Warning
+                        </h4>
+                        <p style="color: var(--dark-text); font-size: 0.875rem;">
+                            <strong>Do not exceed the recommended dose.</strong> Overdose can cause serious liver damage. 
+                            Stop use and consult doctor if you experience yellowing of skin/eyes, dark urine, or severe nausea.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reviews -->
+            <div id="reviews" class="tab-content">
+                <div class="card">
+                    <div class="review-summary">
+                        <div class="overall-rating">4.5</div>
+                        <div>
+                            <div class="rating" style="background: transparent; padding: 0;">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <p style="color: var(--medium-text); margin-top: 0.5rem;">Based on 2,847 verified reviews</p>
+                        </div>
+                    </div>
+                    
+                    <div class="review-cards">
+                        <div class="review-card" style="background-color: var(--light-gray);">
+                            <div class="review-header">
+                                <div class="reviewer-name">Rahul Sharma</div>
+                                <div class="review-date">2 weeks ago</div>
+                            </div>
+                            <div class="rating" style="background: transparent; padding: 0; margin-bottom: 0.5rem;">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p style="color: var(--medium-text);">Effective for fever. Works within 30 minutes. Genuine product delivered on time.</p>
+                        </div>
+                        
+                        <div class="review-card" style="background-color: var(--light-gray);">
+                            <div class="review-header">
+                                <div class="reviewer-name">Priya Patel</div>
+                                <div class="review-date">1 month ago</div>
+                            </div>
+                            <div class="rating" style="background: transparent; padding: 0; margin-bottom: 0.5rem;">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                            </div>
+                            <p style="color: var(--medium-text);">Good for headache relief. Delivery was fast and packaging was secure.</p>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-secondary" style="margin-top: 1.5rem; width: 100%;">
+                        <i class="fas fa-comment-alt"></i>
+                        View All Reviews
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trust Badges -->
+        <div class="trust-badges">
+            <div class="trust-badge">
+                <div class="trust-icon">
+                    <i class="fas fa-award"></i>
+                </div>
+                <div style="font-weight: 600; font-size: 0.875rem;">Genuine Medicines</div>
+            </div>
+            <div class="trust-badge">
+                <div class="trust-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <div style="font-weight: 600; font-size: 0.875rem;">Pharmacist Verified</div>
+            </div>
+            <div class="trust-badge">
+                <div class="trust-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div style="font-weight: 600; font-size: 0.875rem;">Secure Delivery</div>
+            </div>
+            <div class="trust-badge">
+                <div class="trust-icon">
+                    <i class="fas fa-undo"></i>
+                </div>
+                <div style="font-weight: 600; font-size: 0.875rem;">Easy Returns</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Sticky Button -->
+    <div class="mobile-sticky-btn">
+        <div style="flex-grow: 1;">
+            <div style="font-weight: 700; font-size: 1.25rem;">₹25.99</div>
+            <div style="font-size: 0.875rem; color: var(--medium-text);">In stock • Free delivery</div>
+        </div>
+        <button class="btn btn-primary">
+            <i class="fas fa-cart-plus"></i>
+            Add to Cart
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="logo" style="font-size: 1.25rem;">
+                <i class="fas fa-pills"></i>
+                <span>MediCare Pharmacy</span>
+            </div>
+            
+            <div class="footer-disclaimer">
+                <p><strong>Medical Disclaimer:</strong> This information is for educational purposes only. Always consult your doctor before taking any medicine. Do not exceed the recommended dosage.</p>
+                <p style="margin-top: 0.5rem;"><strong>Prescription Required:</strong> This medicine requires a valid prescription. By purchasing, you confirm you have a prescription.</p>
+            </div>
+            
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Contact Us</a>
+                <a href="#">FAQ</a>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 MediCare Pharmacy. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab functionality
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Quantity selector
+        const minusBtn = document.querySelector('.qty-btn.minus');
+        const plusBtn = document.querySelector('.qty-btn.plus');
+        const qtyInput = document.querySelector('.qty-input');
+        
+        minusBtn.addEventListener('click', () => {
+            let value = parseInt(qtyInput.value);
+            if (value > 1) qtyInput.value = value - 1;
+        });
+        
+        plusBtn.addEventListener('click', () => {
+            let value = parseInt(qtyInput.value);
+            if (value < 10) qtyInput.value = value + 1;
+        });
+        
+        // Mobile sticky button visibility
+        window.addEventListener('scroll', () => {
+            const stickyBtn = document.querySelector('.mobile-sticky-btn');
+            if (window.innerWidth <= 768) {
+                if (window.scrollY > 300) {
+                    stickyBtn.style.display = 'flex';
+                } else {
+                    stickyBtn.style.display = 'none';
+                }
+            }
+        });
+        
+        // Add to cart buttons
+        const addToCartButtons = document.querySelectorAll('.btn-primary');
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const qty = qtyInput.value;
+                alert(`Added ${qty} strip(s) of Dolo 650 to your cart!`);
+            });
+        });
+    </script>
+</body>
+</html>
