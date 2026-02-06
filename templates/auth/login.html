@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curexa | Secure Healthcare Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        :root {
+            --primary: #0d9ba8;
+            --primary-light: #e0f7fa;
+            --primary-dark: #007c8a;
+            --secondary: #4db6ac;
+            --text: #2c3e50;
+            --text-light: #546e7a;
+            --white: #ffffff;
+            --light-bg: #f8fafc;
+            --border: #e0e6ef;
+            --success: #2ecc71;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+            background-image: radial-gradient(circle at 15% 50%, rgba(13, 155, 168, 0.05) 0%, transparent 20%),
+                              radial-gradient(circle at 85% 30%, rgba(77, 182, 172, 0.05) 0%, transparent 20%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .logo-text {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: var(--text-light);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Main Card */
+        .login-card {
+            display: flex;
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            min-height: 520px;
+        }
+
+        .login-card:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Branding Section */
+        .branding-section {
+            flex: 1;
+            background: linear-gradient(135deg, #e0f7fa 0%, #f1f8e9 100%);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .branding-content h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .branding-content p {
+            color: var(--text-light);
+            font-size: 17px;
+            margin-bottom: 30px;
+        }
+
+        .medical-illustration {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .medical-icons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .medical-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .medical-icon:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .trust-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Login Form Section */
+        .form-section {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+        }
+
+        .form-header h2 {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 15px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 18px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13, 155, 168, 0.2);
+        }
+
+        .input-field.valid {
+            border-color: var(--success);
+        }
+
+        .input-field.valid + .validation-icon {
+            opacity: 1;
+            color: var(--success);
+        }
+
+        .validation-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .btn {
+            padding: 16px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(13, 155, 168, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(13, 155, 168, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-primary.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn-primary.loading::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .form-footer {
+            margin-top: 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .security-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--text-light);
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .security-note i {
+            color: var(--success);
+        }
+
+        /* OTP Step */
+        .otp-step {
+            display: none;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .otp-instruction {
+            background-color: var(--primary-light);
+            padding: 16px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+            font-size: 15px;
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .otp-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13, 155, 168, 0.2);
+            outline: none;
+        }
+
+        .resend-otp {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .resend-otp a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .resend-otp a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .login-card {
+                flex-direction: column;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .branding-section {
+                padding: 30px;
+            }
+
+            .form-section {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 10px;
+            }
+
+            .branding-section, .form-section {
+                padding: 25px;
+            }
+
+            .logo-text {
+                font-size: 28px;
+            }
+
+            .branding-content h1 {
+                font-size: 26px;
+            }
+
+            .otp-inputs {
+                gap: 8px;
+            }
+
+            .otp-input {
+                width: 45px;
+                height: 55px;
+                font-size: 20px;
+            }
+
+            .medical-icons {
+                gap: 15px;
+            }
+
+            .medical-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .badge {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+        }
+
+        /* Focus accessibility */
+        .input-field:focus, .btn:focus, .link:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Animation for success */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="logo-text">Curexa</div>
+            </div>
+            <p>Secure access to doctors, appointments, and medical services.</p>
+        </div>
+
+        <!-- Main Login Card -->
+        <div class="login-card">
+            <!-- Branding Section -->
+            <div class="branding-section">
+                <div class="branding-content">
+                    <h1>Welcome Back to Curexa</h1>
+                    <p>Your trusted partner for comprehensive healthcare management. Access your medical records, schedule appointments, and connect with healthcare providers securely.</p>
+                    
+                    <div class="medical-illustration">
+                        <div class="medical-icons">
+                            <div class="medical-icon">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="medical-icon">
+                                <i class="fas fa-stethoscope"></i>
+                            </div>
+                            <div class="medical-icon">
+                                <i class="fas fa-prescription-bottle-alt"></i>
+                            </div>
+                            <div class="medical-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trust-badges">
+                    <div class="badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>HIPAA-inspired security</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-lock"></i>
+                        <span>Medical-grade privacy</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Section -->
+            <div class="form-section">
+                <div class="form-header">
+                    <h2>Login to Your Account</h2>
+                    <p>Enter your email to receive a one-time password</p>
+                </div>
+
+                <!-- Email Step -->
+                <form class="login-form" id="emailForm">
+                    <div class="input-group">
+                        <label for="email">Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                class="input-field" 
+                                placeholder="Enter your email address"
+                                autocomplete="email"
+                                required
+                            >
+                            <div class="validation-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="continueBtn" disabled>
+                        <span>Continue with Email</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <!-- OTP Step (Hidden Initially) -->
+                <div class="otp-step" id="otpStep">
+                    <div class="otp-instruction">
+                        <p>A 6-digit one-time password has been sent to <strong id="userEmail">user@example.com</strong>. Please enter it below to access your account.</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="otp">One-Time Password</label>
+                        <div class="otp-inputs">
+                            <input type="text" class="otp-input" maxlength="1" data-index="0">
+                            <input type="text" class="otp-input" maxlength="1" data-index="1">
+                            <input type="text" class="otp-input" maxlength="1" data-index="2">
+                            <input type="text" class="otp-input" maxlength="1" data-index="3">
+                            <input type="text" class="otp-input" maxlength="1" data-index="4">
+                            <input type="text" class="otp-input" maxlength="1" data-index="5">
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" id="verifyOtpBtn">
+                        <span>Verify OTP</span>
+                        <i class="fas fa-check"></i>
+                    </button>
+
+                    <div class="resend-otp">
+                        <p>Didn't receive the code? <a href="#" id="resendOtp">Resend OTP</a> in <span id="countdown">30</span> seconds</p>
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <div class="links">
+                        <a href="#" class="link">
+                            <i class="fas fa-user-plus"></i>
+                            <span>New to Curexa? Create an account</span>
+                        </a>
+                        <a href="#" class="link">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Need help?</span>
+                        </a>
+                    </div>
+
+                    <div class="security-note">
+                        <i class="fas fa-lock"></i>
+                        <span>Your data is encrypted & secure</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const emailForm = document.getElementById('emailForm');
+        const emailInput = document.getElementById('email');
+        const continueBtn = document.getElementById('continueBtn');
+        const otpStep = document.getElementById('otpStep');
+        const userEmailSpan = document.getElementById('userEmail');
+        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+        const resendOtpLink = document.getElementById('resendOtp');
+        const countdownSpan = document.getElementById('countdown');
+        const otpInputs = document.querySelectorAll('.otp-input');
+
+        // Email validation
+        emailInput.addEventListener('input', function() {
+            const isValid = validateEmail(this.value);
+            
+            if (isValid) {
+                this.classList.add('valid');
+                continueBtn.disabled = false;
+            } else {
+                this.classList.remove('valid');
+                continueBtn.disabled = true;
+            }
+        });
+
+        // Email validation function
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Handle email form submission
+        emailForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateEmail(emailInput.value)) return;
+            
+            // Show loading state
+            continueBtn.classList.add('loading');
+            continueBtn.disabled = true;
+            
+            // Simulate API call to send OTP
+            setTimeout(() => {
+                // Hide email form, show OTP step
+                emailForm.style.display = 'none';
+                otpStep.style.display = 'flex';
+                otpStep.classList.add('fade-in');
+                
+                // Update email display
+                userEmailSpan.textContent = emailInput.value;
+                
+                // Reset button state (for when we go back)
+                continueBtn.classList.remove('loading');
+                continueBtn.disabled = false;
+                
+                // Start OTP countdown
+                startOtpCountdown();
+                
+                // Focus first OTP input
+                otpInputs[0].focus();
+            }, 1500);
+        });
+
+        // OTP input handling
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', function() {
+                // Auto-focus next input if current one has value
+                if (this.value.length === 1 && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+                
+                // Check if all OTP inputs are filled
+                checkOtpFilled();
+            });
+            
+            input.addEventListener('keydown', function(e) {
+                // Handle backspace to move to previous input
+                if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+        });
+
+        // Check if all OTP digits are filled
+        function checkOtpFilled() {
+            let allFilled = true;
+            otpInputs.forEach(input => {
+                if (input.value.length === 0) allFilled = false;
+            });
+            
+            verifyOtpBtn.disabled = !allFilled;
+        }
+
+        // Verify OTP
+        verifyOtpBtn.addEventListener('click', function() {
+            // Show loading state
+            this.classList.add('loading');
+            this.disabled = true;
+            
+            // Simulate OTP verification
+            setTimeout(() => {
+                alert('Login successful! Redirecting to your dashboard...');
+                // In a real application, you would redirect to dashboard
+                // window.location.href = '/dashboard';
+            }, 1500);
+        });
+
+        // Resend OTP functionality
+        let countdownInterval;
+        function startOtpCountdown() {
+            let countdown = 30;
+            countdownSpan.textContent = countdown;
+            resendOtpLink.style.pointerEvents = 'none';
+            resendOtpLink.style.opacity = '0.5';
+            
+            countdownInterval = setInterval(() => {
+                countdown--;
+                countdownSpan.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    resendOtpLink.style.pointerEvents = 'auto';
+                    resendOtpLink.style.opacity = '1';
+                }
+            }, 1000);
+        }
+
+        resendOtpLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Reset OTP inputs
+            otpInputs.forEach(input => {
+                input.value = '';
+            });
+            
+            // Disable verify button
+            verifyOtpBtn.disabled = true;
+            
+            // Show sending indicator
+            const originalText = resendOtpLink.textContent;
+            resendOtpLink.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            
+            // Simulate resend OTP
+            setTimeout(() => {
+                alert('New OTP sent to your email!');
+                resendOtpLink.textContent = originalText;
+                
+                // Restart countdown
+                startOtpCountdown();
+                
+                // Focus first OTP input
+                otpInputs[0].focus();
+            }, 1000);
+        });
+
+        // Initialize button state
+        continueBtn.disabled = true;
+        verifyOtpBtn.disabled = true;
+    </script>
+</body>
+</html>

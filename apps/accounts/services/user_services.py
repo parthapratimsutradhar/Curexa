@@ -106,4 +106,5 @@ def delete_doctor(user_id: int):
     DoctorProfile.objects.filter(doctor=user).delete()
 
     
-    
+def get_user_details(user):
+    return get_object_or_404(User, id=user, is_active=True)

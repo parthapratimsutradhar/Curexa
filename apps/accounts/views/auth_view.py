@@ -5,13 +5,14 @@ from apps.core.utilities.otp_service import send_otp_code, verify_otp_code
 from django.contrib.auth import login, logout
 from apps.accounts.services import user_services
 
-# class LoginView(View):
-#     def get(self, request):
-#         return
+class LoginView(View):
+    def get(self, request):
+        return render(request, "auth/login.html")
 
-#     def post(self, request):
-#         # Handle login logic here
-#         return redirect('home')  # Redirect to home after login    
+    def post(self, request):
+        # Handle login logic here
+        return redirect('home')  # Redirect to home after login  
+      
 
 class LogoutView(View):
     def get(self, request):
@@ -49,3 +50,13 @@ def verify_otp_view(request):
             return JsonResponse({"status": "success", "message": "OTP verified"})            
         else:
             return JsonResponse({"status": "error", "message": "Invalid or expired OTP"}, status=400)
+
+
+class VerifyOtpView(View):
+    def get(self, request):
+        return render(request, "auth/verify_otp.html")
+
+
+class RegisterView(View):
+    def get(self, request):
+        return render(request, "auth/register.html")
