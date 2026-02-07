@@ -80,7 +80,22 @@
                     </li>
                 </ul>
                 <div class="d-flex">
-                    <button id="loginBtn" class="btn btn-outline-primary me-2"><i class="fas fa-user"></i> Login</button>
+                    {% if request.user.is_authenticated %}
+                        <div class="dropdown">
+                        <a class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i>
+                            {{user.public_id}}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'patient-profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">
+                            <i class="fas fa-user"></i> Login
+                        </a>
+                    {% endif %}
                     <a href="#" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> Cart (0)</a>
                 </div>
             </div>

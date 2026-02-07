@@ -18,8 +18,8 @@ class CookieJWTAuthentication(JWTAuthentication):
     - You can also add 'refresh' cookie logic for token rotation
     """
 
-    access_cookie_name = "access"       # Name of cookie storing access token
-    refresh_cookie_name = "refresh"     # Name of cookie storing refresh token
+    access_cookie_name = "access_token"       # Name of cookie storing access token
+    refresh_cookie_name = "refresh_token"     # Name of cookie storing refresh token
 
     def get_header(self, request):
         """
@@ -28,7 +28,7 @@ class CookieJWTAuthentication(JWTAuthentication):
         raw_token = request.COOKIES.get(self.access_cookie_name)
         if raw_token:
             # SimpleJWT expects "Authorization: Bearer <token>"
-            return f"Bearer {raw_token}"
+            return b"Bearer " + raw_token.encode()
         return None
 
     def authenticate(self, request):

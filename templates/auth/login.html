@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Curexa | Secure Healthcare Login</title>
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -269,7 +270,7 @@
 
         .validation-icon {
             position: absolute;
-            right: 16px;
+            right: 40px;
             top: 50%;
             transform: translateY(-50%);
             opacity: 0;
@@ -556,6 +557,7 @@
 
             <!-- Form Section -->
             <div class="form-section">
+                {% csrf_token %}
                 <div class="form-header">
                     <h2>Login to Your Account</h2>
                     <p>Enter your email to receive a one-time password</p>
@@ -617,7 +619,7 @@
 
                 <div class="form-footer">
                     <div class="links">
-                        <a href="#" class="link">
+                        <a href="{% url 'register' %}" class="link">
                             <i class="fas fa-user-plus"></i>
                             <span>New to Curexa? Create an account</span>
                         </a>
@@ -636,164 +638,210 @@
         </div>
     </div>
 
-    <script>
-        // DOM Elements
-        const emailForm = document.getElementById('emailForm');
-        const emailInput = document.getElementById('email');
-        const continueBtn = document.getElementById('continueBtn');
-        const otpStep = document.getElementById('otpStep');
-        const userEmailSpan = document.getElementById('userEmail');
-        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
-        const resendOtpLink = document.getElementById('resendOtp');
-        const countdownSpan = document.getElementById('countdown');
-        const otpInputs = document.querySelectorAll('.otp-input');
 
-        // Email validation
-        emailInput.addEventListener('input', function() {
-            const isValid = validateEmail(this.value);
-            
-            if (isValid) {
-                this.classList.add('valid');
-                continueBtn.disabled = false;
-            } else {
-                this.classList.remove('valid');
-                continueBtn.disabled = true;
+   <script>
+
+    
+    // ===== CSRF Helper =====
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
-        });
-
-        // Email validation function
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
         }
+        return cookieValue;
+    }
 
-        // Handle email form submission
-        emailForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (!validateEmail(emailInput.value)) return;
-            
-            // Show loading state
-            continueBtn.classList.add('loading');
-            continueBtn.disabled = true;
-            
-            // Simulate API call to send OTP
-            setTimeout(() => {
-                // Hide email form, show OTP step
+    const csrftoken = getCookie('csrftoken');
+
+    // ===== DOM Elements =====
+    const emailForm = document.getElementById('emailForm');
+    const emailInput = document.getElementById('email');
+    const continueBtn = document.getElementById('continueBtn');
+    const otpStep = document.getElementById('otpStep');
+    const userEmailSpan = document.getElementById('userEmail');
+    const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+    const resendOtpLink = document.getElementById('resendOtp');
+    const countdownSpan = document.getElementById('countdown');
+    const otpInputs = document.querySelectorAll('.otp-input');
+
+    let countdownInterval;
+
+    // ===== Send OTP =====
+    emailForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const email = emailInput.value.trim();
+        if (!email) return;
+
+        continueBtn.classList.add('loading');
+        continueBtn.disabled = true;
+
+        fetch('/send-otp/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrftoken
+            },
+            body: new URLSearchParams({
+                contact: email
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
                 emailForm.style.display = 'none';
                 otpStep.style.display = 'flex';
-                otpStep.classList.add('fade-in');
-                
-                // Update email display
-                userEmailSpan.textContent = emailInput.value;
-                
-                // Reset button state (for when we go back)
-                continueBtn.classList.remove('loading');
-                continueBtn.disabled = false;
-                
-                // Start OTP countdown
+                userEmailSpan.textContent = email;
                 startOtpCountdown();
-                
-                // Focus first OTP input
                 otpInputs[0].focus();
-            }, 1500);
+            } else {
+                alert(data.message || 'Failed to send OTP');
+            }
+        })
+        .catch(() => alert('Server error. Try again later.'))
+        .finally(() => {
+            continueBtn.classList.remove('loading');
+            continueBtn.disabled = false;
+        });
+    });
+
+    // ===== OTP Input Auto Move =====
+    otpInputs.forEach((input, index) => {
+        input.addEventListener('input', () => {
+            if (input.value && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+            verifyOtpBtn.disabled = [...otpInputs].some(i => !i.value);
         });
 
-        // OTP input handling
-        otpInputs.forEach((input, index) => {
-            input.addEventListener('input', function() {
-                // Auto-focus next input if current one has value
-                if (this.value.length === 1 && index < otpInputs.length - 1) {
-                    otpInputs[index + 1].focus();
-                }
-                
-                // Check if all OTP inputs are filled
-                checkOtpFilled();
-            });
-            
-            input.addEventListener('keydown', function(e) {
-                // Handle backspace to move to previous input
-                if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
-                    otpInputs[index - 1].focus();
-                }
-            });
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !input.value && index > 0) {
+                otpInputs[index - 1].focus();
+            }
         });
+    });
 
-        // Check if all OTP digits are filled
-        function checkOtpFilled() {
-            let allFilled = true;
-            otpInputs.forEach(input => {
-                if (input.value.length === 0) allFilled = false;
+    // ===== Verify OTP =====
+verifyOtpBtn.addEventListener('click', function () {
+    const otp = [...otpInputs].map(i => i.value).join('');
+    const email = userEmailSpan.textContent;
+
+    this.classList.add('loading');
+    this.disabled = true;
+
+    fetch('/verify-otp/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrftoken
+        },
+        body: new URLSearchParams({
+            contact: email,
+            otp: otp
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+
+            return fetch("/api/auth/patient/resolve/", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken
+                },
+                body: JSON.stringify({ email })
             });
-            
-            verifyOtpBtn.disabled = !allFilled;
+        } else {
+            throw new Error("Invalid OTP");
         }
-
-        // Verify OTP
-        verifyOtpBtn.addEventListener('click', function() {
-            // Show loading state
-            this.classList.add('loading');
-            this.disabled = true;
-            
-            // Simulate OTP verification
-            setTimeout(() => {
-                alert('Login successful! Redirecting to your dashboard...');
-                // In a real application, you would redirect to dashboard
-                // window.location.href = '/dashboard';
-            }, 1500);
-        });
-
-        // Resend OTP functionality
-        let countdownInterval;
-        function startOtpCountdown() {
-            let countdown = 30;
-            countdownSpan.textContent = countdown;
-            resendOtpLink.style.pointerEvents = 'none';
-            resendOtpLink.style.opacity = '0.5';
-            
-            countdownInterval = setInterval(() => {
-                countdown--;
-                countdownSpan.textContent = countdown;
-                
-                if (countdown <= 0) {
-                    clearInterval(countdownInterval);
-                    resendOtpLink.style.pointerEvents = 'auto';
-                    resendOtpLink.style.opacity = '1';
-                }
-            }, 1000);
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "success") {
+            window.location.href = "/";
         }
+    })
+    .catch(err => alert(err.message))
+    .finally(() => {
+        verifyOtpBtn.classList.remove('loading');
+        verifyOtpBtn.disabled = false;
+    });
+});
 
-        resendOtpLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Reset OTP inputs
-            otpInputs.forEach(input => {
-                input.value = '';
-            });
-            
-            // Disable verify button
-            verifyOtpBtn.disabled = true;
-            
-            // Show sending indicator
-            const originalText = resendOtpLink.textContent;
-            resendOtpLink.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-            
-            // Simulate resend OTP
-            setTimeout(() => {
-                alert('New OTP sent to your email!');
-                resendOtpLink.textContent = originalText;
-                
-                // Restart countdown
-                startOtpCountdown();
-                
-                // Focus first OTP input
-                otpInputs[0].focus();
-            }, 1000);
-        });
 
-        // Initialize button state
-        continueBtn.disabled = true;
+    // ===== Resend OTP =====
+    resendOtpLink.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        otpInputs.forEach(i => i.value = '');
         verifyOtpBtn.disabled = true;
-    </script>
+
+        fetch('/send-otp/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrftoken
+            },
+            body: new URLSearchParams({
+                contact: userEmailSpan.textContent
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                startOtpCountdown();
+                otpInputs[0].focus();
+            } else {
+                alert(data.message || 'Resend failed');
+            }
+        });
+    });
+
+    // ===== OTP Countdown =====
+    function startOtpCountdown() {
+        let seconds = 30;
+        countdownSpan.textContent = seconds;
+        resendOtpLink.style.pointerEvents = 'none';
+        resendOtpLink.style.opacity = '0.5';
+
+        clearInterval(countdownInterval);
+        countdownInterval = setInterval(() => {
+            seconds--;
+            countdownSpan.textContent = seconds;
+            if (seconds <= 0) {
+                clearInterval(countdownInterval);
+                resendOtpLink.style.pointerEvents = 'auto';
+                resendOtpLink.style.opacity = '1';
+            }
+        }, 1000);
+    }
+
+    // ===== Enable Continue Button on Valid Email =====
+emailInput.addEventListener('input', function () {
+    const email = emailInput.value.trim();
+
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if (isValidEmail) {
+        continueBtn.disabled = false;
+        emailInput.classList.add('valid');
+    } else {
+        continueBtn.disabled = true;
+        emailInput.classList.remove('valid');
+    }
+});
+
+</script>
+
 </body>
 </html>
+
