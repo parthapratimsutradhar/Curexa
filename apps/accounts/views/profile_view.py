@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from apps.accounts.serializers.patient_serializer import PatientResolveSerializer
-
+from apps.core.services.util_services import full_name
 
 class PatientResolveAPIView(APIView):
     permission_classes = [AllowAny]
@@ -27,6 +27,7 @@ class PatientResolveAPIView(APIView):
                 "is_new_user": created,
                 "user": {
                     "public_id": user.public_id,
+                    "name":full_name(user.first_name,user.middle_name,user.last_name),
                     "email": user.email,
                     "role": user.role
                 }
