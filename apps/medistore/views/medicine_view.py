@@ -8,6 +8,14 @@ from apps.medistore.models import Medicine
 
 from apps.medistore.serializers.medicine_serializers import MedicineListSerializer
 
+class MedicineListView(View):
+    def get(self, request):
+        return render (request, "enduser/medistore/medicine_products_catalog.html")
+    
+class MedicineDetailsView(View):
+    def get(self, request):
+        return render(request, "enduser/medistore/medicine_detail.html")        
+
 
 class MedicineListAPIView(ListAPIView):
     serializer_class = MedicineListSerializer

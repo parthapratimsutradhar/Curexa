@@ -1,929 +1,2022 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Find Doctors & Specialists - Qurexa | Book Appointments Online</title>
-    <meta name="description" content="Find qualified doctors, specialists, and healthcare providers near you. Book appointments online, read reviews, and check availability in real-time." />
-    <link rel="stylesheet" href="../css/main.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare+ | Premium Online Pharmacy</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotateY(0deg); }
-            50% { transform: translateY(-10px) rotateY(180deg); }
+        :root {
+            --primary-blue: #0d6efd;
+            --medical-blue: #2a6fd6;
+            --medical-teal: #1ba8b6;
+            --soft-teal: #e8f7f9;
+            --accent-green: #28a745;
+            --accent-red: #dc3545;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --bg-white: #ffffff;
+            --bg-soft: #f9fbfd;
+            --card-shadow: 0 8px 24px rgba(32, 101, 209, 0.08);
+            --card-radius: 16px;
         }
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.3); }
-            50% { box-shadow: 0 0 30px rgba(74, 144, 226, 0.5); }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-soft);
+            color: var(--text-dark);
+            padding-top: 76px; /* Reset to original since header is simplified */
         }
-        .floating-stethoscope {
-            animation: float 4s ease-in-out infinite;
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
         }
-        .pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite;
+
+        /* Header Styles */
+        .main-header {
+            background-color: var(--bg-white);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
         }
-        .doctor-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--medical-teal);
+            text-decoration: none;
         }
-        .doctor-card:hover {
-            transform: translateY(-8px) rotateX(5deg);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+        .logo span {
+            color: var(--medical-blue);
         }
-        .filter-chip {
-            transition: all 0.2s ease;
+
+        .cart-icon {
+            position: relative;
+            font-size: 1.4rem;
+            color: var(--medical-blue);
         }
-        .filter-chip:hover {
-            transform: translateY(-2px);
-        }
-        .search-suggestions {
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.95);
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
-        }
-        .availability-badge {
-            width: 8px;
-            height: 8px;
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--accent-red);
+            color: white;
+            font-size: 0.7rem;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            display: inline-block;
-            margin-right: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
         }
-        .availability-online { background-color: #10B981; }
-        .availability-busy { background-color: #F59E0B; }
-        .availability-offline { background-color: #6B7280; }
-        .rating-stars {
-            color: #FBBF24;
+
+        /* Category Navigation Bar */
+        .category-navbar {
+            background-color: var(--bg-white);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 20px;
         }
-        /* Fixed header styles */
-        .nav-logo {
-            height: 32px;
+
+        .category-scroll-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            margin-bottom: -15px;
+            padding-bottom: 15px;
+        }
+
+        .category-scroll-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-list {
+            gap: 8px;
+            min-width: max-content;
+        }
+
+        .category-btn {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 50px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .category-btn:hover {
+            border-color: var(--medical-teal);
+            color: var(--medical-teal);
+            background-color: rgba(27, 168, 182, 0.04);
+        }
+
+        .category-btn.active {
+            background-color: var(--medical-teal);
+            border-color: var(--medical-teal);
+            color: white;
+        }
+
+        .category-btn.active:hover {
+            background-color: var(--medical-blue);
+            border-color: var(--medical-blue);
+            color: white;
+        }
+
+        .scroll-btn {
             width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .nav-logo-text {
-            font-size: 1.25rem;
-            line-height: 1.75rem;
+
+        .quick-stats {
+            border-left: 1px solid #e2e8f0;
+            padding-left: 20px;
         }
-        .nav-tagline {
-            font-size: 0.625rem;
-            line-height: 0.875rem;
+
+        .stat-item {
+            text-align: center;
         }
-        .hero-icon {
-            height: 4rem;
-            width: 4rem;
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--medical-blue);
         }
-        .doctor-photo {
-            width: 5rem;
-            height: 5rem;
+
+        .stat-label {
+            font-size: 0.75rem;
+            margin-top: 2px;
         }
-        /* Mobile optimizations */
+
+        /* Search and Filter Controls */
+        .search-filter-controls {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            margin-bottom: 24px;
+            padding: 20px;
+        }
+
+        .main-search-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .main-search-container input {
+            border-radius: 50px;
+            padding-left: 48px;
+            padding-right: 48px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+            height: 50px;
+            font-size: 1rem;
+        }
+
+        .main-search-container input:focus {
+            border-color: var(--medical-teal);
+            box-shadow: 0 0 0 3px rgba(27, 168, 182, 0.1);
+        }
+
+        .main-search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            z-index: 5;
+        }
+
+        .main-search-clear {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            cursor: pointer;
+            display: none;
+        }
+
+        .main-search-container input:not(:placeholder-shown) + .main-search-clear {
+            display: block;
+        }
+
+        .active-filters-container {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--medical-teal), var(--medical-blue));
+            color: white;
+            border-radius: 50px;
+            padding: 6px 14px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .filter-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(27, 168, 182, 0.2);
+        }
+
+        .filter-tag-remove {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 6px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-tag-remove:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .clear-all-filters {
+            background: transparent;
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            border-radius: 50px;
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+            transition: all 0.2s;
+        }
+
+        .clear-all-filters:hover {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        /* Sorting Controls */
+        .sorting-controls {
+            background-color: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            margin-bottom: 24px;
+        }
+
+        .view-toggle button {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            color: var(--text-light);
+            padding: 8px 16px;
+        }
+
+        .view-toggle button.active {
+            background-color: var(--soft-teal);
+            border-color: var(--medical-teal);
+            color: var(--medical-teal);
+        }
+
+        /* Sidebar Filters - FIXED POSITION */
+        .filter-sidebar {
+            background-color: var(--bg-white);
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            padding: 24px;
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .filter-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--medical-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-section {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .filter-section:last-child {
+            border-bottom: none;
+        }
+
+        .form-check-label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--medical-teal);
+            border-color: var(--medical-teal);
+        }
+
+        .price-slider {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .price-range-values {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Main Content Area */
+        .main-content-area {
+            padding-left: 30px;
+        }
+
+        /* Medicine Cards */
+        .medicine-card {
+            background-color: var(--bg-white);
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 1px solid transparent;
+            margin-bottom: 25px;
+        }
+
+        .medicine-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(32, 101, 209, 0.12);
+            border-color: var(--medical-teal);
+        }
+
+        .medicine-image {
+            height: 180px;
+            background-color: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .medicine-image img {
+            max-height: 140px;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .medicine-details {
+            padding: 20px;
+        }
+
+        .medicine-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            color: var(--text-dark);
+            line-height: 1.3;
+        }
+
+        .salt-composition {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .brand-name {
+            font-size: 0.9rem;
+            color: var(--medical-blue);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .prescription-badge {
+            background-color: #fff3cd;
+            color: #856404;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .prescription-badge i {
+            margin-right: 5px;
+            font-size: 0.7rem;
+        }
+
+        .price-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .current-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-right: 10px;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .discount-badge {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 50px;
+            margin-left: auto;
+            font-weight: 600;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .stars {
+            color: #ffc107;
+            margin-right: 8px;
+        }
+
+        .rating-count {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .stock-status {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 18px;
+        }
+
+        .in-stock {
+            color: var(--accent-green);
+        }
+
+        .low-stock {
+            color: #ffc107;
+        }
+
+        .out-of-stock {
+            color: var(--accent-red);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-add-cart {
+            background-color: var(--medical-teal);
+            color: white;
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-add-cart:hover {
+            background-color: var(--medical-blue);
+            transform: scale(1.02);
+        }
+
+        .btn-buy-now {
+            background-color: var(--medical-blue);
+            color: white;
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-buy-now:hover {
+            background-color: #1a56db;
+            transform: scale(1.02);
+        }
+
+        .btn-compare {
+            grid-column: span 2;
+            background-color: transparent;
+            color: var(--medical-blue);
+            border: 1px solid var(--medical-blue);
+            border-radius: 8px;
+            padding: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-compare:hover {
+            background-color: rgba(27, 168, 182, 0.08);
+        }
+
+        /* Trust Badges */
+        .trust-badges {
+            background: linear-gradient(135deg, #f8fafc, #e8f7f9);
+            border-radius: var(--card-radius);
+            padding: 24px;
+            margin-top: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .trust-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin: 10px;
+        }
+
+        .trust-icon {
+            font-size: 2rem;
+            color: var(--medical-teal);
+            margin-bottom: 10px;
+        }
+
+        .trust-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .trust-subtext {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .quick-stats {
+                display: none !important;
+            }
+            
+            .filter-sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 320px;
+                height: 100vh;
+                z-index: 1050;
+                transition: left 0.3s ease;
+                overflow-y: auto;
+            }
+
+            .filter-sidebar.show {
+                left: 0;
+            }
+
+            .main-content-area {
+                padding-left: 0;
+            }
+
+            .filter-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1040;
+                display: none;
+            }
+
+            .filter-overlay.show {
+                display: block;
+            }
+
+            .filter-toggle-btn {
+                display: block;
+            }
+        }
+
         @media (max-width: 768px) {
-            .doctor-photo {
-                width: 4rem;
-                height: 4rem;
+            .category-navbar {
+                padding-top: 12px;
+                padding-bottom: 12px;
             }
-            .hero-icon {
-                height: 3rem;
-                width: 3rem;
+            
+            .category-btn {
+                padding: 6px 14px;
+                font-size: 0.85rem;
             }
-            .search-input {
-                font-size: 0.875rem;
-                padding-left: 2.5rem;
-                padding-right: 2.5rem;
+            
+            .category-btn i {
+                margin-right: 3px;
+                font-size: 0.8rem;
+            }
+            
+            .scroll-btn {
+                display: none !important;
+            }
+            
+            .medicine-card {
+                margin-bottom: 20px;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-compare {
+                grid-column: span 1;
+            }
+            
+            .main-search-container input {
+                height: 45px;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .medicine-card {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1060;
+            min-width: 300px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Comparison Drawer */
+        .comparison-drawer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1050;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .comparison-drawer.show {
+            transform: translateY(0);
+        }
+
+        .drawer-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #edf2f7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer-body {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .comparison-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .comparison-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Skeleton Loader */
+        .skeleton-loader {
+            background-color: #e2e8f0;
+            border-radius: 8px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Grid Layout Fix */
+        .medicine-grid-container {
+            min-height: 100vh;
+        }
+        
+        /* Mobile Bottom Navigation */
+        .mobile-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 1000;
+            padding: 10px 0;
+        }
+        
+        .mobile-bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+        
+        .mobile-bottom-nav-item.active {
+            color: var(--medical-teal);
+        }
+        
+        .mobile-bottom-nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-bottom-nav {
+                display: flex;
+                justify-content: space-around;
+            }
+            body {
+                padding-bottom: 60px;
             }
         }
     </style>
-<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fqurexamed8487back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.6"></script>
 </head>
-<body class="bg-background font-inter">
-    <!-- Navigation Header - Fixed Sizing -->
-    <nav class="bg-white shadow-medical sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo - Fixed Size -->
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <svg class="nav-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="32" height="32" rx="6" fill="#4A90E2"/>
-                            <path d="M16 6v20M6 16h20" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-                            <circle cx="16" cy="16" r="5" fill="none" stroke="white" stroke-width="1.5"/>
-                        </svg>
-                    </div>
-                    <div class="ml-2">
-                        <h1 class="nav-logo-text font-bold text-gray-900">Qurexa</h1>
-                        <p class="nav-tagline text-gray-500">Healthcare Excellence</p>
-                    </div>
-                </div>
-
-                <!-- Desktop Navigation -->
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-6">
-                        <a href="homepage_healthcare_dashboard.html" class="text-gray-600 hover:text-secondary px-3 py-2 rounded-md text-sm transition-colors">Home</a>
-                        <a href="medicine_products_catalog.html" class="text-gray-600 hover:text-secondary px-3 py-2 rounded-md text-sm transition-colors">Medicine</a>
-                        <a href="care_services_hub.html" class="text-secondary font-semibold px-3 py-2 rounded-md text-sm">Care Services</a>
-                        <a href="personal_health_dashboard.html" class="text-gray-600 hover:text-secondary px-3 py-2 rounded-md text-sm transition-colors">My Health</a>
-                        <a href="emergency_urgent_care.html" class="text-gray-600 hover:text-secondary px-3 py-2 rounded-md text-sm transition-colors">Emergency</a>
-                        <a href="about_qurexa_our_healthcare_mission.html" class="text-gray-600 hover:text-secondary px-3 py-2 rounded-md text-sm transition-colors">About</a>
-                    </div>
-                </div>
-
-                <!-- Mobile menu button -->
-                <div class="md:hidden">
-                    <button type="button" class="text-gray-600 hover:text-secondary focus:outline-none focus:text-secondary" onclick="toggleMobileMenu()">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                        </svg>
+<body>
+    <!-- Header Section (Simplified) -->
+    <header class="main-header py-2">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <a href="#" class="logo me-4">
+                        <i class="fas fa-heartbeat me-2"></i>MediCare<span>+</span>
+                    </a>
+                    <button class="btn btn-outline-teal d-lg-none filter-toggle-btn me-2" id="mobileFilterToggle">
+                        <i class="fas fa-filter"></i> Filters
                     </button>
+                </div>
+                
+                <div class="d-flex align-items-center">
+                    <div class="cart-icon position-relative">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">3</span>
+                    </div>
                 </div>
             </div>
         </div>
+    </header>
 
-        <!-- Mobile Navigation Menu -->
-        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="homepage_healthcare_dashboard.html" class="text-gray-600 hover:text-secondary block px-3 py-2 rounded-md text-base">Home</a>
-                <a href="medicine_products_catalog.html" class="text-gray-600 hover:text-secondary block px-3 py-2 rounded-md text-base">Medicine</a>
-                <a href="care_services_hub.html" class="text-secondary font-semibold block px-3 py-2 rounded-md text-base">Care Services</a>
-                <a href="personal_health_dashboard.html" class="text-gray-600 hover:text-secondary block px-3 py-2 rounded-md text-base">My Health</a>
-                <a href="emergency_urgent_care.html" class="text-gray-600 hover:text-secondary block px-3 py-2 rounded-md text-base">Emergency</a>
-                <a href="about_qurexa_our_healthcare_mission.html" class="text-gray-600 hover:text-secondary block px-3 py-2 rounded-md text-base">About</a>
+    <!-- Category Filter Navigation -->
+    <nav class="category-navbar py-2">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="category-scroll-wrapper flex-grow-1">
+                    <div class="category-list d-flex" id="categoryList">
+                        <button class="category-btn active" data-category="all">
+                            <i class="fas fa-box me-1"></i> All Medicines
+                        </button>
+                        <button class="category-btn" data-category="prescription">
+                            <i class="fas fa-prescription me-1"></i> Prescription Required
+                        </button>
+                        <button class="category-btn" data-category="generic">
+                            <i class="fas fa-pills me-1"></i> Generic Available
+                        </button>
+                        <button class="category-btn" data-category="bestseller">
+                            <i class="fas fa-fire me-1"></i> Best Seller
+                        </button>
+                        <button class="category-btn" data-category="discounted">
+                            <i class="fas fa-tag me-1"></i> Discounted
+                        </button>
+                        <button class="category-btn" data-category="in-stock">
+                            <i class="fas fa-check-circle me-1"></i> In Stock
+                        </button>
+                        <button class="category-btn" data-category="fever">
+                            <i class="fas fa-thermometer me-1"></i> Fever & Cold
+                        </button>
+                        <button class="category-btn" data-category="pain">
+                            <i class="fas fa-head-side-virus me-1"></i> Pain Relief
+                        </button>
+                        <button class="category-btn" data-category="diabetes">
+                            <i class="fas fa-syringe me-1"></i> Diabetes
+                        </button>
+                        <button class="category-btn" data-category="cardiac">
+                            <i class="fas fa-heartbeat me-1"></i> Cardiac Care
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Scroll buttons for desktop -->
+                <div class="d-none d-md-flex ms-3">
+                    <button class="btn btn-sm btn-outline-secondary scroll-btn" id="scrollLeftBtn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary scroll-btn ms-1" id="scrollRightBtn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="d-none d-lg-flex align-items-center ms-4">
+                    <div class="quick-stats d-flex">
+                        <div class="stat-item me-3">
+                            <div class="stat-value">1,245+</div>
+                            <div class="stat-label text-muted small">Medicines</div>
+                        </div>
+                        <div class="stat-item me-3">
+                            <div class="stat-value">98%</div>
+                            <div class="stat-label text-muted small">In Stock</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">24x7</div>
+                            <div class="stat-label text-muted small">Support</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- Smart Search Hero Section -->
-    <section class="gradient-bg py-12 lg:py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-8">
-                <div class="flex justify-center mb-4">
-                    <div class="floating-stethoscope">
-                        <svg class="hero-icon text-secondary" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="40" cy="40" r="28" fill="currentColor" opacity="0.1"/>
-                            <path d="M48 32C48 27.5817 44.4183 24 40 24C35.5817 24 32 27.5817 32 32M48 32C48 36.4183 44.4183 40 40 40C35.5817 40 32 36.4183 32 32M48 32H52C54.2091 32 56 33.7909 56 36V44C56 46.2091 54.2091 48 52 48H48M32 32H28C25.7909 32 24 33.7909 24 36V44C24 46.2091 25.7909 48 28 48H32" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                            <path d="M40 40V56" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                        </svg>
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        <div class="row medicine-grid-container">
+            <!-- Filter Sidebar -->
+            <div class="col-lg-3 d-none d-lg-block">
+                <div class="filter-sidebar">
+                    <div class="filter-title">
+                        <span>Advanced Filters</span>
+                        <button class="btn btn-sm btn-outline-teal" id="clearFilters">Clear All</button>
                     </div>
+                    
+                    <div class="filter-section">
+                        <h6>Category</h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="tablets" checked>
+                            <label class="form-check-label" for="tablets">
+                                Tablets
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="syrups">
+                            <label class="form-check-label" for="syrups">
+                                Syrups
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="injections">
+                            <label class="form-check-label" for="injections">
+                                Injections
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="creams">
+                            <label class="form-check-label" for="creams">
+                                Creams & Ointments
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="capsules">
+                            <label class="form-check-label" for="capsules">
+                                Capsules
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h6>Price Range</h6>
+                        <input type="range" class="form-range price-slider" min="0" max="5000" step="50" value="2500" id="priceSlider">
+                        <div class="price-range-values">
+                            <span>₹0</span>
+                            <span id="priceMaxValue">₹5000</span>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h6>Prescription Required</h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="prescription" id="prescriptionYes">
+                            <label class="form-check-label" for="prescriptionYes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="prescription" id="prescriptionNo" checked>
+                            <label class="form-check-label" for="prescriptionNo">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h6>Availability</h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="inStock" checked>
+                            <label class="form-check-label" for="inStock">
+                                In Stock
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="outOfStock">
+                            <label class="form-check-label" for="outOfStock">
+                                Out of Stock
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h6>Discount</h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="discount10">
+                            <label class="form-check-label" for="discount10">
+                                10% or more
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="discount20">
+                            <label class="form-check-label" for="discount20">
+                                20% or more
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="discount30" checked>
+                            <label class="form-check-label" for="discount30">
+                                30% or more
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary w-100 mt-3" id="applyFilters" style="background-color: var(--medical-teal); border-color: var(--medical-teal);">
+                        <i class="fas fa-check-circle me-2"></i>Apply Filters
+                    </button>
                 </div>
-                <h1 class="text-2xl md:text-4xl font-bold text-gray-900 mb-3">
-                    Find Your <span class="text-secondary">Doctor</span>
-                </h1>
-                <p class="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
-                    Connect with qualified healthcare providers, specialists, and medical experts in your area
-                </p>
             </div>
-
-            <!-- Advanced Search Bar -->
-            <div class="max-w-3xl mx-auto relative">
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
+            
+            <!-- Medicine Listing -->
+            <div class="col-lg-9 main-content-area">
+                <!-- Search and Filter Controls -->
+                <div class="search-filter-controls">
+                    <!-- Search Bar -->
+                    <div class="main-search-container">
+                        <i class="fas fa-search main-search-icon"></i>
+                        <input type="text" class="form-control" id="mainSearchInput" placeholder="Search medicines, salts, or brands...">
+                        <i class="fas fa-times main-search-clear" id="clearSearch"></i>
                     </div>
-                    <input type="text" id="smart-search" placeholder="Search by doctor name, specialty, or condition" class="search-input w-full pl-10 pr-28 py-3 text-base border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-medical" oninput="showSearchSuggestions(this.value)" />
-                    <div class="absolute inset-y-0 right-0 flex items-center space-x-2 pr-3">
-                        <button type="button" class="p-1.5 text-gray-400 hover:text-secondary transition-colors" onclick="startLocationSearch()" title="Use My Location">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
-                        </button>
-                        <button type="button" class="btn-primary px-4 py-1.5 text-sm">Search</button>
+                    
+                    <!-- Active Filters -->
+                    <div class="active-filters-container" id="activeFiltersContainer">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <small class="text-muted">Active Filters:</small>
+                            <button class="btn btn-sm clear-all-filters" id="clearActiveFilters">
+                                <i class="fas fa-times me-1"></i> Clear All
+                            </button>
+                        </div>
+                        <div id="activeFiltersList">
+                            <!-- Active filter tags will be added here -->
+                        </div>
                     </div>
                 </div>
-
-                <!-- Search Suggestions Dropdown -->
-                <div id="search-suggestions" class="absolute top-full left-0 right-0 mt-1 search-suggestions rounded-xl shadow-medical-strong border border-gray-100 hidden z-10">
-                    <div class="p-3">
-                        <div class="space-y-1">
-                            <div class="flex items-center p-2 hover:bg-blue-50 rounded-lg cursor-pointer transition-colors">
-                                <svg class="w-3 h-3 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                </svg>
-                                <span class="text-sm text-gray-700">Cardiologists near me</span>
-                                <span class="ml-auto text-xs text-gray-500">Specialty</span>
+                
+                <!-- Sorting Controls -->
+                <div class="sorting-controls">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <div class="d-flex align-items-center">
+                                <span class="me-3 d-none d-md-block">Sort by:</span>
+                                <span class="me-3 d-md-none">Sort:</span>
+                                <select class="form-select" style="max-width: 200px;" id="sortSelect">
+                                    <option selected>Relevance</option>
+                                    <option>Price: Low to High</option>
+                                    <option>Price: High to Low</option>
+                                    <option>Popularity</option>
+                                    <option>Customer Ratings</option>
+                                    <option>New Arrivals</option>
+                                </select>
                             </div>
-                            <div class="flex items-center p-2 hover:bg-blue-50 rounded-lg cursor-pointer transition-colors">
-                                <svg class="w-3 h-3 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                </svg>
-                                <span class="text-sm text-gray-700">Primary Care Physicians</span>
-                                <span class="ml-auto text-xs text-gray-500">Category</span>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-md-none">
+                                    <span class="text-muted">Showing 8 of 1245 products</span>
+                                </div>
+                                <div class="view-toggle btn-group" role="group">
+                                    <button type="button" class="btn btn-sm active" id="gridViewBtn">
+                                        <i class="fas fa-th-large"></i> <span class="d-none d-md-inline">Grid</span>
+                                    </button>
+                                    <button type="button" class="btn btn-sm" id="listViewBtn">
+                                        <i class="fas fa-list"></i> <span class="d-none d-md-inline">List</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                
+                <!-- AI Suggestions -->
+                <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
+                    <i class="fas fa-robot fa-lg me-3"></i>
+                    <div class="flex-grow-1">
+                        <strong>AI Recommendation:</strong> Based on your search history, we recommend checking generic alternatives for cost savings.
+                    </div>
+                    <a href="#" class="alert-link ms-2 d-none d-md-block">View suggestions</a>
+                </div>
+                
+                <!-- Medicine Cards Grid -->
+                <div class="row" id="medicineGrid">
+                    <!-- Medicine cards will be inserted here by JavaScript -->
+                </div>
+                
+                <!-- Pagination -->
+                <nav aria-label="Medicine pagination" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <!-- Trust & Safety Section -->
+                <div class="trust-badges mt-5">
+                    <div class="trust-badge">
+                        <div class="trust-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="trust-text">100% Verified Medicines</div>
+                        <div class="trust-subtext">Licensed Pharmacy</div>
+                    </div>
+                    
+                    <div class="trust-badge">
+                        <div class="trust-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="trust-text">Doctor Verified</div>
+                        <div class="trust-subtext">Prescription Checked</div>
+                    </div>
+                    
+                    <div class="trust-badge d-none d-md-flex">
+                        <div class="trust-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="trust-text">Free Delivery</div>
+                        <div class="trust-subtext">Above ₹499</div>
+                    </div>
+                    
+                    <div class="trust-badge d-none d-md-flex">
+                        <div class="trust-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="trust-text">Secure Payment</div>
+                        <div class="trust-subtext">Data Privacy</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Filter Overlay -->
+            <div class="filter-overlay" id="filterOverlay"></div>
+            
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="mobile-bottom-nav">
+        <a href="#" class="mobile-bottom-nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="mobile-bottom-nav-item" id="mobileFilterBtn">
+            <i class="fas fa-filter"></i>
+            <span>Filter</span>
+        </a>
+        <a href="#" class="mobile-bottom-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Search</span>
+        </a>
+        <a href="#" class="mobile-bottom-nav-item">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Cart</span>
+        </a>
+        <a href="#" class="mobile-bottom-nav-item">
+            <i class="fas fa-user"></i>
+            <span>Account</span>
+        </a>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification alert alert-success d-flex align-items-center" id="toastNotification" role="alert">
+        <i class="fas fa-check-circle fa-lg me-3"></i>
+        <div>
+            <strong>Added to cart!</strong> Medicine successfully added to your cart.
+        </div>
+        <button type="button" class="btn-close ms-auto" onclick="hideToast()"></button>
+    </div>
+
+    <!-- Comparison Drawer -->
+    <div class="comparison-drawer" id="comparisonDrawer">
+        <div class="drawer-header">
+            <h5 class="mb-0">Compare Medicines (2)</h5>
+            <div>
+                <button class="btn btn-sm btn-outline-primary me-2" id="clearComparison">Clear All</button>
+                <button class="btn btn-sm btn-primary">Compare Now</button>
+                <button class="btn btn-sm btn-close" onclick="toggleComparisonDrawer()"></button>
             </div>
         </div>
-    </section>
-
-    <!-- Advanced Filters Section -->
-    <section class="py-6 bg-white border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-                <!-- Filter Categories -->
-                <div class="flex flex-wrap items-center gap-2">
-                    <span class="text-xs font-semibold text-gray-700">Filter by:</span>
-                    <button class="filter-chip bg-secondary text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-medical">
-                        All Doctors
-                    </button>
-                    <button class="filter-chip bg-gray-100 text-gray-700 hover:bg-gray-200 px-3 py-1.5 rounded-full text-xs font-medium transition-colors">
-                        Primary Care
-                    </button>
-                    <button class="filter-chip bg-gray-100 text-gray-700 hover:bg-gray-200 px-3 py-1.5 rounded-full text-xs font-medium transition-colors">
-                        Specialists
-                    </button>
+        <div class="drawer-body">
+            <div class="comparison-item">
+                <div class="me-3">
+                    <div class="skeleton-loader" style="width: 60px; height: 60px;"></div>
                 </div>
-
-                <!-- Advanced Filters Toggle -->
-                <div class="flex items-center gap-3">
-                    <button class="flex items-center text-secondary hover:text-blue-600 text-sm font-medium transition-colors" onclick="toggleAdvancedFilters()">
-                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"/>
-                        </svg>
-                        Advanced Filters
-                    </button>
-                    <button class="flex items-center text-gray-600 hover:text-gray-800 text-sm font-medium transition-colors" onclick="resetFilters()">
-                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                        </svg>
-                        Reset
-                    </button>
+                <div class="flex-grow-1">
+                    <div class="fw-bold">Dolo 650mg Tablet</div>
+                    <div class="text-muted small">Paracetamol (650mg)</div>
                 </div>
+                <div class="text-end">
+                    <div class="fw-bold">₹25.50</div>
+                    <div class="text-muted small">10 tablets</div>
+                </div>
+                <button class="btn btn-sm btn-outline-danger ms-3">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-
-            <!-- Advanced Filters Panel -->
-            <div id="advanced-filters" class="hidden mt-4 p-4 bg-gray-50 rounded-xl">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- Specialty Filter -->
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1">Specialty</label>
-                        <select class="input-field text-sm py-1.5">
-                            <option>All Specialties</option>
-                            <option>Cardiology</option>
-                            <option>Dermatology</option>
-                            <option>Orthopedics</option>
-                            <option>Pediatrics</option>
-                        </select>
-                    </div>
-
-                    <!-- Insurance Filter -->
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1">Insurance</label>
-                        <select class="input-field text-sm py-1.5">
-                            <option>All Insurance Plans</option>
-                            <option>Aetna</option>
-                            <option>Blue Cross Blue Shield</option>
-                            <option>Cigna</option>
-                            <option>UnitedHealthcare</option>
-                        </select>
-                    </div>
-
-                    <!-- Distance -->
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1">Distance</label>
-                        <select class="input-field text-sm py-1.5">
-                            <option>Any Distance</option>
-                            <option>Within 5 miles</option>
-                            <option>Within 10 miles</option>
-                            <option>Within 25 miles</option>
-                        </select>
-                    </div>
-
-                    <!-- Availability -->
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1">Availability</label>
-                        <select class="input-field text-sm py-1.5">
-                            <option>Any Availability</option>
-                            <option>Same Day Appointments</option>
-                            <option>Weekends Available</option>
-                            <option>Evening Hours</option>
-                        </select>
-                    </div>
+            
+            <div class="comparison-item">
+                <div class="me-3">
+                    <div class="skeleton-loader" style="width: 60px; height: 60px;"></div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Doctors Grid Section -->
-    <section class="py-8 bg-background">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Results Header -->
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-                <div>
-                    <h2 class="text-xl font-bold text-gray-900 mb-1">Qualified Doctors & Specialists</h2>
-                    <p class="text-sm text-gray-600">Showing 342 doctors • Updated in real-time</p>
+                <div class="flex-grow-1">
+                    <div class="fw-bold">Crocin Advance 650mg</div>
+                    <div class="text-muted small">Paracetamol (650mg)</div>
                 </div>
-                <div class="flex items-center gap-3 mt-3 sm:mt-0">
-                    <span class="text-xs text-gray-600">Sort by:</span>
-                    <select class="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option>Relevance</option>
-                        <option>Distance: Nearest First</option>
-                        <option>Rating: Highest First</option>
-                        <option>Availability: Soonest First</option>
-                    </select>
+                <div class="text-end">
+                    <div class="fw-bold">₹22.00</div>
+                    <div class="text-muted small">10 tablets</div>
                 </div>
-            </div>
-
-            <!-- Doctors Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Doctor Card 1 -->
-                <div class="doctor-card bg-white rounded-xl shadow-medical p-4 group">
-                    <div class="flex items-start mb-3">
-                        <div class="relative mr-3">
-                            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Dr. Sarah Johnson" class="doctor-photo rounded-full object-cover" onerror="this.src='https://images.pexels.com/photos/4173239/pexels-photo-4173239.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'; this.onerror=null;" />
-                            <div class="availability-badge availability-online absolute bottom-1 right-1"></div>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="text-lg font-semibold text-gray-900 mb-1">Dr. Sarah Johnson</h3>
-                                    <p class="text-secondary font-medium text-sm mb-1">Cardiologist</p>
-                                </div>
-                                <button class="text-gray-400 hover:text-secondary transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="flex items-center mb-1">
-                                <div class="rating-stars text-sm">
-                                    ★★★★☆
-                                </div>
-                                <span class="text-xs text-gray-600 ml-1">4.7 (128)</span>
-                            </div>
-                            <p class="text-xs text-gray-600 mb-2">Harvard Medical School • 15 years</p>
-                            <div class="flex flex-wrap gap-1 mb-2">
-                                <span class="bg-blue-100 text-blue-800 text-xs px-1.5 py-0.5 rounded">Same Day</span>
-                                <span class="bg-green-100 text-green-800 text-xs px-1.5 py-0.5 rounded">Telemedicine</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Doctor Details -->
-                    <div class="space-y-2 mb-3">
-                        <div class="flex items-center text-xs text-gray-600">
-                            <svg class="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
-                            <span>2.3 miles • Heart Center NYC</span>
-                        </div>
-                        <div class="flex items-center text-xs text-gray-600">
-                            <svg class="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <span>Next: Today, 3:30 PM</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="grid grid-cols-2 gap-2">
-                        <button class="btn-primary text-xs py-1.5">
-                            Book Now
-                        </button>
-                        <button class="btn-secondary text-xs py-1.5">
-                            View Profile
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Doctor Card 2 -->
-                <div class="doctor-card bg-white rounded-xl shadow-medical p-4 group">
-                    <div class="flex items-start mb-3">
-                        <div class="relative mr-3">
-                            <img src="https://images.pexels.com/photos/4173239/pexels-photo-4173239.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Dr. Michael Chen" class="doctor-photo rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3'; this.onerror=null;" />
-                            <div class="availability-badge availability-online absolute bottom-1 right-1"></div>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="text-lg font-semibold text-gray-900 mb-1">Dr. Michael Chen</h3>
-                                    <p class="text-secondary font-medium text-sm mb-1">Orthopedic Surgeon</p>
-                                </div>
-                                <button class="text-gray-400 hover:text-secondary transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="flex items-center mb-1">
-                                <div class="rating-stars text-sm">
-                                    ★★★★★
-                                </div>
-                                <span class="text-xs text-gray-600 ml-1">4.9 (234)</span>
-                            </div>
-                            <p class="text-xs text-gray-600 mb-2">Johns Hopkins • 12 years</p>
-                            <div class="flex flex-wrap gap-1 mb-2">
-                                <span class="bg-blue-100 text-blue-800 text-xs px-1.5 py-0.5 rounded">Sports Medicine</span>
-                                <span class="bg-green-100 text-green-800 text-xs px-1.5 py-0.5 rounded">Weekends</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Doctor Details -->
-                    <div class="space-y-2 mb-3">
-                        <div class="flex items-center text-xs text-gray-600">
-                            <svg class="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
-                            <span>5.1 miles • OrthoCare Center</span>
-                        </div>
-                        <div class="flex items-center text-xs text-gray-600">
-                            <svg class="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <span>Next: Tomorrow, 10:00 AM</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="grid grid-cols-2 gap-2">
-                        <button class="btn-primary text-xs py-1.5">
-                            Book Now
-                        </button>
-                        <button class="btn-secondary text-xs py-1.5">
-                            View Profile
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Doctor Card 3 -->
-                <div class="doctor-card bg-white rounded-xl shadow-medical p-4 group">
-                    <div class="flex items-start mb-3">
-                        <div class="relative mr-3">
-                            <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Dr. Emily Rodriguez" class="doctor-photo rounded-full object-cover" onerror="this.src='https://images.pexels.com/photos/4173239/pexels-photo-4173239.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'; this.onerror=null;" />
-                            <div class="availability-badge availability-busy absolute bottom-1 right-1"></div>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="text-lg font-semibold text-gray-900 mb-1">Dr. Emily Rodriguez</h3>
-                                    <p class="text-secondary font-medium text-sm mb-1">Pediatrician</p>
-                                </div>
-                                <button class="text-gray-400 hover:text-secondary transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="flex items-center mb-1">
-                                <div class="rating-stars text-sm">
-                                    ★★★★☆
-                                </div>
-                                <span class="text-xs text-gray-600 ml-1">4.8 (189)</span>
-                            </div>
-                            <p class="text-xs text-gray-600 mb-2">Stanford • 8 years</p>
-                            <div class="flex flex-wrap gap-1 mb-2">
-                                <span class="bg-blue-100 text-blue-800 text-xs px-1.5 py-0.5 rounded">New Patients</span>
-                                <span class="bg-green-100 text-green-800 text-xs px-1.5 py-0.5 rounded">Telemedicine</span>
-                                <span class="bg-purple-100 text-purple-800 text-xs px-1.5 py-0.5 rounded">Evenings</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Doctor Details -->
-                    <div class="space-y-2 mb-3">
-                        <div class="flex items-center text-xs text-gray-600">
-                            <svg class="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
-                            <span>3.7 miles • Children's Health</span>
-                        </div>
-                        <div class="flex items-center text-xs text-gray-600">
-                            <svg class="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <span>Next: Friday, 2:15 PM</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="grid grid-cols-2 gap-2">
-                        <button class="btn-primary text-xs py-1.5">
-                            Book Now
-                        </button>
-                        <button class="btn-secondary text-xs py-1.5">
-                            View Profile
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Doctor Card 4 -->
-                <div class="doctor-card bg-white rounded-xl shadow-medical p-4 group">
-                    <div class="flex items-start mb-3">
-                        <div class="relative mr-3">
-                            <img src="https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Dr. James Wilson" class="doctor-photo rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3'; this.onerror=null;" />
-                            <div class="availability-badge availability-online absolute bottom-1 right-1"></div>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="text-lg font-semibold text-gray-900 mb-1">Dr. James Wilson</h3>
-                                    <p class="text-secondary font-medium text-sm mb-1">Dermatologist</p>
-                                </div>
-                                <button class="text-secondary hover:text-blue-600 transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="flex items-center mb-1">
-                                <div class="rating-stars text-sm">
-                                    ★★★★☆
-                                </div>
-                                <span class="text-xs text-gray-600 ml-1">4.6 (156)</span>
-                            </div>
-                            <p class="text-xs text-gray-600 mb-2">Yale • 10 years</p>
-                            <div class="flex flex-wrap gap-1 mb-2">
-                                <span class="bg-blue-100 text-blue-800 text-xs px-1.5 py-0.5 rounded">Cosmetic</span>
-                                <span class="bg-green-100 text-green-800 text-xs px-1.5 py-0.5 rounded">Telemedicine</span>
-                                <span class="bg-purple-100 text-purple-800 text-xs px-1.5 py-0.5 rounded">Same Day</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Doctor Details -->
-                    <div class="space-y-2 mb-3">
-                        <div class="flex items-center text-xs text-gray-600">
-                            <svg class="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
-                            <span>1.8 miles • Skin Care Specialists</span>
-                        </div>
-                        <div class="flex items-center text-xs text-gray-600">
-                            <svg class="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <span>Next: Today, 4:45 PM</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="grid grid-cols-2 gap-2">
-                        <button class="btn-primary text-xs py-1.5">
-                            Book Now
-                        </button>
-                        <button class="btn-secondary text-xs py-1.5">
-                            View Profile
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Doctor Card 5 -->
-                <div class="doctor-card bg-white rounded-xl shadow-medical p-4 group">
-                    <div class="flex items-start mb-3">
-                        <div class="relative mr-3">
-                            <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Dr. Lisa Park" class="doctor-photo rounded-full object-cover" onerror="this.src='https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'; this.onerror=null;" />
-                            <div class="availability-badge availability-online absolute bottom-1 right-1"></div>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="text-lg font-semibold text-gray-900 mb-1">Dr. Lisa Park</h3>
-                                    <p class="text-secondary font-medium text-sm mb-1">Neurologist</p>
-                                </div>
-                                <button class="text-gray-400 hover:text-secondary transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="flex items-center mb-1">
-                                <div class="rating-stars text-sm">
-                                    ★★★★★
-                                </div>
-                                <span class="text-xs text-gray-600 ml-1">4.9 (210)</span>
-                            </div>
-                            <p class="text-xs text-gray-600 mb-2">Mayo Clinic • 14 years</p>
-                            <div class="flex flex-wrap gap-1 mb-2">
-                                <span class="bg-blue-100 text-blue-800 text-xs px-1.5 py-0.5 rounded">Headache Specialist</span>
-                                <span class="bg-green-100 text-green-800 text-xs px-1.5 py-0.5 rounded">Telemedicine</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Doctor Details -->
-                    <div class="space-y-2 mb-3">
-                        <div class="flex items-center text-xs text-gray-600">
-                            <svg class="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
-                            <span>6.2 miles • NeuroCare Institute</span>
-                        </div>
-                        <div class="flex items-center text-xs text-gray-600">
-                            <svg class="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <span>Next: Monday, 9:00 AM</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="grid grid-cols-2 gap-2">
-                        <button class="btn-primary text-xs py-1.5">
-                            Book Now
-                        </button>
-                        <button class="btn-secondary text-xs py-1.5">
-                            View Profile
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Doctor Card 6 -->
-                <div class="doctor-card bg-white rounded-xl shadow-medical p-4 group">
-                    <div class="flex items-start mb-3">
-                        <div class="relative mr-3">
-                            <img src="https://images.pexels.com/photos/4173239/pexels-photo-4173239.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Dr. Robert Miller" class="doctor-photo rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3'; this.onerror=null;" />
-                            <div class="availability-badge availability-offline absolute bottom-1 right-1"></div>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="text-lg font-semibold text-gray-900 mb-1">Dr. Robert Miller</h3>
-                                    <p class="text-secondary font-medium text-sm mb-1">Gastroenterologist</p>
-                                </div>
-                                <button class="text-gray-400 hover:text-secondary transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="flex items-center mb-1">
-                                <div class="rating-stars text-sm">
-                                    ★★★★☆
-                                </div>
-                                <span class="text-xs text-gray-600 ml-1">4.5 (143)</span>
-                            </div>
-                            <p class="text-xs text-gray-600 mb-2">UCLA • 11 years</p>
-                            <div class="flex flex-wrap gap-1 mb-2">
-                                <span class="bg-blue-100 text-blue-800 text-xs px-1.5 py-0.5 rounded">Digestive Health</span>
-                                <span class="bg-green-100 text-green-800 text-xs px-1.5 py-0.5 rounded">Evenings</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Doctor Details -->
-                    <div class="space-y-2 mb-3">
-                        <div class="flex items-center text-xs text-gray-600">
-                            <svg class="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
-                            <span>4.5 miles • Digestive Health</span>
-                        </div>
-                        <div class="flex items-center text-xs text-gray-600">
-                            <svg class="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <span>Next: Wednesday, 11:30 AM</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="grid grid-cols-2 gap-2">
-                        <button class="btn-primary text-xs py-1.5">
-                            Book Now
-                        </button>
-                        <button class="btn-secondary text-xs py-1.5">
-                            View Profile
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Load More Button -->
-            <div class="text-center mt-8">
-                <button class="btn-secondary px-6 py-2 text-sm">
-                    Load More Doctors
-                    <svg class="w-4 h-4 ml-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                    </svg>
+                <button class="btn btn-sm btn-outline-danger ms-3">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
         </div>
-    </section>
-
-    <!-- Telemedicine Section -->
-    <section class="py-12 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-900 mb-3">Virtual Care Options</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Connect with doctors from the comfort of your home through secure video consultations
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Telemedicine Option 1 -->
-                <div class="bg-blue-50 rounded-xl p-6 text-center">
-                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8.5a1.5 1.5 0 001.5-1.5v-6A1.5 1.5 0 0013.5 9H12"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Video Consultation</h3>
-                    <p class="text-sm text-gray-600 mb-4">Secure face-to-face virtual appointments</p>
-                    <button class="btn-primary w-full text-sm py-2">Start Video Visit</button>
-                </div>
-
-                <!-- Telemedicine Option 2 -->
-                <div class="bg-green-50 rounded-xl p-6 text-center">
-                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Chat with Doctor</h3>
-                    <p class="text-sm text-gray-600 mb-4">Quick answers via secure messaging</p>
-                    <button class="btn-secondary w-full text-sm py-2">Start Chat</button>
-                </div>
-
-                <!-- Telemedicine Option 3 -->
-                <div class="bg-purple-50 rounded-xl p-6 text-center">
-                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Second Opinion</h3>
-                    <p class="text-sm text-gray-600 mb-4">Expert second opinions on diagnoses</p>
-                    <button class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors w-full text-sm">Request Opinion</button>
-                </div>
-            </div>
-        </div>
-    </section>
+    </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <!-- Company Info -->
-                <div class="col-span-1 md:col-span-2">
-                    <div class="flex items-center mb-3">
-                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="24" height="24" rx="4" fill="#4A90E2"/>
-                            <path d="M12 4v16M4 12h16" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                            <circle cx="12" cy="12" r="3" fill="none" stroke="white" stroke-width="1.5"/>
-                        </svg>
-                        <span class="ml-2 text-lg font-bold">Qurexa</span>
+    <footer class="bg-white border-top py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h5 class="fw-bold mb-3">MediCare+</h5>
+                    <p class="text-muted small">Your trusted online pharmacy for genuine medicines, healthcare products, and wellness solutions.</p>
+                    <div class="d-flex mt-3">
+                        <div class="me-3"><i class="fab fa-google-play text-primary"></i></div>
+                        <div><i class="fab fa-app-store-ios text-primary"></i></div>
                     </div>
-                    <p class="text-gray-300 mb-3 text-sm max-w-md">
-                        Transforming healthcare through intelligent technology and compassionate care.
-                    </p>
                 </div>
-
-                <!-- Quick Links -->
-                <div>
-                    <h3 class="text-base font-semibold mb-2">Quick Links</h3>
-                    <ul class="space-y-1">
-                        <li><a href="medicine_products_catalog.html" class="text-gray-300 hover:text-white transition-colors text-sm">Find Medicine</a></li>
-                        <li><a href="doctors_listing.html" class="text-gray-300 hover:text-white transition-colors text-sm">Find Doctors</a></li>
-                        <li><a href="emergency_urgent_care.html" class="text-gray-300 hover:text-white transition-colors text-sm">Emergency Care</a></li>
+                <div class="col-md-2 mb-3 mb-md-0">
+                    <h6 class="fw-bold">Company</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="#" class="text-muted text-decoration-none">About Us</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Careers</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Blog</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Contact</a></li>
                     </ul>
                 </div>
-
-                <!-- Contact Info -->
-                <div>
-                    <h3 class="text-base font-semibold mb-2">Contact</h3>
-                    <ul class="space-y-1 text-gray-300 text-sm">
-                        <li>1-800-QUREXA-1</li>
-                        <li>support@qurexa.com</li>
-                        <li>24/7 Doctor Line</li>
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <h6 class="fw-bold">Services</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="#" class="text-muted text-decoration-none">Order Medicines</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Book Lab Tests</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Consult Doctors</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Healthcare Products</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold">Need Help?</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="#" class="text-muted text-decoration-none">FAQs</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Terms of Use</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Return Policy</a></li>
                     </ul>
                 </div>
             </div>
-
-            <div class="border-t border-gray-800 mt-6 pt-6 text-center text-gray-400 text-xs">
-                <p>&copy; 2025 Qurexa Medical Platform. All Rights Reserved. | HIPAA Compliant</p>
+            <hr class="my-4">
+            <div class="text-center text-muted small">
+                <p>© 2023 MediCare+. All rights reserved. Licensed pharmacy under the Drugs and Cosmetics Act.</p>
+                <p class="mb-0">Information provided on this site is for informational purposes only. Please consult a healthcare professional before using any medicines.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Floating Emergency Button -->
-    <div class="fixed bottom-4 right-4 z-50">
-        <a href="emergency_urgent_care.html" class="pulse-glow bg-red-500 hover:bg-red-600 text-white p-3 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/>
-            </svg>
-        </a>
-    </div>
-
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
-        function toggleMobileMenu() {
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('hidden');
-        }
-
-        function showSearchSuggestions(value) {
-            const suggestions = document.getElementById('search-suggestions');
-            if (value.length > 2) {
-                suggestions.classList.remove('hidden');
-            } else {
-                suggestions.classList.add('hidden');
+        // Medicine data
+        const medicines = [
+            {
+                id: 1,
+                name: "Dolo 650mg Tablet",
+                salt: "Paracetamol (650mg)",
+                brand: "Micro Labs",
+                prescription: true,
+                price: 25.50,
+                originalPrice: 35.00,
+                discount: 27,
+                rating: 4.5,
+                reviews: 1245,
+                stock: "in-stock",
+                imageClass: "bg-warning-subtle",
+                category: "tablets"
+            },
+            {
+                id: 2,
+                name: "Azithral 500mg Tablet",
+                salt: "Azithromycin (500mg)",
+                brand: "Alembic Pharmaceuticals",
+                prescription: true,
+                price: 120.75,
+                originalPrice: 150.00,
+                discount: 19,
+                rating: 4.3,
+                reviews: 876,
+                stock: "in-stock",
+                imageClass: "bg-info-subtle",
+                category: "tablets"
+            },
+            {
+                id: 3,
+                name: "Montair-LC Tablet",
+                salt: "Montelukast (10mg) + Levocetirizine (5mg)",
+                brand: "Cipla",
+                prescription: true,
+                price: 89.00,
+                originalPrice: 120.00,
+                discount: 26,
+                rating: 4.6,
+                reviews: 2103,
+                stock: "low-stock",
+                imageClass: "bg-primary-subtle",
+                category: "tablets"
+            },
+            {
+                id: 4,
+                name: "Zerodol-SP Tablet",
+                salt: "Aceclofenac (100mg) + Paracetamol (325mg) + Serratiopeptidase (15mg)",
+                brand: "Ipca Laboratories",
+                prescription: false,
+                price: 65.25,
+                originalPrice: 85.00,
+                discount: 23,
+                rating: 4.4,
+                reviews: 1542,
+                stock: "in-stock",
+                imageClass: "bg-danger-subtle",
+                category: "tablets"
+            },
+            {
+                id: 5,
+                name: "Pan 40mg Tablet",
+                salt: "Pantoprazole (40mg)",
+                brand: "Alkem Laboratories",
+                prescription: true,
+                price: 42.50,
+                originalPrice: 60.00,
+                discount: 29,
+                rating: 4.2,
+                reviews: 987,
+                stock: "in-stock",
+                imageClass: "bg-success-subtle",
+                category: "tablets"
+            },
+            {
+                id: 6,
+                name: "Zincovit Syrup 200ml",
+                salt: "Multivitamin with Zinc & Lysine",
+                brand: "USV",
+                prescription: false,
+                price: 145.00,
+                originalPrice: 180.00,
+                discount: 19,
+                rating: 4.7,
+                reviews: 2310,
+                stock: "in-stock",
+                imageClass: "bg-warning-subtle",
+                category: "syrups"
+            },
+            {
+                id: 7,
+                name: "Emeset 4mg Tablet",
+                salt: "Ondansetron (4mg)",
+                brand: "Cipla",
+                prescription: true,
+                price: 28.75,
+                originalPrice: 40.00,
+                discount: 28,
+                rating: 4.5,
+                reviews: 1123,
+                stock: "out-of-stock",
+                imageClass: "bg-info-subtle",
+                category: "tablets"
+            },
+            {
+                id: 8,
+                name: "Becosules Capsule",
+                salt: "Multivitamin, Multimineral & Antioxidants",
+                brand: "Pfizer",
+                prescription: false,
+                price: 55.00,
+                originalPrice: 70.00,
+                discount: 21,
+                rating: 4.6,
+                reviews: 1895,
+                stock: "in-stock",
+                imageClass: "bg-primary-subtle",
+                category: "capsules"
             }
-        }
+        ];
 
-        function toggleAdvancedFilters() {
-            const filters = document.getElementById('advanced-filters');
-            filters.classList.toggle('hidden');
-        }
-
-        function resetFilters() {
-            // Reset all filter selections
-            const filterChips = document.querySelectorAll('.filter-chip');
-            filterChips.forEach(chip => {
-                chip.classList.remove('bg-secondary', 'text-white');
-                chip.classList.add('bg-gray-100', 'text-gray-700');
-            });
-            // Reset first chip to active
-            filterChips[0].classList.remove('bg-gray-100', 'text-gray-700');
-            filterChips[0].classList.add('bg-secondary', 'text-white');
-            
-            // Reset advanced filters
-            const selects = document.querySelectorAll('#advanced-filters select');
-            selects.forEach(select => {
-                select.selectedIndex = 0;
-            });
-        }
-
-        function startLocationSearch() {
-            // Location search functionality placeholder
-            alert('Location-based search would be implemented here');
-        }
-
-        // Add click handlers for filter chips
-        document.querySelectorAll('.filter-chip').forEach(chip => {
-            chip.addEventListener('click', function() {
-                // Remove active state from all chips
-                document.querySelectorAll('.filter-chip').forEach(c => {
-                    c.classList.remove('bg-secondary', 'text-white');
-                    c.classList.add('bg-gray-100', 'text-gray-700');
-                });
-                // Add active state to clicked chip
-                this.classList.remove('bg-gray-100', 'text-gray-700');
-                this.classList.add('bg-secondary', 'text-white');
-            });
-        });
-
-        // Hide search suggestions when clicking outside
-        document.addEventListener('click', function(event) {
-            const searchInput = document.getElementById('smart-search');
-            const suggestions = document.getElementById('search-suggestions');
-            if (!searchInput.contains(event.target) && !suggestions.contains(event.target)) {
-                suggestions.classList.add('hidden');
-            }
-        });
-
-        // Add intersection observer for doctor card animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+        // Active filters state
+        let activeFilters = {
+            search: '',
+            categories: ['all'],
+            prescription: null,
+            stock: [],
+            discount: [],
+            price: 5000
         };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+        // Initialize the medicine grid
+        function renderMedicineCards(filteredMedicines = medicines) {
+            const medicineGrid = document.getElementById('medicineGrid');
+            medicineGrid.innerHTML = '';
+            
+            filteredMedicines.forEach(medicine => {
+                const stockText = medicine.stock === 'in-stock' ? 'In Stock' : 
+                                medicine.stock === 'low-stock' ? 'Low Stock' : 'Out of Stock';
+                
+                const card = document.createElement('div');
+                card.className = 'col-md-6 col-xl-4 col-xxl-3 mb-4';
+                card.innerHTML = `
+                    <div class="medicine-card">
+                        <div class="medicine-image ${medicine.imageClass}">
+                            <div class="skeleton-loader" style="width: 120px; height: 120px;"></div>
+                        </div>
+                        <div class="medicine-details">
+                            <h3 class="medicine-name">${medicine.name}</h3>
+                            <p class="salt-composition">${medicine.salt}</p>
+                            <p class="brand-name">${medicine.brand}</p>
+                            
+                            ${medicine.prescription ? 
+                                '<div class="prescription-badge"><i class="fas fa-prescription"></i> Prescription Required</div>' : 
+                                ''}
+                            
+                            <div class="price-section">
+                                <div class="current-price">₹${medicine.price.toFixed(2)}</div>
+                                <div class="original-price">₹${medicine.originalPrice.toFixed(2)}</div>
+                                <div class="discount-badge">${medicine.discount}% OFF</div>
+                            </div>
+                            
+                            <div class="rating">
+                                <div class="stars">
+                                    ${generateStars(medicine.rating)}
+                                </div>
+                                <div class="rating-count">${medicine.rating} (${medicine.reviews} reviews)</div>
+                            </div>
+                            
+                            <div class="stock-status ${medicine.stock}">
+                                <i class="fas ${medicine.stock === 'in-stock' ? 'fa-check-circle' : 
+                                    medicine.stock === 'low-stock' ? 'fa-exclamation-circle' : 'fa-times-circle'} me-1"></i>
+                                ${stockText}
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <button class="btn-add-cart" onclick="addToCart(${medicine.id})">
+                                    <i class="fas fa-cart-plus me-1"></i> Add to Cart
+                                </button>
+                                <button class="btn-buy-now" onclick="buyNow(${medicine.id})">
+                                    <i class="fas fa-bolt me-1"></i> Buy Now
+                                </button>
+                                <button class="btn-compare" onclick="addToComparison(${medicine.id})">
+                                    <i class="fas fa-balance-scale me-1"></i> Compare
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                medicineGrid.appendChild(card);
+            });
+            
+            // Simulate loading animation
+            setTimeout(() => {
+                document.querySelectorAll('.medicine-image .skeleton-loader').forEach(loader => {
+                    loader.style.animation = 'none';
+                    loader.style.backgroundColor = 'transparent';
+                    loader.innerHTML = '<i class="fas fa-pills fa-4x text-muted"></i>';
+                });
+            }, 500);
+        }
+
+        // Generate star rating HTML
+        function generateStars(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+            
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+            
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+            
+            return stars;
+        }
+
+        // Cart functionality
+        let cartCount = 3;
+        
+        function addToCart(medicineId) {
+            cartCount++;
+            document.querySelector('.cart-count').textContent = cartCount;
+            
+            // Show toast notification
+            showToast('Added to cart! Medicine successfully added to your cart.');
+            
+            // Animate cart icon
+            const cartIcon = document.querySelector('.cart-icon');
+            cartIcon.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                cartIcon.style.transform = 'scale(1)';
+            }, 300);
+        }
+
+        function buyNow(medicineId) {
+            showToast('Redirecting to checkout...');
+        }
+
+        // Comparison functionality
+        let comparisonItems = [1, 2];
+        
+        function addToComparison(medicineId) {
+            if (!comparisonItems.includes(medicineId)) {
+                if (comparisonItems.length >= 4) {
+                    showToast('Maximum 4 items can be compared at once.');
+                    return;
+                }
+                
+                comparisonItems.push(medicineId);
+                showToast('Added to comparison list.');
+                toggleComparisonDrawer();
+            } else {
+                showToast('This item is already in comparison list.');
+            }
+        }
+
+        function toggleComparisonDrawer() {
+            const drawer = document.getElementById('comparisonDrawer');
+            drawer.classList.toggle('show');
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            if (message) {
+                toast.querySelector('.alert strong').textContent = message.split('!')[0] + '!';
+                toast.querySelector('.alert div:nth-child(2)').innerHTML = message;
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                hideToast();
+            }, 3000);
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('toastNotification');
+            toast.classList.remove('show');
+        }
+
+        // Category filtering functionality
+        const categoryButtons = document.querySelectorAll('.category-btn');
+
+        // Update active filters and UI
+        function updateActiveFiltersUI() {
+            const activeFiltersList = document.getElementById('activeFiltersList');
+            activeFiltersList.innerHTML = '';
+            
+            let hasFilters = false;
+            
+            // Search filter
+            if (activeFilters.search && activeFilters.search.trim() !== '') {
+                hasFilters = true;
+                const filterTag = createFilterTag('Search: ' + activeFilters.search, 'search');
+                activeFiltersList.appendChild(filterTag);
+            }
+            
+            // Category filters (excluding 'all')
+            if (activeFilters.categories.length > 0 && !(activeFilters.categories.length === 1 && activeFilters.categories[0] === 'all')) {
+                hasFilters = true;
+                activeFilters.categories.forEach(category => {
+                    if (category !== 'all') {
+                        const filterTag = createFilterTag(getCategoryLabel(category), 'category-' + category);
+                        activeFiltersList.appendChild(filterTag);
+                    }
+                });
+            }
+            
+            // Show/hide active filters container
+            const activeFiltersContainer = document.getElementById('activeFiltersContainer');
+            activeFiltersContainer.style.display = hasFilters ? 'block' : 'none';
+            
+            // Apply filters
+            applyAllFilters();
+        }
+
+        function createFilterTag(label, filterId) {
+            const tag = document.createElement('div');
+            tag.className = 'filter-tag';
+            tag.innerHTML = `
+                ${label}
+                <button class="filter-tag-remove" data-filter="${filterId}">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            tag.querySelector('.filter-tag-remove').addEventListener('click', function() {
+                removeFilter(filterId);
+            });
+            
+            return tag;
+        }
+
+        function removeFilter(filterId) {
+            if (filterId === 'search') {
+                activeFilters.search = '';
+                document.getElementById('mainSearchInput').value = '';
+            } else if (filterId.startsWith('category-')) {
+                const category = filterId.replace('category-', '');
+                activeFilters.categories = activeFilters.categories.filter(cat => cat !== category);
+                
+                // Update category buttons
+                const categoryBtn = document.querySelector(`.category-btn[data-category="${category}"]`);
+                if (categoryBtn) categoryBtn.classList.remove('active');
+                
+                // If no categories selected, add 'all'
+                if (activeFilters.categories.length === 0) {
+                    activeFilters.categories.push('all');
+                    document.querySelector('.category-btn[data-category="all"]').classList.add('active');
+                }
+            }
+            
+            updateActiveFiltersUI();
+        }
+
+        function getCategoryLabel(category) {
+            const labels = {
+                'prescription': 'Prescription Required',
+                'generic': 'Generic Available',
+                'bestseller': 'Best Seller',
+                'discounted': 'Discounted',
+                'in-stock': 'In Stock',
+                'fever': 'Fever & Cold',
+                'pain': 'Pain Relief',
+                'diabetes': 'Diabetes',
+                'cardiac': 'Cardiac Care'
+            };
+            return labels[category] || category;
+        }
+
+        // Apply all filters
+        function applyAllFilters() {
+            let filteredMedicines = medicines;
+            
+            // Search filter
+            if (activeFilters.search && activeFilters.search.trim() !== '') {
+                const searchTerm = activeFilters.search.toLowerCase();
+                filteredMedicines = filteredMedicines.filter(medicine => 
+                    medicine.name.toLowerCase().includes(searchTerm) ||
+                    medicine.salt.toLowerCase().includes(searchTerm) ||
+                    medicine.brand.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Category filters
+            if (activeFilters.categories.length > 0 && !(activeFilters.categories.length === 1 && activeFilters.categories[0] === 'all')) {
+                filteredMedicines = filteredMedicines.filter(medicine => {
+                    return activeFilters.categories.some(category => {
+                        switch(category) {
+                            case 'prescription':
+                                return medicine.prescription;
+                            case 'generic':
+                                return medicine.name.toLowerCase().includes('generic') || 
+                                       medicine.price < medicine.originalPrice * 0.7;
+                            case 'bestseller':
+                                return medicine.reviews > 1000;
+                            case 'discounted':
+                                return medicine.discount >= 20;
+                            case 'in-stock':
+                                return medicine.stock === 'in-stock';
+                            case 'fever':
+                                return ['Paracetamol', 'Azithromycin', 'Montelukast'].some(drug => 
+                                       medicine.salt.includes(drug));
+                            case 'pain':
+                                return ['Aceclofenac', 'Paracetamol', 'Diclofenac'].some(drug => 
+                                       medicine.salt.includes(drug));
+                            case 'diabetes':
+                                return medicine.salt.toLowerCase().includes('gl') ||
+                                       medicine.name.toLowerCase().includes('metformin');
+                            case 'cardiac':
+                                return medicine.salt.toLowerCase().includes('aspirin') ||
+                                       medicine.name.toLowerCase().includes('atorva');
+                            default:
+                                return true;
+                        }
+                    });
+                });
+            }
+            
+            // Sort by selected option
+            const sortSelect = document.getElementById('sortSelect');
+            const sortValue = sortSelect.value;
+            
+            if (sortValue === 'Price: Low to High') {
+                filteredMedicines.sort((a, b) => a.price - b.price);
+            } else if (sortValue === 'Price: High to Low') {
+                filteredMedicines.sort((a, b) => b.price - a.price);
+            } else if (sortValue === 'Popularity') {
+                filteredMedicines.sort((a, b) => b.reviews - a.reviews);
+            } else if (sortValue === 'Customer Ratings') {
+                filteredMedicines.sort((a, b) => b.rating - a.rating);
+            } else if (sortValue === 'New Arrivals') {
+                // For demo, just reverse the array
+                filteredMedicines.reverse();
+            }
+            
+            renderMedicineCards(filteredMedicines);
+            showToast(`Showing ${filteredMedicines.length} medicines`);
+        }
+
+        // Add event listeners to category buttons
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const category = this.dataset.category;
+                
+                if (category === 'all') {
+                    // If 'all' is clicked, deactivate all others
+                    categoryButtons.forEach(btn => {
+                        if (btn.dataset.category !== 'all') {
+                            btn.classList.remove('active');
+                        }
+                    });
+                    activeFilters.categories = ['all'];
+                } else {
+                    // If other category is clicked, remove 'all' if it was active
+                    if (activeFilters.categories.includes('all')) {
+                        activeFilters.categories = activeFilters.categories.filter(cat => cat !== 'all');
+                        const allBtn = document.querySelector('.category-btn[data-category="all"]');
+                        if (allBtn) allBtn.classList.remove('active');
+                    }
+                    
+                    // Toggle the clicked category
+                    const index = activeFilters.categories.indexOf(category);
+                    if (index === -1) {
+                        activeFilters.categories.push(category);
+                        this.classList.add('active');
+                    } else {
+                        activeFilters.categories.splice(index, 1);
+                        this.classList.remove('active');
+                    }
+                    
+                    // If no categories selected, add 'all'
+                    if (activeFilters.categories.length === 0) {
+                        activeFilters.categories.push('all');
+                        document.querySelector('.category-btn[data-category="all"]').classList.add('active');
+                    }
+                }
+                
+                updateActiveFiltersUI();
+            });
+        });
+
+        // Search functionality
+        const mainSearchInput = document.getElementById('mainSearchInput');
+        const clearSearchBtn = document.getElementById('clearSearch');
+
+        mainSearchInput.addEventListener('input', function() {
+            activeFilters.search = this.value;
+            updateActiveFiltersUI();
+            
+            // Show/hide clear button
+            if (this.value) {
+                clearSearchBtn.style.display = 'block';
+            } else {
+                clearSearchBtn.style.display = 'none';
+            }
+        });
+
+        mainSearchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                updateActiveFiltersUI();
+            }
+        });
+
+        clearSearchBtn.addEventListener('click', function() {
+            mainSearchInput.value = '';
+            activeFilters.search = '';
+            updateActiveFiltersUI();
+            clearSearchBtn.style.display = 'none';
+        });
+
+        // Clear all active filters
+        document.getElementById('clearActiveFilters').addEventListener('click', function() {
+            // Reset all filters
+            activeFilters = {
+                search: '',
+                categories: ['all'],
+                prescription: null,
+                stock: [],
+                discount: [],
+                price: 5000
+            };
+            
+            // Reset UI
+            mainSearchInput.value = '';
+            clearSearchBtn.style.display = 'none';
+            
+            // Reset category buttons
+            categoryButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.category === 'all') {
+                    btn.classList.add('active');
                 }
             });
-        }, observerOptions);
-
-        // Observe doctor cards for animation
-        document.querySelectorAll('.doctor-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
+            
+            // Reset sidebar filters
+            document.querySelectorAll('.form-check-input').forEach(input => {
+                input.checked = false;
+            });
+            
+            // Check a few defaults
+            document.getElementById('tablets').checked = true;
+            document.getElementById('inStock').checked = true;
+            document.getElementById('prescriptionNo').checked = true;
+            document.getElementById('priceSlider').value = 5000;
+            document.getElementById('priceMaxValue').textContent = '₹5000';
+            
+            updateActiveFiltersUI();
+            showToast('All filters cleared.');
         });
 
-        // Book appointment functionality
-        document.querySelectorAll('.btn-primary').forEach(button => {
-            if (button.textContent.includes('Book Now')) {
-                button.addEventListener('click', function() {
-                    const doctorName = this.closest('.doctor-card').querySelector('h3').textContent;
-                    const specialty = this.closest('.doctor-card').querySelector('.text-secondary').textContent;
-                    alert(`Booking appointment with ${doctorName} - ${specialty}`);
-                });
-            }
+        // Horizontal scroll for category navigation
+        const categoryList = document.getElementById('categoryList');
+        const scrollLeftBtn = document.getElementById('scrollLeftBtn');
+        const scrollRightBtn = document.getElementById('scrollRightBtn');
+
+        if (scrollLeftBtn && scrollRightBtn) {
+            scrollLeftBtn.addEventListener('click', () => {
+                categoryList.scrollBy({ left: -200, behavior: 'smooth' });
+            });
+            
+            scrollRightBtn.addEventListener('click', () => {
+                categoryList.scrollBy({ left: 200, behavior: 'smooth' });
+            });
+            
+            // Show/hide scroll buttons based on scroll position
+            categoryList.addEventListener('scroll', () => {
+                scrollLeftBtn.style.opacity = categoryList.scrollLeft > 0 ? '1' : '0.5';
+                scrollRightBtn.style.opacity = 
+                    categoryList.scrollLeft < (categoryList.scrollWidth - categoryList.clientWidth) ? '1' : '0.5';
+            });
+        }
+
+        // View toggle
+        const gridViewBtn = document.getElementById('gridViewBtn');
+        const listViewBtn = document.getElementById('listViewBtn');
+        
+        gridViewBtn.addEventListener('click', function() {
+            gridViewBtn.classList.add('active');
+            listViewBtn.classList.remove('active');
+            document.getElementById('medicineGrid').classList.remove('list-view');
+        });
+        
+        listViewBtn.addEventListener('click', function() {
+            listViewBtn.classList.add('active');
+            gridViewBtn.classList.remove('active');
+            document.getElementById('medicineGrid').classList.add('list-view');
         });
 
-        // View profile functionality
-        document.querySelectorAll('.btn-secondary').forEach(button => {
-            if (button.textContent.includes('View Profile')) {
-                button.addEventListener('click', function() {
-                    const doctorName = this.closest('.doctor-card').querySelector('h3').textContent;
-                    alert(`Opening detailed profile for ${doctorName}`);
+        // Mobile filter toggle
+        const mobileFilterToggle = document.getElementById('mobileFilterToggle');
+        const mobileFilterBtn = document.getElementById('mobileFilterBtn');
+        const filterSidebar = document.querySelector('.filter-sidebar');
+        const filterOverlay = document.getElementById('filterOverlay');
+        
+        function openMobileFilters() {
+            filterSidebar.classList.add('show');
+            filterOverlay.classList.add('show');
+        }
+        
+        function closeMobileFilters() {
+            filterSidebar.classList.remove('show');
+            filterOverlay.classList.remove('show');
+        }
+        
+        if (mobileFilterToggle) {
+            mobileFilterToggle.addEventListener('click', openMobileFilters);
+        }
+        
+        if (mobileFilterBtn) {
+            mobileFilterBtn.addEventListener('click', openMobileFilters);
+        }
+        
+        if (filterOverlay) {
+            filterOverlay.addEventListener('click', closeMobileFilters);
+        }
+
+        // Clear sidebar filters
+        document.getElementById('clearFilters').addEventListener('click', function() {
+            document.querySelectorAll('.form-check-input').forEach(input => {
+                input.checked = false;
+            });
+            
+            // Check a few defaults
+            document.getElementById('tablets').checked = true;
+            document.getElementById('inStock').checked = true;
+            document.getElementById('prescriptionNo').checked = true;
+            document.getElementById('priceSlider').value = 5000;
+            document.getElementById('priceMaxValue').textContent = '₹5000';
+            
+            showToast('All sidebar filters cleared.');
+        });
+
+        // Apply sidebar filters
+        document.getElementById('applyFilters').addEventListener('click', function() {
+            // Get all filter values
+            const tabletsChecked = document.getElementById('tablets').checked;
+            const syrupsChecked = document.getElementById('syrups').checked;
+            const injectionsChecked = document.getElementById('injections').checked;
+            const creamsChecked = document.getElementById('creams').checked;
+            const capsulesChecked = document.getElementById('capsules').checked;
+            
+            const inStockChecked = document.getElementById('inStock').checked;
+            const outOfStockChecked = document.getElementById('outOfStock').checked;
+            
+            const discount10Checked = document.getElementById('discount10').checked;
+            const discount20Checked = document.getElementById('discount20').checked;
+            const discount30Checked = document.getElementById('discount30').checked;
+            
+            const prescriptionYes = document.getElementById('prescriptionYes').checked;
+            const prescriptionNo = document.getElementById('prescriptionNo').checked;
+            
+            const priceValue = document.getElementById('priceSlider').value;
+            
+            // Apply price filter
+            activeFilters.price = priceValue;
+            
+            // Update price display
+            document.getElementById('priceMaxValue').textContent = `₹${priceValue}`;
+            
+            // Apply filters and update UI
+            updateActiveFiltersUI();
+            showToast('Sidebar filters applied.');
+            
+            // Close mobile filters if open
+            closeMobileFilters();
+        });
+
+        // Price slider update
+        const priceSlider = document.getElementById('priceSlider');
+        const priceMaxValue = document.getElementById('priceMaxValue');
+        
+        priceSlider.addEventListener('input', function() {
+            priceMaxValue.textContent = `₹${this.value}`;
+        });
+
+        // Sort select change
+        document.getElementById('sortSelect').addEventListener('change', function() {
+            applyAllFilters();
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMedicineCards();
+            updateActiveFiltersUI();
+            
+            // Initialize price slider
+            priceMaxValue.textContent = `₹${priceSlider.value}`;
+            
+            // Add active class to mobile bottom nav items on click
+            document.querySelectorAll('.mobile-bottom-nav-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.mobile-bottom-nav-item').forEach(navItem => {
+                        navItem.classList.remove('active');
+                    });
+                    this.classList.add('active');
                 });
-            }
+            });
+            
+            // Add some sample quick stats animation
+            const statValues = document.querySelectorAll('.stat-value');
+            statValues.forEach(stat => {
+                const originalValue = stat.textContent;
+                stat.textContent = '0';
+                
+                let counter = 0;
+                const target = parseInt(originalValue);
+                const increment = target / 20;
+                
+                const updateCounter = () => {
+                    if (counter < target) {
+                        counter += increment;
+                        stat.textContent = Math.ceil(counter) + (originalValue.includes('+') ? '+' : '');
+                        setTimeout(updateCounter, 50);
+                    } else {
+                        stat.textContent = originalValue;
+                    }
+                };
+                
+                setTimeout(updateCounter, 500);
+            });
         });
     </script>
-<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
 </body>
 </html>
