@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr. Sarah Chen - Cardiology Specialist | HealthCare Plus</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% extends "enduser/base.html" %}
+{% block title %} {{doctor.name}}{{doctor.specialization}}| Curexa{% endblock %}
+{% load static %}
+{% block content %}
     <style>
         /* CSS Variables for Theme Colors */
         :root {
@@ -804,28 +798,6 @@
             scroll-behavior: smooth;
         }
     </style>
-</head>
-<body>
-    <!-- Header Section -->
-    <header>
-        <div class="container header-container">
-            <div class="logo">
-                <i class="fas fa-heartbeat"></i>
-                <span>HealthCare Plus</span>
-            </div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="#" class="active">Home</a></li>
-                    <li><a href="#">Doctors</a></li>
-                    <li><a href="#">Appointments</a></li>
-                    <li><a href="#">Profile</a></li>
-                </ul>
-                <button class="mobile-menu-btn">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </nav>
-        </div>
-    </header>
 
     <main class="container">
         <!-- Doctor Profile Card -->
@@ -1095,28 +1067,6 @@
         </button>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container footer-container">
-            <div class="footer-logo">
-                <i class="fas fa-heartbeat"></i>
-                HealthCare Plus
-            </div>
-            <p class="footer-disclaimer">
-                HealthCare Plus provides a platform for patients to connect with healthcare providers. This information is for general purposes only and should not be considered medical advice. Always consult with a qualified healthcare professional for diagnosis and treatment.
-            </p>
-            <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Contact Us</a>
-                <a href="#">Help Center</a>
-            </div>
-            <div class="copyright">
-                &copy; 2023 HealthCare Plus. All rights reserved.
-            </div>
-        </div>
-    </footer>
-
     <script>
         // Mobile menu toggle
         document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
@@ -1171,5 +1121,4 @@
         // Uncomment the line below to see skeleton loading effect on page load
         // window.addEventListener('load', simulateLoading);
     </script>
-</body>
-</html>
+{% endblock content %}

@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Appointments | HealthCare Connect</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+{% extends "enduser/base.html" %}
+{% block title %}My Appointments | Curexa{% endblock %}
+{% load static %}
+{% block content %}
+
     <style>
         :root {
             --primary-blue: #0d7c93;
@@ -743,8 +740,6 @@
             box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3);
         }
     </style>
-</head>
-<body>
     <div class="app-container">
         <!-- Page Header -->
         <header class="page-header">
@@ -1402,5 +1397,5 @@
             });
         }, 5000);
     </script>
-</body>
-</html>
+
+{% endblock content %}

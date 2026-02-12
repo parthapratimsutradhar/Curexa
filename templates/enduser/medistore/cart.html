@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedCart | Premium Healthcare Cart</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+{% extends "enduser/base.html" %}
+{% block title %}Your Cart | Curexa{% endblock %}
+{% load static %}
+{% block content %}
     <style>
         * {
             margin: 0;
@@ -925,26 +921,6 @@
             color: var(--danger-red);
         }
     </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Premium Header -->
-        <header class="header">
-            <div class="logo-container">
-                <div class="logo">
-                    <i class="fas fa-heartbeat"></i>
-                </div>
-                <span class="logo-text">MedCart Pro</span>
-            </div>
-            <nav class="nav-links">
-                <a href="#" class="nav-link">Home</a>
-                <a href="#" class="nav-link">Medicines</a>
-                <a href="#" class="nav-link">Healthcare</a>
-                <a href="#" class="nav-link">Doctors</a>
-                <a href="#" class="nav-link active">Cart <span class="cart-count">3</span></a>
-                <a href="#" class="nav-link">Account</a>
-            </nav>
-        </header>
 
         <!-- Page Header -->
         <div class="page-header">
@@ -1181,19 +1157,6 @@
                 <i class="fas fa-pills"></i> Browse Medicines
             </button>
         </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-links">
-                <a href="#" class="footer-link">Privacy Policy</a>
-                <a href="#" class="footer-link">Terms of Service</a>
-                <a href="#" class="footer-link">Contact Us</a>
-                <a href="#" class="footer-link">FAQs</a>
-                <a href="#" class="footer-link">Return Policy</a>
-            </div>
-            <p>© 2023 MedCart Pro. All rights reserved. Lic. No: MH-DRUGS-LIC-12345</p>
-            <p style="margin-top: 8px; font-size: 0.8rem;">For medical emergencies, contact your nearest hospital or call emergency services.</p>
-        </footer>
     </div>
 
     <!-- Toast Notification -->
@@ -1487,5 +1450,4 @@
             }
         });
     </script>
-</body>
-</html>
+{% endblock content %}

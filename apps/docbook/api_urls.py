@@ -15,7 +15,7 @@ urlpatterns = [
     
     # Appointments
     path('appointments/book/', views.AppointmentBookAPIView.as_view(), name='admin-appointment-book'),
-    path('appointments/', views.AppointmentsByDoctorAPIView.as_view(), name='appointments'),
+    path('appointments/', views.AppointmentsByDoctorAPIView.as_view(), name='api_appointments'),
     
     # {
     #  "appointment_type": 1,

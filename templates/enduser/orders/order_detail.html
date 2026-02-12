@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order #ORD-789456 | MediCare Pharmacy</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% extends "enduser/base.html" %}
+{% block title %} Order {{order.id}}| Curexa{% endblock %}
+{% load static %}
+{% block content %}
     <style>
         /* CSS Variables */
         :root {
@@ -910,41 +904,9 @@
             visibility: visible;
         }
     </style>
-</head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="container header-container">
-            <div class="logo">
-                <i class="fas fa-pills"></i>
-                <span>MediCare Pharmacy</span>
-            </div>
-            <div class="header-actions">
-                <div class="header-action">
-                    <i class="fas fa-home"></i>
-                    <span>Home</span>
-                </div>
-                <div class="header-action">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Cart</span>
-                </div>
-                <div class="header-action">
-                    <i class="fas fa-user-circle"></i>
-                    <span>Account</span>
-                </div>
-            </div>
-        </div>
-    </header>
 
     <main class="container">
-        <!-- Breadcrumb -->
-        <div class="breadcrumb">
-            <a href="#">Home</a>
-            <i class="fas fa-chevron-right"></i>
-            <a href="#">Orders</a>
-            <i class="fas fa-chevron-right"></i>
-            <span>Order Details</span>
-        </div>
+
 
         <!-- Order Header -->
         <div class="order-header">
@@ -1277,69 +1239,6 @@
         </button>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-container">
-                <div>
-                    <h3>MediCare Pharmacy</h3>
-                    <div class="footer-links">
-                        <a href="#">About Us</a>
-                        <a href="#">Contact Us</a>
-                        <a href="#">Careers</a>
-                        <a href="#">Blog</a>
-                    </div>
-                </div>
-                
-                <div>
-                    <h3>Our Services</h3>
-                    <div class="footer-links">
-                        <a href="#">Order Medicines</a>
-                        <a href="#">Book Lab Tests</a>
-                        <a href="#">Consult Doctors</a>
-                    </div>
-                </div>
-                
-                <div>
-                    <h3>Policy</h3>
-                    <div class="footer-links">
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms of Use</a>
-                        <a href="#">Return Policy</a>
-                        <a href="#">Cancellation Policy</a>
-                    </div>
-                </div>
-                
-                <div>
-                    <h3>Need Help?</h3>
-                    <div class="footer-links">
-                        <a href="#">FAQ</a>
-                        <a href="#">Prescription Help</a>
-                        <a href="#">Shipping Info</a>
-                        <a href="#">Support Center</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="footer-disclaimer">
-                <p><strong>Medical Disclaimer:</strong> Medicines sold on MediCare Pharmacy are sourced from verified pharmacies and licensed sellers. Always consult your doctor before taking any medication. Do not self-medicate. Keep medicines out of reach of children.</p>
-                <p style="margin-top: 0.5rem;">For any issues with your order, contact our customer support at support@medicarepharmacy.com or call +91 1800 123 4567 (9 AM - 9 PM, 7 days a week).</p>
-            </div>
-            
-            <div class="footer-bottom">
-                <div>
-                    <p>&copy; 2023 MediCare Pharmacy. All rights reserved.</p>
-                </div>
-                <div style="display: flex; gap: 1rem;">
-                    <i class="fab fa-facebook" style="cursor: pointer;"></i>
-                    <i class="fab fa-twitter" style="cursor: pointer;"></i>
-                    <i class="fab fa-instagram" style="cursor: pointer;"></i>
-                    <i class="fab fa-linkedin" style="cursor: pointer;"></i>
-                </div>
-            </div>
-        </div>
-    </footer>
-
     <script>
         // Mobile sticky button visibility
         window.addEventListener('scroll', () => {
@@ -1400,5 +1299,4 @@
             }
         });
     </script>
-</body>
-</html>
+{% endblock content %}

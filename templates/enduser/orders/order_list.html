@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Orders | MedCart Healthcare</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+{% extends "enduser/base.html" %}
+{% block title %} My Orders | Curexa{% endblock %}
+{% load static %}
+{% block content %}
     <style>
         * {
             margin: 0;
@@ -914,26 +910,7 @@
             }
         }
     </style>
-</head>
-<body>
     <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="logo-container">
-                <div class="logo">
-                    <i class="fas fa-heartbeat"></i>
-                </div>
-                <span class="logo-text">MedCart Pro</span>
-            </div>
-            <nav class="nav-links">
-                <a href="#" class="nav-link">Home</a>
-                <a href="#" class="nav-link">Medicines</a>
-                <a href="#" class="nav-link">Healthcare</a>
-                <a href="#" class="nav-link">Doctors</a>
-                <a href="#" class="nav-link active">My Orders</a>
-                <a href="#" class="nav-link">Account</a>
-            </nav>
-        </header>
 
         <!-- Page Header -->
         <div class="page-header">
@@ -1617,5 +1594,4 @@
             alert('Filter options would open here. You could filter by date range, order amount, payment method, etc.');
         });
     </script>
-</body>
-</html>
+{% endblock content %}

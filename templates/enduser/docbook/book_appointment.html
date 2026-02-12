@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedCare - Book Appointment</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+{% extends "enduser/base.html" %}
+{% block title %}Book Doctor Appointment | Curexa{% endblock %}
+{% load static %}
+{% block content %}
     <style>
         :root {
             --primary-blue: #2a86ff;
@@ -1114,8 +1110,7 @@
             to { transform: rotate(360deg); }
         }
     </style>
-</head>
-<body>
+
     <div class="container">
         <header>
             <div class="logo">
@@ -1301,13 +1296,6 @@
                 <p>Your appointment has been confirmed successfully.</p>
             </div>
         </div>
-
-        <footer>
-            <p>© 2024 MedCare. All rights reserved. | <a href="#" style="color: var(--primary-blue); text-decoration: none;">Privacy Policy</a> | <a href="#" style="color: var(--primary-blue); text-decoration: none;">Terms of Service</a> | <a href="#" style="color: var(--primary-blue); text-decoration: none;">Contact Support</a></p>
-            <p style="margin-top: 10px; font-size: 13px; color: var(--text-light);">
-                <i class="fas fa-shield-alt"></i> HIPAA Compliant • Secure Data • 24/7 Support
-            </p>
-        </footer>
     </div>
 
     <script>
@@ -2074,6 +2062,6 @@
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', init);
-    </script>
-</body>
-</html>
+
+
+{% endblock content %}

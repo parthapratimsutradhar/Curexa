@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dolo 650 Tablet - Fever & Pain Relief | MediCare Pharmacy</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% extends "enduser/base.html" %}
+{% block title %}{{medicine.name}} | Curexa{% endblock %}
+{% load static %}
+{% block content %}
     <style>
         /* CSS Variables */
         :root {
@@ -48,7 +42,8 @@
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
         }
 
         .section {
@@ -633,25 +628,7 @@
             }
         }
     </style>
-</head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="container header-container">
-            <div class="logo">
-                <i class="fas fa-pills"></i>
-                <span>MediCare</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 1.5rem;">
-                <i class="fas fa-search" style="color: var(--medium-text); cursor: pointer;"></i>
-                <i class="fas fa-shopping-cart" style="color: var(--medium-text); cursor: pointer;"></i>
-                <i class="fas fa-user-circle" style="color: var(--medium-text); cursor: pointer;"></i>
-            </div>
-        </div>
-        <div class="breadcrumb container">
-            <a href="#">Home</a> / <a href="#">Medicines</a> / <a href="#">Pain Relief</a> / <span>Dolo 650 Tablet</span>
-        </div>
-    </header>
+
 
     <main class="container">
         <!-- Medicine Hero -->
@@ -978,31 +955,6 @@
         </button>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container footer-container">
-            <div class="logo" style="font-size: 1.25rem;">
-                <i class="fas fa-pills"></i>
-                <span>MediCare Pharmacy</span>
-            </div>
-            
-            <div class="footer-disclaimer">
-                <p><strong>Medical Disclaimer:</strong> This information is for educational purposes only. Always consult your doctor before taking any medicine. Do not exceed the recommended dosage.</p>
-                <p style="margin-top: 0.5rem;"><strong>Prescription Required:</strong> This medicine requires a valid prescription. By purchasing, you confirm you have a prescription.</p>
-            </div>
-            
-            <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Use</a>
-                <a href="#">Contact Us</a>
-                <a href="#">FAQ</a>
-            </div>
-            
-            <div class="copyright">
-                &copy; 2023 MediCare Pharmacy. All rights reserved.
-            </div>
-        </div>
-    </footer>
 
     <script>
         // Tab functionality
@@ -1060,5 +1012,5 @@
             });
         });
     </script>
-</body>
-</html>
+
+{% endblock content %}

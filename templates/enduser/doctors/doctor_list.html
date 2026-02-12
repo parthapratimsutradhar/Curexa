@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health System | Find & Book Doctors</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% extends "enduser/base.html" %}
+{% block title %} Find & Book Doctors| Curexa{% endblock %}
+{% load static %}
+{% block content %}
     <style>
         :root {
             --primary-blue: #4a90e2;
@@ -1017,35 +1009,7 @@
             }
         }
     </style>
-</head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="container header-container">
-            <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-heartbeat"></i>
-                </div>
-                <div>
-                    <div class="logo-text">Health<span>System</span></div>
-                    <div class="logo-tagline">Healthcare Excellence</div>
-                </div>
-            </div>
-            
-            <nav class="nav-links" id="navLinks">
-                <a href="#" class="nav-link">Home</a>
-                <a href="#" class="nav-link">Medicine</a>
-                <a href="#" class="nav-link active">Care Services</a>
-                <a href="#" class="nav-link">My Health</a>
-                <a href="#" class="nav-link">Emergency</a>
-                <a href="#" class="nav-link">About</a>
-            </nav>
-            
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </header>
+
 
     <!-- Search Hero Section -->
     <section class="search-section">
@@ -1239,65 +1203,6 @@
         </section>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div>
-                    <div class="footer-logo">
-                        <div class="logo-icon">
-                            <i class="fas fa-heartbeat"></i>
-                        </div>
-                        <div class="footer-logo-text">HealthSystem</div>
-                    </div>
-                    <p class="footer-description">
-                        Transforming healthcare through intelligent technology and compassionate care.
-                    </p>
-                </div>
-                
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="#">Find Medicine</a></li>
-                        <li><a href="#">Find Doctors</a></li>
-                        <li><a href="#">Emergency Care</a></li>
-                        <li><a href="#">My Health</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-links">
-                    <h3>Services</h3>
-                    <ul>
-                        <li><a href="#">Primary Care</a></li>
-                        <li><a href="#">Specialists</a></li>
-                        <li><a href="#">Telemedicine</a></li>
-                        <li><a href="#">Lab Tests</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-contact">
-                    <h3>Contact</h3>
-                    <ul>
-                        <li>1-800-HEALTH-1</li>
-                        <li>support@healthsystem.com</li>
-                        <li>24/7 Doctor Line</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2023 HealthSystem. All Rights Reserved. | HIPAA Compliant</p>
-                <p style="margin-top: 8px; font-size: 12px;">Made with <i class="fas fa-heart" style="color: #ef4444;"></i> for better healthcare access</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Emergency Button -->
-    <div class="emergency-button">
-        <button class="emergency-btn">
-            <i class="fas fa-exclamation-triangle"></i>
-        </button>
-    </div>
 
     <script>
         // Doctor data - enhanced with more details
@@ -1761,5 +1666,4 @@
             document.head.appendChild(style);
         });
     </script>
-</body>
-</html>
+{% endblock content %}

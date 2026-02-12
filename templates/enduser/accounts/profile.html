@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HealthPortal | Patient Profile</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+{% extends "enduser/base.html" %}
+{% block title %}My Profile | Curexa{% endblock %}
+{% load static %}
+{% block content %}
     <style>
         :root {
             --primary-blue: #2A7DE1;
@@ -803,8 +799,7 @@
             margin-top: 32px;
         }
     </style>
-</head>
-<body>
+
     <div class="dashboard-container">
         <!-- Header -->
         <header class="dashboard-header">
@@ -1491,5 +1486,4 @@
             });
         });
     </script>
-</body>
-</html>
+{% endblock content %}

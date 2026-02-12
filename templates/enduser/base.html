@@ -45,22 +45,22 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'medicine-catalog' %}">
+                        <a class="nav-link" href="{% url 'medicines_list' %}">
                             <i class="fas fa-pills me-2"></i> Medicine
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'care-services' %}">
-                            <i class="fas fa-user-md me-2"></i> Care Services
+                        <a class="nav-link" href="{% url 'appointments' %}">
+                            <i class="fas fa-user-md me-2"></i> Book Appointment
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'health-dashboard' %}">
+                        <a class="nav-link" href="{% url 'patient_profile' %}">
                             <i class="fas fa-heartbeat me-2"></i> My Health
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'emergency-care' %}">
+                        <a class="nav-link" href="{% url 'emergency_care' %}">
                             <i class="fas fa-ambulance me-2"></i> Emergency
                         </a>
                     </li>
@@ -144,60 +144,7 @@
             {% endif %}
 
             {% block content %}
-                <!-- Page Content -->
-                <div class="hero-section text-center">
-                    <h1 class="display-3 fw-bold mb-4">Welcome to Curexa</h1>
-                    <p class="lead mb-4">Your trusted partner in health and wellness</p>
-                    <div class="row justify-content-center">
-                        <div class="col-md-8">
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control form-control-lg" placeholder="Search medicines, symptoms, or doctors...">
-                                <button class="btn btn-primary btn-lg" type="button">
-                                    <i class="fas fa-search me-2"></i> Search
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row g-4 mb-5 quick-actions">
-                    <div class="col-md-3 col-6">
-                        <a href="{% url 'medicine-catalog' %}" class="card text-decoration-none">
-                            <div class="card-body">
-                                <i class="fas fa-pills fa-3x mb-3"></i>
-                                <h5 class="card-title">Buy Medicine</h5>
-                                <p class="card-text">Order prescription & OTC medicines</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <a href="{% url 'care-services' %}" class="card text-decoration-none">
-                            <div class="card-body">
-                                <i class="fas fa-user-md fa-3x mb-3"></i>
-                                <h5 class="card-title">Doctor Consult</h5>
-                                <p class="card-text">Talk to doctors online</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <a href="{% url 'health-dashboard' %}" class="card text-decoration-none">
-                            <div class="card-body">
-                                <i class="fas fa-heartbeat fa-3x mb-3"></i>
-                                <h5 class="card-title">Health Tracker</h5>
-                                <p class="card-text">Monitor your health</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <a href="{% url 'emergency-care' %}" class="card text-decoration-none">
-                            <div class="card-body">
-                                <i class="fas fa-ambulance fa-3x mb-3"></i>
-                                <h5 class="card-title">Emergency</h5>
-                                <p class="card-text">24/7 emergency support</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+            <!-- Main page content -->
             {% endblock %}
         </main>
     </div>
@@ -337,10 +284,10 @@
                 <div>
                     <h3 class="footer-heading">Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="{% url 'medicine-catalog' %}" class="footer-link">Find Medicine</a></li>
-                        <li><a href="{% url 'care-services' %}" class="footer-link">Book Appointment</a></li>
-                        <li><a href="{% url 'emergency-care' %}" class="footer-link">Emergency Care</a></li>
-                        <li><a href="{% url 'health-dashboard' %}" class="footer-link">Health Dashboard</a></li>
+                        <li><a href="{% url 'medicines_list' %}" class="footer-link">Find Medicine</a></li>
+                        <li><a href="{% url 'appointments' %}" class="footer-link">Book Appointment</a></li>
+                        <li><a href="{% url 'emergency_care' %}" class="footer-link">Emergency Care</a></li>
+                        <li><a href="{% url 'patient_profile' %}" class="footer-link">Health Dashboard</a></li>
                         <li><a href="{% url 'about' %}" class="footer-link">About Us</a></li>
                     </ul>
                 </div>
@@ -391,7 +338,7 @@
     </footer>
 
     <!-- Emergency Button -->
-    <a href="{% url 'emergency-care' %}" class="emergency-btn pulse-red">
+    <a href="{% url 'emergency_care' %}" class="emergency-btn pulse-red">
         <i class="fas fa-ambulance"></i>
     </a>
 

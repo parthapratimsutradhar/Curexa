@@ -58,8 +58,8 @@ class PatientResolveAPIView(APIView):
 class ProfileView(View):
     def get(self, request):
         print(request)
-        user=user_services.get_user_details(request.user.id)
-        print("hiiiodnbnldnid:"+user)
+        # user=user_services.get_user_details(request.user.id)
+        # print("hiiiodnbnldnid:"+user)
         return render(request, "enduser/accounts/profile.html")
     
 class EditProfileView(View):
