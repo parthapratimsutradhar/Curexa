@@ -8,5 +8,6 @@ router.register(r'admin-users', AdminUserViewSet, basename='admin-users')
 
 urlpatterns = [
     path("auth/patient/resolve/", views.PatientResolveAPIView.as_view(), name="patient-resolve"),
+    path("auth/google/", views.GoogleLoginAPIView.as_view(), name="auth-google"),
     path('', include(router.urls)),
 ]

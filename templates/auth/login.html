@@ -6,6 +6,7 @@
     <title>Curexa | Secure Healthcare Login</title>
     <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         * {
             margin: 0;
@@ -587,6 +588,28 @@
                         <span>Continue with Email</span>
                         <i class="fas fa-arrow-right"></i>
                     </button>
+<!-- OR separator -->
+<p>or</p>
+
+            <!-- Google One Tap / Account Picker -->
+            <div id="g_id_onload"
+                data-client_id="{{ GOOGLE_CLIENT_ID }}"
+                data-callback="handleGoogleLogin"
+                data-auto_prompt="true">
+            </div>
+
+            <!-- Google Button -->
+            <div class="g_id_signin"
+                data-type="standard"
+                data-size="large"
+                data-theme="outline"
+                data-text="continue_with"
+                data-shape="pill">
+            </div>
+
+
+
+
                 </form>
 
                 <!-- OTP Step (Hidden Initially) -->
@@ -619,10 +642,6 @@
 
                 <div class="form-footer">
                     <div class="links">
-                        <a href="{% url 'register' %}" class="link">
-                            <i class="fas fa-user-plus"></i>
-                            <span>New to Curexa? Create an account</span>
-                        </a>
                         <a href="#" class="link">
                             <i class="fas fa-question-circle"></i>
                             <span>Need help?</span>
@@ -842,6 +861,28 @@ emailInput.addEventListener('input', function () {
 
 </script>
 
+<script>
+async function handleGoogleLogin(response) {
+    console.log("GSI response:", response); // 👈 ADD THIS
+  try {
+    const res = await fetch("/api/auth/google/", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        credential: response.credential
+      })
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+
+    // JWT cookies are now set
+    window.location.href = "/";
+  } catch (err) {
+    console.error("Google login failed:", err);
+  }
+}
+</script>
 </body>
 </html>
 

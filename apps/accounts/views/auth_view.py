@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from apps.core.utilities.otp_service import send_otp_code, verify_otp_code
 from django.contrib.auth import logout
+from django.conf import settings
 
 
 class RegisterView(View):
@@ -12,7 +13,7 @@ class RegisterView(View):
 
 class LoginView(View):
     def get(self, request):
-        return render(request, "auth/login.html")
+        return render(request, "auth/login.html",  {"GOOGLE_CLIENT_ID": settings.GOOGLE_CLIENT_ID})
 
     def post(self, request):
         # Handle login logic here

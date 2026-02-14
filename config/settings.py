@@ -14,8 +14,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    
+    'django.contrib.staticfiles', 
+
+    'django_extensions', # show_urls 
+
     # Third Party Apps
     'rest_framework',
     'drf_spectacular',
@@ -201,3 +203,6 @@ EMAIL_HOST_USER = env("EMAIL_ID")
 EMAIL_HOST_PASSWORD = env("EMAIL_PASSWORD")
 SITE_URL = env("SITE_URL", default="http://localhost:8000")
 DEFAULT_FROM_EMAIL = "Curexa <" + env("EMAIL_ID") + ">"
+
+
+GOOGLE_CLIENT_ID=env("GOOGLE_CLIENT_ID")

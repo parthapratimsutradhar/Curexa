@@ -1,5 +1,3 @@
-# apps/accounts/serializers/patient_resolve.py
-
 from rest_framework import serializers
 from apps.accounts.models import User, PatientProfile
 from apps.core.constants.default_values import Role
@@ -19,8 +17,8 @@ class PatientResolveSerializer(serializers.Serializer):
             defaults={
                 "first_name": validated_data.get("first_name", ""),
                 "last_name": validated_data.get("last_name", ""),
-                "role": Role.PATIENT.value
-            }
+                "role": Role.PATIENT.value,
+            },
         )
 
         # Ensure patient profile exists
@@ -28,7 +26,10 @@ class PatientResolveSerializer(serializers.Serializer):
             patient=user,
             defaults={
                 "phone_number": validated_data.get("phone_number")
-            }
+            },
         )
 
         return user, created
+
+    def save(self, **kwargs):
+        return self.create(self.validated_data)
