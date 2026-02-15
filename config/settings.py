@@ -20,8 +20,12 @@ INSTALLED_APPS = [
 
     # Third Party Apps
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular',
     'django_filters',
+    
+    'cloudinary',
+    'cloudinary_storage',
     
     # Custom Apps
     'apps.accounts',
@@ -37,14 +41,18 @@ INSTALLED_APPS = [
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',         # for admin session
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',       # populate request.user
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'apps.core.utilities.jwt_cookie_auth.JWTCookieAuthMiddleware', 
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 
 # Migration Modules
 MIGRATION_MODULES = {
@@ -116,8 +124,7 @@ CACHES = {
 REST_FRAMEWORK = {
     # Authentication
     'DEFAULT_AUTHENTICATION_CLASSES': (
-         'rest_framework.authentication.SessionAuthentication',
-        'apps.core.utilities.authentication.CookieJWTAuthentication',
+        'apps.core.utilities.authentication.CookieJWTAuthentication'
     ),
 
     # Permissions
@@ -160,6 +167,7 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
+
 
 # CSRF Configuration
 CSRF_COOKIE_HTTPONLY = False      # JS must read it
@@ -206,3 +214,11 @@ DEFAULT_FROM_EMAIL = "Curexa <" + env("EMAIL_ID") + ">"
 
 
 GOOGLE_CLIENT_ID=env("GOOGLE_CLIENT_ID")
+
+# Cloudinary credentials
+CLOUD_NAME=env("CLOUD_NAME")
+API_KEY= env("API_KEY")
+API_SECRET= env("API_SECRET")
+
+# Default file storage (optional, for all media files)
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

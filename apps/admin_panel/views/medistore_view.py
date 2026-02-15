@@ -4,7 +4,7 @@ from apps.medistore.services import category_services
 from apps.core.services import util_services
 from apps.medistore.services import medicine_services, inventory_services,inventory_log_services
 from apps.core.constants.default_values import DosageForm, AGE_GROUP
-from apps.core.utilities import file_management
+from apps.core.utilities.cloudinary_utils import cloudinary_upload_files
 
 class MedicineListView(View):
     def get(self, request):
@@ -36,13 +36,14 @@ class MedicineAddView(View):
         category_id = request.POST.get('category')
 
         manufacturer = request.POST.get('manufacturer')
-        cost_price = request.POST.get('cost_price') or 0
-        retail_price = request.POST.get('retail_price') or 0
-        quantity = request.POST.get('change_quantity') or 0
-        stock_alert = request.POST.get('stock_alert') or 0
+        cost_price = float(request.POST.get('cost_price') or 0)
+        retail_price = float(request.POST.get('retail_price') or 0)
+        quantity = int(request.POST.get('change_quantity') or 0)
+        stock_alert = int(request.POST.get('stock_alert') or 0)
+
 
         description = request.POST.get('description')
-        is_prescription_required = request.POST.get('is_prescription_required') == 'true'
+        is_prescription_required = str(request.POST.get('is_prescription_required')).lower() == 'true'
 
         classification = request.POST.get('classification')
         age_group = request.POST.get('age_group')
@@ -54,10 +55,9 @@ class MedicineAddView(View):
 
         images_data = request.FILES.getlist('images')
         print(images_data)
-        images_path = file_management.save_uploaded_file(images_data, "Medicines")
+        images_path = cloudinary_upload_files(images_data)
         print(images_path)
         
-
         category = category_services.get_category(category_id)
 
         medicine = medicine_services.add_new_medicine(

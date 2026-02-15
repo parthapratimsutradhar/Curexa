@@ -8,23 +8,18 @@ from apps.core.constants.default_values import Role
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from apps.accounts.serializers.patient_serializer import PatientResolveSerializer
 from apps.core.services.util_services import full_name
-
-
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from apps.core.utilities.authentication import CookieJWTAuthentication
 
-from google.oauth2 import id_token
-from google.auth.transport import requests as google_requests
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.conf import settings
-from rest_framework_simplejwt.tokens import RefreshToken
+
 
 class GoogleLoginAPIView(APIView):
     authentication_classes = []
@@ -76,14 +71,21 @@ class GoogleLoginAPIView(APIView):
 
         # Always enforce patient role
         if user.role != Role.PATIENT.value:
-            user.role = Role.PATIENT.value
-            user.save(update_fields=["role"])
+            return Response(
+                {"detail": "Unauthorized Access"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         profile, _ = PatientProfile.objects.get_or_create(patient=user)
 
         if created:
             user.set_unusable_password()
             user.save()
+
+        if (first_name or last_name) and (not profile.patient.first_name and not profile.patient.last_name):
+            profile.patient.first_name = first_name
+            profile.patient.last_name = last_name
+            profile.patient.save(update_fields=['first_name', 'last_name'])
 
         if avatar and not profile.profile_picture:
             profile.profile_picture = avatar
@@ -122,8 +124,6 @@ class GoogleLoginAPIView(APIView):
         )
 
         return response
-
-
 
 class PatientResolveAPIView(APIView):
     permission_classes = [AllowAny]
@@ -180,3 +180,31 @@ class ProfileView(View):
 class EditProfileView(View):
     def get(self, request):
         return render(request, "enduser/accounts/edit_profile.html")
+    
+    
+class MeAPIView(APIView):
+    authentication_classes = [CookieJWTAuthentication]   # ✅ LIST
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "role": user.role,
+        })
+    
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class LogoutAPIView(APIView):
+    authentication_classes = []   # 🚫 no auth
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        response = Response({"detail": "Logged out"})
+        response.delete_cookie("access_token")
+        response.delete_cookie("refresh_token")
+        return response

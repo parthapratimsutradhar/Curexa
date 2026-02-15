@@ -72,7 +72,7 @@
         .logo-icon {
             width: 42px;
             height: 42px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #e0f7f9, #ecf8ee);
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -126,20 +126,20 @@
             font-size: 32px;
             font-weight: 700;
             color: var(--primary-dark);
-            margin-bottom: 16px;
+            margin-bottom: 12px; /* Reduced from 16px for better balance */
             line-height: 1.3;
         }
 
         .branding-content p {
             color: var(--text-light);
             font-size: 17px;
-            margin-bottom: 30px;
+            margin-bottom: 24px; /* Reduced from 30px */
         }
 
         .medical-illustration {
             display: flex;
             justify-content: center;
-            margin: 30px 0;
+            margin: 20px 0; /* Reduced from 30px */
         }
 
         .medical-icons {
@@ -329,6 +329,58 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Enhanced OR separator */
+        .separator {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 14px;
+            margin: 0;
+            line-height: 1.2; 
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .separator::before {
+            margin-right: 16px;
+        }
+
+        .separator::after {
+            margin-left: 16px;
+        }
+
+        /* Google button wrapper */
+        #g_id_onload {
+           display: none;
+        }
+        .google-btn-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .google-btn-wrapper .g_id_signin {
+            width: 100%;
+            max-width: 300px; /* Keeps button at a reasonable size */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .google-btn-wrapper .g_id_signin:hover {
+            transform: translateY(-2px);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        /* Make Google button iframe responsive */
+        .google-btn-wrapper iframe {
+            border-radius: 40px !important; /* Pill shape consistency */
+        }
+
         .form-footer {
             margin-top: 10px;
             text-align: center;
@@ -510,8 +562,9 @@
         <!-- Header -->
         <div class="header">
             <div class="logo">
+                <!-- Replaced heart icon with a plus inside a circle for a more professional medical logo -->
                 <div class="logo-icon">
-                    <i class="fas fa-heartbeat"></i>
+                    <img src="/static/images/curexa_icon.png" alt="Curexa Logo" class="logo-icon" />
                 </div>
                 <div class="logo-text">Curexa</div>
             </div>
@@ -588,28 +641,28 @@
                         <span>Continue with Email</span>
                         <i class="fas fa-arrow-right"></i>
                     </button>
-<!-- OR separator -->
-<p>or</p>
 
-            <!-- Google One Tap / Account Picker -->
-            <div id="g_id_onload"
-                data-client_id="{{ GOOGLE_CLIENT_ID }}"
-                data-callback="handleGoogleLogin"
-                data-auto_prompt="true">
-            </div>
+                    <!-- Enhanced OR separator -->
+                    <div class="separator">OR</div>
 
-            <!-- Google Button -->
-            <div class="g_id_signin"
-                data-type="standard"
-                data-size="large"
-                data-theme="outline"
-                data-text="continue_with"
-                data-shape="pill">
-            </div>
+                    <!-- Google One Tap / Account Picker -->
+                    <div id="g_id_onload"
+                        data-client_id="{{ GOOGLE_CLIENT_ID }}"
+                        data-callback="handleGoogleLogin"
+                        data-auto_prompt="true">
+                    </div>
 
-
-
-
+                    <!-- Google Button with custom wrapper for better styling -->
+                    <div class="google-btn-wrapper">
+                        <div class="g_id_signin"
+                            data-type="standard"
+                            data-size="large"
+                            data-theme="outline"
+                            data-text="continue_with"
+                            data-shape="pill"
+                            data-width="300">
+                        </div>
+                    </div>
                 </form>
 
                 <!-- OTP Step (Hidden Initially) -->
@@ -660,7 +713,6 @@
 
    <script>
 
-    
     // ===== CSRF Helper =====
     function getCookie(name) {
         let cookieValue = null;
@@ -748,54 +800,53 @@
     });
 
     // ===== Verify OTP =====
-verifyOtpBtn.addEventListener('click', function () {
-    const otp = [...otpInputs].map(i => i.value).join('');
-    const email = userEmailSpan.textContent;
+    verifyOtpBtn.addEventListener('click', function () {
+        const otp = [...otpInputs].map(i => i.value).join('');
+        const email = userEmailSpan.textContent;
 
-    this.classList.add('loading');
-    this.disabled = true;
+        this.classList.add('loading');
+        this.disabled = true;
 
-    fetch('/verify-otp/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': csrftoken
-        },
-        body: new URLSearchParams({
-            contact: email,
-            otp: otp
+        fetch('/verify-otp/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrftoken
+            },
+            body: new URLSearchParams({
+                contact: email,
+                otp: otp
+            })
         })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === 'success') {
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
 
-            return fetch("/api/auth/patient/resolve/", {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": csrftoken
-                },
-                body: JSON.stringify({ email })
-            });
-        } else {
-            throw new Error("Invalid OTP");
-        }
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === "success") {
-            window.location.href = "/";
-        }
-    })
-    .catch(err => alert(err.message))
-    .finally(() => {
-        verifyOtpBtn.classList.remove('loading');
-        verifyOtpBtn.disabled = false;
+                return fetch("/api/auth/patient/resolve/", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": csrftoken
+                    },
+                    body: JSON.stringify({ email })
+                });
+            } else {
+                throw new Error("Invalid OTP");
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                window.location.href = "/";
+            }
+        })
+        .catch(err => alert(err.message))
+        .finally(() => {
+            verifyOtpBtn.classList.remove('loading');
+            verifyOtpBtn.disabled = false;
+        });
     });
-});
-
 
     // ===== Resend OTP =====
     resendOtpLink.addEventListener('click', function (e) {
@@ -845,44 +896,42 @@ verifyOtpBtn.addEventListener('click', function () {
     }
 
     // ===== Enable Continue Button on Valid Email =====
-emailInput.addEventListener('input', function () {
-    const email = emailInput.value.trim();
+    emailInput.addEventListener('input', function () {
+        const email = emailInput.value.trim();
+        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-    if (isValidEmail) {
-        continueBtn.disabled = false;
-        emailInput.classList.add('valid');
-    } else {
-        continueBtn.disabled = true;
-        emailInput.classList.remove('valid');
-    }
-});
-
-</script>
-
-<script>
-async function handleGoogleLogin(response) {
-    console.log("GSI response:", response); // 👈 ADD THIS
-  try {
-    const res = await fetch("/api/auth/google/", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        credential: response.credential
-      })
+        if (isValidEmail) {
+            continueBtn.disabled = false;
+            emailInput.classList.add('valid');
+        } else {
+            continueBtn.disabled = true;
+            emailInput.classList.remove('valid');
+        }
     });
 
-    if (!res.ok) throw new Error(await res.text());
+    </script>
 
-    // JWT cookies are now set
-    window.location.href = "/";
-  } catch (err) {
-    console.error("Google login failed:", err);
-  }
-}
-</script>
+    <script>
+    async function handleGoogleLogin(response) {
+        console.log("GSI response:", response);
+        try {
+            const res = await fetch("/api/auth/google/", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    credential: response.credential
+                })
+            });
+
+            if (!res.ok) throw new Error(await res.text());
+
+            // JWT cookies are now set
+            window.location.href = "/";
+        } catch (err) {
+            console.error("Google login failed:", err);
+        }
+    }
+    </script>
 </body>
 </html>
-

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from apps.medistore.models import Medicine
 from apps.medistore.serializers import category_serializers, inventory_serializers
+from apps.core.utilities.cloudinary_utils import cloudinary_upload_files
 
 class MedicineListSerializer(serializers.ModelSerializer):
     category = category_serializers.CategorySerializer(read_only=True)
@@ -39,3 +40,22 @@ class MedicineListSerializer(serializers.ModelSerializer):
             "is_active",
             "created_at",
         ]
+
+
+class MedicineImageUploadSerializer(serializers.Serializer):
+    images = serializers.ListField(
+        child=serializers.ImageField(),
+        allow_empty=False
+    )
+
+    def update(self, instance, validated_data):
+        """
+        Uploads images to Cloudinary and appends URLs to instance.medicine_images
+        """
+        files = validated_data.get("images", [])
+        uploaded_urls = cloudinary_upload_files(files, folder_name=f"medicines/{instance.SKU}")
+
+        # Append new URLs to existing images
+        instance.medicine_images = (instance.medicine_images or []) + uploaded_urls
+        instance.save()
+        return instance

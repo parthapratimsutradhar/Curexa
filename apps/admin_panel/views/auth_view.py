@@ -1,6 +1,6 @@
 from django.views import View
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from apps.core.utilities.decorators import anonymous_required, admin_required
 from apps.core.services.admin import admin_service
 from apps.core.constants.default_values import Role
@@ -16,7 +16,7 @@ class AdminLoginView(View):
         email = request.POST.get('email')
         password = request.POST.get('password')        
         # Authentication logic here
-        user = admin_service.get_admin(email, password)
+        user = authenticate(request, email=email, password=password)
         # Check if authentication succeeded
         if user and getattr(user, "role", None) == Role.ADMIN.value:
             login(request, user)

@@ -1,5 +1,5 @@
 {% extends "enduser/base.html" %}
-{% block title %}Buy Medicines Online | Curexa{% endblock %}
+{% block title %}Buy Medicines Online | Curexa - India's Trusted Pharmacy{% endblock %}
 {% load static %}
 {% block content %}
     <style>
@@ -16,12 +16,15 @@
             --bg-soft: #f9fbfd;
             --card-shadow: 0 8px 24px rgba(32, 101, 209, 0.08);
             --card-radius: 16px;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-teal: linear-gradient(135deg, #1ba8b6 0%, #2a6fd6 100%);
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-soft);
             color: var(--text-dark);
+            overflow-x: hidden;
         }
 
         h1, h2, h3, h4, h5, h6 {
@@ -29,72 +32,254 @@
             font-weight: 600;
         }
 
-        /* Header Styles */
-        .main-header {
-            background-color: var(--bg-white);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            position: fixed;
+        /* ====== NAVIGATION - PREMIUM STYLING ====== */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            padding: 0.8rem 1.5rem;
+            border-bottom: 3px solid transparent;
+            border-image: var(--gradient-premium);
+            border-image-slice: 1;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: translateX(5px);
+        }
+
+        .navbar-brand img {
+            height: 48px;
+            width: auto;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand:hover img {
+            transform: scale(1.1);
+        }
+
+        .com_name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin-left: 12px;
+            background: var(--gradient-premium);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover .com_name {
+            transform: translateY(-2px);
+        }
+
+        .com_name::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-premium);
+            border-radius: 2px;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: center;
+        }
+
+        .navbar-brand:hover .com_name::after {
+            transform: scaleX(1);
+        }
+
+        .navbar-nav {
+            flex-direction: row;
+            align-items: center;
+            margin-left: auto !important;
+            margin-right: 20px;
+        }
+
+        .nav-item {
+            margin-left: 0.8rem;
+            margin-right: 0.8rem;
+        }
+
+        .nav-link {
+            color: #4a5568;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            z-index: 1030;
+            bottom: 0;
+            background: var(--gradient-premium);
+            opacity: 0;
+            border-radius: 8px;
+            transition: opacity 0.3s ease;
+            z-index: -1;
         }
 
-        .logo {
-            font-weight: 700;
-            font-size: 1.8rem;
-            color: var(--medical-teal);
-            text-decoration: none;
+        .nav-link:hover,
+        .nav-link.active {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.2);
         }
 
-        .logo span {
-            color: var(--medical-blue);
+        .nav-link:hover::before,
+        .nav-link.active::before {
+            opacity: 1;
         }
 
-        .cart-icon {
+        .nav-link i {
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover i {
+            transform: scale(1.2);
+        }
+
+        /* User Actions */
+        .user-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .user-actions .btn {
+            padding: 0.5rem 1.2rem;
+            font-size: 0.95rem;
+            min-height: 42px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            font-size: 1.4rem;
-            color: var(--medical-blue);
+            overflow: hidden;
+        }
+
+        .cart-btn {
+            position: relative;
         }
 
         .cart-count {
             position: absolute;
             top: -8px;
             right: -8px;
-            background-color: var(--accent-red);
+            background: var(--accent-red);
             color: white;
             font-size: 0.7rem;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background: var(--gradient-teal);
+            color: white;
+            padding: 15px 0;
+            margin-top: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .welcome-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-text h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .welcome-text p {
+            margin-bottom: 0;
+            opacity: 0.9;
+        }
+
+        .health-tip {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         /* Category Navigation Bar */
         .category-navbar {
             background-color: var(--bg-white);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
             border-bottom: 1px solid #e2e8f0;
             margin-bottom: 20px;
+            position: sticky;
+            top: 72px;
+            z-index: 1020;
         }
 
         .category-scroll-wrapper {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            margin-bottom: -15px;
-            padding-bottom: 15px;
+            scrollbar-width: thin;
+            padding: 12px 0;
         }
 
         .category-scroll-wrapper::-webkit-scrollbar {
-            display: none;
+            height: 4px;
+        }
+
+        .category-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: var(--medical-teal);
+            border-radius: 10px;
         }
 
         .category-list {
-            gap: 8px;
+            gap: 12px;
             min-width: max-content;
         }
 
@@ -102,72 +287,158 @@
             background: white;
             border: 1px solid #e2e8f0;
             border-radius: 50px;
-            padding: 8px 16px;
-            font-size: 0.9rem;
+            padding: 10px 20px;
+            font-size: 0.95rem;
             font-weight: 500;
             color: var(--text-light);
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             white-space: nowrap;
             display: flex;
             align-items: center;
             cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
         .category-btn:hover {
             border-color: var(--medical-teal);
             color: var(--medical-teal);
             background-color: rgba(27, 168, 182, 0.04);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(27, 168, 182, 0.15);
         }
 
         .category-btn.active {
-            background-color: var(--medical-teal);
-            border-color: var(--medical-teal);
+            background: var(--gradient-teal);
+            border-color: transparent;
             color: white;
+            box-shadow: 0 4px 12px rgba(27, 168, 182, 0.3);
         }
 
-        .category-btn.active:hover {
-            background-color: var(--medical-blue);
-            border-color: var(--medical-blue);
-            color: white;
+        /* Main Container */
+        .container-fluid.py-4 {
+            padding-top: 1rem !important;
+            padding-bottom: 2rem !important;
+            max-width: 1600px;
+            margin: 0 auto;
         }
 
-        .scroll-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            padding: 0;
+        /* Filter Sidebar */
+        .filter-sidebar {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            padding: 28px;
+            position: sticky;
+            top: 140px;
+            max-height: calc(100vh - 160px);
+            overflow-y: auto;
+            border: 1px solid rgba(27, 168, 182, 0.1);
+            width: 100%;
+        }
+
+        .filter-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .filter-sidebar::-webkit-scrollbar-thumb {
+            background: var(--medical-teal);
+            border-radius: 10px;
+        }
+
+        .filter-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            background: var(--gradient-teal);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-section {
+            margin-bottom: 28px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid #f0f4f8;
+        }
+
+        .filter-section h6 {
+            font-size: 1rem;
+            margin-bottom: 18px;
+            color: var(--text-dark);
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 8px;
         }
 
-        .quick-stats {
-            border-left: 1px solid #e2e8f0;
-            padding-left: 20px;
+        .filter-section h6 i {
+            color: var(--medical-teal);
         }
 
-        .stat-item {
-            text-align: center;
+        .form-check {
+            margin-bottom: 12px;
         }
 
-        .stat-value {
-            font-weight: 700;
-            font-size: 1rem;
-            color: var(--medical-blue);
+        .form-check-input {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+            border: 2px solid #e2e8f0;
         }
 
-        .stat-label {
-            font-size: 0.75rem;
-            margin-top: 2px;
+        .form-check-input:checked {
+            background-color: var(--medical-teal);
+            border-color: var(--medical-teal);
+        }
+
+        .form-check-label {
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+
+        /* Price Slider */
+        .price-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 10px;
+            background: linear-gradient(to right, var(--medical-teal), var(--medical-blue));
+        }
+
+        .price-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border: 2px solid var(--medical-teal);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(27, 168, 182, 0.3);
+            transition: all 0.2s;
+        }
+
+        .price-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .price-range-values {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-weight: 600;
+            color: var(--medical-teal);
         }
 
         /* Search and Filter Controls */
         .search-filter-controls {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
             margin-bottom: 24px;
-            padding: 20px;
+            padding: 25px;
+            border: 1px solid rgba(27, 168, 182, 0.1);
         }
 
         .main-search-container {
@@ -176,315 +447,296 @@
         }
 
         .main-search-container input {
-            border-radius: 50px;
-            padding-left: 48px;
-            padding-right: 48px;
+            border-radius: 60px;
+            padding-left: 60px;
+            padding-right: 50px;
             border: 2px solid #e2e8f0;
             transition: all 0.3s;
-            height: 50px;
-            font-size: 1rem;
+            height: 60px;
+            font-size: 1.1rem;
+            background: var(--bg-soft);
         }
 
         .main-search-container input:focus {
             border-color: var(--medical-teal);
-            box-shadow: 0 0 0 3px rgba(27, 168, 182, 0.1);
+            box-shadow: 0 0 0 4px rgba(27, 168, 182, 0.15);
+            background: white;
         }
 
         .main-search-icon {
             position: absolute;
-            left: 18px;
+            left: 25px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--text-light);
+            color: var(--medical-teal);
+            font-size: 1.2rem;
             z-index: 5;
         }
 
         .main-search-clear {
             position: absolute;
-            right: 18px;
+            right: 25px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-light);
             cursor: pointer;
             display: none;
+            z-index: 5;
         }
 
-        .main-search-container input:not(:placeholder-shown) + .main-search-clear {
-            display: block;
-        }
-
-        .active-filters-container {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .filter-tag {
-            display: inline-flex;
-            align-items: center;
-            background: linear-gradient(135deg, var(--medical-teal), var(--medical-blue));
-            color: white;
-            border-radius: 50px;
-            padding: 6px 14px;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .filter-tag:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(27, 168, 182, 0.2);
-        }
-
-        .filter-tag-remove {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 6px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .filter-tag-remove:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .clear-all-filters {
-            background: transparent;
-            border: 1px solid var(--accent-red);
+        .main-search-clear:hover {
             color: var(--accent-red);
-            border-radius: 50px;
-            padding: 4px 12px;
-            font-size: 0.8rem;
-            margin-left: 5px;
-            transition: all 0.2s;
-        }
-
-        .clear-all-filters:hover {
-            background: var(--accent-red);
-            color: white;
         }
 
         /* Sorting Controls */
         .sorting-controls {
-            background-color: white;
+            background: white;
+            border-radius: 16px;
+            padding: 18px 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+            margin-bottom: 25px;
+            border: 1px solid rgba(27, 168, 182, 0.1);
+        }
+
+        .form-select {
             border-radius: 12px;
-            padding: 16px 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-            margin-bottom: 24px;
+            border: 2px solid #e2e8f0;
+            padding: 10px 35px 10px 15px;
+            font-weight: 500;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .view-toggle button {
-            background-color: white;
-            border: 1px solid #e2e8f0;
-            color: var(--text-light);
-            padding: 8px 16px;
-        }
-
-        .view-toggle button.active {
-            background-color: var(--soft-teal);
+        .form-select:hover {
             border-color: var(--medical-teal);
-            color: var(--medical-teal);
         }
 
-        /* Sidebar Filters - FIXED POSITION */
-        .filter-sidebar {
-            background-color: var(--bg-white);
-            border-radius: var(--card-radius);
-            box-shadow: var(--card-shadow);
-            padding: 24px;
-            position: sticky;
-            top: 100px;
-            max-height: calc(100vh - 120px);
-            overflow-y: auto;
-            margin-bottom: 20px;
+        .view-toggle .btn {
+            border-radius: 12px;
+            padding: 8px 16px;
+            transition: all 0.3s;
+            border: 2px solid #e2e8f0;
+            margin-left: 5px;
+            background: white;
         }
 
-        .filter-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--medical-blue);
+        .view-toggle .btn.active {
+            background: var(--gradient-teal);
+            border-color: transparent;
+            color: white;
+        }
+
+        /* Medicine Cards Grid */
+        .col-lg-9 .row {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
         }
 
-        .filter-section {
-            margin-bottom: 24px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #edf2f7;
+        .col-lg-9 .col-md-6.col-xl-4.col-xxl-3 {
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+            padding-left: 15px;
+            padding-right: 15px;
+            margin-bottom: 30px;
         }
 
-        .filter-section:last-child {
-            border-bottom: none;
+        @media (max-width: 1200px) {
+            .col-lg-9 .col-md-6.col-xl-4.col-xxl-3 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
         }
 
-        .form-check-label {
+        @media (max-width: 768px) {
+            .col-lg-9 .col-md-6.col-xl-4.col-xxl-3 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+
+        .medicine-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            height: 100%;
+            border: 1px solid rgba(27, 168, 182, 0.1);
+            position: relative;
             cursor: pointer;
             display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .form-check-input:checked {
-            background-color: var(--medical-teal);
-            border-color: var(--medical-teal);
-        }
-
-        .price-slider {
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .price-range-values {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        /* Main Content Area */
-        .main-content-area {
-            padding-left: 30px;
-        }
-
-        /* Medicine Cards */
-        .medicine-card {
-            background-color: var(--bg-white);
-            border-radius: var(--card-radius);
-            box-shadow: var(--card-shadow);
-            overflow: hidden;
-            transition: all 0.3s ease;
-            height: 100%;
-            border: 1px solid transparent;
-            margin-bottom: 25px;
+            flex-direction: column;
         }
 
         .medicine-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 28px rgba(32, 101, 209, 0.12);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(27, 168, 182, 0.15);
             border-color: var(--medical-teal);
         }
 
+        .medicine-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-teal);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .medicine-card:hover::before {
+            transform: scaleX(1);
+        }
+
         .medicine-image {
-            height: 180px;
-            background-color: #f8fafc;
+            height: 220px;
+            background: linear-gradient(135deg, #f8fafc, #e8f7f9);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            border-bottom: 1px solid #edf2f7;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .medicine-image img {
-            max-height: 140px;
-            max-width: 100%;
-            object-fit: contain;
+        .medicine-image i {
+            color: var(--medical-teal);
+            opacity: 0.7;
+            font-size: 4rem;
+        }
+
+        .medicine-image::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .medicine-card:hover .medicine-image::after {
+            opacity: 1;
         }
 
         .medicine-details {
-            padding: 20px;
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .medicine-name {
             font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 6px;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
             color: var(--text-dark);
-            line-height: 1.3;
-        }
-
-        .salt-composition {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            margin-bottom: 12px;
+            transition: color 0.3s;
             line-height: 1.4;
         }
 
+        .medicine-card:hover .medicine-name {
+            background: var(--gradient-teal);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .salt-composition {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
         .brand-name {
-            font-size: 0.9rem;
-            color: var(--medical-blue);
-            font-weight: 500;
+            font-size: 1rem;
+            color: var(--medical-teal);
+            font-weight: 600;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .prescription-badge {
-            background-color: #fff3cd;
+            background: #fff3cd;
             color: #856404;
-            font-size: 0.75rem;
-            padding: 4px 10px;
+            font-size: 0.8rem;
+            padding: 5px 12px;
             border-radius: 50px;
             display: inline-flex;
             align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .prescription-badge i {
-            margin-right: 5px;
-            font-size: 0.7rem;
+            margin-bottom: 18px;
+            border: 1px solid #ffeeba;
         }
 
         .price-section {
             display: flex;
-            align-items: center;
-            margin-bottom: 15px;
+            align-items: baseline;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
         }
 
         .current-price {
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: 700;
-            color: var(--text-dark);
-            margin-right: 10px;
+            background: var(--gradient-teal);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-right: 12px;
         }
 
         .original-price {
             text-decoration: line-through;
             color: var(--text-light);
-            font-size: 1rem;
+            font-size: 1.2rem;
         }
 
         .discount-badge {
             background: linear-gradient(135deg, #28a745, #20c997);
             color: white;
-            font-size: 0.85rem;
-            padding: 4px 10px;
+            font-size: 0.9rem;
+            padding: 5px 12px;
             border-radius: 50px;
             margin-left: auto;
             font-weight: 600;
+            animation: pulse 2s infinite;
         }
 
         .rating {
             display: flex;
             align-items: center;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
         .stars {
             color: #ffc107;
-            margin-right: 8px;
+            margin-right: 10px;
+            font-size: 0.9rem;
         }
 
         .rating-count {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-light);
         }
 
         .stock-status {
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-bottom: 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .in-stock {
@@ -502,198 +754,344 @@
         .action-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 12px;
+            margin-top: auto;
         }
 
         .btn-add-cart {
-            background-color: var(--medical-teal);
+            background: var(--gradient-teal);
             color: white;
-            border-radius: 8px;
-            padding: 10px;
-            font-weight: 500;
-            transition: all 0.2s;
+            border-radius: 16px;
+            padding: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
             border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-add-cart::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-add-cart:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-add-cart:hover {
-            background-color: var(--medical-blue);
-            transform: scale(1.02);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(27, 168, 182, 0.4);
         }
 
         .btn-buy-now {
-            background-color: var(--medical-blue);
+            background: var(--gradient-primary);
             color: white;
-            border-radius: 8px;
-            padding: 10px;
-            font-weight: 500;
-            transition: all 0.2s;
+            border-radius: 16px;
+            padding: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
             border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 1rem;
         }
 
         .btn-buy-now:hover {
-            background-color: #1a56db;
-            transform: scale(1.02);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
         .btn-compare {
             grid-column: span 2;
-            background-color: transparent;
-            color: var(--medical-blue);
-            border: 1px solid var(--medical-blue);
-            border-radius: 8px;
-            padding: 8px;
-            font-weight: 500;
-            transition: all 0.2s;
+            background: transparent;
+            color: var(--medical-teal);
+            border: 2px solid var(--medical-teal);
+            border-radius: 16px;
+            padding: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
         }
 
         .btn-compare:hover {
-            background-color: rgba(27, 168, 182, 0.08);
+            background: var(--soft-teal);
+            transform: translateY(-2px);
+        }
+
+        /* Active Filters */
+        .active-filters-container {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed #e2e8f0;
+        }
+
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            background: var(--gradient-teal);
+            color: white;
+            border-radius: 50px;
+            padding: 8px 18px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 10px rgba(27, 168, 182, 0.2);
+        }
+
+        .filter-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(27, 168, 182, 0.3);
+        }
+
+        .filter-tag-remove {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-tag-remove:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        /* AI Suggestion Banner */
+        .alert-info {
+            border-radius: 16px;
+            border: none;
+            background: linear-gradient(135deg, #e8f7f9, #d1eef2);
+            margin-bottom: 25px;
+            padding: 20px 25px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-teal);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(27, 168, 182, 0.3);
+        }
+
+        /* Load More Button */
+        #loadMoreBtn {
+            border-radius: 50px;
+            padding: 14px 45px;
+            border: 2px solid var(--medical-teal);
+            color: var(--medical-teal);
+            background: transparent;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 20px 0;
+        }
+
+        #loadMoreBtn:hover {
+            background: var(--gradient-teal);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(27, 168, 182, 0.3);
         }
 
         /* Trust Badges */
         .trust-badges {
             background: linear-gradient(135deg, #f8fafc, #e8f7f9);
-            border-radius: var(--card-radius);
-            padding: 24px;
-            margin-top: 40px;
+            border-radius: 30px;
+            padding: 35px;
+            margin-top: 50px;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-around;
-            align-items: center;
+            border: 1px solid rgba(27, 168, 182, 0.2);
+            clear: both;
         }
 
         .trust-badge {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             text-align: center;
-            margin: 10px;
+            margin: 15px;
+            animation: fadeInUp 0.5s ease;
+            animation-fill-mode: both;
         }
 
+        .trust-badge:nth-child(1) { animation-delay: 0.1s; }
+        .trust-badge:nth-child(2) { animation-delay: 0.2s; }
+        .trust-badge:nth-child(3) { animation-delay: 0.3s; }
+        .trust-badge:nth-child(4) { animation-delay: 0.4s; }
+
         .trust-icon {
-            font-size: 2rem;
-            color: var(--medical-teal);
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            background: var(--gradient-teal);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
         }
 
         .trust-text {
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 700;
+            font-size: 1.1rem;
             color: var(--text-dark);
+            margin-bottom: 5px;
         }
 
         .trust-subtext {
-            font-size: 0.8rem;
             color: var(--text-light);
+            font-size: 0.9rem;
         }
 
-        /* Responsive */
-        @media (max-width: 992px) {
-            .quick-stats {
-                display: none !important;
-            }
-            
-            .filter-sidebar {
-                position: fixed;
-                top: 0;
-                left: -100%;
-                width: 320px;
-                height: 100vh;
-                z-index: 1050;
-                transition: left 0.3s ease;
-                overflow-y: auto;
-            }
-
-            .filter-sidebar.show {
-                left: 0;
-            }
-
-            .main-content-area {
-                padding-left: 0;
-            }
-
-            .filter-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: rgba(0, 0, 0, 0.5);
-                z-index: 1040;
-                display: none;
-            }
-
-            .filter-overlay.show {
-                display: block;
-            }
-
-            .filter-toggle-btn {
-                display: block;
-            }
+        /* Quick View Modal */
+        .quick-view-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
         }
 
-        @media (max-width: 768px) {
-            .category-navbar {
-                padding-top: 12px;
-                padding-bottom: 12px;
-            }
-            
-            .category-btn {
-                padding: 6px 14px;
-                font-size: 0.85rem;
-            }
-            
-            .category-btn i {
-                margin-right: 3px;
-                font-size: 0.8rem;
-            }
-            
-            .scroll-btn {
-                display: none !important;
-            }
-            
-            .medicine-card {
-                margin-bottom: 20px;
-            }
-
-            .action-buttons {
-                grid-template-columns: 1fr;
-            }
-
-            .btn-compare {
-                grid-column: span 1;
-            }
-            
-            .main-search-container input {
-                height: 45px;
-                font-size: 0.95rem;
-            }
+        .quick-view-modal.show {
+            display: flex;
+            animation: fadeIn 0.3s;
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .modal-content {
+            background: white;
+            border-radius: 32px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+            animation: slideUp 0.4s;
         }
 
-        .medicine-card {
-            animation: fadeIn 0.4s ease-out;
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: #f0f4f8;
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
+        .close-modal:hover {
+            background: var(--accent-red);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        /* Toast Notification */
         .toast-notification {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1060;
-            min-width: 300px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateX(400px);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 2000;
+            border-left: 5px solid var(--accent-green);
         }
 
         .toast-notification.show {
-            opacity: 1;
-            transform: translateY(0);
+            transform: translateX(0);
+        }
+
+        .toast-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .toast-content {
+            flex-grow: 1;
+        }
+
+        .toast-title {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .toast-message {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+            transition: all 0.3s;
+        }
+
+        .toast-close:hover {
+            color: var(--accent-red);
+            transform: rotate(90deg);
         }
 
         /* Comparison Drawer */
@@ -702,13 +1100,13 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background-color: white;
-            border-top-left-radius: 16px;
-            border-top-right-radius: 16px;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            background: white;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
             z-index: 1050;
             transform: translateY(100%);
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         .comparison-drawer.show {
@@ -716,90 +1114,466 @@
         }
 
         .drawer-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid #edf2f7;
+            padding: 20px 30px;
+            border-bottom: 2px solid #f0f4f8;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: linear-gradient(135deg, #f8fafc, #e8f7f9);
+        }
+
+        .drawer-header h5 {
+            margin: 0;
+            background: var(--gradient-teal);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .drawer-body {
-            padding: 20px;
-            max-height: 60vh;
+            padding: 25px;
+            max-height: 50vh;
             overflow-y: auto;
         }
 
         .comparison-item {
             display: flex;
             align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #f1f5f9;
+            padding: 15px;
+            border-radius: 16px;
+            background: #f8fafc;
+            margin-bottom: 10px;
+            transition: all 0.3s;
         }
 
-        .comparison-item:last-child {
-            border-bottom: none;
+        .comparison-item:hover {
+            background: var(--soft-teal);
+            transform: translateX(5px);
         }
 
-        /* Skeleton Loader */
-        .skeleton-loader {
-            background-color: #e2e8f0;
-            border-radius: 8px;
-            animation: pulse 1.5s infinite;
+        /* Mobile Filter Toggle */
+        #mobileFilterToggle {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            z-index: 1030;
+            border-radius: 50px;
+            padding: 12px 24px;
+            background: var(--gradient-teal);
+            border: none;
+            box-shadow: 0 4px 15px rgba(27, 168, 182, 0.3);
+            display: none;
+            color: white;
+            font-weight: 600;
+        }
+
+        @media (max-width: 991.98px) {
+            #mobileFilterToggle {
+                display: block;
+            }
+        }
+
+        /* Filter Overlay for Mobile */
+        .filter-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1040;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+
+        .filter-overlay.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        /* Mobile Filter Sidebar */
+        @media (max-width: 991.98px) {
+            .filter-sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 320px;
+                height: 100vh;
+                z-index: 1050;
+                transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                border-radius: 0;
+                max-height: 100vh;
+            }
+
+            .filter-sidebar.show {
+                left: 0;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
-        /* Grid Layout Fix */
-        .medicine-grid-container {
-            min-height: 100vh;
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
-        
-        /* Mobile Bottom Navigation */
-        .mobile-bottom-nav {
-            position: fixed;
-            bottom: 0;
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading Skeleton */
+        .skeleton-loader {
+            background: linear-gradient(90deg, #f0f4f8 25%, #e2e8f0 50%, #f0f4f8 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Footer Styles (from base.html) */
+        footer {
+            background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+            color: white;
+            padding: 60px 0 30px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 50px;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
             left: 0;
             right: 0;
-            background: white;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            display: none;
-            z-index: 1000;
-            padding: 10px 0;
+            height: 4px;
+            background: var(--gradient-premium);
         }
-        
-        .mobile-bottom-nav-item {
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        @media (min-width: 768px) {
+            .footer-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .footer-logo-container {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+            width: fit-content;
+        }
+
+        .footer-logo-container:hover {
+            transform: translateX(5px);
+        }
+
+        .footer-logo-container img {
+            height: 50px;
+            width: auto;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+            transition: transform 0.3s ease;
+        }
+
+        .footer-logo-container:hover img {
+            transform: scale(1.1);
+        }
+
+        .footer-company-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #d1d5db 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            padding-bottom: 8px;
+            display: inline-block;
+        }
+
+        .footer-company-name::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-premium);
+            border-radius: 2px;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: center;
+        }
+
+        .footer-logo-container:hover .footer-company-name::after {
+            transform: scaleX(1);
+        }
+
+        .footer-description {
+            color: #d1d5db;
+            margin-bottom: 30px;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            max-width: 400px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-light);
+            color: #9ca3af;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
             text-decoration: none;
-            font-size: 0.8rem;
         }
-        
-        .mobile-bottom-nav-item.active {
-            color: var(--medical-teal);
+
+        .social-link:hover {
+            background: var(--gradient-premium);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(102, 126, 234, 0.3);
         }
-        
-        .mobile-bottom-nav-item i {
+
+        .footer-heading {
             font-size: 1.2rem;
-            margin-bottom: 4px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: white;
+            position: relative;
+            padding-bottom: 10px;
         }
-        
-        @media (max-width: 768px) {
-            .mobile-bottom-nav {
-                display: flex;
-                justify-content: space-around;
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--gradient-premium);
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-link {
+            color: #d1d5db;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 6px 0;
+        }
+
+        .footer-link::before {
+            content: '→';
+            margin-right: 10px;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: white;
+            transform: translateX(10px);
+            text-decoration: none;
+        }
+
+        .footer-link:hover::before {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .contact-info {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .contact-item {
+            color: #d1d5db;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            padding: 8px 0;
+        }
+
+        .contact-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--gradient-premium);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding-top: 30px;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom p {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-bottom a {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            padding: 0 5px;
+        }
+
+        .footer-bottom a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* Emergency Button */
+        .emergency-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            text-decoration: none;
+            font-size: 1.8rem;
+            border: 3px solid white;
+        }
+
+        .emergency-btn:hover {
+            transform: scale(1.15) rotate(10deg);
+            box-shadow: 0 12px 30px rgba(239, 68, 68, 0.6);
+        }
+
+        @keyframes pulse-red {
+            0% { 
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+                transform: scale(1);
             }
-            body {
-                padding-bottom: 60px;
+            50% { 
+                box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+                transform: scale(1.05);
             }
+            100% { 
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+                transform: scale(1);
+            }
+        }
+
+        .pulse-red {
+            animation: pulse-red 2s infinite;
         }
     </style>
+
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+        <div class="container">
+            <div class="welcome-content">
+                <div class="welcome-text">
+                    <h2>Welcome back, <span id="userName">Guest</span>! 👋</h2>
+                    <p>Your health is our priority. Get medicines delivered in 2 hours.</p>
+                </div>
+                <div class="health-tip ms-auto">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Health Tip: Take medicines with water, not milk</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Category Filter Navigation -->
     <nav class="category-navbar py-2">
@@ -808,62 +1582,52 @@
                 <div class="category-scroll-wrapper flex-grow-1">
                     <div class="category-list d-flex" id="categoryList">
                         <button class="category-btn active" data-category="all">
-                            <i class="fas fa-box me-1"></i> All Medicines
+                            <i class="fas fa-box me-2"></i> All Medicines
                         </button>
                         <button class="category-btn" data-category="prescription">
-                            <i class="fas fa-prescription me-1"></i> Prescription Required
+                            <i class="fas fa-prescription me-2"></i> Prescription
                         </button>
                         <button class="category-btn" data-category="generic">
-                            <i class="fas fa-pills me-1"></i> Generic Available
+                            <i class="fas fa-pills me-2"></i> Generic
                         </button>
                         <button class="category-btn" data-category="bestseller">
-                            <i class="fas fa-fire me-1"></i> Best Seller
+                            <i class="fas fa-fire me-2"></i> Best Seller
                         </button>
                         <button class="category-btn" data-category="discounted">
-                            <i class="fas fa-tag me-1"></i> Discounted
+                            <i class="fas fa-tag me-2"></i> Discounted
                         </button>
                         <button class="category-btn" data-category="in-stock">
-                            <i class="fas fa-check-circle me-1"></i> In Stock
+                            <i class="fas fa-check-circle me-2"></i> In Stock
                         </button>
                         <button class="category-btn" data-category="fever">
-                            <i class="fas fa-thermometer me-1"></i> Fever & Cold
+                            <i class="fas fa-thermometer me-2"></i> Fever
                         </button>
                         <button class="category-btn" data-category="pain">
-                            <i class="fas fa-head-side-virus me-1"></i> Pain Relief
+                            <i class="fas fa-head-side-virus me-2"></i> Pain Relief
                         </button>
                         <button class="category-btn" data-category="diabetes">
-                            <i class="fas fa-syringe me-1"></i> Diabetes
+                            <i class="fas fa-syringe me-2"></i> Diabetes
                         </button>
                         <button class="category-btn" data-category="cardiac">
-                            <i class="fas fa-heartbeat me-1"></i> Cardiac Care
+                            <i class="fas fa-heartbeat me-2"></i> Cardiac
                         </button>
                     </div>
                 </div>
                 
-                <!-- Scroll buttons for desktop -->
-                <div class="d-none d-md-flex ms-3">
-                    <button class="btn btn-sm btn-outline-secondary scroll-btn" id="scrollLeftBtn">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="btn btn-sm btn-outline-secondary scroll-btn ms-1" id="scrollRightBtn">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-                
-                <!-- Quick Stats -->
+                <!-- Quick Stats with animation -->
                 <div class="d-none d-lg-flex align-items-center ms-4">
                     <div class="quick-stats d-flex">
-                        <div class="stat-item me-3">
-                            <div class="stat-value">1,245+</div>
-                            <div class="stat-label text-muted small">Medicines</div>
+                        <div class="stat-item me-4">
+                            <div class="stat-value" data-target="1245">0</div>
+                            <div class="stat-label">Medicines</div>
                         </div>
-                        <div class="stat-item me-3">
-                            <div class="stat-value">98%</div>
-                            <div class="stat-label text-muted small">In Stock</div>
+                        <div class="stat-item me-4">
+                            <div class="stat-value" data-target="98">0%</div>
+                            <div class="stat-label">In Stock</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">24x7</div>
-                            <div class="stat-label text-muted small">Support</div>
+                            <div class="stat-value" data-target="247">0</div>
+                            <div class="stat-label">24x7 Support</div>
                         </div>
                     </div>
                 </div>
@@ -874,75 +1638,87 @@
     <!-- Main Content -->
     <div class="container-fluid py-4">
         <div class="row medicine-grid-container">
-            <!-- Filter Sidebar -->
-            <div class="col-lg-3 d-none d-lg-block">
-                <div class="filter-sidebar">
+            <!-- Filter Sidebar - Left Column -->
+            <div class="col-lg-3">
+                <div class="filter-sidebar" id="filterSidebar">
                     <div class="filter-title">
-                        <span>Advanced Filters</span>
-                        <button class="btn btn-sm btn-outline-teal" id="clearFilters">Clear All</button>
+                        <span><i class="fas fa-sliders-h me-2"></i>Advanced Filters</span>
+                        <button class="btn btn-sm btn-outline-teal" id="clearFilters">
+                            <i class="fas fa-redo-alt me-1"></i> Reset
+                        </button>
                     </div>
                     
                     <div class="filter-section">
-                        <h6>Category</h6>
+                        <h6><i class="fas fa-pills"></i> Category</h6>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="tablets" checked>
                             <label class="form-check-label" for="tablets">
-                                Tablets
+                                Tablets <span class="text-muted">(234)</span>
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="syrups">
                             <label class="form-check-label" for="syrups">
-                                Syrups
+                                Syrups <span class="text-muted">(156)</span>
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="injections">
                             <label class="form-check-label" for="injections">
-                                Injections
+                                Injections <span class="text-muted">(89)</span>
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="creams">
                             <label class="form-check-label" for="creams">
-                                Creams & Ointments
+                                Creams <span class="text-muted">(112)</span>
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="capsules">
                             <label class="form-check-label" for="capsules">
-                                Capsules
+                                Capsules <span class="text-muted">(178)</span>
                             </label>
                         </div>
                     </div>
                     
                     <div class="filter-section">
-                        <h6>Price Range</h6>
+                        <h6><i class="fas fa-rupee-sign"></i> Price Range</h6>
                         <input type="range" class="form-range price-slider" min="0" max="5000" step="50" value="2500" id="priceSlider">
                         <div class="price-range-values">
                             <span>₹0</span>
-                            <span id="priceMaxValue">₹5000</span>
+                            <span id="priceDisplay">₹2500</span>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <input type="number" class="form-control form-control-sm" style="width: 45%;" placeholder="Min" id="minPrice" value="0">
+                            <input type="number" class="form-control form-control-sm" style="width: 45%;" placeholder="Max" id="maxPrice" value="2500">
                         </div>
                     </div>
                     
                     <div class="filter-section">
-                        <h6>Prescription Required</h6>
+                        <h6><i class="fas fa-prescription"></i> Prescription</h6>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="prescription" id="prescriptionYes">
                             <label class="form-check-label" for="prescriptionYes">
-                                Yes
+                                Required
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="prescription" id="prescriptionNo" checked>
                             <label class="form-check-label" for="prescriptionNo">
-                                No
+                                Not Required
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="prescription" id="prescriptionBoth">
+                            <label class="form-check-label" for="prescriptionBoth">
+                                Both
                             </label>
                         </div>
                     </div>
                     
                     <div class="filter-section">
-                        <h6>Availability</h6>
+                        <h6><i class="fas fa-check-circle"></i> Availability</h6>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="inStock" checked>
                             <label class="form-check-label" for="inStock">
@@ -958,7 +1734,7 @@
                     </div>
                     
                     <div class="filter-section">
-                        <h6>Discount</h6>
+                        <h6><i class="fas fa-tags"></i> Discount</h6>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="discount10">
                             <label class="form-check-label" for="discount10">
@@ -979,32 +1755,49 @@
                         </div>
                     </div>
                     
-                    <button class="btn btn-primary w-100 mt-3" id="applyFilters" style="background-color: var(--medical-teal); border-color: var(--medical-teal);">
+                    <div class="filter-section">
+                        <h6><i class="fas fa-star"></i> Rating</h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="rating4">
+                            <label class="form-check-label" for="rating4">
+                                4★ & above
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="rating3">
+                            <label class="form-check-label" for="rating3">
+                                3★ & above
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary w-100 mt-3" id="applyFilters" style="background: var(--gradient-teal); border: none; border-radius: 16px; padding: 14px;">
                         <i class="fas fa-check-circle me-2"></i>Apply Filters
                     </button>
                 </div>
             </div>
             
-            <!-- Medicine Listing -->
+            <!-- Medicine Listing - Right Column -->
             <div class="col-lg-9 main-content-area">
                 <!-- Search and Filter Controls -->
                 <div class="search-filter-controls">
-                    <!-- Search Bar -->
+                    <!-- Search Bar with Suggestions -->
                     <div class="main-search-container">
                         <i class="fas fa-search main-search-icon"></i>
-                        <input type="text" class="form-control" id="mainSearchInput" placeholder="Search medicines, salts, or brands...">
+                        <input type="text" class="form-control" id="mainSearchInput" 
+                               placeholder="Search medicines, salts, or brands... (e.g., Paracetamol, Dolo, Cipla)">
                         <i class="fas fa-times main-search-clear" id="clearSearch"></i>
                     </div>
                     
                     <!-- Active Filters -->
-                    <div class="active-filters-container" id="activeFiltersContainer">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <small class="text-muted">Active Filters:</small>
+                    <div class="active-filters-container" id="activeFiltersContainer" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <small class="text-muted"><i class="fas fa-filter me-1"></i>Active Filters:</small>
                             <button class="btn btn-sm clear-all-filters" id="clearActiveFilters">
                                 <i class="fas fa-times me-1"></i> Clear All
                             </button>
                         </div>
-                        <div id="activeFiltersList">
+                        <div id="activeFiltersList" class="d-flex flex-wrap">
                             <!-- Active filter tags will be added here -->
                         </div>
                     </div>
@@ -1015,10 +1808,9 @@
                     <div class="row align-items-center">
                         <div class="col-md-6 mb-3 mb-md-0">
                             <div class="d-flex align-items-center">
-                                <span class="me-3 d-none d-md-block">Sort by:</span>
-                                <span class="me-3 d-md-none">Sort:</span>
-                                <select class="form-select" style="max-width: 200px;" id="sortSelect">
-                                    <option selected>Relevance</option>
+                                <span class="me-3"><i class="fas fa-sort me-2"></i>Sort by:</span>
+                                <select class="form-select" style="max-width: 250px;" id="sortSelect">
+                                    <option>Relevance</option>
                                     <option>Price: Low to High</option>
                                     <option>Price: High to Low</option>
                                     <option>Popularity</option>
@@ -1027,17 +1819,17 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6 text-md-end">
+                        <div class="col-md-6">
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-md-none">
-                                    <span class="text-muted">Showing 8 of 1245 products</span>
+                                <div>
+                                    <span class="text-muted" id="resultCount">Showing 8 of 1245 products</span>
                                 </div>
                                 <div class="view-toggle btn-group" role="group">
-                                    <button type="button" class="btn btn-sm active" id="gridViewBtn">
-                                        <i class="fas fa-th-large"></i> <span class="d-none d-md-inline">Grid</span>
+                                    <button type="button" class="btn btn-sm active" id="gridViewBtn" title="Grid View">
+                                        <i class="fas fa-th-large"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm" id="listViewBtn">
-                                        <i class="fas fa-list"></i> <span class="d-none d-md-inline">List</span>
+                                    <button type="button" class="btn btn-sm" id="listViewBtn" title="List View">
+                                        <i class="fas fa-list"></i>
                                     </button>
                                 </div>
                             </div>
@@ -1045,13 +1837,19 @@
                     </div>
                 </div>
                 
-                <!-- AI Suggestions -->
+                <!-- AI Suggestions Banner -->
                 <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
-                    <i class="fas fa-robot fa-lg me-3"></i>
-                    <div class="flex-grow-1">
-                        <strong>AI Recommendation:</strong> Based on your search history, we recommend checking generic alternatives for cost savings.
+                    <div class="me-3">
+                        <div style="width: 40px; height: 40px; background: var(--gradient-teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-robot"></i>
+                        </div>
                     </div>
-                    <a href="#" class="alert-link ms-2 d-none d-md-block">View suggestions</a>
+                    <div class="flex-grow-1">
+                        <strong>AI Recommendation:</strong> Based on your search history, we recommend checking generic alternatives to save up to 70%.
+                    </div>
+                    <button class="btn btn-sm btn-primary" onclick="showGenericAlternatives()">
+                        View Alternatives <i class="fas fa-arrow-right ms-1"></i>
+                    </button>
                 </div>
                 
                 <!-- Medicine Cards Grid -->
@@ -1059,20 +1857,12 @@
                     <!-- Medicine cards will be inserted here by JavaScript -->
                 </div>
                 
-                <!-- Pagination -->
-                <nav aria-label="Medicine pagination" class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1">Previous</a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+                <!-- Load More Button -->
+                <div class="text-center mt-4">
+                    <button class="btn btn-outline-primary" id="loadMoreBtn">
+                        <i class="fas fa-spinner me-2"></i>Load More Products
+                    </button>
+                </div>
                 
                 <!-- Trust & Safety Section -->
                 <div class="trust-badges mt-5">
@@ -1080,7 +1870,7 @@
                         <div class="trust-icon">
                             <i class="fas fa-shield-alt"></i>
                         </div>
-                        <div class="trust-text">100% Verified Medicines</div>
+                        <div class="trust-text">100% Verified</div>
                         <div class="trust-subtext">Licensed Pharmacy</div>
                     </div>
                     
@@ -1092,7 +1882,7 @@
                         <div class="trust-subtext">Prescription Checked</div>
                     </div>
                     
-                    <div class="trust-badge d-none d-md-flex">
+                    <div class="trust-badge">
                         <div class="trust-icon">
                             <i class="fas fa-truck"></i>
                         </div>
@@ -1100,107 +1890,82 @@
                         <div class="trust-subtext">Above ₹499</div>
                     </div>
                     
-                    <div class="trust-badge d-none d-md-flex">
+                    <div class="trust-badge">
                         <div class="trust-icon">
                             <i class="fas fa-lock"></i>
                         </div>
                         <div class="trust-text">Secure Payment</div>
-                        <div class="trust-subtext">Data Privacy</div>
+                        <div class="trust-subtext">100% Safe</div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Mobile Filter Overlay -->
-            <div class="filter-overlay" id="filterOverlay"></div>
-            
         </div>
     </div>
 
-    <!-- Mobile Bottom Navigation -->
-    <div class="mobile-bottom-nav">
-        <a href="#" class="mobile-bottom-nav-item active">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
-        <a href="#" class="mobile-bottom-nav-item" id="mobileFilterBtn">
-            <i class="fas fa-filter"></i>
-            <span>Filter</span>
-        </a>
-        <a href="#" class="mobile-bottom-nav-item">
-            <i class="fas fa-search"></i>
-            <span>Search</span>
-        </a>
-        <a href="#" class="mobile-bottom-nav-item">
-            <i class="fas fa-shopping-cart"></i>
-            <span>Cart</span>
-        </a>
-        <a href="#" class="mobile-bottom-nav-item">
-            <i class="fas fa-user"></i>
-            <span>Account</span>
-        </a>
+    <!-- Quick View Modal -->
+    <div class="quick-view-modal" id="quickViewModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeQuickView()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="row" id="quickViewContent">
+                <!-- Quick view content will be loaded here -->
+            </div>
+        </div>
     </div>
+
+    <!-- Mobile Filter Overlay -->
+    <div class="filter-overlay" id="filterOverlay" onclick="closeMobileFilters()"></div>
+
+    <!-- Mobile Filter Toggle Button -->
+    <button class="btn btn-primary" id="mobileFilterToggle">
+        <i class="fas fa-filter me-2"></i>Filters
+    </button>
 
     <!-- Toast Notification -->
-    <div class="toast-notification alert alert-success d-flex align-items-center" id="toastNotification" role="alert">
-        <i class="fas fa-check-circle fa-lg me-3"></i>
-        <div>
-            <strong>Added to cart!</strong> Medicine successfully added to your cart.
+    <div class="toast-notification" id="toastNotification">
+        <div class="toast-icon">
+            <i class="fas fa-check"></i>
         </div>
-        <button type="button" class="btn-close ms-auto" onclick="hideToast()"></button>
+        <div class="toast-content">
+            <div class="toast-title">Added to Cart!</div>
+            <div class="toast-message">Medicine added to your cart successfully.</div>
+        </div>
+        <button class="toast-close" onclick="hideToast()">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
 
     <!-- Comparison Drawer -->
     <div class="comparison-drawer" id="comparisonDrawer">
         <div class="drawer-header">
-            <h5 class="mb-0">Compare Medicines (2)</h5>
+            <h5 class="mb-0"><i class="fas fa-balance-scale me-2"></i>Compare Medicines (<span id="compareCount">0</span>)</h5>
             <div>
-                <button class="btn btn-sm btn-outline-primary me-2" id="clearComparison">Clear All</button>
-                <button class="btn btn-sm btn-primary">Compare Now</button>
-                <button class="btn btn-sm btn-close" onclick="toggleComparisonDrawer()"></button>
+                <button class="btn btn-sm btn-outline-primary me-2" id="clearComparison" style="border-radius: 50px;">
+                    <i class="fas fa-trash-alt me-1"></i>Clear
+                </button>
+                <button class="btn btn-sm btn-primary" style="border-radius: 50px; background: var(--gradient-teal); border: none;">
+                    <i class="fas fa-chart-bar me-1"></i>Compare
+                </button>
+                <button class="btn btn-sm btn-close ms-2" onclick="toggleComparisonDrawer()"></button>
             </div>
         </div>
-        <div class="drawer-body">
-            <div class="comparison-item">
-                <div class="me-3">
-                    <div class="skeleton-loader" style="width: 60px; height: 60px;"></div>
-                </div>
-                <div class="flex-grow-1">
-                    <div class="fw-bold">Dolo 650mg Tablet</div>
-                    <div class="text-muted small">Paracetamol (650mg)</div>
-                </div>
-                <div class="text-end">
-                    <div class="fw-bold">₹25.50</div>
-                    <div class="text-muted small">10 tablets</div>
-                </div>
-                <button class="btn btn-sm btn-outline-danger ms-3">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="comparison-item">
-                <div class="me-3">
-                    <div class="skeleton-loader" style="width: 60px; height: 60px;"></div>
-                </div>
-                <div class="flex-grow-1">
-                    <div class="fw-bold">Crocin Advance 650mg</div>
-                    <div class="text-muted small">Paracetamol (650mg)</div>
-                </div>
-                <div class="text-end">
-                    <div class="fw-bold">₹22.00</div>
-                    <div class="text-muted small">10 tablets</div>
-                </div>
-                <button class="btn btn-sm btn-outline-danger ms-3">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+        <div class="drawer-body" id="comparisonList">
+            <!-- Comparison items will be added here -->
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
+    <!-- Emergency Button -->
+    <a href="#" class="emergency-btn pulse-red" title="Emergency Help">
+        <i class="fas fa-phone-alt"></i>
+    </a>
+
+    <!-- Bootstrap JS and Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
     
     <script>
-        // Medicine data
+        // Medicine data with more details
         const medicines = [
             {
                 id: 1,
@@ -1214,8 +1979,14 @@
                 rating: 4.5,
                 reviews: 1245,
                 stock: "in-stock",
-                imageClass: "bg-warning-subtle",
-                category: "tablets"
+                stockCount: 245,
+                manufacturer: "Micro Labs Ltd",
+                composition: "Paracetamol IP 650mg",
+                uses: "Fever, Body pain, Headache",
+                sideEffects: "Nausea, Stomach pain",
+                substitutes: ["Crocin 650mg", "Pacimol 650mg"],
+                category: "tablets",
+                tags: ["fever", "pain"]
             },
             {
                 id: 2,
@@ -1229,8 +2000,14 @@
                 rating: 4.3,
                 reviews: 876,
                 stock: "in-stock",
-                imageClass: "bg-info-subtle",
-                category: "tablets"
+                stockCount: 189,
+                manufacturer: "Alembic Pharma",
+                composition: "Azithromycin Dihydrate 500mg",
+                uses: "Bacterial infections, Respiratory tract infections",
+                sideEffects: "Diarrhea, Nausea",
+                substitutes: ["Azax 500mg", "Zithrox 500mg"],
+                category: "tablets",
+                tags: ["antibiotic"]
             },
             {
                 id: 3,
@@ -1244,8 +2021,14 @@
                 rating: 4.6,
                 reviews: 2103,
                 stock: "low-stock",
-                imageClass: "bg-primary-subtle",
-                category: "tablets"
+                stockCount: 15,
+                manufacturer: "Cipla Ltd",
+                composition: "Montelukast 10mg + Levocetirizine 5mg",
+                uses: "Allergy, Asthma",
+                sideEffects: "Headache, Drowsiness",
+                substitutes: ["Monticope-L", "Montemac-L"],
+                category: "tablets",
+                tags: ["allergy", "asthma"]
             },
             {
                 id: 4,
@@ -1259,8 +2042,14 @@
                 rating: 4.4,
                 reviews: 1542,
                 stock: "in-stock",
-                imageClass: "bg-danger-subtle",
-                category: "tablets"
+                stockCount: 312,
+                manufacturer: "Ipca Labs",
+                composition: "Aceclofenac 100mg + Paracetamol 325mg + Serratiopeptidase 15mg",
+                uses: "Pain relief, Inflammation",
+                sideEffects: "Stomach pain, Dizziness",
+                substitutes: ["Dolokind-SP", "Hifenac-SP"],
+                category: "tablets",
+                tags: ["pain", "inflammation"]
             },
             {
                 id: 5,
@@ -1274,8 +2063,14 @@
                 rating: 4.2,
                 reviews: 987,
                 stock: "in-stock",
-                imageClass: "bg-success-subtle",
-                category: "tablets"
+                stockCount: 567,
+                manufacturer: "Alkem Labs",
+                composition: "Pantoprazole Sodium 40mg",
+                uses: "Acidity, Heartburn, GERD",
+                sideEffects: "Headache, Diarrhea",
+                substitutes: ["Pantocid 40mg", "Pantop 40mg"],
+                category: "tablets",
+                tags: ["acidity", "gerd"]
             },
             {
                 id: 6,
@@ -1289,8 +2084,14 @@
                 rating: 4.7,
                 reviews: 2310,
                 stock: "in-stock",
-                imageClass: "bg-warning-subtle",
-                category: "syrups"
+                stockCount: 89,
+                manufacturer: "USV Pvt Ltd",
+                composition: "Multivitamins + Zinc + Lysine",
+                uses: "Nutritional supplement",
+                sideEffects: "None in recommended doses",
+                substitutes: ["Sansvit Syrup", "Vibavit Syrup"],
+                category: "syrups",
+                tags: ["vitamins", "supplement"]
             },
             {
                 id: 7,
@@ -1304,8 +2105,14 @@
                 rating: 4.5,
                 reviews: 1123,
                 stock: "out-of-stock",
-                imageClass: "bg-info-subtle",
-                category: "tablets"
+                stockCount: 0,
+                manufacturer: "Cipla Ltd",
+                composition: "Ondansetron 4mg",
+                uses: "Nausea, Vomiting",
+                sideEffects: "Headache, Constipation",
+                substitutes: ["Vomikind 4mg", "Ondem 4mg"],
+                category: "tablets",
+                tags: ["nausea", "vomiting"]
             },
             {
                 id: 8,
@@ -1319,91 +2126,408 @@
                 rating: 4.6,
                 reviews: 1895,
                 stock: "in-stock",
-                imageClass: "bg-primary-subtle",
-                category: "capsules"
+                stockCount: 423,
+                manufacturer: "Pfizer Ltd",
+                composition: "Vitamin B Complex + Vitamin C + Minerals",
+                uses: "Vitamin deficiency, Stress",
+                sideEffects: "None in recommended doses",
+                substitutes: ["Supradyn", "Revital"],
+                category: "capsules",
+                tags: ["vitamins", "energy"]
             }
         ];
+
+        // Cart state
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let cartCount = cart.length;
+
+        // Comparison state
+        let comparisonItems = JSON.parse(localStorage.getItem('comparison')) || [];
 
         // Active filters state
         let activeFilters = {
             search: '',
             categories: ['all'],
-            prescription: null,
-            stock: [],
-            discount: [],
-            price: 5000
+            prescription: 'both',
+            stock: ['in-stock'],
+            discount: [30],
+            price: { min: 0, max: 5000 },
+            rating: null
         };
 
-        // Initialize the medicine grid
+        // DOM Elements
+        const medicineGrid = document.getElementById('medicineGrid');
+        const searchInput = document.getElementById('mainSearchInput');
+        const clearSearch = document.getElementById('clearSearch');
+        const sortSelect = document.getElementById('sortSelect');
+        const resultCount = document.getElementById('resultCount');
+        const activeFiltersContainer = document.getElementById('activeFiltersContainer');
+        const activeFiltersList = document.getElementById('activeFiltersList');
+        const toastNotification = document.getElementById('toastNotification');
+        const quickViewModal = document.getElementById('quickViewModal');
+        const comparisonDrawer = document.getElementById('comparisonDrawer');
+        const compareCount = document.getElementById('compareCount');
+        const comparisonList = document.getElementById('comparisonList');
+        const filterSidebar = document.getElementById('filterSidebar');
+        const filterOverlay = document.getElementById('filterOverlay');
+        const mobileFilterToggle = document.getElementById('mobileFilterToggle');
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMedicineCards();
+            updateCartCount();
+            updateComparisonDrawer();
+            initCounters();
+            initEventListeners();
+            
+            // Show welcome message
+            setTimeout(() => {
+                showToast('Welcome to Curexa! 🏥', 'Your trusted online pharmacy');
+            }, 1000);
+        });
+
+        // Initialize event listeners
+        function initEventListeners() {
+            // Search input
+            searchInput.addEventListener('input', function() {
+                activeFilters.search = this.value;
+                clearSearch.style.display = this.value ? 'block' : 'none';
+                updateActiveFiltersUI();
+            });
+
+            // Clear search
+            clearSearch.addEventListener('click', function() {
+                searchInput.value = '';
+                activeFilters.search = '';
+                this.style.display = 'none';
+                updateActiveFiltersUI();
+            });
+
+            // Sort select
+            sortSelect.addEventListener('change', function() {
+                applyFilters();
+            });
+
+            // Grid/List view toggle
+            document.getElementById('gridViewBtn').addEventListener('click', function() {
+                this.classList.add('active');
+                document.getElementById('listViewBtn').classList.remove('active');
+                document.getElementById('medicineGrid').classList.remove('list-view');
+            });
+
+            document.getElementById('listViewBtn').addEventListener('click', function() {
+                this.classList.add('active');
+                document.getElementById('gridViewBtn').classList.remove('active');
+                document.getElementById('medicineGrid').classList.add('list-view');
+            });
+
+            // Load more button
+            document.getElementById('loadMoreBtn').addEventListener('click', function() {
+                const btn = this;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
+                
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-check me-2"></i>Loaded!';
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-spinner me-2"></i>Load More Products';
+                    }, 2000);
+                }, 2000);
+            });
+
+            // Apply filters button
+            document.getElementById('applyFilters').addEventListener('click', function() {
+                // Get stock filters
+                activeFilters.stock = [];
+                if (document.getElementById('inStock').checked) activeFilters.stock.push('in-stock');
+                if (document.getElementById('outOfStock').checked) activeFilters.stock.push('out-of-stock');
+                
+                // Get discount filters
+                activeFilters.discount = [];
+                if (document.getElementById('discount10').checked) activeFilters.discount.push(10);
+                if (document.getElementById('discount20').checked) activeFilters.discount.push(20);
+                if (document.getElementById('discount30').checked) activeFilters.discount.push(30);
+                
+                // Get prescription
+                if (document.getElementById('prescriptionYes').checked) activeFilters.prescription = 'yes';
+                else if (document.getElementById('prescriptionNo').checked) activeFilters.prescription = 'no';
+                else activeFilters.prescription = 'both';
+                
+                updateActiveFiltersUI();
+                closeMobileFilters();
+                showToast('Filters Applied', 'Products have been filtered');
+            });
+
+            // Clear filters button
+            document.getElementById('clearFilters').addEventListener('click', function() {
+                document.querySelectorAll('.form-check-input').forEach(input => {
+                    input.checked = false;
+                });
+                
+                document.getElementById('inStock').checked = true;
+                document.getElementById('discount30').checked = true;
+                document.getElementById('prescriptionBoth').checked = true;
+                
+                showToast('Filters Reset', 'All sidebar filters have been reset');
+            });
+
+            // Clear active filters
+            document.getElementById('clearActiveFilters').addEventListener('click', function() {
+                activeFilters = {
+                    search: '',
+                    categories: ['all'],
+                    prescription: 'both',
+                    stock: ['in-stock'],
+                    discount: [30],
+                    price: { min: 0, max: 5000 },
+                    rating: null
+                };
+                
+                // Reset UI
+                searchInput.value = '';
+                clearSearch.style.display = 'none';
+                
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.category === 'all') {
+                        btn.classList.add('active');
+                    }
+                });
+                
+                document.querySelectorAll('.form-check-input').forEach(input => {
+                    input.checked = false;
+                });
+                
+                document.getElementById('inStock').checked = true;
+                document.getElementById('discount30').checked = true;
+                document.getElementById('minPrice').value = 0;
+                document.getElementById('maxPrice').value = 5000;
+                document.getElementById('priceSlider').value = 5000;
+                
+                updateActiveFiltersUI();
+                showToast('Filters Cleared', 'All filters have been reset');
+            });
+
+            // Clear comparison
+            document.getElementById('clearComparison').addEventListener('click', function() {
+                comparisonItems = [];
+                localStorage.setItem('comparison', JSON.stringify(comparisonItems));
+                updateComparisonDrawer();
+                comparisonDrawer.classList.remove('show');
+                showToast('Cleared', 'Comparison list cleared');
+            });
+
+            // Category buttons
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    
+                    if (category === 'all') {
+                        document.querySelectorAll('.category-btn').forEach(b => {
+                            b.classList.remove('active');
+                        });
+                        activeFilters.categories = ['all'];
+                    } else {
+                        if (activeFilters.categories.includes('all')) {
+                            activeFilters.categories = [];
+                            document.querySelector('[data-category="all"]').classList.remove('active');
+                        }
+                        
+                        const index = activeFilters.categories.indexOf(category);
+                        if (index === -1) {
+                            activeFilters.categories.push(category);
+                            this.classList.add('active');
+                        } else {
+                            activeFilters.categories.splice(index, 1);
+                            this.classList.remove('active');
+                        }
+                        
+                        if (activeFilters.categories.length === 0) {
+                            activeFilters.categories = ['all'];
+                            document.querySelector('[data-category="all"]').classList.add('active');
+                        }
+                    }
+                    
+                    updateActiveFiltersUI();
+                });
+            });
+
+            // Price slider
+            const priceSlider = document.getElementById('priceSlider');
+            const minPrice = document.getElementById('minPrice');
+            const maxPrice = document.getElementById('maxPrice');
+            const priceDisplay = document.getElementById('priceDisplay');
+
+            minPrice.addEventListener('change', function() {
+                const min = parseInt(this.value) || 0;
+                const max = parseInt(maxPrice.value) || 5000;
+                activeFilters.price = { min, max };
+                priceSlider.value = max;
+                priceDisplay.textContent = `₹${max}`;
+            });
+
+            maxPrice.addEventListener('change', function() {
+                const min = parseInt(minPrice.value) || 0;
+                const max = parseInt(this.value) || 5000;
+                activeFilters.price = { min, max };
+                priceSlider.value = max;
+                priceDisplay.textContent = `₹${max}`;
+            });
+
+            priceSlider.addEventListener('input', function() {
+                const max = parseInt(this.value);
+                maxPrice.value = max;
+                priceDisplay.textContent = `₹${max}`;
+                activeFilters.price = { min: parseInt(minPrice.value) || 0, max };
+            });
+
+            // Mobile filter toggle
+            mobileFilterToggle.addEventListener('click', openMobileFilters);
+
+            // Click outside to close comparison drawer
+            document.addEventListener('click', function(e) {
+                if (!comparisonDrawer.contains(e.target) && !e.target.closest('[onclick="toggleComparisonDrawer()"]') && comparisonDrawer.classList.contains('show')) {
+                    comparisonDrawer.classList.remove('show');
+                }
+            });
+        }
+
+        // Initialize animated counters
+        function initCounters() {
+            const counters = document.querySelectorAll('.stat-value');
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                const suffix = counter.textContent.includes('%') ? '%' : '';
+                let count = 0;
+                const increment = target / 50;
+                
+                const updateCounter = () => {
+                    if (count < target) {
+                        count += increment;
+                        counter.textContent = Math.ceil(count) + suffix;
+                        setTimeout(updateCounter, 20);
+                    } else {
+                        counter.textContent = target + suffix;
+                    }
+                };
+                
+                updateCounter();
+            });
+        }
+
+        // Update cart count display
+        function updateCartCount() {
+            const cartCountElement = document.querySelector('.cart-count');
+            if (cartCountElement) {
+                cartCountElement.textContent = cart.length;
+                if (cart.length > 0) {
+                    cartCountElement.style.animation = 'pulse 0.5s';
+                    setTimeout(() => {
+                        cartCountElement.style.animation = '';
+                    }, 500);
+                }
+            }
+        }
+
+        // Render medicine cards
         function renderMedicineCards(filteredMedicines = medicines) {
-            const medicineGrid = document.getElementById('medicineGrid');
             medicineGrid.innerHTML = '';
             
-            filteredMedicines.forEach(medicine => {
-                const stockText = medicine.stock === 'in-stock' ? 'In Stock' : 
-                                medicine.stock === 'low-stock' ? 'Low Stock' : 'Out of Stock';
-                
-                const card = document.createElement('div');
-                card.className = 'col-md-6 col-xl-4 col-xxl-3 mb-4';
-                card.innerHTML = `
+            // Show loading skeleton
+            for (let i = 0; i < 8; i++) {
+                const skeleton = document.createElement('div');
+                skeleton.className = 'col-md-6 col-xl-4 col-xxl-3 mb-4';
+                skeleton.innerHTML = `
                     <div class="medicine-card">
-                        <div class="medicine-image ${medicine.imageClass}">
+                        <div class="medicine-image">
                             <div class="skeleton-loader" style="width: 120px; height: 120px;"></div>
                         </div>
                         <div class="medicine-details">
-                            <h3 class="medicine-name">${medicine.name}</h3>
-                            <p class="salt-composition">${medicine.salt}</p>
-                            <p class="brand-name">${medicine.brand}</p>
-                            
-                            ${medicine.prescription ? 
-                                '<div class="prescription-badge"><i class="fas fa-prescription"></i> Prescription Required</div>' : 
-                                ''}
-                            
-                            <div class="price-section">
-                                <div class="current-price">₹${medicine.price.toFixed(2)}</div>
-                                <div class="original-price">₹${medicine.originalPrice.toFixed(2)}</div>
-                                <div class="discount-badge">${medicine.discount}% OFF</div>
-                            </div>
-                            
-                            <div class="rating">
-                                <div class="stars">
-                                    ${generateStars(medicine.rating)}
-                                </div>
-                                <div class="rating-count">${medicine.rating} (${medicine.reviews} reviews)</div>
-                            </div>
-                            
-                            <div class="stock-status ${medicine.stock}">
-                                <i class="fas ${medicine.stock === 'in-stock' ? 'fa-check-circle' : 
-                                    medicine.stock === 'low-stock' ? 'fa-exclamation-circle' : 'fa-times-circle'} me-1"></i>
-                                ${stockText}
-                            </div>
-                            
-                            <div class="action-buttons">
-                                <button class="btn-add-cart" onclick="addToCart(${medicine.id})">
-                                    <i class="fas fa-cart-plus me-1"></i> Add to Cart
-                                </button>
-                                <button class="btn-buy-now" onclick="buyNow(${medicine.id})">
-                                    <i class="fas fa-bolt me-1"></i> Buy Now
-                                </button>
-                                <button class="btn-compare" onclick="addToComparison(${medicine.id})">
-                                    <i class="fas fa-balance-scale me-1"></i> Compare
-                                </button>
-                            </div>
+                            <div class="skeleton-loader" style="height: 24px; width: 80%; margin-bottom: 10px;"></div>
+                            <div class="skeleton-loader" style="height: 18px; width: 60%; margin-bottom: 15px;"></div>
+                            <div class="skeleton-loader" style="height: 20px; width: 40%; margin-bottom: 15px;"></div>
+                            <div class="skeleton-loader" style="height: 30px; width: 50%; margin-bottom: 15px;"></div>
                         </div>
                     </div>
                 `;
-                
-                medicineGrid.appendChild(card);
-            });
+                medicineGrid.appendChild(skeleton);
+            }
             
-            // Simulate loading animation
+            // Simulate loading and render actual cards
             setTimeout(() => {
-                document.querySelectorAll('.medicine-image .skeleton-loader').forEach(loader => {
-                    loader.style.animation = 'none';
-                    loader.style.backgroundColor = 'transparent';
-                    loader.innerHTML = '<i class="fas fa-pills fa-4x text-muted"></i>';
+                medicineGrid.innerHTML = '';
+                
+                filteredMedicines.forEach(medicine => {
+                    const stockText = medicine.stock === 'in-stock' ? 'In Stock' : 
+                                    medicine.stock === 'low-stock' ? `Only ${medicine.stockCount} left` : 'Out of Stock';
+                    
+                    const card = document.createElement('div');
+                    card.className = 'col-md-6 col-xl-4 col-xxl-3 mb-4';
+                    card.setAttribute('data-id', medicine.id);
+                    card.setAttribute('data-name', medicine.name.toLowerCase());
+                    card.setAttribute('data-category', medicine.category);
+                    card.setAttribute('data-price', medicine.price);
+                    card.setAttribute('data-rating', medicine.rating);
+                    
+                    card.innerHTML = `
+                        <div class="medicine-card" onclick="quickView(${medicine.id})">
+                            <div class="medicine-image">
+                                <i class="fas fa-pills fa-4x"></i>
+                            </div>
+                            <div class="medicine-details">
+                                <h3 class="medicine-name">${medicine.name}</h3>
+                                <p class="salt-composition">${medicine.salt}</p>
+                                <p class="brand-name">
+                                    <i class="fas fa-building me-1"></i>${medicine.brand}
+                                </p>
+                                
+                                ${medicine.prescription ? 
+                                    '<div class="prescription-badge"><i class="fas fa-prescription me-1"></i> Rx Required</div>' : 
+                                    '<div class="prescription-badge" style="background: #d4edda; color: #155724; border-color: #c3e6cb;"><i class="fas fa-check-circle me-1"></i> OTC</div>'}
+                                
+                                <div class="price-section">
+                                    <span class="current-price">₹${medicine.price.toFixed(2)}</span>
+                                    <span class="original-price">₹${medicine.originalPrice.toFixed(2)}</span>
+                                    <span class="discount-badge">${medicine.discount}% OFF</span>
+                                </div>
+                                
+                                <div class="rating">
+                                    <div class="stars">
+                                        ${generateStars(medicine.rating)}
+                                    </div>
+                                    <span class="rating-count">(${medicine.reviews})</span>
+                                </div>
+                                
+                                <div class="stock-status ${medicine.stock}">
+                                    <i class="fas ${medicine.stock === 'in-stock' ? 'fa-check-circle' : 
+                                        medicine.stock === 'low-stock' ? 'fa-exclamation-circle' : 'fa-times-circle'} me-2"></i>
+                                    ${stockText}
+                                    ${medicine.stock === 'low-stock' ? `<span class="badge bg-warning text-dark ms-2">Hurry!</span>` : ''}
+                                </div>
+                                
+                                <div class="action-buttons" onclick="event.stopPropagation()">
+                                    <button class="btn-add-cart" onclick="addToCart(${medicine.id})">
+                                        <i class="fas fa-cart-plus"></i>
+                                        <span>Add</span>
+                                    </button>
+                                    <button class="btn-buy-now" onclick="buyNow(${medicine.id})">
+                                        <i class="fas fa-bolt"></i>
+                                        <span>Buy</span>
+                                    </button>
+                                    <button class="btn-compare" onclick="addToComparison(${medicine.id})">
+                                        <i class="fas fa-balance-scale"></i>
+                                        <span>Compare</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    medicineGrid.appendChild(card);
                 });
-            }, 500);
+                
+                // Update result count
+                resultCount.textContent = `Showing ${filteredMedicines.length} of ${medicines.length} products`;
+            }, 1000);
         }
 
         // Generate star rating HTML
@@ -1428,60 +2552,203 @@
             return stars;
         }
 
-        // Cart functionality
-        let cartCount = 3;
-        
+        // Cart functions
         function addToCart(medicineId) {
-            cartCount++;
-            document.querySelector('.cart-count').textContent = cartCount;
+            const medicine = medicines.find(m => m.id === medicineId);
             
-            // Show toast notification
-            showToast('Added to cart! Medicine successfully added to your cart.');
+            if (medicine.stock === 'out-of-stock') {
+                showToast('Out of Stock!', 'This medicine is currently unavailable', 'error');
+                return;
+            }
             
-            // Animate cart icon
+            cart.push(medicine);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            
+            // Animate the cart icon
             const cartIcon = document.querySelector('.cart-icon');
-            cartIcon.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                cartIcon.style.transform = 'scale(1)';
-            }, 300);
+            if (cartIcon) {
+                cartIcon.style.animation = 'none';
+                cartIcon.offsetHeight;
+                cartIcon.style.animation = 'pulse 0.5s';
+            }
+            
+            showToast('Added to Cart!', `${medicine.name} has been added to your cart`);
+            
+            // Confetti effect for first purchase
+            if (cart.length === 1) {
+                createConfetti();
+            }
         }
 
         function buyNow(medicineId) {
-            showToast('Redirecting to checkout...');
+            addToCart(medicineId);
+            setTimeout(() => {
+                window.location.href = '/checkout/';
+            }, 1000);
         }
 
-        // Comparison functionality
-        let comparisonItems = [1, 2];
-        
+        // Quick view function
+        function quickView(medicineId) {
+            const medicine = medicines.find(m => m.id === medicineId);
+            const content = document.getElementById('quickViewContent');
+            
+            content.innerHTML = `
+                <div class="col-md-5">
+                    <div class="medicine-image" style="height: 300px;">
+                        <i class="fas fa-pills fa-6x" style="color: var(--medical-teal);"></i>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <h2 class="mb-3">${medicine.name}</h2>
+                    <p class="text-muted mb-2">${medicine.salt}</p>
+                    <p class="mb-3"><strong>Manufacturer:</strong> ${medicine.manufacturer}</p>
+                    
+                    <div class="price-section mb-3">
+                        <span class="current-price" style="font-size: 2rem;">₹${medicine.price.toFixed(2)}</span>
+                        <span class="original-price" style="font-size: 1.2rem;">₹${medicine.originalPrice.toFixed(2)}</span>
+                        <span class="discount-badge">${medicine.discount}% OFF</span>
+                    </div>
+                    
+                    <div class="rating mb-3">
+                        ${generateStars(medicine.rating)}
+                        <span class="ms-2">${medicine.rating} (${medicine.reviews} reviews)</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6>Composition:</h6>
+                        <p>${medicine.composition}</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6>Uses:</h6>
+                        <p>${medicine.uses}</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6>Substitutes:</h6>
+                        <p>${medicine.substitutes.join(', ')}</p>
+                    </div>
+                    
+                    <div class="stock-status ${medicine.stock} mb-3">
+                        <i class="fas ${medicine.stock === 'in-stock' ? 'fa-check-circle' : 
+                            medicine.stock === 'low-stock' ? 'fa-exclamation-circle' : 'fa-times-circle'} me-2"></i>
+                        ${medicine.stock === 'in-stock' ? `In Stock (${medicine.stockCount} units)` : 
+                          medicine.stock === 'low-stock' ? `Only ${medicine.stockCount} left!` : 'Out of Stock'}
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button class="btn-add-cart" style="padding: 12px 30px;" onclick="addToCart(${medicine.id})">
+                            <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                        </button>
+                        <button class="btn-buy-now" style="padding: 12px 30px;" onclick="buyNow(${medicine.id})">
+                            <i class="fas fa-bolt me-2"></i>Buy Now
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            quickViewModal.classList.add('show');
+        }
+
+        function closeQuickView() {
+            quickViewModal.classList.remove('show');
+        }
+
+        // Comparison functions
         function addToComparison(medicineId) {
-            if (!comparisonItems.includes(medicineId)) {
-                if (comparisonItems.length >= 4) {
-                    showToast('Maximum 4 items can be compared at once.');
-                    return;
-                }
-                
-                comparisonItems.push(medicineId);
-                showToast('Added to comparison list.');
-                toggleComparisonDrawer();
-            } else {
-                showToast('This item is already in comparison list.');
+            if (comparisonItems.includes(medicineId)) {
+                showToast('Already Added', 'This item is already in comparison list', 'info');
+                return;
             }
+            
+            if (comparisonItems.length >= 4) {
+                showToast('Limit Reached', 'You can compare up to 4 items at once', 'warning');
+                return;
+            }
+            
+            comparisonItems.push(medicineId);
+            localStorage.setItem('comparison', JSON.stringify(comparisonItems));
+            updateComparisonDrawer();
+            showToast('Added to Compare', 'Item added to comparison list');
+            
+            // Show the comparison drawer
+            comparisonDrawer.classList.add('show');
+        }
+
+        function removeFromComparison(medicineId) {
+            comparisonItems = comparisonItems.filter(id => id !== medicineId);
+            localStorage.setItem('comparison', JSON.stringify(comparisonItems));
+            updateComparisonDrawer();
+            
+            if (comparisonItems.length === 0) {
+                comparisonDrawer.classList.remove('show');
+            }
+        }
+
+        function updateComparisonDrawer() {
+            compareCount.textContent = comparisonItems.length;
+            
+            if (comparisonItems.length === 0) {
+                comparisonList.innerHTML = '<p class="text-center text-muted py-4">No items to compare. Add medicines to compare.</p>';
+                return;
+            }
+            
+            comparisonList.innerHTML = '';
+            comparisonItems.forEach(id => {
+                const medicine = medicines.find(m => m.id === id);
+                if (medicine) {
+                    const item = document.createElement('div');
+                    item.className = 'comparison-item';
+                    item.innerHTML = `
+                        <div class="me-3">
+                            <i class="fas fa-pills fa-2x" style="color: var(--medical-teal);"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold">${medicine.name}</div>
+                            <div class="text-muted small">${medicine.salt}</div>
+                        </div>
+                        <div class="text-end me-3">
+                            <div class="fw-bold">₹${medicine.price.toFixed(2)}</div>
+                            <div class="text-muted small">${medicine.discount}% off</div>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger" onclick="removeFromComparison(${medicine.id})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    comparisonList.appendChild(item);
+                }
+            });
         }
 
         function toggleComparisonDrawer() {
-            const drawer = document.getElementById('comparisonDrawer');
-            drawer.classList.toggle('show');
+            comparisonDrawer.classList.toggle('show');
         }
 
         // Toast notification
-        function showToast(message) {
-            const toast = document.getElementById('toastNotification');
-            if (message) {
-                toast.querySelector('.alert strong').textContent = message.split('!')[0] + '!';
-                toast.querySelector('.alert div:nth-child(2)').innerHTML = message;
+        function showToast(title, message, type = 'success') {
+            const icon = toastNotification.querySelector('.toast-icon i');
+            const titleEl = toastNotification.querySelector('.toast-title');
+            const messageEl = toastNotification.querySelector('.toast-message');
+            
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-check';
+                toastNotification.style.borderLeftColor = 'var(--accent-green)';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-times';
+                toastNotification.style.borderLeftColor = 'var(--accent-red)';
+            } else if (type === 'warning') {
+                icon.className = 'fas fa-exclamation';
+                toastNotification.style.borderLeftColor = '#ffc107';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info';
+                toastNotification.style.borderLeftColor = 'var(--medical-teal)';
             }
             
-            toast.classList.add('show');
+            toastNotification.classList.add('show');
             
             setTimeout(() => {
                 hideToast();
@@ -1489,16 +2756,46 @@
         }
 
         function hideToast() {
-            const toast = document.getElementById('toastNotification');
-            toast.classList.remove('show');
+            toastNotification.classList.remove('show');
         }
 
-        // Category filtering functionality
-        const categoryButtons = document.querySelectorAll('.category-btn');
+        // Confetti effect
+        function createConfetti() {
+            const colors = ['#1ba8b6', '#2a6fd6', '#28a745', '#ffc107'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-10px';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.zIndex = '9999';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear`;
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
 
-        // Update active filters and UI
+        // Add fall animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh) rotate(360deg);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Filter functions
         function updateActiveFiltersUI() {
-            const activeFiltersList = document.getElementById('activeFiltersList');
             activeFiltersList.innerHTML = '';
             
             let hasFilters = false;
@@ -1506,63 +2803,79 @@
             // Search filter
             if (activeFilters.search && activeFilters.search.trim() !== '') {
                 hasFilters = true;
-                const filterTag = createFilterTag('Search: ' + activeFilters.search, 'search');
-                activeFiltersList.appendChild(filterTag);
+                activeFiltersList.appendChild(createFilterTag('🔍 ' + activeFilters.search, 'search'));
             }
             
-            // Category filters (excluding 'all')
+            // Category filters
             if (activeFilters.categories.length > 0 && !(activeFilters.categories.length === 1 && activeFilters.categories[0] === 'all')) {
                 hasFilters = true;
-                activeFilters.categories.forEach(category => {
-                    if (category !== 'all') {
-                        const filterTag = createFilterTag(getCategoryLabel(category), 'category-' + category);
-                        activeFiltersList.appendChild(filterTag);
+                activeFilters.categories.forEach(cat => {
+                    if (cat !== 'all') {
+                        activeFiltersList.appendChild(createFilterTag(getCategoryLabel(cat), 'cat-' + cat));
                     }
                 });
             }
             
-            // Show/hide active filters container
-            const activeFiltersContainer = document.getElementById('activeFiltersContainer');
-            activeFiltersContainer.style.display = hasFilters ? 'block' : 'none';
+            // Price filter
+            if (activeFilters.price.min > 0 || activeFilters.price.max < 5000) {
+                hasFilters = true;
+                activeFiltersList.appendChild(createFilterTag(`₹${activeFilters.price.min} - ₹${activeFilters.price.max}`, 'price'));
+            }
             
-            // Apply filters
-            applyAllFilters();
+            // Stock filter
+            if (activeFilters.stock.length > 0) {
+                hasFilters = true;
+                activeFilters.stock.forEach(stock => {
+                    activeFiltersList.appendChild(createFilterTag(stock === 'in-stock' ? 'In Stock' : 'Out of Stock', 'stock-' + stock));
+                });
+            }
+            
+            // Discount filter
+            if (activeFilters.discount.length > 0) {
+                hasFilters = true;
+                activeFilters.discount.forEach(disc => {
+                    activeFiltersList.appendChild(createFilterTag(disc + '% or more', 'discount-' + disc));
+                });
+            }
+            
+            activeFiltersContainer.style.display = hasFilters ? 'block' : 'none';
+            applyFilters();
         }
 
         function createFilterTag(label, filterId) {
-            const tag = document.createElement('div');
+            const tag = document.createElement('span');
             tag.className = 'filter-tag';
             tag.innerHTML = `
                 ${label}
-                <button class="filter-tag-remove" data-filter="${filterId}">
+                <button class="filter-tag-remove" onclick="removeFilter('${filterId}')">
                     <i class="fas fa-times"></i>
                 </button>
             `;
-            
-            tag.querySelector('.filter-tag-remove').addEventListener('click', function() {
-                removeFilter(filterId);
-            });
-            
             return tag;
         }
 
         function removeFilter(filterId) {
             if (filterId === 'search') {
                 activeFilters.search = '';
-                document.getElementById('mainSearchInput').value = '';
-            } else if (filterId.startsWith('category-')) {
-                const category = filterId.replace('category-', '');
-                activeFilters.categories = activeFilters.categories.filter(cat => cat !== category);
-                
-                // Update category buttons
-                const categoryBtn = document.querySelector(`.category-btn[data-category="${category}"]`);
-                if (categoryBtn) categoryBtn.classList.remove('active');
-                
-                // If no categories selected, add 'all'
-                if (activeFilters.categories.length === 0) {
-                    activeFilters.categories.push('all');
-                    document.querySelector('.category-btn[data-category="all"]').classList.add('active');
-                }
+                searchInput.value = '';
+                clearSearch.style.display = 'none';
+            } else if (filterId.startsWith('cat-')) {
+                const category = filterId.replace('cat-', '');
+                activeFilters.categories = activeFilters.categories.filter(c => c !== category);
+                document.querySelector(`[data-category="${category}"]`).classList.remove('active');
+            } else if (filterId === 'price') {
+                activeFilters.price = { min: 0, max: 5000 };
+                document.getElementById('minPrice').value = 0;
+                document.getElementById('maxPrice').value = 5000;
+                document.getElementById('priceSlider').value = 5000;
+            } else if (filterId.startsWith('stock-')) {
+                const stock = filterId.replace('stock-', '');
+                activeFilters.stock = activeFilters.stock.filter(s => s !== stock);
+                document.getElementById(stock === 'in-stock' ? 'inStock' : 'outOfStock').checked = false;
+            } else if (filterId.startsWith('discount-')) {
+                const disc = parseInt(filterId.replace('discount-', ''));
+                activeFilters.discount = activeFilters.discount.filter(d => d !== disc);
+                document.getElementById(`discount${disc}`).checked = false;
             }
             
             updateActiveFiltersUI();
@@ -1570,372 +2883,99 @@
 
         function getCategoryLabel(category) {
             const labels = {
-                'prescription': 'Prescription Required',
-                'generic': 'Generic Available',
+                'prescription': 'Prescription',
+                'generic': 'Generic',
                 'bestseller': 'Best Seller',
                 'discounted': 'Discounted',
                 'in-stock': 'In Stock',
-                'fever': 'Fever & Cold',
+                'fever': 'Fever',
                 'pain': 'Pain Relief',
                 'diabetes': 'Diabetes',
-                'cardiac': 'Cardiac Care'
+                'cardiac': 'Cardiac'
             };
             return labels[category] || category;
         }
 
-        // Apply all filters
-        function applyAllFilters() {
-            let filteredMedicines = medicines;
+        function applyFilters() {
+            let filtered = [...medicines];
             
             // Search filter
-            if (activeFilters.search && activeFilters.search.trim() !== '') {
+            if (activeFilters.search) {
                 const searchTerm = activeFilters.search.toLowerCase();
-                filteredMedicines = filteredMedicines.filter(medicine => 
-                    medicine.name.toLowerCase().includes(searchTerm) ||
-                    medicine.salt.toLowerCase().includes(searchTerm) ||
-                    medicine.brand.toLowerCase().includes(searchTerm)
+                filtered = filtered.filter(m => 
+                    m.name.toLowerCase().includes(searchTerm) ||
+                    m.salt.toLowerCase().includes(searchTerm) ||
+                    m.brand.toLowerCase().includes(searchTerm) ||
+                    m.composition.toLowerCase().includes(searchTerm)
                 );
             }
             
             // Category filters
             if (activeFilters.categories.length > 0 && !(activeFilters.categories.length === 1 && activeFilters.categories[0] === 'all')) {
-                filteredMedicines = filteredMedicines.filter(medicine => {
-                    return activeFilters.categories.some(category => {
-                        switch(category) {
-                            case 'prescription':
-                                return medicine.prescription;
-                            case 'generic':
-                                return medicine.name.toLowerCase().includes('generic') || 
-                                       medicine.price < medicine.originalPrice * 0.7;
-                            case 'bestseller':
-                                return medicine.reviews > 1000;
-                            case 'discounted':
-                                return medicine.discount >= 20;
-                            case 'in-stock':
-                                return medicine.stock === 'in-stock';
-                            case 'fever':
-                                return ['Paracetamol', 'Azithromycin', 'Montelukast'].some(drug => 
-                                       medicine.salt.includes(drug));
-                            case 'pain':
-                                return ['Aceclofenac', 'Paracetamol', 'Diclofenac'].some(drug => 
-                                       medicine.salt.includes(drug));
-                            case 'diabetes':
-                                return medicine.salt.toLowerCase().includes('gl') ||
-                                       medicine.name.toLowerCase().includes('metformin');
-                            case 'cardiac':
-                                return medicine.salt.toLowerCase().includes('aspirin') ||
-                                       medicine.name.toLowerCase().includes('atorva');
-                            default:
-                                return true;
-                        }
+                filtered = filtered.filter(m => {
+                    return activeFilters.categories.some(cat => {
+                        if (cat === 'prescription') return m.prescription;
+                        if (cat === 'generic') return m.price < m.originalPrice * 0.7;
+                        if (cat === 'bestseller') return m.reviews > 1000;
+                        if (cat === 'discounted') return m.discount >= 20;
+                        if (cat === 'in-stock') return m.stock !== 'out-of-stock';
+                        return m.tags.includes(cat);
                     });
                 });
             }
             
-            // Sort by selected option
-            const sortSelect = document.getElementById('sortSelect');
+            // Price filter
+            filtered = filtered.filter(m => 
+                m.price >= activeFilters.price.min && m.price <= activeFilters.price.max
+            );
+            
+            // Stock filter
+            if (activeFilters.stock.length > 0) {
+                filtered = filtered.filter(m => activeFilters.stock.includes(m.stock));
+            }
+            
+            // Discount filter
+            if (activeFilters.discount.length > 0) {
+                filtered = filtered.filter(m => 
+                    activeFilters.discount.some(d => m.discount >= d)
+                );
+            }
+            
+            // Sort
             const sortValue = sortSelect.value;
             
             if (sortValue === 'Price: Low to High') {
-                filteredMedicines.sort((a, b) => a.price - b.price);
+                filtered.sort((a, b) => a.price - b.price);
             } else if (sortValue === 'Price: High to Low') {
-                filteredMedicines.sort((a, b) => b.price - a.price);
+                filtered.sort((a, b) => b.price - a.price);
             } else if (sortValue === 'Popularity') {
-                filteredMedicines.sort((a, b) => b.reviews - a.reviews);
+                filtered.sort((a, b) => b.reviews - a.reviews);
             } else if (sortValue === 'Customer Ratings') {
-                filteredMedicines.sort((a, b) => b.rating - a.rating);
+                filtered.sort((a, b) => b.rating - a.rating);
             } else if (sortValue === 'New Arrivals') {
-                // For demo, just reverse the array
-                filteredMedicines.reverse();
+                filtered.reverse();
             }
             
-            renderMedicineCards(filteredMedicines);
-            showToast(`Showing ${filteredMedicines.length} medicines`);
+            renderMedicineCards(filtered);
         }
 
-        // Add event listeners to category buttons
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const category = this.dataset.category;
-                
-                if (category === 'all') {
-                    // If 'all' is clicked, deactivate all others
-                    categoryButtons.forEach(btn => {
-                        if (btn.dataset.category !== 'all') {
-                            btn.classList.remove('active');
-                        }
-                    });
-                    activeFilters.categories = ['all'];
-                } else {
-                    // If other category is clicked, remove 'all' if it was active
-                    if (activeFilters.categories.includes('all')) {
-                        activeFilters.categories = activeFilters.categories.filter(cat => cat !== 'all');
-                        const allBtn = document.querySelector('.category-btn[data-category="all"]');
-                        if (allBtn) allBtn.classList.remove('active');
-                    }
-                    
-                    // Toggle the clicked category
-                    const index = activeFilters.categories.indexOf(category);
-                    if (index === -1) {
-                        activeFilters.categories.push(category);
-                        this.classList.add('active');
-                    } else {
-                        activeFilters.categories.splice(index, 1);
-                        this.classList.remove('active');
-                    }
-                    
-                    // If no categories selected, add 'all'
-                    if (activeFilters.categories.length === 0) {
-                        activeFilters.categories.push('all');
-                        document.querySelector('.category-btn[data-category="all"]').classList.add('active');
-                    }
-                }
-                
-                updateActiveFiltersUI();
-            });
-        });
-
-        // Search functionality
-        const mainSearchInput = document.getElementById('mainSearchInput');
-        const clearSearchBtn = document.getElementById('clearSearch');
-
-        mainSearchInput.addEventListener('input', function() {
-            activeFilters.search = this.value;
-            updateActiveFiltersUI();
-            
-            // Show/hide clear button
-            if (this.value) {
-                clearSearchBtn.style.display = 'block';
-            } else {
-                clearSearchBtn.style.display = 'none';
-            }
-        });
-
-        mainSearchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                updateActiveFiltersUI();
-            }
-        });
-
-        clearSearchBtn.addEventListener('click', function() {
-            mainSearchInput.value = '';
-            activeFilters.search = '';
-            updateActiveFiltersUI();
-            clearSearchBtn.style.display = 'none';
-        });
-
-        // Clear all active filters
-        document.getElementById('clearActiveFilters').addEventListener('click', function() {
-            // Reset all filters
-            activeFilters = {
-                search: '',
-                categories: ['all'],
-                prescription: null,
-                stock: [],
-                discount: [],
-                price: 5000
-            };
-            
-            // Reset UI
-            mainSearchInput.value = '';
-            clearSearchBtn.style.display = 'none';
-            
-            // Reset category buttons
-            categoryButtons.forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.category === 'all') {
-                    btn.classList.add('active');
-                }
-            });
-            
-            // Reset sidebar filters
-            document.querySelectorAll('.form-check-input').forEach(input => {
-                input.checked = false;
-            });
-            
-            // Check a few defaults
-            document.getElementById('tablets').checked = true;
-            document.getElementById('inStock').checked = true;
-            document.getElementById('prescriptionNo').checked = true;
-            document.getElementById('priceSlider').value = 5000;
-            document.getElementById('priceMaxValue').textContent = '₹5000';
-            
-            updateActiveFiltersUI();
-            showToast('All filters cleared.');
-        });
-
-        // Horizontal scroll for category navigation
-        const categoryList = document.getElementById('categoryList');
-        const scrollLeftBtn = document.getElementById('scrollLeftBtn');
-        const scrollRightBtn = document.getElementById('scrollRightBtn');
-
-        if (scrollLeftBtn && scrollRightBtn) {
-            scrollLeftBtn.addEventListener('click', () => {
-                categoryList.scrollBy({ left: -200, behavior: 'smooth' });
-            });
-            
-            scrollRightBtn.addEventListener('click', () => {
-                categoryList.scrollBy({ left: 200, behavior: 'smooth' });
-            });
-            
-            // Show/hide scroll buttons based on scroll position
-            categoryList.addEventListener('scroll', () => {
-                scrollLeftBtn.style.opacity = categoryList.scrollLeft > 0 ? '1' : '0.5';
-                scrollRightBtn.style.opacity = 
-                    categoryList.scrollLeft < (categoryList.scrollWidth - categoryList.clientWidth) ? '1' : '0.5';
-            });
-        }
-
-        // View toggle
-        const gridViewBtn = document.getElementById('gridViewBtn');
-        const listViewBtn = document.getElementById('listViewBtn');
-        
-        gridViewBtn.addEventListener('click', function() {
-            gridViewBtn.classList.add('active');
-            listViewBtn.classList.remove('active');
-            document.getElementById('medicineGrid').classList.remove('list-view');
-        });
-        
-        listViewBtn.addEventListener('click', function() {
-            listViewBtn.classList.add('active');
-            gridViewBtn.classList.remove('active');
-            document.getElementById('medicineGrid').classList.add('list-view');
-        });
-
-        // Mobile filter toggle
-        const mobileFilterToggle = document.getElementById('mobileFilterToggle');
-        const mobileFilterBtn = document.getElementById('mobileFilterBtn');
-        const filterSidebar = document.querySelector('.filter-sidebar');
-        const filterOverlay = document.getElementById('filterOverlay');
-        
+        // Mobile filter functions
         function openMobileFilters() {
             filterSidebar.classList.add('show');
             filterOverlay.classList.add('show');
         }
-        
+
         function closeMobileFilters() {
             filterSidebar.classList.remove('show');
             filterOverlay.classList.remove('show');
         }
-        
-        if (mobileFilterToggle) {
-            mobileFilterToggle.addEventListener('click', openMobileFilters);
+
+        // Generic alternatives suggestion
+        function showGenericAlternatives() {
+            const generics = medicines.filter(m => m.price < m.originalPrice * 0.7);
+            renderMedicineCards(generics);
+            showToast('Generic Alternatives', `Showing ${generics.length} generic options`, 'info');
         }
-        
-        if (mobileFilterBtn) {
-            mobileFilterBtn.addEventListener('click', openMobileFilters);
-        }
-        
-        if (filterOverlay) {
-            filterOverlay.addEventListener('click', closeMobileFilters);
-        }
-
-        // Clear sidebar filters
-        document.getElementById('clearFilters').addEventListener('click', function() {
-            document.querySelectorAll('.form-check-input').forEach(input => {
-                input.checked = false;
-            });
-            
-            // Check a few defaults
-            document.getElementById('tablets').checked = true;
-            document.getElementById('inStock').checked = true;
-            document.getElementById('prescriptionNo').checked = true;
-            document.getElementById('priceSlider').value = 5000;
-            document.getElementById('priceMaxValue').textContent = '₹5000';
-            
-            showToast('All sidebar filters cleared.');
-        });
-
-        // Apply sidebar filters
-        document.getElementById('applyFilters').addEventListener('click', function() {
-            // Get all filter values
-            const tabletsChecked = document.getElementById('tablets').checked;
-            const syrupsChecked = document.getElementById('syrups').checked;
-            const injectionsChecked = document.getElementById('injections').checked;
-            const creamsChecked = document.getElementById('creams').checked;
-            const capsulesChecked = document.getElementById('capsules').checked;
-            
-            const inStockChecked = document.getElementById('inStock').checked;
-            const outOfStockChecked = document.getElementById('outOfStock').checked;
-            
-            const discount10Checked = document.getElementById('discount10').checked;
-            const discount20Checked = document.getElementById('discount20').checked;
-            const discount30Checked = document.getElementById('discount30').checked;
-            
-            const prescriptionYes = document.getElementById('prescriptionYes').checked;
-            const prescriptionNo = document.getElementById('prescriptionNo').checked;
-            
-            const priceValue = document.getElementById('priceSlider').value;
-            
-            // Apply price filter
-            activeFilters.price = priceValue;
-            
-            // Update price display
-            document.getElementById('priceMaxValue').textContent = `₹${priceValue}`;
-            
-            // Apply filters and update UI
-            updateActiveFiltersUI();
-            showToast('Sidebar filters applied.');
-            
-            // Close mobile filters if open
-            closeMobileFilters();
-        });
-
-        // Price slider update
-        const priceSlider = document.getElementById('priceSlider');
-        const priceMaxValue = document.getElementById('priceMaxValue');
-        
-        priceSlider.addEventListener('input', function() {
-            priceMaxValue.textContent = `₹${this.value}`;
-        });
-
-        // Sort select change
-        document.getElementById('sortSelect').addEventListener('change', function() {
-            applyAllFilters();
-        });
-
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
-            renderMedicineCards();
-            updateActiveFiltersUI();
-            
-            // Initialize price slider
-            priceMaxValue.textContent = `₹${priceSlider.value}`;
-            
-            // Add active class to mobile bottom nav items on click
-            document.querySelectorAll('.mobile-bottom-nav-item').forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    document.querySelectorAll('.mobile-bottom-nav-item').forEach(navItem => {
-                        navItem.classList.remove('active');
-                    });
-                    this.classList.add('active');
-                });
-            });
-            
-            // Add some sample quick stats animation
-            const statValues = document.querySelectorAll('.stat-value');
-            statValues.forEach(stat => {
-                const originalValue = stat.textContent;
-                stat.textContent = '0';
-                
-                let counter = 0;
-                const target = parseInt(originalValue);
-                const increment = target / 20;
-                
-                const updateCounter = () => {
-                    if (counter < target) {
-                        counter += increment;
-                        stat.textContent = Math.ceil(counter) + (originalValue.includes('+') ? '+' : '');
-                        setTimeout(updateCounter, 50);
-                    } else {
-                        stat.textContent = originalValue;
-                    }
-                };
-                
-                setTimeout(updateCounter, 500);
-            });
-        });
     </script>
 
 {% endblock content %}
