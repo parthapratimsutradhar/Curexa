@@ -15,10 +15,6 @@ class LoginView(View):
     def get(self, request):
         return render(request, "auth/login.html",  {"GOOGLE_CLIENT_ID": settings.GOOGLE_CLIENT_ID})
 
-    def post(self, request):
-        # Handle login logic here
-        return redirect('home')  # Redirect to home after login
-
 
 class LogoutView(View):
     def get(self, request):

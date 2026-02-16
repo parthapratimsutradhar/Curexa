@@ -341,7 +341,7 @@ async function fetchMedicines(){
       sku: m.SKU,
       category: m.category?.name || 'Other',
       retail_price: m.retail_price,
-      stock: m.inventory ? m.inventory.change_quantity : 0,
+      stock: m.inventory ? m.inventory.quantity : 0,
       active: m.is_active,
       description: m.description || '',
       brand: m.manufacturer || 'Generic',

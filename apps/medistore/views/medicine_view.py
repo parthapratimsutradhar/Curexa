@@ -7,6 +7,8 @@ from rest_framework.filters import SearchFilter
 from apps.medistore.models import Medicine
 
 from apps.medistore.serializers.medicine_serializers import MedicineListSerializer
+from rest_framework.permissions import AllowAny
+from django.db.models import F, BooleanField, Case, When, Value
 
 class MedicineListView(View):
     def get(self, request):
@@ -19,10 +21,7 @@ class MedicineDetailsView(View):
 
 class MedicineListAPIView(ListAPIView):
     serializer_class = MedicineListSerializer
-
-    # Enable search only for this view
     filter_backends = [SearchFilter]
-
     search_fields = [
         "name",
         "SKU",
@@ -30,25 +29,35 @@ class MedicineListAPIView(ListAPIView):
         "manufacturer",
         "category__name",
     ]
-
     ordering_fields = [
         "retail_price",
         "name",
         "created_at",
         "expiry_date",
     ]
-
+    
+    permission_classes = [AllowAny]  # ✅ public
+    
     ordering = ["-created_at"]
 
     def get_queryset(self):
+
+
         queryset = (
             Medicine.objects
-            .select_related("category")
-            .prefetch_related("inventory")
+            .select_related("category", "inventory")
             .filter(is_active=True)
+            .annotate(
+                in_stock=Case(
+                    When(inventory__quantity__gt=F('inventory__stock_alert_level'), then=Value(True)),
+                    default=Value(False),
+                    output_field=BooleanField()
+                )
+            )
         )
 
-        # 🔹 Manual filters (query params)
+
+        # 🔹 Manual filters
         params = self.request.query_params
 
         if params.get("category"):
@@ -70,5 +79,7 @@ class MedicineListAPIView(ListAPIView):
             queryset = queryset.filter(
                 is_prescription_required=params["prescription_required"].lower() == "true"
             )
+        for med in queryset:
+            print(med.in_stock)    
 
         return queryset

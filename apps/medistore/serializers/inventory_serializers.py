@@ -4,4 +4,4 @@ from apps.medistore.models import Inventory
 class InventorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventory
-        fields = ["medicine","quantity", "stock_alert_level"]
+        fields = ["medicine", "quantity", "stock_alert_level"]

@@ -15,6 +15,10 @@ class MedicineListSerializer(serializers.ModelSerializer):
         source="get_age_group_display",
         read_only=True
     )
+    
+     # 🔹 Include annotated field
+    in_stock = serializers.BooleanField(read_only=True)
+
 
     class Meta:
         model = Medicine
@@ -39,6 +43,7 @@ class MedicineListSerializer(serializers.ModelSerializer):
             "inventory",
             "is_active",
             "created_at",
+            "in_stock",  # 🔹 include here
         ]
 
 

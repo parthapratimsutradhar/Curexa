@@ -12,7 +12,7 @@ urlpatterns = [
     path("admin/profile/update", views.AdminProfileView.as_view(), name="admin_profile_update"),
     
     # Doctors
-    path("admin/doctors/", views.DoctorListView.as_view(), name="doctor_list"),
+    path("admin/doctors/", views.DoctorListView.as_view(), name="doctor-list"),
     path("admin/api/doctors/", views.doctor_list_api, name="doctor_list_api"),
     path("admin/doctors/add/", views.DoctorAddView.as_view(), name="doctor_add"),
     path("admin/doctors/<int:pk>/detail/", views.DoctorDetailView.as_view(), name="doctor_detail"),

@@ -124,7 +124,7 @@ CACHES = {
 REST_FRAMEWORK = {
     # Authentication
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'apps.core.utilities.authentication.CookieJWTAuthentication'
+        'apps.core.utilities.authentication.CookieJWTAuthentication',
     ),
 
     # Permissions

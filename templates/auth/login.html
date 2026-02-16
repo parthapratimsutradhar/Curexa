@@ -655,6 +655,8 @@
                     <!-- Google Button with custom wrapper for better styling -->
                     <div class="google-btn-wrapper">
                         <div class="g_id_signin"
+                            data-client_id="{{ GOOGLE_CLIENT_ID }}"
+                            data-callback="handleGoogleLogin"
                             data-type="standard"
                             data-size="large"
                             data-theme="outline"
