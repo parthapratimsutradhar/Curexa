@@ -2,7 +2,8 @@ from django.db import models
 from apps.core.models.base_model import BaseModel
 
 class Category(BaseModel):
-    name = models.CharField(max_length=255, unique=True)    
+    name = models.CharField(max_length=255, unique=True)
+    slug = models.SlugField(unique=True, blank=True)
     description = models.TextField(blank=True, null=True)
 
     class Meta:

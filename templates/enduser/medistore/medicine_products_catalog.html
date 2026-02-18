@@ -39,24 +39,14 @@
                         <button class="category-btn" data-category="bestseller">
                             <i class="fas fa-fire me-2"></i> Best Seller
                         </button>
-                        <button class="category-btn" data-category="discounted">
-                            <i class="fas fa-tag me-2"></i> Discounted
-                        </button>
                         <button class="category-btn" data-category="in-stock">
                             <i class="fas fa-check-circle me-2"></i> In Stock
                         </button>
-                        <button class="category-btn" data-category="fever">
-                            <i class="fas fa-thermometer me-2"></i> Fever
-                        </button>
-                        <button class="category-btn" data-category="pain">
-                            <i class="fas fa-head-side-virus me-2"></i> Pain Relief
-                        </button>
-                        <button class="category-btn" data-category="diabetes">
-                            <i class="fas fa-syringe me-2"></i> Diabetes
-                        </button>
-                        <button class="category-btn" data-category="cardiac">
-                            <i class="fas fa-heartbeat me-2"></i> Cardiac
-                        </button>
+                        {% for s in slug %}
+                            <button class="category-btn" data-slug="{{ s.0 }}" data-category="slug"> 
+                                <i class="fas fa-tag me-2"></i> {{ s.0|title }}
+                            </button>
+                        {% endfor %}
                     </div>
                 </div>
                 
@@ -95,37 +85,40 @@
                     </div>
                     
                     <div class="filter-section">
-                        <h6><i class="fas fa-pills"></i> Category</h6>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="tablets" checked>
-                            <label class="form-check-label" for="tablets">
-                                Tablets <span class="text-muted">(234)</span>
+                        <h6><i class="fas fa-pills"></i> Dosage Forms</h6>
+                    {% for df in dosage_form %}
+                    <div class="form-check">
+                        <input class="form-check-input dosage-filter" type="checkbox" value="{{ df.dosage_form_value }}">
+                        <label class="form-check-label" for="dosage-{{ df.dosage_form_value }}">
+                            {{ df.dosage_form_name|title }} 
+                            <span class="text-muted">({{ df.total }})</span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                    </div>
+
+                    <div class="filter-section">
+                        <h6><i class="fas fa-stethoscope me-2"></i>Categories</h6>
+                        {% for cat in category %}
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="category-{{cat.category__id}}" value="{{cat.category__id}}">
+                            <label class="form-check-label" for="category-{{cat.category__id}}">
+                                {{cat.category__name}} <span class="text-muted">({{cat.total}})</span>
                             </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="syrups">
-                            <label class="form-check-label" for="syrups">
-                                Syrups <span class="text-muted">(156)</span>
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="injections">
-                            <label class="form-check-label" for="injections">
-                                Injections <span class="text-muted">(89)</span>
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="creams">
-                            <label class="form-check-label" for="creams">
-                                Creams <span class="text-muted">(112)</span>
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="capsules">
-                            <label class="form-check-label" for="capsules">
-                                Capsules <span class="text-muted">(178)</span>
-                            </label>
-                        </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="filter-section">
+                        <h6><i class="fas fa-user me-2"></i>Age Group</h6>
+                        {% for ag in age_group %}
+                            <div class="form-check">
+                                <input class="form-check-input age-filter" type="checkbox" value="{{ ag.id }}">  <!-- send ID -->
+                                <label class="form-check-label" for="age-{{ag.id}}">
+                                    {{ ag.age_group_name }} <span class="text-muted">({{ag.total}})</span>
+                                </label>
+                            </div>
+                        {% endfor %}
                     </div>
                     
                     <div class="filter-section">
@@ -178,45 +171,6 @@
                             </label>
                         </div>
                     </div>
-                    
-                    <div class="filter-section">
-                        <h6><i class="fas fa-tags"></i> Discount</h6>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="discount10">
-                            <label class="form-check-label" for="discount10">
-                                10% or more
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="discount20">
-                            <label class="form-check-label" for="discount20">
-                                20% or more
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="discount30" checked>
-                            <label class="form-check-label" for="discount30">
-                                30% or more
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-section">
-                        <h6><i class="fas fa-star"></i> Rating</h6>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="rating4">
-                            <label class="form-check-label" for="rating4">
-                                4★ & above
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="rating3">
-                            <label class="form-check-label" for="rating3">
-                                3★ & above
-                            </label>
-                        </div>
-                    </div>
-                    
                     <button class="btn btn-primary w-100 mt-3" id="applyFilters" style="background: var(--gradient-teal); border: none; border-radius: 16px; padding: 14px;">
                         <i class="fas fa-check-circle me-2"></i>Apply Filters
                     </button>
@@ -256,11 +210,10 @@
                             <div class="d-flex align-items-center">
                                 <span class="me-3"><i class="fas fa-sort me-2"></i>Sort by:</span>
                                 <select class="form-select" style="max-width: 250px;" id="sortSelect">
-                                    <option>Relevance</option>
                                     <option>Price: Low to High</option>
                                     <option>Price: High to Low</option>
-                                    <option>Popularity</option>
-                                    <option>Customer Ratings</option>
+                                    <option>Name: A to Z</option>
+                                    <option>Name: Z to A</option>
                                     <option>New Arrivals</option>
                                 </select>
                             </div>
@@ -281,21 +234,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- AI Suggestions Banner -->
-                <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
-                    <div class="me-3">
-                        <div style="width: 40px; height: 40px; background: var(--gradient-teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                    </div>
-                    <div class="flex-grow-1">
-                        <strong>AI Recommendation:</strong> Based on your search history, we recommend checking generic alternatives to save up to 70%.
-                    </div>
-                    <button class="btn btn-sm btn-primary" onclick="showGenericAlternatives()">
-                        View Alternatives <i class="fas fa-arrow-right ms-1"></i>
-                    </button>
                 </div>
                 
                 <!-- Medicine Cards Grid -->
@@ -349,14 +287,6 @@
     </div>
 
 
-    <!-- Mobile Filter Overlay -->
-    <div class="filter-overlay" id="filterOverlay" onclick="closeMobileFilters()"></div>
-
-    <!-- Mobile Filter Toggle Button -->
-    <button class="btn btn-primary" id="mobileFilterToggle">
-        <i class="fas fa-filter me-2"></i>Filters
-    </button>
-
     <!-- Toast Notification -->
     <div class="toast-notification" id="toastNotification">
         <div class="toast-icon">
@@ -371,1047 +301,718 @@
         </button>
     </div>
 
-    <!-- Comparison Drawer -->
-    <div class="comparison-drawer" id="comparisonDrawer">
-        <div class="drawer-header">
-            <h5 class="mb-0"><i class="fas fa-balance-scale me-2"></i>Compare Medicines (<span id="compareCount">0</span>)</h5>
-            <div>
-                <button class="btn btn-sm btn-outline-primary me-2" id="clearComparison" style="border-radius: 50px;">
-                    <i class="fas fa-trash-alt me-1"></i>Clear
-                </button>
-                <button class="btn btn-sm btn-primary" style="border-radius: 50px; background: var(--gradient-teal); border: none;">
-                    <i class="fas fa-chart-bar me-1"></i>Compare
-                </button>
-                <button class="btn btn-sm btn-close ms-2" onclick="toggleComparisonDrawer()"></button>
-            </div>
-        </div>
-        <div class="drawer-body" id="comparisonList">
-            <!-- Comparison items will be added here -->
-        </div>
-    </div>
-
-    <!-- Emergency Button -->
-    <a href="#" class="emergency-btn pulse-red" title="Emergency Help">
-        <i class="fas fa-phone-alt"></i>
-    </a>
-
     <!-- Bootstrap JS and Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
     
-   <script>
-        // Medicine data with more details
-        const medicines = [
-            {
-                id: 1,
-                name: "Dolo 650mg Tablet",
-                salt: "Paracetamol (650mg)",
-                brand: "Micro Labs",
-                prescription: true,
-                price: 25.50,
-                originalPrice: 35.00,
-                discount: 27,
-                rating: 4.5,
-                reviews: 1245,
-                stock: "in-stock",
-                stockCount: 245,
-                manufacturer: "Micro Labs Ltd",
-                composition: "Paracetamol IP 650mg",
-                uses: "Fever, Body pain, Headache",
-                sideEffects: "Nausea, Stomach pain",
-                substitutes: ["Crocin 650mg", "Pacimol 650mg"],
-                category: "tablets",
-                tags: ["fever", "pain"]
-            },
-            {
-                id: 2,
-                name: "Azithral 500mg Tablet",
-                salt: "Azithromycin (500mg)",
-                brand: "Alembic Pharmaceuticals",
-                prescription: true,
-                price: 120.75,
-                originalPrice: 150.00,
-                discount: 19,
-                rating: 4.3,
-                reviews: 876,
-                stock: "in-stock",
-                stockCount: 189,
-                manufacturer: "Alembic Pharma",
-                composition: "Azithromycin Dihydrate 500mg",
-                uses: "Bacterial infections, Respiratory tract infections",
-                sideEffects: "Diarrhea, Nausea",
-                substitutes: ["Azax 500mg", "Zithrox 500mg"],
-                category: "tablets",
-                tags: ["antibiotic"]
-            },
-            {
-                id: 3,
-                name: "Montair-LC Tablet",
-                salt: "Montelukast (10mg) + Levocetirizine (5mg)",
-                brand: "Cipla",
-                prescription: true,
-                price: 89.00,
-                originalPrice: 120.00,
-                discount: 26,
-                rating: 4.6,
-                reviews: 2103,
-                stock: "low-stock",
-                stockCount: 15,
-                manufacturer: "Cipla Ltd",
-                composition: "Montelukast 10mg + Levocetirizine 5mg",
-                uses: "Allergy, Asthma",
-                sideEffects: "Headache, Drowsiness",
-                substitutes: ["Monticope-L", "Montemac-L"],
-                category: "tablets",
-                tags: ["allergy", "asthma"]
-            },
-            {
-                id: 4,
-                name: "Zerodol-SP Tablet",
-                salt: "Aceclofenac (100mg) + Paracetamol (325mg) + Serratiopeptidase (15mg)",
-                brand: "Ipca Laboratories",
-                prescription: false,
-                price: 65.25,
-                originalPrice: 85.00,
-                discount: 23,
-                rating: 4.4,
-                reviews: 1542,
-                stock: "in-stock",
-                stockCount: 312,
-                manufacturer: "Ipca Labs",
-                composition: "Aceclofenac 100mg + Paracetamol 325mg + Serratiopeptidase 15mg",
-                uses: "Pain relief, Inflammation",
-                sideEffects: "Stomach pain, Dizziness",
-                substitutes: ["Dolokind-SP", "Hifenac-SP"],
-                category: "tablets",
-                tags: ["pain", "inflammation"]
-            },
-            {
-                id: 5,
-                name: "Pan 40mg Tablet",
-                salt: "Pantoprazole (40mg)",
-                brand: "Alkem Laboratories",
-                prescription: true,
-                price: 42.50,
-                originalPrice: 60.00,
-                discount: 29,
-                rating: 4.2,
-                reviews: 987,
-                stock: "in-stock",
-                stockCount: 567,
-                manufacturer: "Alkem Labs",
-                composition: "Pantoprazole Sodium 40mg",
-                uses: "Acidity, Heartburn, GERD",
-                sideEffects: "Headache, Diarrhea",
-                substitutes: ["Pantocid 40mg", "Pantop 40mg"],
-                category: "tablets",
-                tags: ["acidity", "gerd"]
-            },
-            {
-                id: 6,
-                name: "Zincovit Syrup 200ml",
-                salt: "Multivitamin with Zinc & Lysine",
-                brand: "USV",
-                prescription: false,
-                price: 145.00,
-                originalPrice: 180.00,
-                discount: 19,
-                rating: 4.7,
-                reviews: 2310,
-                stock: "in-stock",
-                stockCount: 89,
-                manufacturer: "USV Pvt Ltd",
-                composition: "Multivitamins + Zinc + Lysine",
-                uses: "Nutritional supplement",
-                sideEffects: "None in recommended doses",
-                substitutes: ["Sansvit Syrup", "Vibavit Syrup"],
-                category: "syrups",
-                tags: ["vitamins", "supplement"]
-            },
-            {
-                id: 7,
-                name: "Emeset 4mg Tablet",
-                salt: "Ondansetron (4mg)",
-                brand: "Cipla",
-                prescription: true,
-                price: 28.75,
-                originalPrice: 40.00,
-                discount: 28,
-                rating: 4.5,
-                reviews: 1123,
-                stock: "out-of-stock",
-                stockCount: 0,
-                manufacturer: "Cipla Ltd",
-                composition: "Ondansetron 4mg",
-                uses: "Nausea, Vomiting",
-                sideEffects: "Headache, Constipation",
-                substitutes: ["Vomikind 4mg", "Ondem 4mg"],
-                category: "tablets",
-                tags: ["nausea", "vomiting"]
-            },
-            {
-                id: 8,
-                name: "Becosules Capsule",
-                salt: "Multivitamin, Multimineral & Antioxidants",
-                brand: "Pfizer",
-                prescription: false,
-                price: 55.00,
-                originalPrice: 70.00,
-                discount: 21,
-                rating: 4.6,
-                reviews: 1895,
-                stock: "in-stock",
-                stockCount: 423,
-                manufacturer: "Pfizer Ltd",
-                composition: "Vitamin B Complex + Vitamin C + Minerals",
-                uses: "Vitamin deficiency, Stress",
-                sideEffects: "None in recommended doses",
-                substitutes: ["Supradyn", "Revital"],
-                category: "capsules",
-                tags: ["vitamins", "energy"]
+<script>
+(() => {
+    const API_URL = '/api/medicines/';
+
+    // State
+    let medicines = [];
+    let nextPageUrl = null;
+    let currentPage = 1;
+    let isLoading = false;
+
+    // DOM refs (assumes existing elements in template)
+    const medicineGrid = document.getElementById('medicineGrid');
+    const searchInput = document.getElementById('mainSearchInput');
+    const clearSearch = document.getElementById('clearSearch');
+    const sortSelect = document.getElementById('sortSelect');
+    const resultCount = document.getElementById('resultCount');
+    const activeFiltersContainer = document.getElementById('activeFiltersContainer');
+    const activeFiltersList = document.getElementById('activeFiltersList');
+    const toastNotification = document.getElementById('toastNotification');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+    // Local states copied from your template defaults
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let comparisonItems = JSON.parse(localStorage.getItem('comparison')) || [];
+
+let activeFilters = {
+    search: '',
+    categories: ['all'],
+    slug: null,
+    prescription: 'both',
+    stock: ['in-stock'],
+    price: { min: 0, max: 5000 },
+    dosage_form: null,
+    age_group: null
+};
+
+
+    // Helper: build query params for API call
+    function buildQueryParams(page = 1) {
+        const params = new URLSearchParams();
+
+        params.set('page_size', 9);
+
+        // Search uses DRF SearchFilter
+        if (activeFilters.search) params.set('search', activeFilters.search);
+
+        // Price filters (backend expects min_price/max_price per your view)
+        if (activeFilters.price?.min) params.set('min_price', activeFilters.price.min);
+        if (activeFilters.price?.max && activeFilters.price.max < 5000) params.set('max_price', activeFilters.price.max);
+
+        // Prescription param (backend expects "prescription_required")
+        if (activeFilters.prescription === 'yes') params.set('prescription_required', 'true');
+        else if (activeFilters.prescription === 'no') params.set('prescription_required', 'false');
+
+        if (activeFilters.dosage_form) {
+            params.set('dosage_form', activeFilters.dosage_form);
+        }
+        if (activeFilters.age_group) {
+            params.set('age_group', activeFilters.age_group);
+        }
+
+        if (activeFilters.stock.includes('in-stock')) {
+            params.set('stock_status', 'IN_STOCK');
+        }
+        if (activeFilters.stock.includes('out-of-stock')) {
+            params.set('stock_status', 'OUT_OF_STOCK');
+        }
+
+        if (activeFilters.slug) {
+            params.set('slug', activeFilters.slug);
+        }
+
+        // Send category IDs directly if any checkbox selected
+        if (activeFilters.categories.length > 0 && !(activeFilters.categories.length === 1 && activeFilters.categories[0] === 'all')) {
+            params.set('category', activeFilters.categories.join(','));
+        }
+
+
+
+        // Ordering mapping
+        const sortValue = sortSelect.value;
+        if (sortValue === 'Price: Low to High') params.set('ordering', 'retail_price');
+        else if (sortValue === 'Price: High to Low') params.set('ordering', '-retail_price');        
+        else if (sortValue === 'New Arrivals') params.set('ordering', '-created_at');
+
+        params.set('page', page);
+
+        return params.toString();
+    }
+
+    // Fetch medicines from API (supports append for "load more")
+    async function loadMedicines({ page = 1, append = false } = {}) {
+        if (isLoading) return;
+        isLoading = true;
+        toggleLoadMoreUi(true);
+
+        try {
+            const qs = buildQueryParams(page);
+            const url = `${API_URL}?${qs}`;
+            const res = await fetch(url, { credentials: 'same-origin' });
+            if (!res.ok) throw new Error('Failed to fetch medicines');
+
+            const data = await res.json();
+
+            // DRF paginated format: { count, next, previous, results: [...] }
+            const results = Array.isArray(data.results) ? data.results : (Array.isArray(data) ? data : []);
+
+            // Map backend fields -> frontend model shape
+            const mapped = results.map(mapBackendToClient);
+
+            if (append) {
+                medicines = medicines.concat(mapped);
+            } else {
+                medicines = mapped;
             }
-        ];
 
-        // Cart state
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        let cartCount = cart.length;
+            // Next page tracking
+            nextPageUrl = data.next || null;
+            currentPage = page;
 
-        // Comparison state
-        let comparisonItems = JSON.parse(localStorage.getItem('comparison')) || [];
+            // Apply client-side filters that backend may not handle (discount threshold, stock labels, tag-based categories)
+            const finalList = applyClientSideFilters(medicines);
 
-        // Active filters state
-        let activeFilters = {
-            search: '',
-            categories: ['all'],
-            prescription: 'both',
-            stock: ['in-stock'],
-            discount: [30],
-            price: { min: 0, max: 5000 },
-            rating: null
+            renderMedicineCards(finalList);
+
+            // Update result count; if backend provides count use it
+            if (data.count !== undefined) {
+                resultCount.textContent = `Showing ${finalList.length} of ${data.count} products`;
+            } else {
+                resultCount.textContent = `Showing ${finalList.length} of ${medicines.length} products`;
+            }
+
+            // Hide/Show Load More button
+            if (nextPageUrl) {
+                loadMoreBtn.style.display = '';
+            } else {
+                loadMoreBtn.style.display = finalList.length ? '' : 'none';
+            }
+        } catch (err) {
+            console.error(err);
+            showToast('Error', 'Unable to load products. Try again later.', 'error');
+        } finally {
+            isLoading = false;
+            toggleLoadMoreUi(false);
+        }
+    }
+
+    function toggleLoadMoreUi(loading) {
+        if (!loadMoreBtn) return;
+        if (loading) {
+            loadMoreBtn.disabled = true;
+            loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
+        } else {
+            loadMoreBtn.disabled = false;
+            loadMoreBtn.innerHTML = '<i class="fas fa-spinner me-2"></i>Load More Products';
+        }
+    }
+
+    // Map common backend fields to the frontend 'medicine' shape used in renderMedicineCards()
+    function mapBackendToClient(b) {
+        return {
+            id: b.id,
+            name: b.name || b.display_name || b.product_name || '',
+            salt: b.salt_composition || b.salt || b.composition || (b.ingredients ? b.ingredients.join(', ') : '') || '',
+            brand: b.manufacturer || b.brand || (b.company && b.company.name) || '',
+            category: (b.category && (b.category.name || b.category.slug)) || 'uncategorized',
+            category_id: (b.category && b.category.id) || null,
+            price: parseFloat(firstAvailable(b, ['retail_price', 'price', 'selling_price', 'current_price'])) || 0,
+            originalPrice: parseFloat(firstAvailable(b, ['mrp', 'original_price', 'list_price', 'max_retail_price'])) || parseFloat(firstAvailable(b, ['retail_price', 'price'])) || 0,
+            stock: determineStock(b),
+            stockCount: parseInt(firstAvailable(b, ['inventory_quantity', 'stock_quantity', 'quantity', 'inventory?.quantity'])) || 0,
+            prescription: !!b.is_prescription_required || !!b.prescription_required || !!b.requires_prescription || false,
+            tags: b.tags || b.labels || [],
+            raw: b
         };
+    }
 
-        // DOM Elements
-        const medicineGrid = document.getElementById('medicineGrid');
-        const searchInput = document.getElementById('mainSearchInput');
-        const clearSearch = document.getElementById('clearSearch');
-        const sortSelect = document.getElementById('sortSelect');
-        const resultCount = document.getElementById('resultCount');
-        const activeFiltersContainer = document.getElementById('activeFiltersContainer');
-        const activeFiltersList = document.getElementById('activeFiltersList');
-        const toastNotification = document.getElementById('toastNotification');
-        const quickViewModal = document.getElementById('quickViewModal');
-        const comparisonDrawer = document.getElementById('comparisonDrawer');
-        const compareCount = document.getElementById('compareCount');
-        const comparisonList = document.getElementById('comparisonList');
-        const filterSidebar = document.getElementById('filterSidebar');
-        const filterOverlay = document.getElementById('filterOverlay');
-        const mobileFilterToggle = document.getElementById('mobileFilterToggle');
-
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
-            renderMedicineCards();
-            updateCartCount();
-            updateComparisonDrawer();
-            initCounters();
-            initEventListeners();
-            
-            // Show welcome message
-            setTimeout(() => {
-                showToast('Welcome to Curexa! 🏥', 'Your trusted online pharmacy');
-            }, 1000);
-        });
-
-        // Initialize event listeners
-        function initEventListeners() {
-            // Search input
-            searchInput.addEventListener('input', function() {
-                activeFilters.search = this.value;
-                clearSearch.style.display = this.value ? 'block' : 'none';
-                updateActiveFiltersUI();
-            });
-
-            // Clear search
-            clearSearch.addEventListener('click', function() {
-                searchInput.value = '';
-                activeFilters.search = '';
-                this.style.display = 'none';
-                updateActiveFiltersUI();
-            });
-
-            // Sort select
-            sortSelect.addEventListener('change', function() {
-                applyFilters();
-            });
-
-            // Grid/List view toggle
-            document.getElementById('gridViewBtn').addEventListener('click', function() {
-                this.classList.add('active');
-                document.getElementById('listViewBtn').classList.remove('active');
-                document.getElementById('medicineGrid').classList.remove('list-view');
-            });
-
-            document.getElementById('listViewBtn').addEventListener('click', function() {
-                this.classList.add('active');
-                document.getElementById('gridViewBtn').classList.remove('active');
-                document.getElementById('medicineGrid').classList.add('list-view');
-            });
-
-            // Load more button
-            document.getElementById('loadMoreBtn').addEventListener('click', function() {
-                const btn = this;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
-                
-                setTimeout(() => {
-                    btn.innerHTML = '<i class="fas fa-check me-2"></i>Loaded!';
-                    setTimeout(() => {
-                        btn.innerHTML = '<i class="fas fa-spinner me-2"></i>Load More Products';
-                    }, 2000);
-                }, 2000);
-            });
-
-            // Apply filters button
-            document.getElementById('applyFilters').addEventListener('click', function() {
-                // Get stock filters
-                activeFilters.stock = [];
-                if (document.getElementById('inStock').checked) activeFilters.stock.push('in-stock');
-                if (document.getElementById('outOfStock').checked) activeFilters.stock.push('out-of-stock');
-                
-                // Get discount filters
-                activeFilters.discount = [];
-                if (document.getElementById('discount10').checked) activeFilters.discount.push(10);
-                if (document.getElementById('discount20').checked) activeFilters.discount.push(20);
-                if (document.getElementById('discount30').checked) activeFilters.discount.push(30);
-                
-                // Get prescription
-                if (document.getElementById('prescriptionYes').checked) activeFilters.prescription = 'yes';
-                else if (document.getElementById('prescriptionNo').checked) activeFilters.prescription = 'no';
-                else activeFilters.prescription = 'both';
-                
-                updateActiveFiltersUI();
-                closeMobileFilters();
-                showToast('Filters Applied', 'Products have been filtered');
-            });
-
-            // Clear filters button
-            document.getElementById('clearFilters').addEventListener('click', function() {
-                document.querySelectorAll('.form-check-input').forEach(input => {
-                    input.checked = false;
-                });
-                
-                document.getElementById('inStock').checked = true;
-                document.getElementById('discount30').checked = true;
-                document.getElementById('prescriptionBoth').checked = true;
-                
-                showToast('Filters Reset', 'All sidebar filters have been reset');
-            });
-
-            // Clear active filters
-            document.getElementById('clearActiveFilters').addEventListener('click', function() {
-                activeFilters = {
-                    search: '',
-                    categories: ['all'],
-                    prescription: 'both',
-                    stock: ['in-stock'],
-                    discount: [30],
-                    price: { min: 0, max: 5000 },
-                    rating: null
-                };
-                
-                // Reset UI
-                searchInput.value = '';
-                clearSearch.style.display = 'none';
-                
-                document.querySelectorAll('.category-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                    if (btn.dataset.category === 'all') {
-                        btn.classList.add('active');
-                    }
-                });
-                
-                document.querySelectorAll('.form-check-input').forEach(input => {
-                    input.checked = false;
-                });
-                
-                document.getElementById('inStock').checked = true;
-                document.getElementById('discount30').checked = true;
-                document.getElementById('minPrice').value = 0;
-                document.getElementById('maxPrice').value = 5000;
-                document.getElementById('priceSlider').value = 5000;
-                
-                updateActiveFiltersUI();
-                showToast('Filters Cleared', 'All filters have been reset');
-            });
-
-            // Clear comparison
-            document.getElementById('clearComparison').addEventListener('click', function() {
-                comparisonItems = [];
-                localStorage.setItem('comparison', JSON.stringify(comparisonItems));
-                updateComparisonDrawer();
-                comparisonDrawer.classList.remove('show');
-                showToast('Cleared', 'Comparison list cleared');
-            });
-
-            // Category buttons
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const category = this.dataset.category;
-                    
-                    if (category === 'all') {
-                        document.querySelectorAll('.category-btn').forEach(b => {
-                            b.classList.remove('active');
-                        });
-                        activeFilters.categories = ['all'];
-                    } else {
-                        if (activeFilters.categories.includes('all')) {
-                            activeFilters.categories = [];
-                            document.querySelector('[data-category="all"]').classList.remove('active');
-                        }
-                        
-                        const index = activeFilters.categories.indexOf(category);
-                        if (index === -1) {
-                            activeFilters.categories.push(category);
-                            this.classList.add('active');
-                        } else {
-                            activeFilters.categories.splice(index, 1);
-                            this.classList.remove('active');
-                        }
-                        
-                        if (activeFilters.categories.length === 0) {
-                            activeFilters.categories = ['all'];
-                            document.querySelector('[data-category="all"]').classList.add('active');
-                        }
-                    }
-                    
-                    updateActiveFiltersUI();
-                });
-            });
-
-            // Price slider
-            const priceSlider = document.getElementById('priceSlider');
-            const minPrice = document.getElementById('minPrice');
-            const maxPrice = document.getElementById('maxPrice');
-            const priceDisplay = document.getElementById('priceDisplay');
-
-            minPrice.addEventListener('change', function() {
-                const min = parseInt(this.value) || 0;
-                const max = parseInt(maxPrice.value) || 5000;
-                activeFilters.price = { min, max };
-                priceSlider.value = max;
-                priceDisplay.textContent = `₹${max}`;
-            });
-
-            maxPrice.addEventListener('change', function() {
-                const min = parseInt(minPrice.value) || 0;
-                const max = parseInt(this.value) || 5000;
-                activeFilters.price = { min, max };
-                priceSlider.value = max;
-                priceDisplay.textContent = `₹${max}`;
-            });
-
-            priceSlider.addEventListener('input', function() {
-                const max = parseInt(this.value);
-                maxPrice.value = max;
-                priceDisplay.textContent = `₹${max}`;
-                activeFilters.price = { min: parseInt(minPrice.value) || 0, max };
-            });
-
-            // Mobile filter toggle
-            mobileFilterToggle.addEventListener('click', openMobileFilters);
-
-            // Click outside to close comparison drawer
-            document.addEventListener('click', function(e) {
-                if (!comparisonDrawer.contains(e.target) && !e.target.closest('[onclick="toggleComparisonDrawer()"]') && comparisonDrawer.classList.contains('show')) {
-                    comparisonDrawer.classList.remove('show');
+    function firstAvailable(obj, keys) {
+        for (const k of keys) {
+            // support nested like 'inventory.quantity' if provided
+            if (k.includes('.')) {
+                const parts = k.split('.');
+                let cur = obj;
+                let ok = true;
+                for (const p of parts) {
+                    if (cur && p in cur) cur = cur[p];
+                    else { ok = false; break; }
                 }
+                if (ok && cur !== undefined && cur !== null) return cur;
+            } else if (obj && k in obj && obj[k] !== null && obj[k] !== undefined) {
+                return obj[k];
+            }
+        }
+        return undefined;
+    }
+
+    function determineStock(b) {
+        // Try a few common signals from backend
+        const qty = parseInt(firstAvailable(b, ['inventory_quantity', 'stock_quantity', 'quantity', 'inventory?.quantity'])) || 0;
+        const alert = parseInt(firstAvailable(b, ['inventory_stock_alert_level', 'inventory?.stock_alert_level'])) || 0;
+        if (qty <= 0) return 'out-of-stock';
+        if (alert && qty <= alert) return 'low-stock';
+        // Some backends provide 'is_active' or 'in_stock' boolean
+        const inStockFlag = firstAvailable(b, ['in_stock', 'available', 'is_available', 'inventory?.in_stock']);
+        if (typeof inStockFlag === 'boolean') return inStockFlag ? 'in-stock' : 'out-of-stock';
+        return 'in-stock';
+    }
+
+    // Apply any client-side-only filters (discount thresholds, tag categories)
+    function applyClientSideFilters(list) {
+        let filtered = [...list];
+
+        // Stock filter (front-end uses values like 'in-stock' or 'out-of-stock')
+        if (activeFilters.stock && activeFilters.stock.length > 0) {
+            filtered = filtered.filter(m => activeFilters.stock.includes(m.stock));
+        }
+
+        // Category tag filtering when server-side category id not provided
+        if (activeFilters.categories.length > 0 && !(activeFilters.categories.length === 1 && activeFilters.categories[0] === 'all')) {
+            // If any button lacks data-category-id for server filtering, fall back to client tag matching
+            const needsClientFilter = activeFilters.categories.some(cat => {
+                const btn = document.querySelector(`[data-category="${cat}"]`);
+                return !(btn && btn.dataset.categoryId);
             });
-        }
-
-        // Initialize animated counters
-        function initCounters() {
-            const counters = document.querySelectorAll('.stat-value');
-            counters.forEach(counter => {
-                const target = parseInt(counter.getAttribute('data-target'));
-                const suffix = counter.textContent.includes('%') ? '%' : '';
-                let count = 0;
-                const increment = target / 50;
-                
-                const updateCounter = () => {
-                    if (count < target) {
-                        count += increment;
-                        counter.textContent = Math.ceil(count) + suffix;
-                        setTimeout(updateCounter, 20);
-                    } else {
-                        counter.textContent = target + suffix;
-                    }
-                };
-                
-                updateCounter();
-            });
-        }
-
-        // Update cart count display
-        function updateCartCount() {
-            const cartCountElement = document.querySelector('.cart-count');
-            if (cartCountElement) {
-                cartCountElement.textContent = cart.length;
-                if (cart.length > 0) {
-                    cartCountElement.style.animation = 'pulse 0.5s';
-                    setTimeout(() => {
-                        cartCountElement.style.animation = '';
-                    }, 500);
-                }
-            }
-        }
-
-        // Render medicine cards
-        function renderMedicineCards(filteredMedicines = medicines) {
-            medicineGrid.innerHTML = '';
-            
-            // Show loading skeleton
-            for (let i = 0; i < 8; i++) {
-                const skeleton = document.createElement('div');
-                skeleton.className = 'col-md-6 col-xl-4 col-xxl-3 mb-4';
-                skeleton.innerHTML = `
-                    <div class="medicine-card">
-                        <div class="medicine-image">
-                            <div class="skeleton-loader" style="width: 120px; height: 120px;"></div>
-                        </div>
-                        <div class="medicine-details">
-                            <div class="skeleton-loader" style="height: 24px; width: 80%; margin-bottom: 10px;"></div>
-                            <div class="skeleton-loader" style="height: 18px; width: 60%; margin-bottom: 15px;"></div>
-                            <div class="skeleton-loader" style="height: 20px; width: 40%; margin-bottom: 15px;"></div>
-                            <div class="skeleton-loader" style="height: 30px; width: 50%; margin-bottom: 15px;"></div>
-                        </div>
-                    </div>
-                `;
-                medicineGrid.appendChild(skeleton);
-            }
-            
-            // Simulate loading and render actual cards
-            setTimeout(() => {
-                medicineGrid.innerHTML = '';
-                
-                filteredMedicines.forEach(medicine => {
-                    const stockText = medicine.stock === 'in-stock' ? 'In Stock' : 
-                                    medicine.stock === 'low-stock' ? `Only ${medicine.stockCount} left` : 'Out of Stock';
-                    
-                    const card = document.createElement('div');
-                    card.className = 'col-md-6 col-xl-4 col-xxl-3 mb-4';
-                    card.setAttribute('data-id', medicine.id);
-                    card.setAttribute('data-name', medicine.name.toLowerCase());
-                    card.setAttribute('data-category', medicine.category);
-                    card.setAttribute('data-price', medicine.price);
-                    card.setAttribute('data-rating', medicine.rating);
-                    
-                    card.innerHTML = `
-                        <div class="medicine-card" onclick="quickView(${medicine.id})">
-                            <div class="medicine-image">
-                                <i class="fas fa-pills fa-4x"></i>
-                            </div>
-                            <div class="medicine-details">
-                                <h3 class="medicine-name">${medicine.name}</h3>
-                                <p class="salt-composition">${medicine.salt}</p>
-                                <p class="brand-name">
-                                    <i class="fas fa-building me-1"></i>${medicine.brand}
-                                </p>
-                                
-                                ${medicine.prescription ? 
-                                    '<div class="prescription-badge"><i class="fas fa-prescription me-1"></i> Rx Required</div>' : 
-                                    '<div class="prescription-badge" style="background: #d4edda; color: #155724; border-color: #c3e6cb;"><i class="fas fa-check-circle me-1"></i> OTC</div>'}
-                                
-                                <div class="price-section">
-                                    <span class="current-price">₹${medicine.price.toFixed(2)}</span>
-                                    <span class="original-price">₹${medicine.originalPrice.toFixed(2)}</span>
-                                    <span class="discount-badge">${medicine.discount}% OFF</span>
-                                </div>
-                                
-                                <div class="rating">
-                                    <div class="stars">
-                                        ${generateStars(medicine.rating)}
-                                    </div>
-                                    <span class="rating-count">(${medicine.reviews})</span>
-                                </div>
-                                
-                                <div class="stock-status ${medicine.stock}">
-                                    <i class="fas ${medicine.stock === 'in-stock' ? 'fa-check-circle' : 
-                                        medicine.stock === 'low-stock' ? 'fa-exclamation-circle' : 'fa-times-circle'} me-2"></i>
-                                    ${stockText}
-                                    ${medicine.stock === 'low-stock' ? `<span class="badge bg-warning text-dark ms-2">Hurry!</span>` : ''}
-                                </div>
-                                
-                                <div class="action-buttons" onclick="event.stopPropagation()">
-                                    <button class="btn-add-cart" onclick="addToCart(${medicine.id})">
-                                        <i class="fas fa-cart-plus"></i>
-                                        <span>Add</span>
-                                    </button>
-                                    <button class="btn-buy-now" onclick="buyNow(${medicine.id})">
-                                        <i class="fas fa-bolt"></i>
-                                        <span>Buy</span>
-                                    </button>
-                                    <button class="btn-compare" onclick="addToComparison(${medicine.id})">
-                                        <i class="fas fa-balance-scale"></i>
-                                        <span>Compare</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    
-                    medicineGrid.appendChild(card);
-                });
-                
-                // Update result count
-                resultCount.textContent = `Showing ${filteredMedicines.length} of ${medicines.length} products`;
-            }, 1000);
-        }
-
-        // Generate star rating HTML
-        function generateStars(rating) {
-            let stars = '';
-            const fullStars = Math.floor(rating);
-            const hasHalfStar = rating % 1 >= 0.5;
-            
-            for (let i = 0; i < fullStars; i++) {
-                stars += '<i class="fas fa-star"></i>';
-            }
-            
-            if (hasHalfStar) {
-                stars += '<i class="fas fa-star-half-alt"></i>';
-            }
-            
-            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-            for (let i = 0; i < emptyStars; i++) {
-                stars += '<i class="far fa-star"></i>';
-            }
-            
-            return stars;
-        }
-
-        // Cart functions
-        function addToCart(medicineId) {
-            const medicine = medicines.find(m => m.id === medicineId);
-            
-            if (medicine.stock === 'out-of-stock') {
-                showToast('Out of Stock!', 'This medicine is currently unavailable', 'error');
-                return;
-            }
-            
-            cart.push(medicine);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount();
-            
-            // Animate the cart icon
-            const cartIcon = document.querySelector('.cart-icon');
-            if (cartIcon) {
-                cartIcon.style.animation = 'none';
-                cartIcon.offsetHeight;
-                cartIcon.style.animation = 'pulse 0.5s';
-            }
-            
-            showToast('Added to Cart!', `${medicine.name} has been added to your cart`);
-            
-            // Confetti effect for first purchase
-            if (cart.length === 1) {
-                createConfetti();
-            }
-        }
-
-        function buyNow(medicineId) {
-            addToCart(medicineId);
-            setTimeout(() => {
-                window.location.href = '/checkout/';
-            }, 1000);
-        }
-
-        // Quick view function
-        function quickView(medicineId) {
-            const medicine = medicines.find(m => m.id === medicineId);
-            const content = document.getElementById('quickViewContent');
-            
-            content.innerHTML = `
-                <div class="col-md-5">
-                    <div class="medicine-image" style="height: 300px;">
-                        <i class="fas fa-pills fa-6x" style="color: var(--medical-teal);"></i>
-                    </div>
-                </div>
-                <div class="col-md-7">
-                    <h2 class="mb-3">${medicine.name}</h2>
-                    <p class="text-muted mb-2">${medicine.salt}</p>
-                    <p class="mb-3"><strong>Manufacturer:</strong> ${medicine.manufacturer}</p>
-                    
-                    <div class="price-section mb-3">
-                        <span class="current-price" style="font-size: 2rem;">₹${medicine.price.toFixed(2)}</span>
-                        <span class="original-price" style="font-size: 1.2rem;">₹${medicine.originalPrice.toFixed(2)}</span>
-                        <span class="discount-badge">${medicine.discount}% OFF</span>
-                    </div>
-                    
-                    <div class="rating mb-3">
-                        ${generateStars(medicine.rating)}
-                        <span class="ms-2">${medicine.rating} (${medicine.reviews} reviews)</span>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <h6>Composition:</h6>
-                        <p>${medicine.composition}</p>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <h6>Uses:</h6>
-                        <p>${medicine.uses}</p>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <h6>Substitutes:</h6>
-                        <p>${medicine.substitutes.join(', ')}</p>
-                    </div>
-                    
-                    <div class="stock-status ${medicine.stock} mb-3">
-                        <i class="fas ${medicine.stock === 'in-stock' ? 'fa-check-circle' : 
-                            medicine.stock === 'low-stock' ? 'fa-exclamation-circle' : 'fa-times-circle'} me-2"></i>
-                        ${medicine.stock === 'in-stock' ? `In Stock (${medicine.stockCount} units)` : 
-                          medicine.stock === 'low-stock' ? `Only ${medicine.stockCount} left!` : 'Out of Stock'}
-                    </div>
-                    
-                    <div class="d-flex gap-2">
-                        <button class="btn-add-cart" style="padding: 12px 30px;" onclick="addToCart(${medicine.id})">
-                            <i class="fas fa-cart-plus me-2"></i>Add to Cart
-                        </button>
-                        <button class="btn-buy-now" style="padding: 12px 30px;" onclick="buyNow(${medicine.id})">
-                            <i class="fas fa-bolt me-2"></i>Buy Now
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            quickViewModal.classList.add('show');
-        }
-
-        function closeQuickView() {
-            quickViewModal.classList.remove('show');
-        }
-
-        // Comparison functions
-        function addToComparison(medicineId) {
-            if (comparisonItems.includes(medicineId)) {
-                showToast('Already Added', 'This item is already in comparison list', 'info');
-                return;
-            }
-            
-            if (comparisonItems.length >= 4) {
-                showToast('Limit Reached', 'You can compare up to 4 items at once', 'warning');
-                return;
-            }
-            
-            comparisonItems.push(medicineId);
-            localStorage.setItem('comparison', JSON.stringify(comparisonItems));
-            updateComparisonDrawer();
-            showToast('Added to Compare', 'Item added to comparison list');
-            
-            // Show the comparison drawer
-            comparisonDrawer.classList.add('show');
-        }
-
-        function removeFromComparison(medicineId) {
-            comparisonItems = comparisonItems.filter(id => id !== medicineId);
-            localStorage.setItem('comparison', JSON.stringify(comparisonItems));
-            updateComparisonDrawer();
-            
-            if (comparisonItems.length === 0) {
-                comparisonDrawer.classList.remove('show');
-            }
-        }
-
-        function updateComparisonDrawer() {
-            compareCount.textContent = comparisonItems.length;
-            
-            if (comparisonItems.length === 0) {
-                comparisonList.innerHTML = '<p class="text-center text-muted py-4">No items to compare. Add medicines to compare.</p>';
-                return;
-            }
-            
-            comparisonList.innerHTML = '';
-            comparisonItems.forEach(id => {
-                const medicine = medicines.find(m => m.id === id);
-                if (medicine) {
-                    const item = document.createElement('div');
-                    item.className = 'comparison-item';
-                    item.innerHTML = `
-                        <div class="me-3">
-                            <i class="fas fa-pills fa-2x" style="color: var(--medical-teal);"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="fw-bold">${medicine.name}</div>
-                            <div class="text-muted small">${medicine.salt}</div>
-                        </div>
-                        <div class="text-end me-3">
-                            <div class="fw-bold">₹${medicine.price.toFixed(2)}</div>
-                            <div class="text-muted small">${medicine.discount}% off</div>
-                        </div>
-                        <button class="btn btn-sm btn-outline-danger" onclick="removeFromComparison(${medicine.id})">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    `;
-                    comparisonList.appendChild(item);
-                }
-            });
-        }
-
-        function toggleComparisonDrawer() {
-            comparisonDrawer.classList.toggle('show');
-        }
-
-        // Toast notification
-        function showToast(title, message, type = 'success') {
-            const icon = toastNotification.querySelector('.toast-icon i');
-            const titleEl = toastNotification.querySelector('.toast-title');
-            const messageEl = toastNotification.querySelector('.toast-message');
-            
-            titleEl.textContent = title;
-            messageEl.textContent = message;
-            
-            if (type === 'success') {
-                icon.className = 'fas fa-check';
-                toastNotification.style.borderLeftColor = 'var(--accent-green)';
-            } else if (type === 'error') {
-                icon.className = 'fas fa-times';
-                toastNotification.style.borderLeftColor = 'var(--accent-red)';
-            } else if (type === 'warning') {
-                icon.className = 'fas fa-exclamation';
-                toastNotification.style.borderLeftColor = '#ffc107';
-            } else if (type === 'info') {
-                icon.className = 'fas fa-info';
-                toastNotification.style.borderLeftColor = 'var(--medical-teal)';
-            }
-            
-            toastNotification.classList.add('show');
-            
-            setTimeout(() => {
-                hideToast();
-            }, 3000);
-        }
-
-        function hideToast() {
-            toastNotification.classList.remove('show');
-        }
-
-        // Confetti effect
-        function createConfetti() {
-            const colors = ['#1ba8b6', '#2a6fd6', '#28a745', '#ffc107'];
-            
-            for (let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.style.position = 'fixed';
-                confetti.style.left = Math.random() * 100 + '%';
-                confetti.style.top = '-10px';
-                confetti.style.width = '10px';
-                confetti.style.height = '10px';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.borderRadius = '50%';
-                confetti.style.zIndex = '9999';
-                confetti.style.pointerEvents = 'none';
-                confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear`;
-                document.body.appendChild(confetti);
-                
-                setTimeout(() => {
-                    confetti.remove();
-                }, 5000);
-            }
-        }
-
-        // Add fall animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fall {
-                to {
-                    transform: translateY(100vh) rotate(360deg);
-                }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Filter functions
-        function updateActiveFiltersUI() {
-            activeFiltersList.innerHTML = '';
-            
-            let hasFilters = false;
-            
-            // Search filter
-            if (activeFilters.search && activeFilters.search.trim() !== '') {
-                hasFilters = true;
-                activeFiltersList.appendChild(createFilterTag('🔍 ' + activeFilters.search, 'search'));
-            }
-            
-            // Category filters
-            if (activeFilters.categories.length > 0 && !(activeFilters.categories.length === 1 && activeFilters.categories[0] === 'all')) {
-                hasFilters = true;
-                activeFilters.categories.forEach(cat => {
-                    if (cat !== 'all') {
-                        activeFiltersList.appendChild(createFilterTag(getCategoryLabel(cat), 'cat-' + cat));
-                    }
-                });
-            }
-            
-            // Price filter
-            if (activeFilters.price.min > 0 || activeFilters.price.max < 5000) {
-                hasFilters = true;
-                activeFiltersList.appendChild(createFilterTag(`₹${activeFilters.price.min} - ₹${activeFilters.price.max}`, 'price'));
-            }
-            
-            // Stock filter
-            if (activeFilters.stock.length > 0) {
-                hasFilters = true;
-                activeFilters.stock.forEach(stock => {
-                    activeFiltersList.appendChild(createFilterTag(stock === 'in-stock' ? 'In Stock' : 'Out of Stock', 'stock-' + stock));
-                });
-            }
-            
-            // Discount filter
-            if (activeFilters.discount.length > 0) {
-                hasFilters = true;
-                activeFilters.discount.forEach(disc => {
-                    activeFiltersList.appendChild(createFilterTag(disc + '% or more', 'discount-' + disc));
-                });
-            }
-            
-            activeFiltersContainer.style.display = hasFilters ? 'block' : 'none';
-            applyFilters();
-        }
-
-        function createFilterTag(label, filterId) {
-            const tag = document.createElement('span');
-            tag.className = 'filter-tag';
-            tag.innerHTML = `
-                ${label}
-                <button class="filter-tag-remove" onclick="removeFilter('${filterId}')">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            return tag;
-        }
-
-        function removeFilter(filterId) {
-            if (filterId === 'search') {
-                activeFilters.search = '';
-                searchInput.value = '';
-                clearSearch.style.display = 'none';
-            } else if (filterId.startsWith('cat-')) {
-                const category = filterId.replace('cat-', '');
-                activeFilters.categories = activeFilters.categories.filter(c => c !== category);
-                document.querySelector(`[data-category="${category}"]`).classList.remove('active');
-            } else if (filterId === 'price') {
-                activeFilters.price = { min: 0, max: 5000 };
-                document.getElementById('minPrice').value = 0;
-                document.getElementById('maxPrice').value = 5000;
-                document.getElementById('priceSlider').value = 5000;
-            } else if (filterId.startsWith('stock-')) {
-                const stock = filterId.replace('stock-', '');
-                activeFilters.stock = activeFilters.stock.filter(s => s !== stock);
-                document.getElementById(stock === 'in-stock' ? 'inStock' : 'outOfStock').checked = false;
-            } else if (filterId.startsWith('discount-')) {
-                const disc = parseInt(filterId.replace('discount-', ''));
-                activeFilters.discount = activeFilters.discount.filter(d => d !== disc);
-                document.getElementById(`discount${disc}`).checked = false;
-            }
-            
-            updateActiveFiltersUI();
-        }
-
-        function getCategoryLabel(category) {
-            const labels = {
-                'prescription': 'Prescription',
-                'generic': 'Generic',
-                'bestseller': 'Best Seller',
-                'discounted': 'Discounted',
-                'in-stock': 'In Stock',
-                'fever': 'Fever',
-                'pain': 'Pain Relief',
-                'diabetes': 'Diabetes',
-                'cardiac': 'Cardiac'
-            };
-            return labels[category] || category;
-        }
-
-        function applyFilters() {
-            let filtered = [...medicines];
-            
-            // Search filter
-            if (activeFilters.search) {
-                const searchTerm = activeFilters.search.toLowerCase();
-                filtered = filtered.filter(m => 
-                    m.name.toLowerCase().includes(searchTerm) ||
-                    m.salt.toLowerCase().includes(searchTerm) ||
-                    m.brand.toLowerCase().includes(searchTerm) ||
-                    m.composition.toLowerCase().includes(searchTerm)
-                );
-            }
-            
-            // Category filters
-            if (activeFilters.categories.length > 0 && !(activeFilters.categories.length === 1 && activeFilters.categories[0] === 'all')) {
+            if (needsClientFilter) {
                 filtered = filtered.filter(m => {
                     return activeFilters.categories.some(cat => {
                         if (cat === 'prescription') return m.prescription;
-                        if (cat === 'generic') return m.price < m.originalPrice * 0.7;
-                        if (cat === 'bestseller') return m.reviews > 1000;
-                        if (cat === 'discounted') return m.discount >= 20;
+                        if (cat === 'generic') return m.price < (m.originalPrice * 0.7 || 1e9);
                         if (cat === 'in-stock') return m.stock !== 'out-of-stock';
-                        return m.tags.includes(cat);
+                        // Otherwise check tags & category name
+                        return (m.tags && m.tags.includes(cat)) || (m.category && m.category.toLowerCase().includes(cat));
                     });
                 });
             }
-            
-            // Price filter
-            filtered = filtered.filter(m => 
-                m.price >= activeFilters.price.min && m.price <= activeFilters.price.max
+        }
+
+        // Price range (just in case)
+        filtered = filtered.filter(m => m.price >= (activeFilters.price.min || 0) && m.price <= (activeFilters.price.max || 1e9));
+
+        // Search fallback (if server didn't handle search)
+        if (activeFilters.search) {
+            const term = activeFilters.search.toLowerCase();
+            filtered = filtered.filter(m =>
+                (m.name && m.name.toLowerCase().includes(term)) ||
+                (m.salt && m.salt.toLowerCase().includes(term)) ||
+                (m.brand && m.brand.toLowerCase().includes(term)) ||
+                (m.raw && JSON.stringify(m.raw).toLowerCase().includes(term))
             );
-            
-            // Stock filter
-            if (activeFilters.stock.length > 0) {
-                filtered = filtered.filter(m => activeFilters.stock.includes(m.stock));
-            }
-            
-            // Discount filter
-            if (activeFilters.discount.length > 0) {
-                filtered = filtered.filter(m => 
-                    activeFilters.discount.some(d => m.discount >= d)
-                );
-            }
-            
-            // Sort
-            const sortValue = sortSelect.value;
-            
-            if (sortValue === 'Price: Low to High') {
-                filtered.sort((a, b) => a.price - b.price);
-            } else if (sortValue === 'Price: High to Low') {
-                filtered.sort((a, b) => b.price - a.price);
-            } else if (sortValue === 'Popularity') {
-                filtered.sort((a, b) => b.reviews - a.reviews);
-            } else if (sortValue === 'Customer Ratings') {
-                filtered.sort((a, b) => b.rating - a.rating);
-            } else if (sortValue === 'New Arrivals') {
-                filtered.reverse();
-            }
-            
-            renderMedicineCards(filtered);
         }
 
-        // Mobile filter functions
-        function openMobileFilters() {
-            filterSidebar.classList.add('show');
-            filterOverlay.classList.add('show');
+        // Sorting client-side if backend didn't handle ordering
+        const sortValue = sortSelect.value;
+        if (sortValue === 'Price: Low to High') {
+            filtered.sort((a, b) => a.price - b.price);
+        } else if (sortValue === 'Price: High to Low') {
+            filtered.sort((a, b) => b.price - a.price);
         }
 
-        function closeMobileFilters() {
-            filterSidebar.classList.remove('show');
-            filterOverlay.classList.remove('show');
+        return filtered;
+    }
+
+    // Render cards (keeps your markup & classes)
+    function renderMedicineCards(filteredMedicines = []) {
+        medicineGrid.innerHTML = '';
+
+        // If no products
+        if (!filteredMedicines.length) {
+            medicineGrid.innerHTML = `<div class="col-12 text-center py-5 text-muted">No products found</div>`;
+            return;
         }
 
-        // Generic alternatives suggestion
-        function showGenericAlternatives() {
-            const generics = medicines.filter(m => m.price < m.originalPrice * 0.7);
-            renderMedicineCards(generics);
-            showToast('Generic Alternatives', `Showing ${generics.length} generic options`, 'info');
+        filteredMedicines.forEach(medicine => {
+            const stockText = medicine.stock === 'in-stock' ? 'In Stock' :
+                              medicine.stock === 'low-stock' ? `Only ${medicine.stockCount} left` : 'Out of Stock';
+
+            const card = document.createElement('div');
+            card.className = 'col-md-6 col-xl-4 col-xxl-3 mb-4';
+            card.setAttribute('data-id', medicine.id);
+            card.setAttribute('data-name', (medicine.name || '').toLowerCase());
+            card.setAttribute('data-category', medicine.category);
+            card.setAttribute('data-price', medicine.price);            
+
+            const prescriptionBadge = medicine.prescription ?
+                '<div class="prescription-badge"><i class="fas fa-prescription me-1"></i> Rx Required</div>' :
+                '<div class="prescription-badge" style="background: #d4edda; color: #155724; border-color: #c3e6cb;"><i class="fas fa-check-circle me-1"></i> OTC</div>';
+
+            const originalPriceHtml = (medicine.originalPrice && medicine.originalPrice > medicine.price) ?
+                `<span class="original-price">₹${medicine.originalPrice.toFixed(2)}</span>` : '';
+
+            card.innerHTML = `
+                <div class="medicine-card" onclick="quickView(${medicine.id})">
+                    <div class="medicine-image">
+                        <i class="fas fa-pills fa-4x"></i>
+                    </div>
+                    <div class="medicine-details">
+                        <h3 class="medicine-name">${escapeHtml(medicine.name)}</h3>
+                        <p class="salt-composition">${escapeHtml(medicine.salt)}</p>
+                        <p class="brand-name"><i class="fas fa-building me-1"></i>${escapeHtml(medicine.brand)}</p>
+                        ${prescriptionBadge}
+                        <div class="price-section">
+                            <span class="current-price">₹${(medicine.price || 0).toFixed(2)}</span>
+                            ${originalPriceHtml}
+                        </div>
+                        <div class="stock-status ${medicine.stock}">
+                            <i class="fas ${medicine.stock === 'in-stock' ? 'fa-check-circle' : medicine.stock === 'low-stock' ? 'fa-exclamation-circle' : 'fa-times-circle'} me-2"></i>
+                            ${stockText}
+                            ${medicine.stock === 'low-stock' ? `<span class="badge bg-warning text-dark ms-2">Hurry!</span>` : ''}
+                        </div>
+                        <div class="action-buttons" onclick="event.stopPropagation()">
+                            <button class="btn-add-cart" onclick="addToCart(${medicine.id})">
+                                <i class="fas fa-cart-plus"></i><span>Add</span>
+                            </button>
+                            <button class="btn-buy-now" onclick="buyNow(${medicine.id})">
+                                <i class="fas fa-bolt"></i><span>Buy</span>
+                            </button>
+                            <button class="btn-compare" onclick="addToComparison(${medicine.id})">
+                                <i class="fas fa-balance-scale"></i><span>Compare</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            medicineGrid.appendChild(card);
+        });
+    }
+
+    // Small helpers
+    function escapeHtml(s = '') {
+        return String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+
+    // Cart / compare / quick view functions (basic implementations)
+    window.addToCart = function(id) {
+        const med = medicines.find(m => m.id === id);
+        if (!med) { showToast('Not found', 'Product data not available', 'error'); return; }
+        cart.push({ id: med.id, name: med.name, price: med.price, qty: 1 });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        showToast('Added to Cart!', `${med.name} added to your cart`);
+    };
+
+    window.buyNow = function(id) {
+        const med = medicines.find(m => m.id === id);
+        if (!med) { showToast('Not found', 'Product data not available', 'error'); return; }
+        // Minimal buy flow: add to cart and show confetti
+        addToCart(id);
+        createConfetti();
+        showToast('Order Ready', `Proceed to checkout for ${med.name}`);
+    };
+
+    window.addToComparison = function(id) {
+        const med = medicines.find(m => m.id === id);
+        if (!med) { showToast('Not found', 'Product data not available', 'error'); return; }
+        if (!comparisonItems.some(c => c.id === id)) {
+            comparisonItems.push({ id: med.id, name: med.name, price: med.price });
+            localStorage.setItem('comparison', JSON.stringify(comparisonItems));
+            showToast('Added for Comparison', med.name);
+            document.getElementById('compareCount').textContent = comparisonItems.length;
+        } else {
+            showToast('Already added', med.name, 'info');
         }
-    </script>
+    };
+
+    window.quickView = function(id) {
+        const med = medicines.find(m => m.id === id);
+        if (!med) { showToast('Not found', 'Product data not available', 'error'); return; }
+        // you can implement your modal rendering here; for now a simple toast
+        showToast(med.name, `${med.brand} • ₹${med.price.toFixed(2)}`, 'info');
+    };
+
+    // Hook up UI event listeners (mirrors your original logic)
+    function initEventListeners() {
+        // Search input
+        searchInput.addEventListener('input', function() {
+            activeFilters.search = this.value;
+            clearSearch.style.display = this.value ? 'block' : 'none';
+            updateActiveFiltersUI();
+            // Fetch from server when user stops typing for 400ms
+            debounceFetch();
+        });
+
+        clearSearch.addEventListener('click', function() {
+            searchInput.value = '';
+            activeFilters.search = '';
+            this.style.display = 'none';
+            updateActiveFiltersUI();
+            loadMedicines({ page: 1, append: false });
+        });
+
+        // Sort select
+        sortSelect.addEventListener('change', function() {
+            // reload from server with new ordering
+            loadMedicines({ page: 1, append: false });
+        });
+
+        // Load more
+        loadMoreBtn.addEventListener('click', async function() {
+            if (nextPageUrl) {
+                const url = new URL(nextPageUrl, window.location.origin);
+                const pageParam = url.searchParams.get('page');
+                const nextPage = pageParam ? parseInt(pageParam) : currentPage + 1;
+                await loadMedicines({ page: nextPage, append: true });
+            } else {
+                showToast('No more products', '', 'info');
+            }
+        });
+
+
+        // Apply filters button
+        document.getElementById('applyFilters').addEventListener('click', function() {
+            // Gather relevant UI values (mirrors your original code)
+            activeFilters.stock = [];
+            if (document.getElementById('inStock').checked) activeFilters.stock.push('in-stock');
+            if (document.getElementById('outOfStock').checked) activeFilters.stock.push('out-of-stock');
+
+            if (document.getElementById('prescriptionYes').checked) activeFilters.prescription = 'yes';
+            else if (document.getElementById('prescriptionNo').checked) activeFilters.prescription = 'no';
+            else activeFilters.prescription = 'both';
+
+            // Price inputs
+            const minP = Number(document.getElementById('minPrice').value || 0);
+            const maxP = Number(document.getElementById('maxPrice').value || 5000);
+            activeFilters.price = { min: minP, max: maxP };
+
+            
+            const checkedCategories = [...document.querySelectorAll('input[id^="category-"]:checked')].map(i => i.value);
+            activeFilters.categories = checkedCategories.length ? checkedCategories : ['all'];
+
+            if (activeFilters.dosage_form && activeFilters.dosage_form.length > 0) {
+                hasFilters = true;
+                activeFilters.dosage_form.forEach(df => {
+                    const name = dosageFormMap[df] || df;
+                    activeFiltersList.appendChild(createFilterTag(`Dosage: ${name}`, 'dosage-' + df));
+                });
+            }
+
+
+            const ageSelected = [...document.querySelectorAll('.age-filter:checked')].map(i => i.value);
+            activeFilters.age_group = ageSelected.length === 1 ? ageSelected[0] : null;
+
+
+
+            updateActiveFiltersUI();
+            showToast('Filters Applied', 'Products have been filtered');
+            loadMedicines({ page: 1, append: false });
+        });
+
+        // Clear filters
+        document.getElementById('clearFilters').addEventListener('click', function() {
+            document.querySelectorAll('.form-check-input').forEach(input => input.checked = false);
+            document.getElementById('inStock').checked = true;            
+            document.getElementById('prescriptionBoth').checked = true;
+            document.getElementById('minPrice').value = 0;
+            document.getElementById('maxPrice').value = 5000;
+            document.getElementById('priceSlider').value = 5000;
+
+            activeFilters = {
+                search: '',
+                categories: ['all'],
+                prescription: 'both',
+                stock: ['in-stock'],
+                price: { min: 0, max: 5000 }
+            };
+            updateActiveFiltersUI();
+            loadMedicines({ page: 1, append: false });
+            showToast('Filters Reset', 'All sidebar filters have been reset');
+        });
+
+        // Category buttons (keeps original behavior)
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const slug = this.dataset.slug;
+                const category = this.dataset.category;
+
+                document.querySelectorAll('.category-btn')
+                    .forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                if (slug) {
+                    activeFilters.slug = slug;
+                    activeFilters.categories = ['all'];
+                } else {
+                    activeFilters.slug = null;
+                    activeFilters.categories = [category];
+                }
+
+                updateActiveFiltersUI();
+                loadMedicines({ page: 1, append: false });
+            });
+        });
+
+
+        // Active filters clear click
+        document.getElementById('clearActiveFilters').addEventListener('click', function() {
+            // Reset to defaults
+            activeFilters = {
+                search: '',
+                categories: ['all'],
+                prescription: 'both',
+                stock: ['in-stock'],
+                price: { min: 0, max: 5000 }
+            };
+            searchInput.value = '';
+            clearSearch.style.display = 'none';
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.category === 'all') btn.classList.add('active');
+            });
+            document.querySelectorAll('.form-check-input').forEach(input => input.checked = false);
+            document.getElementById('inStock').checked = true;            
+            document.getElementById('minPrice').value = 0;
+            document.getElementById('maxPrice').value = 5000;
+            document.getElementById('priceSlider').value = 5000;
+
+            updateActiveFiltersUI();
+            loadMedicines({ page: 1, append: false });
+            showToast('Filters Cleared', 'All filters have been reset');
+        });
+    }
+
+    
+    // Build lookup maps
+    const dosageFormMap = {
+        {% for df in dosage_form %}
+        {{ df.dosage_form_value }}: "{{ df.dosage_form_name|escapejs }}",
+        {% endfor %}
+    };
+
+    const ageGroupMap = {
+        {% for ag in age_group %}
+        {{ ag.id }}: "{{ ag.age_group_name|escapejs }}",
+        {% endfor %}
+    };
+
+     // Category lookup map
+
+    const categoryMap = {
+        {% for cat in category %}
+        {{ cat.category__id }}: "{{ cat.category__name|escapejs }}"{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    };
+
+
+
+    // Update active filter UI tags (keeps your original tag rendering)
+    function updateActiveFiltersUI() {
+        activeFiltersList.innerHTML = '';
+        let hasFilters = false;
+
+        if (activeFilters.search && activeFilters.search.trim() !== '') {
+            hasFilters = true;
+            activeFiltersList.appendChild(createFilterTag('🔍 ' + activeFilters.search, 'search'));
+        }
+
+        activeFilters.categories.forEach(cat => {
+            if (cat !== 'all') activeFiltersList.appendChild(createFilterTag(getCategoryLabel(cat), 'cat-' + cat));
+        });
+
+
+        if (activeFilters.price.min > 0 || activeFilters.price.max < 5000) {
+            hasFilters = true;
+            activeFiltersList.appendChild(createFilterTag(`₹${activeFilters.price.min} - ₹${activeFilters.price.max}`, 'price'));
+        }
+
+        if (activeFilters.stock.length > 0) {
+            hasFilters = true;
+            activeFilters.stock.forEach(stock => activeFiltersList.appendChild(createFilterTag(stock === 'in-stock' ? 'In Stock' : 'Out of Stock', 'stock-' + stock)));
+        }
+        activeFiltersContainer.style.display = hasFilters ? 'block' : 'none';
+
+        if (activeFilters.dosage_form) {
+            hasFilters = true;
+            const name = dosageFormMap[activeFilters.dosage_form] || activeFilters.dosage_form;
+            activeFiltersList.appendChild(createFilterTag(`Dosage: ${name}`, 'dosage'));
+        }
+
+        if (activeFilters.age_group) {
+            hasFilters = true;
+            const name = ageGroupMap[activeFilters.age_group] || activeFilters.age_group;
+            activeFiltersList.appendChild(createFilterTag(`Age: ${name}`, 'age'));
+        }
+
+
+    }
+
+    function createFilterTag(label, filterId) {
+        const tag = document.createElement('span');
+        tag.className = 'filter-tag';
+        tag.innerHTML = `
+            ${label}
+            <button class="filter-tag-remove" onclick="removeFilter('${filterId}')">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        return tag;
+    }
+
+    // Expose removeFilter to window so inline onclick works
+    window.removeFilter = function(filterId) {
+        if (!filterId) return;
+
+        if (filterId === 'search') {
+            activeFilters.search = '';
+            searchInput.value = '';
+            clearSearch.style.display = 'none';
+        } else if (filterId.startsWith('cat-')) {
+            const cat = filterId.replace('cat-', '');
+            activeFilters.categories = activeFilters.categories.filter(c => c !== cat);
+            // fallback to 'all' if none left
+            if (activeFilters.categories.length === 0) activeFilters.categories = ['all'];
+            // also uncheck the sidebar checkbox if exists
+            const cb = document.querySelector(`#category-${cat}`);
+            if (cb) cb.checked = false;
+        } else if (filterId === 'price') {
+            activeFilters.price = { min: 0, max: 5000 };
+            document.getElementById('minPrice').value = 0;
+            document.getElementById('maxPrice').value = 5000;
+            document.getElementById('priceSlider').value = 5000;
+        } else if (filterId.startsWith('stock-')) {
+            const stock = filterId.replace('stock-', '');
+            activeFilters.stock = activeFilters.stock.filter(s => s !== stock);
+            if (stock === 'in-stock') document.getElementById('inStock').checked = false;
+            if (stock === 'out-of-stock') document.getElementById('outOfStock').checked = false;
+        } else if (filterId === 'dosage') {
+            activeFilters.dosage_form = null;
+            document.querySelectorAll('.dosage-filter:checked').forEach(cb => cb.checked = false);
+        } else if (filterId === 'age') {
+            activeFilters.age_group = null;
+            document.querySelectorAll('.age-filter:checked').forEach(cb => cb.checked = false);
+        }
+
+        updateActiveFiltersUI();
+        loadMedicines({ page: 1, append: false });
+    };
+
+
+    function getCategoryLabel(catId) {
+        return categoryMap[catId] || catId;
+    }
+
+
+    // small debouncer for search
+    let debounceTimer = null;
+    function debounceFetch() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            loadMedicines({ page: 1, append: false });
+        }, 400);
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+        initEventListeners();
+        updateActiveFiltersUI();
+        loadMedicines({ page: 1, append: false });
+
+        // show initial welcome toast (keeps existing UX)
+        setTimeout(() => showToast('Welcome to Curexa! 🏥', 'Your trusted online pharmacy'), 1000);
+    });
+
+    // Small helper: keep your earlier showToast/hideToast/createConfetti in page;
+    // If they are not present, define minimal versions here (they will be overwritten by your existing functions).
+    window.showToast = window.showToast || function(title = '', message = '', type = 'success') {
+        try {
+            const icon = toastNotification.querySelector('.toast-icon i');
+            const titleEl = toastNotification.querySelector('.toast-title');
+            const messageEl = toastNotification.querySelector('.toast-message');
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            if (type === 'success') { icon.className = 'fas fa-check'; toastNotification.style.borderLeftColor = 'var(--accent-green)'; }
+            else if (type === 'error') { icon.className = 'fas fa-times'; toastNotification.style.borderLeftColor = 'var(--accent-red)'; }
+            else if (type === 'warning') { icon.className = 'fas fa-exclamation'; toastNotification.style.borderLeftColor = '#ffc107'; }
+            else { icon.className = 'fas fa-info'; toastNotification.style.borderLeftColor = 'var(--medical-teal)'; }
+            toastNotification.classList.add('show');
+            setTimeout(() => window.hideToast && window.hideToast(), 3000);
+        } catch (e) { console.log(title, message); }
+    };
+    window.hideToast = window.hideToast || function() {
+        try { toastNotification.classList.remove('show'); } catch (e) {}
+    };
+    window.createConfetti = window.createConfetti || function() {
+        const colors = ['#1ba8b6', '#2a6fd6', '#28a745', '#ffc107'];
+        for (let i = 0; i < 30; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.top = '-10px';
+            confetti.style.width = '8px';
+            confetti.style.height = '8px';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.borderRadius = '50%';
+            confetti.style.zIndex = '9999';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.animation = `fall ${Math.random() * 2 + 1.5}s linear`;
+            document.body.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 4000);
+        }
+    };
+
+})();
+</script>
+
 
 
 

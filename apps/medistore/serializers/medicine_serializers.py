@@ -7,10 +7,11 @@ class MedicineListSerializer(serializers.ModelSerializer):
     category = category_serializers.CategorySerializer(read_only=True)
     inventory = inventory_serializers.InventorySerializer(read_only=True)
 
-    classification_display = serializers.CharField(
-        source="get_classification_display",
+    dosage_form_display = serializers.CharField(
+        source="get_dosage_form_display",
         read_only=True
     )
+
     age_group_display = serializers.CharField(
         source="get_age_group_display",
         read_only=True
@@ -30,8 +31,8 @@ class MedicineListSerializer(serializers.ModelSerializer):
             "medicine_images",
             "is_prescription_required",
             "category",
-            "classification",
-            "classification_display",
+            "dosage_form",
+            "dosage_form_display",
             "age_group",
             "age_group_display",
             "salt_composition",

@@ -18,7 +18,7 @@ class Medicine(BaseModel):
         on_delete=models.CASCADE,
         related_name='fk_category_medicines_category_id'
     )
-    classification = models.IntegerField(
+    dosage_form  = models.IntegerField(
         choices=[(tag.value, tag.name) for tag in DosageForm],
         default=DosageForm.TABLET.value, 
         null=False, blank=False
@@ -33,6 +33,7 @@ class Medicine(BaseModel):
         blank=True,
         null=True
     )
+    is_generic = models.BooleanField(default=False)
     dosage_strength = models.CharField(max_length=100)
     manufacturer = models.CharField(max_length=255, blank=True, null=True)
     manufacture_date = models.DateField(blank=True, null=True)
