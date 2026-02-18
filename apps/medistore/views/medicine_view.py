@@ -5,11 +5,13 @@ from apps.medistore.models import Medicine
 from rest_framework.generics import ListAPIView
 from rest_framework.filters import SearchFilter
 from apps.medistore.models import Medicine
-
 from apps.medistore.serializers.medicine_serializers import MedicineListSerializer
 from rest_framework.permissions import AllowAny
-from django.db.models import F, BooleanField, Case, When, Value,CharField
-
+from django.db.models import F, Case, When, Value, CharField
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.pagination import PageNumberPagination
+from decimal import Decimal
+import json
 
 class MedicineListView(View):
     def get(self, request):
@@ -18,20 +20,18 @@ class MedicineListView(View):
             'dosage_form':medicine_services.medicine_count_by_dosage(),
             'age_group':medicine_services.medicine_count_by_age(),
             'slug':category_services.get_all_slug()
-        }
-        print(context)
+        }     
 
         return render (request, "enduser/medistore/medicine_products_catalog.html", context)
     
 class MedicineDetailsView(View):
     def get(self, request):
-        return render(request, "enduser/medistore/medicine_detail.html")        
-
-
-
-from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.pagination import PageNumberPagination
-from decimal import Decimal
+        medicine_id = self.request.GET.get('id')
+        medicine_data=medicine_services.get_medicine_details_id(medicine_id)
+        print(medicine_data.uses_benefits)
+        print(medicine_data.how_to_use)
+        print(medicine_data.safety_info)
+        return render(request, 'enduser/medistore/medicine_detail.html', {'medicine': medicine_data})       
 
 
 class MedicinePagination(PageNumberPagination):
@@ -83,33 +83,42 @@ class MedicineListAPIView(ListAPIView):
         params = self.request.query_params
 
         if params.get("category"):
+            print("category")
             queryset = queryset.filter(category_id=params["category"])
             
         if params.get("generic"):
+            print("generic")
             queryset = queryset.filter(is_generic=params["generic"])    
 
         if params.get("slug"):
+            print("slug")
             queryset = queryset.filter(category__slug=params["slug"])
 
         if params.get("min_price"):
+            print("min_price")
             queryset = queryset.filter(retail_price__gte=Decimal(params["min_price"]))
 
         if params.get("max_price"):
+            print("max_price")
             queryset = queryset.filter(retail_price__lte=Decimal(params["max_price"]))
 
 
         if params.get("dosage_form"):
+            print("dosage_form")
             queryset = queryset.filter(dosage_form=params["dosage_form"])
 
         if params.get("age_group"):
+            print("age_group")
             queryset = queryset.filter(age_group=params["age_group"])
 
         if params.get("prescription_required") in ["true", "false"]:
+            print("prescription_required")
             queryset = queryset.filter(
                 is_prescription_required=params["prescription_required"] == "true"
             )
             
         if params.get("stock_status"):
+            print("stock_status")
             status = params["stock_status"]
 
             if status == "IN_STOCK":
@@ -124,6 +133,8 @@ class MedicineListAPIView(ListAPIView):
             elif status == "OUT_OF_STOCK":
                 queryset = queryset.filter(inventory__quantity__lte=0)
 
+        for obj in queryset:
+            print(obj)
 
 
         return queryset

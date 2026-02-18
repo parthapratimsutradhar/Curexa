@@ -73,6 +73,7 @@
 
     <!-- Main Content -->
     <div class="container-fluid py-4">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
         <div class="row medicine-grid-container">
             <!-- Filter Sidebar - Left Column -->
             <div class="col-lg-3">
@@ -306,711 +307,717 @@
     <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
     
 <script>
-(() => {
-    const API_URL = '/api/medicines/';
+    (() => {
+        const API_URL = '/api/medicines/';
 
-    // State
-    let medicines = [];
-    let nextPageUrl = null;
-    let currentPage = 1;
-    let isLoading = false;
+        // State
+        let medicines = [];
+        let nextPageUrl = null;
+        let currentPage = 1;
+        let isLoading = false;
 
-    // DOM refs (assumes existing elements in template)
-    const medicineGrid = document.getElementById('medicineGrid');
-    const searchInput = document.getElementById('mainSearchInput');
-    const clearSearch = document.getElementById('clearSearch');
-    const sortSelect = document.getElementById('sortSelect');
-    const resultCount = document.getElementById('resultCount');
-    const activeFiltersContainer = document.getElementById('activeFiltersContainer');
-    const activeFiltersList = document.getElementById('activeFiltersList');
-    const toastNotification = document.getElementById('toastNotification');
-    const loadMoreBtn = document.getElementById('loadMoreBtn');
+        // DOM refs (assumes existing elements in template)
+        const medicineGrid = document.getElementById('medicineGrid');
+        const searchInput = document.getElementById('mainSearchInput');
+        const clearSearch = document.getElementById('clearSearch');
+        const sortSelect = document.getElementById('sortSelect');
+        const resultCount = document.getElementById('resultCount');
+        const activeFiltersContainer = document.getElementById('activeFiltersContainer');
+        const activeFiltersList = document.getElementById('activeFiltersList');
+        const toastNotification = document.getElementById('toastNotification');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
 
-    // Local states copied from your template defaults
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    let comparisonItems = JSON.parse(localStorage.getItem('comparison')) || [];
+        // Local states copied from your template defaults
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let comparisonItems = JSON.parse(localStorage.getItem('comparison')) || [];
 
-let activeFilters = {
-    search: '',
-    categories: ['all'],
-    slug: null,
-    prescription: 'both',
-    stock: ['in-stock'],
-    price: { min: 0, max: 5000 },
-    dosage_form: null,
-    age_group: null
-};
-
-
-    // Helper: build query params for API call
-    function buildQueryParams(page = 1) {
-        const params = new URLSearchParams();
-
-        params.set('page_size', 9);
-
-        // Search uses DRF SearchFilter
-        if (activeFilters.search) params.set('search', activeFilters.search);
-
-        // Price filters (backend expects min_price/max_price per your view)
-        if (activeFilters.price?.min) params.set('min_price', activeFilters.price.min);
-        if (activeFilters.price?.max && activeFilters.price.max < 5000) params.set('max_price', activeFilters.price.max);
-
-        // Prescription param (backend expects "prescription_required")
-        if (activeFilters.prescription === 'yes') params.set('prescription_required', 'true');
-        else if (activeFilters.prescription === 'no') params.set('prescription_required', 'false');
-
-        if (activeFilters.dosage_form) {
-            params.set('dosage_form', activeFilters.dosage_form);
-        }
-        if (activeFilters.age_group) {
-            params.set('age_group', activeFilters.age_group);
-        }
-
-        if (activeFilters.stock.includes('in-stock')) {
-            params.set('stock_status', 'IN_STOCK');
-        }
-        if (activeFilters.stock.includes('out-of-stock')) {
-            params.set('stock_status', 'OUT_OF_STOCK');
-        }
-
-        if (activeFilters.slug) {
-            params.set('slug', activeFilters.slug);
-        }
-
-        // Send category IDs directly if any checkbox selected
-        if (activeFilters.categories.length > 0 && !(activeFilters.categories.length === 1 && activeFilters.categories[0] === 'all')) {
-            params.set('category', activeFilters.categories.join(','));
-        }
-
-
-
-        // Ordering mapping
-        const sortValue = sortSelect.value;
-        if (sortValue === 'Price: Low to High') params.set('ordering', 'retail_price');
-        else if (sortValue === 'Price: High to Low') params.set('ordering', '-retail_price');        
-        else if (sortValue === 'New Arrivals') params.set('ordering', '-created_at');
-
-        params.set('page', page);
-
-        return params.toString();
-    }
-
-    // Fetch medicines from API (supports append for "load more")
-    async function loadMedicines({ page = 1, append = false } = {}) {
-        if (isLoading) return;
-        isLoading = true;
-        toggleLoadMoreUi(true);
-
-        try {
-            const qs = buildQueryParams(page);
-            const url = `${API_URL}?${qs}`;
-            const res = await fetch(url, { credentials: 'same-origin' });
-            if (!res.ok) throw new Error('Failed to fetch medicines');
-
-            const data = await res.json();
-
-            // DRF paginated format: { count, next, previous, results: [...] }
-            const results = Array.isArray(data.results) ? data.results : (Array.isArray(data) ? data : []);
-
-            // Map backend fields -> frontend model shape
-            const mapped = results.map(mapBackendToClient);
-
-            if (append) {
-                medicines = medicines.concat(mapped);
-            } else {
-                medicines = mapped;
-            }
-
-            // Next page tracking
-            nextPageUrl = data.next || null;
-            currentPage = page;
-
-            // Apply client-side filters that backend may not handle (discount threshold, stock labels, tag-based categories)
-            const finalList = applyClientSideFilters(medicines);
-
-            renderMedicineCards(finalList);
-
-            // Update result count; if backend provides count use it
-            if (data.count !== undefined) {
-                resultCount.textContent = `Showing ${finalList.length} of ${data.count} products`;
-            } else {
-                resultCount.textContent = `Showing ${finalList.length} of ${medicines.length} products`;
-            }
-
-            // Hide/Show Load More button
-            if (nextPageUrl) {
-                loadMoreBtn.style.display = '';
-            } else {
-                loadMoreBtn.style.display = finalList.length ? '' : 'none';
-            }
-        } catch (err) {
-            console.error(err);
-            showToast('Error', 'Unable to load products. Try again later.', 'error');
-        } finally {
-            isLoading = false;
-            toggleLoadMoreUi(false);
-        }
-    }
-
-    function toggleLoadMoreUi(loading) {
-        if (!loadMoreBtn) return;
-        if (loading) {
-            loadMoreBtn.disabled = true;
-            loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
-        } else {
-            loadMoreBtn.disabled = false;
-            loadMoreBtn.innerHTML = '<i class="fas fa-spinner me-2"></i>Load More Products';
-        }
-    }
-
-    // Map common backend fields to the frontend 'medicine' shape used in renderMedicineCards()
-    function mapBackendToClient(b) {
-        return {
-            id: b.id,
-            name: b.name || b.display_name || b.product_name || '',
-            salt: b.salt_composition || b.salt || b.composition || (b.ingredients ? b.ingredients.join(', ') : '') || '',
-            brand: b.manufacturer || b.brand || (b.company && b.company.name) || '',
-            category: (b.category && (b.category.name || b.category.slug)) || 'uncategorized',
-            category_id: (b.category && b.category.id) || null,
-            price: parseFloat(firstAvailable(b, ['retail_price', 'price', 'selling_price', 'current_price'])) || 0,
-            originalPrice: parseFloat(firstAvailable(b, ['mrp', 'original_price', 'list_price', 'max_retail_price'])) || parseFloat(firstAvailable(b, ['retail_price', 'price'])) || 0,
-            stock: determineStock(b),
-            stockCount: parseInt(firstAvailable(b, ['inventory_quantity', 'stock_quantity', 'quantity', 'inventory?.quantity'])) || 0,
-            prescription: !!b.is_prescription_required || !!b.prescription_required || !!b.requires_prescription || false,
-            tags: b.tags || b.labels || [],
-            raw: b
-        };
-    }
-
-    function firstAvailable(obj, keys) {
-        for (const k of keys) {
-            // support nested like 'inventory.quantity' if provided
-            if (k.includes('.')) {
-                const parts = k.split('.');
-                let cur = obj;
-                let ok = true;
-                for (const p of parts) {
-                    if (cur && p in cur) cur = cur[p];
-                    else { ok = false; break; }
-                }
-                if (ok && cur !== undefined && cur !== null) return cur;
-            } else if (obj && k in obj && obj[k] !== null && obj[k] !== undefined) {
-                return obj[k];
-            }
-        }
-        return undefined;
-    }
-
-    function determineStock(b) {
-        // Try a few common signals from backend
-        const qty = parseInt(firstAvailable(b, ['inventory_quantity', 'stock_quantity', 'quantity', 'inventory?.quantity'])) || 0;
-        const alert = parseInt(firstAvailable(b, ['inventory_stock_alert_level', 'inventory?.stock_alert_level'])) || 0;
-        if (qty <= 0) return 'out-of-stock';
-        if (alert && qty <= alert) return 'low-stock';
-        // Some backends provide 'is_active' or 'in_stock' boolean
-        const inStockFlag = firstAvailable(b, ['in_stock', 'available', 'is_available', 'inventory?.in_stock']);
-        if (typeof inStockFlag === 'boolean') return inStockFlag ? 'in-stock' : 'out-of-stock';
-        return 'in-stock';
-    }
-
-    // Apply any client-side-only filters (discount thresholds, tag categories)
-    function applyClientSideFilters(list) {
-        let filtered = [...list];
-
-        // Stock filter (front-end uses values like 'in-stock' or 'out-of-stock')
-        if (activeFilters.stock && activeFilters.stock.length > 0) {
-            filtered = filtered.filter(m => activeFilters.stock.includes(m.stock));
-        }
-
-        // Category tag filtering when server-side category id not provided
-        if (activeFilters.categories.length > 0 && !(activeFilters.categories.length === 1 && activeFilters.categories[0] === 'all')) {
-            // If any button lacks data-category-id for server filtering, fall back to client tag matching
-            const needsClientFilter = activeFilters.categories.some(cat => {
-                const btn = document.querySelector(`[data-category="${cat}"]`);
-                return !(btn && btn.dataset.categoryId);
-            });
-            if (needsClientFilter) {
-                filtered = filtered.filter(m => {
-                    return activeFilters.categories.some(cat => {
-                        if (cat === 'prescription') return m.prescription;
-                        if (cat === 'generic') return m.price < (m.originalPrice * 0.7 || 1e9);
-                        if (cat === 'in-stock') return m.stock !== 'out-of-stock';
-                        // Otherwise check tags & category name
-                        return (m.tags && m.tags.includes(cat)) || (m.category && m.category.toLowerCase().includes(cat));
-                    });
-                });
-            }
-        }
-
-        // Price range (just in case)
-        filtered = filtered.filter(m => m.price >= (activeFilters.price.min || 0) && m.price <= (activeFilters.price.max || 1e9));
-
-        // Search fallback (if server didn't handle search)
-        if (activeFilters.search) {
-            const term = activeFilters.search.toLowerCase();
-            filtered = filtered.filter(m =>
-                (m.name && m.name.toLowerCase().includes(term)) ||
-                (m.salt && m.salt.toLowerCase().includes(term)) ||
-                (m.brand && m.brand.toLowerCase().includes(term)) ||
-                (m.raw && JSON.stringify(m.raw).toLowerCase().includes(term))
-            );
-        }
-
-        // Sorting client-side if backend didn't handle ordering
-        const sortValue = sortSelect.value;
-        if (sortValue === 'Price: Low to High') {
-            filtered.sort((a, b) => a.price - b.price);
-        } else if (sortValue === 'Price: High to Low') {
-            filtered.sort((a, b) => b.price - a.price);
-        }
-
-        return filtered;
-    }
-
-    // Render cards (keeps your markup & classes)
-    function renderMedicineCards(filteredMedicines = []) {
-        medicineGrid.innerHTML = '';
-
-        // If no products
-        if (!filteredMedicines.length) {
-            medicineGrid.innerHTML = `<div class="col-12 text-center py-5 text-muted">No products found</div>`;
-            return;
-        }
-
-        filteredMedicines.forEach(medicine => {
-            const stockText = medicine.stock === 'in-stock' ? 'In Stock' :
-                              medicine.stock === 'low-stock' ? `Only ${medicine.stockCount} left` : 'Out of Stock';
-
-            const card = document.createElement('div');
-            card.className = 'col-md-6 col-xl-4 col-xxl-3 mb-4';
-            card.setAttribute('data-id', medicine.id);
-            card.setAttribute('data-name', (medicine.name || '').toLowerCase());
-            card.setAttribute('data-category', medicine.category);
-            card.setAttribute('data-price', medicine.price);            
-
-            const prescriptionBadge = medicine.prescription ?
-                '<div class="prescription-badge"><i class="fas fa-prescription me-1"></i> Rx Required</div>' :
-                '<div class="prescription-badge" style="background: #d4edda; color: #155724; border-color: #c3e6cb;"><i class="fas fa-check-circle me-1"></i> OTC</div>';
-
-            const originalPriceHtml = (medicine.originalPrice && medicine.originalPrice > medicine.price) ?
-                `<span class="original-price">₹${medicine.originalPrice.toFixed(2)}</span>` : '';
-
-            card.innerHTML = `
-                <div class="medicine-card" onclick="quickView(${medicine.id})">
-                    <div class="medicine-image">
-                        <i class="fas fa-pills fa-4x"></i>
-                    </div>
-                    <div class="medicine-details">
-                        <h3 class="medicine-name">${escapeHtml(medicine.name)}</h3>
-                        <p class="salt-composition">${escapeHtml(medicine.salt)}</p>
-                        <p class="brand-name"><i class="fas fa-building me-1"></i>${escapeHtml(medicine.brand)}</p>
-                        ${prescriptionBadge}
-                        <div class="price-section">
-                            <span class="current-price">₹${(medicine.price || 0).toFixed(2)}</span>
-                            ${originalPriceHtml}
-                        </div>
-                        <div class="stock-status ${medicine.stock}">
-                            <i class="fas ${medicine.stock === 'in-stock' ? 'fa-check-circle' : medicine.stock === 'low-stock' ? 'fa-exclamation-circle' : 'fa-times-circle'} me-2"></i>
-                            ${stockText}
-                            ${medicine.stock === 'low-stock' ? `<span class="badge bg-warning text-dark ms-2">Hurry!</span>` : ''}
-                        </div>
-                        <div class="action-buttons" onclick="event.stopPropagation()">
-                            <button class="btn-add-cart" onclick="addToCart(${medicine.id})">
-                                <i class="fas fa-cart-plus"></i><span>Add</span>
-                            </button>
-                            <button class="btn-buy-now" onclick="buyNow(${medicine.id})">
-                                <i class="fas fa-bolt"></i><span>Buy</span>
-                            </button>
-                            <button class="btn-compare" onclick="addToComparison(${medicine.id})">
-                                <i class="fas fa-balance-scale"></i><span>Compare</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            medicineGrid.appendChild(card);
-        });
-    }
-
-    // Small helpers
-    function escapeHtml(s = '') {
-        return String(s)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-    }
-
-
-    // Cart / compare / quick view functions (basic implementations)
-    window.addToCart = function(id) {
-        const med = medicines.find(m => m.id === id);
-        if (!med) { showToast('Not found', 'Product data not available', 'error'); return; }
-        cart.push({ id: med.id, name: med.name, price: med.price, qty: 1 });
-        localStorage.setItem('cart', JSON.stringify(cart));
-        showToast('Added to Cart!', `${med.name} added to your cart`);
+    let activeFilters = {
+        search: '',
+        categories: ['all'],
+        slug: null,
+        prescription: 'both',
+        stock: ['in-stock'],
+        price: { min: 0, max: 5000 },
+        dosage_form: null,
+        age_group: null
     };
 
-    window.buyNow = function(id) {
-        const med = medicines.find(m => m.id === id);
-        if (!med) { showToast('Not found', 'Product data not available', 'error'); return; }
-        // Minimal buy flow: add to cart and show confetti
-        addToCart(id);
-        createConfetti();
-        showToast('Order Ready', `Proceed to checkout for ${med.name}`);
-    };
 
-    window.addToComparison = function(id) {
-        const med = medicines.find(m => m.id === id);
-        if (!med) { showToast('Not found', 'Product data not available', 'error'); return; }
-        if (!comparisonItems.some(c => c.id === id)) {
-            comparisonItems.push({ id: med.id, name: med.name, price: med.price });
-            localStorage.setItem('comparison', JSON.stringify(comparisonItems));
-            showToast('Added for Comparison', med.name);
-            document.getElementById('compareCount').textContent = comparisonItems.length;
-        } else {
-            showToast('Already added', med.name, 'info');
+        // Helper: build query params for API call
+        function buildQueryParams(page = 1) {
+            const params = new URLSearchParams();
+
+            params.set('page_size', 9);
+
+            // Search uses DRF SearchFilter
+            if (activeFilters.search) params.set('search', activeFilters.search);
+
+            // Price filters (backend expects min_price/max_price per your view)
+            if (activeFilters.price?.min) params.set('min_price', activeFilters.price.min);
+            if (activeFilters.price?.max && activeFilters.price.max < 5000) params.set('max_price', activeFilters.price.max);
+
+            // Prescription param (backend expects "prescription_required")
+            if (activeFilters.prescription === 'yes') params.set('prescription_required', 'true');
+            else if (activeFilters.prescription === 'no') params.set('prescription_required', 'false');
+
+            if (activeFilters.dosage_form) {
+                params.set('dosage_form', activeFilters.dosage_form);
+            }
+            if (activeFilters.age_group) {
+                params.set('age_group', activeFilters.age_group);
+            }
+
+            if (activeFilters.stock.includes('in-stock')) {
+                params.set('stock_status', 'IN_STOCK');
+            }
+            if (activeFilters.stock.includes('out-of-stock')) {
+                params.set('stock_status', 'OUT_OF_STOCK');
+            }
+
+            if (activeFilters.slug) {
+                params.set('slug', activeFilters.slug);
+            }
+
+            // Send category IDs directly if any checkbox selected
+            if (activeFilters.categories.length > 0 && !(activeFilters.categories.length === 1 && activeFilters.categories[0] === 'all')) {
+                params.set('category', activeFilters.categories.join(','));
+            }
+
+
+
+            // Ordering mapping
+            const sortValue = sortSelect.value;
+            if (sortValue === 'Price: Low to High') params.set('ordering', 'retail_price');
+            else if (sortValue === 'Price: High to Low') params.set('ordering', '-retail_price');        
+            else if (sortValue === 'New Arrivals') params.set('ordering', '-created_at');
+
+            params.set('page', page);
+
+            return params.toString();
         }
-    };
 
-    window.quickView = function(id) {
-        const med = medicines.find(m => m.id === id);
-        if (!med) { showToast('Not found', 'Product data not available', 'error'); return; }
-        // you can implement your modal rendering here; for now a simple toast
-        showToast(med.name, `${med.brand} • ₹${med.price.toFixed(2)}`, 'info');
-    };
+        // Fetch medicines from API (supports append for "load more")
+        async function loadMedicines({ page = 1, append = false } = {}) {
+            if (isLoading) return;
+            isLoading = true;
+            toggleLoadMoreUi(true);
 
-    // Hook up UI event listeners (mirrors your original logic)
-    function initEventListeners() {
-        // Search input
-        searchInput.addEventListener('input', function() {
-            activeFilters.search = this.value;
-            clearSearch.style.display = this.value ? 'block' : 'none';
-            updateActiveFiltersUI();
-            // Fetch from server when user stops typing for 400ms
-            debounceFetch();
-        });
+            try {
+                const qs = buildQueryParams(page);
+                const url = `${API_URL}?${qs}`;
+                const res = await fetch(url, { credentials: 'same-origin' });
+                if (!res.ok) throw new Error('Failed to fetch medicines');
 
-        clearSearch.addEventListener('click', function() {
-            searchInput.value = '';
-            activeFilters.search = '';
-            this.style.display = 'none';
-            updateActiveFiltersUI();
-            loadMedicines({ page: 1, append: false });
-        });
+                const data = await res.json();
 
-        // Sort select
-        sortSelect.addEventListener('change', function() {
-            // reload from server with new ordering
-            loadMedicines({ page: 1, append: false });
-        });
+                // DRF paginated format: { count, next, previous, results: [...] }
+                const results = Array.isArray(data.results) ? data.results : (Array.isArray(data) ? data : []);
 
-        // Load more
-        loadMoreBtn.addEventListener('click', async function() {
-            if (nextPageUrl) {
-                const url = new URL(nextPageUrl, window.location.origin);
-                const pageParam = url.searchParams.get('page');
-                const nextPage = pageParam ? parseInt(pageParam) : currentPage + 1;
-                await loadMedicines({ page: nextPage, append: true });
-            } else {
-                showToast('No more products', '', 'info');
-            }
-        });
+                // Map backend fields -> frontend model shape
+                const mapped = results.map(mapBackendToClient);
 
-
-        // Apply filters button
-        document.getElementById('applyFilters').addEventListener('click', function() {
-            // Gather relevant UI values (mirrors your original code)
-            activeFilters.stock = [];
-            if (document.getElementById('inStock').checked) activeFilters.stock.push('in-stock');
-            if (document.getElementById('outOfStock').checked) activeFilters.stock.push('out-of-stock');
-
-            if (document.getElementById('prescriptionYes').checked) activeFilters.prescription = 'yes';
-            else if (document.getElementById('prescriptionNo').checked) activeFilters.prescription = 'no';
-            else activeFilters.prescription = 'both';
-
-            // Price inputs
-            const minP = Number(document.getElementById('minPrice').value || 0);
-            const maxP = Number(document.getElementById('maxPrice').value || 5000);
-            activeFilters.price = { min: minP, max: maxP };
-
-            
-            const checkedCategories = [...document.querySelectorAll('input[id^="category-"]:checked')].map(i => i.value);
-            activeFilters.categories = checkedCategories.length ? checkedCategories : ['all'];
-
-            if (activeFilters.dosage_form && activeFilters.dosage_form.length > 0) {
-                hasFilters = true;
-                activeFilters.dosage_form.forEach(df => {
-                    const name = dosageFormMap[df] || df;
-                    activeFiltersList.appendChild(createFilterTag(`Dosage: ${name}`, 'dosage-' + df));
-                });
-            }
-
-
-            const ageSelected = [...document.querySelectorAll('.age-filter:checked')].map(i => i.value);
-            activeFilters.age_group = ageSelected.length === 1 ? ageSelected[0] : null;
-
-
-
-            updateActiveFiltersUI();
-            showToast('Filters Applied', 'Products have been filtered');
-            loadMedicines({ page: 1, append: false });
-        });
-
-        // Clear filters
-        document.getElementById('clearFilters').addEventListener('click', function() {
-            document.querySelectorAll('.form-check-input').forEach(input => input.checked = false);
-            document.getElementById('inStock').checked = true;            
-            document.getElementById('prescriptionBoth').checked = true;
-            document.getElementById('minPrice').value = 0;
-            document.getElementById('maxPrice').value = 5000;
-            document.getElementById('priceSlider').value = 5000;
-
-            activeFilters = {
-                search: '',
-                categories: ['all'],
-                prescription: 'both',
-                stock: ['in-stock'],
-                price: { min: 0, max: 5000 }
-            };
-            updateActiveFiltersUI();
-            loadMedicines({ page: 1, append: false });
-            showToast('Filters Reset', 'All sidebar filters have been reset');
-        });
-
-        // Category buttons (keeps original behavior)
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const slug = this.dataset.slug;
-                const category = this.dataset.category;
-
-                document.querySelectorAll('.category-btn')
-                    .forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-
-                if (slug) {
-                    activeFilters.slug = slug;
-                    activeFilters.categories = ['all'];
+                if (append) {
+                    medicines = medicines.concat(mapped);
                 } else {
-                    activeFilters.slug = null;
-                    activeFilters.categories = [category];
+                    medicines = mapped;
                 }
 
+                // Next page tracking
+                nextPageUrl = data.next || null;
+                currentPage = page;
+
+                // Apply client-side filters that backend may not handle (discount threshold, stock labels, tag-based categories)
+                const finalList = applyClientSideFilters(medicines);
+
+                renderMedicineCards(finalList);
+
+                // Update result count; if backend provides count use it
+                if (data.count !== undefined) {
+                    resultCount.textContent = `Showing ${finalList.length} of ${data.count} products`;
+                } else {
+                    resultCount.textContent = `Showing ${finalList.length} of ${medicines.length} products`;
+                }
+
+                // Hide/Show Load More button
+                if (nextPageUrl) {
+                    loadMoreBtn.style.display = '';
+                } else {
+                    loadMoreBtn.style.display = finalList.length ? '' : 'none';
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Error', 'Unable to load products. Try again later.', 'error');
+            } finally {
+                isLoading = false;
+                toggleLoadMoreUi(false);
+            }
+        }
+
+        function toggleLoadMoreUi(loading) {
+            if (!loadMoreBtn) return;
+            if (loading) {
+                loadMoreBtn.disabled = true;
+                loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
+            } else {
+                loadMoreBtn.disabled = false;
+                loadMoreBtn.innerHTML = '<i class="fas fa-spinner me-2"></i>Load More Products';
+            }
+        }
+
+        // Map common backend fields to the frontend 'medicine' shape used in renderMedicineCards()
+        function mapBackendToClient(b) {
+            return {
+                id: b.id,
+                name: b.name || b.display_name || b.product_name || '',
+                salt: b.salt_composition || b.salt || b.composition || (b.ingredients ? b.ingredients.join(', ') : '') || '',
+                brand: b.manufacturer || b.brand || (b.company && b.company.name) || '',
+                category: (b.category && (b.category.name || b.category.slug)) || 'uncategorized',
+                category_id: (b.category && b.category.id) || null,
+                price: parseFloat(firstAvailable(b, ['retail_price', 'price', 'selling_price', 'current_price'])) || 0,
+                originalPrice: parseFloat(firstAvailable(b, ['mrp', 'original_price', 'list_price', 'max_retail_price'])) || parseFloat(firstAvailable(b, ['retail_price', 'price'])) || 0,
+                stock: determineStock(b),
+                stockCount: parseInt(firstAvailable(b, ['inventory_quantity', 'stock_quantity', 'quantity', 'inventory?.quantity'])) || 0,
+                prescription: !!b.is_prescription_required || !!b.prescription_required || !!b.requires_prescription || false,
+                tags: b.tags || b.labels || [],
+                raw: b
+            };
+        }
+
+        function firstAvailable(obj, keys) {
+            for (const k of keys) {
+                // support nested like 'inventory.quantity' if provided
+                if (k.includes('.')) {
+                    const parts = k.split('.');
+                    let cur = obj;
+                    let ok = true;
+                    for (const p of parts) {
+                        if (cur && p in cur) cur = cur[p];
+                        else { ok = false; break; }
+                    }
+                    if (ok && cur !== undefined && cur !== null) return cur;
+                } else if (obj && k in obj && obj[k] !== null && obj[k] !== undefined) {
+                    return obj[k];
+                }
+            }
+            return undefined;
+        }
+
+        function determineStock(medicine) {
+            // map backend stock_status to frontend style
+            switch ((medicine.stock_status || '').toUpperCase()) {
+                case 'IN_STOCK':
+                    return 'in-stock';
+                case 'LOW_STOCK':
+                    return 'low-stock';
+                case 'OUT_OF_STOCK':
+                default:
+                    return 'out-of-stock';
+            }
+        }
+
+        // Apply any client-side-only filters (discount thresholds, tag categories)
+        function applyClientSideFilters(list) {
+            let filtered = [...list];
+
+            // Stock filter (front-end uses values like 'in-stock' or 'out-of-stock')
+            if (activeFilters.stock && activeFilters.stock.length > 0) {
+                filtered = filtered.filter(m => activeFilters.stock.includes(m.stock));
+            }
+
+            // Category tag filtering when server-side category id not provided
+            if (activeFilters.categories.length > 0 && !(activeFilters.categories.length === 1 && activeFilters.categories[0] === 'all')) {
+                // If any button lacks data-category-id for server filtering, fall back to client tag matching
+                const needsClientFilter = activeFilters.categories.some(cat => {
+                    const btn = document.querySelector(`[data-category="${cat}"]`);
+                    return !(btn && btn.dataset.categoryId);
+                });
+                if (needsClientFilter) {
+                    filtered = filtered.filter(m => {
+                        return activeFilters.categories.some(cat => {
+                            if (cat === 'prescription') return m.prescription;
+                            if (cat === 'generic') return m.price < (m.originalPrice * 0.7 || 1e9);
+                            if (cat === 'in-stock') return m.stock !== 'out-of-stock';
+                            // Otherwise check tags & category name
+                            return (m.tags && m.tags.includes(cat)) || (m.category && m.category.toLowerCase().includes(cat));
+                        });
+                    });
+                }
+            }
+
+            // Price range (just in case)
+            filtered = filtered.filter(m => m.price >= (activeFilters.price.min || 0) && m.price <= (activeFilters.price.max || 1e9));
+
+            // Search fallback (if server didn't handle search)
+            if (activeFilters.search) {
+                const term = activeFilters.search.toLowerCase();
+                filtered = filtered.filter(m =>
+                    (m.name && m.name.toLowerCase().includes(term)) ||
+                    (m.salt && m.salt.toLowerCase().includes(term)) ||
+                    (m.brand && m.brand.toLowerCase().includes(term)) ||
+                    (m.raw && JSON.stringify(m.raw).toLowerCase().includes(term))
+                );
+            }
+
+            // Sorting client-side if backend didn't handle ordering
+            const sortValue = sortSelect.value;
+            if (sortValue === 'Price: Low to High') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (sortValue === 'Price: High to Low') {
+                filtered.sort((a, b) => b.price - a.price);
+            }
+
+            return filtered;
+        }
+
+        // Render cards (keeps your markup & classes)
+        function renderMedicineCards(filteredMedicines = []) {
+            medicineGrid.innerHTML = '';
+
+            // If no products
+            if (!filteredMedicines.length) {
+                medicineGrid.innerHTML = `<div class="col-12 text-center py-5 text-muted">No products found</div>`;
+                return;
+            }
+
+            filteredMedicines.forEach(medicine => {
+                const stockText = medicine.stock === 'in-stock' ? 'In Stock' :
+                                medicine.stock === 'low-stock' ? `Only ${medicine.stockCount} left` : 'Out of Stock';
+
+                const card = document.createElement('div');
+                card.className = 'col-md-6 col-xl-4 col-xxl-3 mb-4';
+                card.setAttribute('data-id', medicine.id);
+                card.setAttribute('data-name', (medicine.name || '').toLowerCase());
+                card.setAttribute('data-category', medicine.category);
+                card.setAttribute('data-price', medicine.price);            
+
+                const prescriptionBadge = medicine.prescription ?
+                    '<div class="prescription-badge"><i class="fas fa-prescription me-1"></i> Rx Required</div>' :
+                    '<div class="prescription-badge" style="background: #d4edda; color: #155724; border-color: #c3e6cb;"><i class="fas fa-check-circle me-1"></i> OTC</div>';
+
+                const originalPriceHtml = (medicine.originalPrice && medicine.originalPrice > medicine.price) ?
+                    `<span class="original-price">₹${medicine.originalPrice.toFixed(2)}</span>` : '';
+
+                card.innerHTML = `
+                    <div class="medicine-card" onclick='goToMedicineDetails(${JSON.stringify(medicine.id)})'>
+                        <div class="medicine-image">
+                            <i class="fas fa-pills fa-4x"></i>
+                        </div>
+                        <div class="medicine-details">
+                            <h3 class="medicine-name">${escapeHtml(medicine.name)}</h3>
+                            <p class="salt-composition">${escapeHtml(medicine.salt)}</p>
+                            <p class="brand-name"><i class="fas fa-building me-1"></i>${escapeHtml(medicine.brand)}</p>
+                            ${prescriptionBadge}
+                            <div class="price-section">
+                                <span class="current-price">₹${(medicine.price || 0).toFixed(2)}</span>
+                                ${originalPriceHtml}
+                            </div>
+                            <div class="stock-status ${medicine.stock}">
+                                <i class="fas ${medicine.stock === 'in-stock' ? 'fa-check-circle' : medicine.stock === 'low-stock' ? 'fa-exclamation-circle' : 'fa-times-circle'} me-2"></i>
+                                ${stockText}
+                                ${medicine.stock === 'low-stock' ? `<span class="badge bg-warning text-dark ms-2">Hurry!</span>` : ''}
+                            </div>
+                            <div class="action-buttons" onclick="event.stopPropagation()">
+                                <button class="btn-add-cart" onclick="addToCart(${medicine.id})">
+                                    <i class="fas fa-cart-plus"></i><span>Add</span>
+                                </button>
+                                <button class="btn-buy-now" onclick="buyNow(${medicine.id})">
+                                    <i class="fas fa-bolt"></i><span>Buy</span>
+                                </button>
+                                <button class="btn-compare" onclick="addToComparison(${medicine.id})">
+                                    <i class="fas fa-balance-scale"></i><span>Compare</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                medicineGrid.appendChild(card);
+            });
+        }
+
+        // Small helpers
+        function escapeHtml(s = '') {
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+
+        // Cart / compare / quick view functions (basic implementations)
+        window.addToCart = function(id) {
+            const med = medicines.find(m => m.id === id);
+            if (!med) { showToast('Not found', 'Product data not available', 'error'); return; }
+            cart.push({ id: med.id, name: med.name, price: med.price, qty: 1 });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            showToast('Added to Cart!', `${med.name} added to your cart`);
+        };
+
+        window.buyNow = function(id) {
+            const med = medicines.find(m => m.id === id);
+            if (!med) { showToast('Not found', 'Product data not available', 'error'); return; }
+            // Minimal buy flow: add to cart and show confetti
+            addToCart(id);
+            createConfetti();
+            showToast('Order Ready', `Proceed to checkout for ${med.name}`);
+        };
+
+        window.addToComparison = function(id) {
+            const med = medicines.find(m => m.id === id);
+            if (!med) { showToast('Not found', 'Product data not available', 'error'); return; }
+            if (!comparisonItems.some(c => c.id === id)) {
+                comparisonItems.push({ id: med.id, name: med.name, price: med.price });
+                localStorage.setItem('comparison', JSON.stringify(comparisonItems));
+                showToast('Added for Comparison', med.name);
+                document.getElementById('compareCount').textContent = comparisonItems.length;
+            } else {
+                showToast('Already added', med.name, 'info');
+            }
+        };
+
+        window.quickView = function(id) {
+            const med = medicines.find(m => m.id === id);
+            if (!med) { showToast('Not found', 'Product data not available', 'error'); return; }
+            // you can implement your modal rendering here; for now a simple toast
+            showToast(med.name, `${med.brand} • ₹${med.price.toFixed(2)}`, 'info');
+        };
+
+        // Hook up UI event listeners (mirrors your original logic)
+        function initEventListeners() {
+            // Search input
+            searchInput.addEventListener('input', function() {
+                activeFilters.search = this.value;
+                clearSearch.style.display = this.value ? 'block' : 'none';
+                updateActiveFiltersUI();
+                // Fetch from server when user stops typing for 400ms
+                debounceFetch();
+            });
+
+            clearSearch.addEventListener('click', function() {
+                searchInput.value = '';
+                activeFilters.search = '';
+                this.style.display = 'none';
                 updateActiveFiltersUI();
                 loadMedicines({ page: 1, append: false });
             });
-        });
 
-
-        // Active filters clear click
-        document.getElementById('clearActiveFilters').addEventListener('click', function() {
-            // Reset to defaults
-            activeFilters = {
-                search: '',
-                categories: ['all'],
-                prescription: 'both',
-                stock: ['in-stock'],
-                price: { min: 0, max: 5000 }
-            };
-            searchInput.value = '';
-            clearSearch.style.display = 'none';
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.category === 'all') btn.classList.add('active');
+            // Sort select
+            sortSelect.addEventListener('change', function() {
+                // reload from server with new ordering
+                loadMedicines({ page: 1, append: false });
             });
-            document.querySelectorAll('.form-check-input').forEach(input => input.checked = false);
-            document.getElementById('inStock').checked = true;            
-            document.getElementById('minPrice').value = 0;
-            document.getElementById('maxPrice').value = 5000;
-            document.getElementById('priceSlider').value = 5000;
+
+            // Load more
+            loadMoreBtn.addEventListener('click', async function() {
+                if (nextPageUrl) {
+                    const url = new URL(nextPageUrl, window.location.origin);
+                    const pageParam = url.searchParams.get('page');
+                    const nextPage = pageParam ? parseInt(pageParam) : currentPage + 1;
+                    await loadMedicines({ page: nextPage, append: true });
+                } else {
+                    showToast('No more products', '', 'info');
+                }
+            });
+
+
+            // Apply filters button
+            document.getElementById('applyFilters').addEventListener('click', function() {
+                // Gather relevant UI values (mirrors your original code)
+                activeFilters.stock = [];
+                if (document.getElementById('inStock').checked) activeFilters.stock.push('in-stock');
+                if (document.getElementById('outOfStock').checked) activeFilters.stock.push('out-of-stock');
+
+                if (document.getElementById('prescriptionYes').checked) activeFilters.prescription = 'yes';
+                else if (document.getElementById('prescriptionNo').checked) activeFilters.prescription = 'no';
+                else activeFilters.prescription = 'both';
+
+                // Price inputs
+                const minP = Number(document.getElementById('minPrice').value || 0);
+                const maxP = Number(document.getElementById('maxPrice').value || 5000);
+                activeFilters.price = { min: minP, max: maxP };
+
+                
+                const checkedCategories = [...document.querySelectorAll('input[id^="category-"]:checked')].map(i => i.value);
+                activeFilters.categories = checkedCategories.length ? checkedCategories : ['all'];
+
+                if (activeFilters.dosage_form && activeFilters.dosage_form.length > 0) {
+                    hasFilters = true;
+                    activeFilters.dosage_form.forEach(df => {
+                        const name = dosageFormMap[df] || df;
+                        activeFiltersList.appendChild(createFilterTag(`Dosage: ${name}`, 'dosage-' + df));
+                    });
+                }
+
+
+                const ageSelected = [...document.querySelectorAll('.age-filter:checked')].map(i => i.value);
+                activeFilters.age_group = ageSelected.length === 1 ? ageSelected[0] : null;
+
+
+
+                updateActiveFiltersUI();
+                showToast('Filters Applied', 'Products have been filtered');
+                loadMedicines({ page: 1, append: false });
+            });
+
+            // Clear filters
+            document.getElementById('clearFilters').addEventListener('click', function() {
+                document.querySelectorAll('.form-check-input').forEach(input => input.checked = false);
+                document.getElementById('inStock').checked = true;            
+                document.getElementById('prescriptionBoth').checked = true;
+                document.getElementById('minPrice').value = 0;
+                document.getElementById('maxPrice').value = 5000;
+                document.getElementById('priceSlider').value = 5000;
+
+                activeFilters = {
+                    search: '',
+                    categories: ['all'],
+                    prescription: 'both',
+                    stock: ['in-stock'],
+                    price: { min: 0, max: 5000 }
+                };
+                updateActiveFiltersUI();
+                loadMedicines({ page: 1, append: false });
+                showToast('Filters Reset', 'All sidebar filters have been reset');
+            });
+
+            // Category buttons (keeps original behavior)
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const slug = this.dataset.slug;
+                    const category = this.dataset.category;
+
+                    document.querySelectorAll('.category-btn')
+                        .forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    if (slug) {
+                        activeFilters.slug = slug;
+                        activeFilters.categories = ['all'];
+                    } else {
+                        activeFilters.slug = null;
+                        activeFilters.categories = [category];
+                    }
+
+                    updateActiveFiltersUI();
+                    loadMedicines({ page: 1, append: false });
+                });
+            });
+
+
+            // Active filters clear click
+            document.getElementById('clearActiveFilters').addEventListener('click', function() {
+                // Reset to defaults
+                activeFilters = {
+                    search: '',
+                    categories: ['all'],
+                    prescription: 'both',
+                    stock: ['in-stock'],
+                    price: { min: 0, max: 5000 }
+                };
+                searchInput.value = '';
+                clearSearch.style.display = 'none';
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.category === 'all') btn.classList.add('active');
+                });
+                document.querySelectorAll('.form-check-input').forEach(input => input.checked = false);
+                document.getElementById('inStock').checked = true;            
+                document.getElementById('minPrice').value = 0;
+                document.getElementById('maxPrice').value = 5000;
+                document.getElementById('priceSlider').value = 5000;
+
+                updateActiveFiltersUI();
+                loadMedicines({ page: 1, append: false });
+                showToast('Filters Cleared', 'All filters have been reset');
+            });
+        }
+
+        
+        // Build lookup maps
+        const dosageFormMap = {
+            {% for df in dosage_form %}
+            {{ df.dosage_form_value }}: "{{ df.dosage_form_name|escapejs }}",
+            {% endfor %}
+        };
+
+        const ageGroupMap = {
+            {% for ag in age_group %}
+            {{ ag.id }}: "{{ ag.age_group_name|escapejs }}",
+            {% endfor %}
+        };
+
+        // Category lookup map
+
+        const categoryMap = {
+            {% for cat in category %}
+            {{ cat.category__id }}: "{{ cat.category__name|escapejs }}"{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        };
+
+
+
+        // Update active filter UI tags (keeps your original tag rendering)
+        function updateActiveFiltersUI() {
+            activeFiltersList.innerHTML = '';
+            let hasFilters = false;
+
+            if (activeFilters.search && activeFilters.search.trim() !== '') {
+                hasFilters = true;
+                activeFiltersList.appendChild(createFilterTag('🔍 ' + activeFilters.search, 'search'));
+            }
+
+            activeFilters.categories.forEach(cat => {
+                if (cat !== 'all') activeFiltersList.appendChild(createFilterTag(getCategoryLabel(cat), 'cat-' + cat));
+            });
+
+
+            if (activeFilters.price.min > 0 || activeFilters.price.max < 5000) {
+                hasFilters = true;
+                activeFiltersList.appendChild(createFilterTag(`₹${activeFilters.price.min} - ₹${activeFilters.price.max}`, 'price'));
+            }
+
+            if (activeFilters.stock.length > 0) {
+                hasFilters = true;
+                activeFilters.stock.forEach(stock => activeFiltersList.appendChild(createFilterTag(stock === 'in-stock' ? 'In Stock' : 'Out of Stock', 'stock-' + stock)));
+            }
+            activeFiltersContainer.style.display = hasFilters ? 'block' : 'none';
+
+            if (activeFilters.dosage_form) {
+                hasFilters = true;
+                const name = dosageFormMap[activeFilters.dosage_form] || activeFilters.dosage_form;
+                activeFiltersList.appendChild(createFilterTag(`Dosage: ${name}`, 'dosage'));
+            }
+
+            if (activeFilters.age_group) {
+                hasFilters = true;
+                const name = ageGroupMap[activeFilters.age_group] || activeFilters.age_group;
+                activeFiltersList.appendChild(createFilterTag(`Age: ${name}`, 'age'));
+            }
+
+
+        }
+
+        function createFilterTag(label, filterId) {
+            const tag = document.createElement('span');
+            tag.className = 'filter-tag';
+            tag.innerHTML = `
+                ${label}
+                <button class="filter-tag-remove" onclick="removeFilter('${filterId}')">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            return tag;
+        }
+
+        // Expose removeFilter to window so inline onclick works
+        window.removeFilter = function(filterId) {
+            if (!filterId) return;
+
+            if (filterId === 'search') {
+                activeFilters.search = '';
+                searchInput.value = '';
+                clearSearch.style.display = 'none';
+            } else if (filterId.startsWith('cat-')) {
+                const cat = filterId.replace('cat-', '');
+                activeFilters.categories = activeFilters.categories.filter(c => c !== cat);
+                // fallback to 'all' if none left
+                if (activeFilters.categories.length === 0) activeFilters.categories = ['all'];
+                // also uncheck the sidebar checkbox if exists
+                const cb = document.querySelector(`#category-${cat}`);
+                if (cb) cb.checked = false;
+            } else if (filterId === 'price') {
+                activeFilters.price = { min: 0, max: 5000 };
+                document.getElementById('minPrice').value = 0;
+                document.getElementById('maxPrice').value = 5000;
+                document.getElementById('priceSlider').value = 5000;
+            } else if (filterId.startsWith('stock-')) {
+                const stock = filterId.replace('stock-', '');
+                activeFilters.stock = activeFilters.stock.filter(s => s !== stock);
+                if (stock === 'in-stock') document.getElementById('inStock').checked = false;
+                if (stock === 'out-of-stock') document.getElementById('outOfStock').checked = false;
+            } else if (filterId === 'dosage') {
+                activeFilters.dosage_form = null;
+                document.querySelectorAll('.dosage-filter:checked').forEach(cb => cb.checked = false);
+            } else if (filterId === 'age') {
+                activeFilters.age_group = null;
+                document.querySelectorAll('.age-filter:checked').forEach(cb => cb.checked = false);
+            }
 
             updateActiveFiltersUI();
             loadMedicines({ page: 1, append: false });
-            showToast('Filters Cleared', 'All filters have been reset');
-        });
-    }
-
-    
-    // Build lookup maps
-    const dosageFormMap = {
-        {% for df in dosage_form %}
-        {{ df.dosage_form_value }}: "{{ df.dosage_form_name|escapejs }}",
-        {% endfor %}
-    };
-
-    const ageGroupMap = {
-        {% for ag in age_group %}
-        {{ ag.id }}: "{{ ag.age_group_name|escapejs }}",
-        {% endfor %}
-    };
-
-     // Category lookup map
-
-    const categoryMap = {
-        {% for cat in category %}
-        {{ cat.category__id }}: "{{ cat.category__name|escapejs }}"{% if not forloop.last %},{% endif %}
-        {% endfor %}
-    };
+        };
 
 
-
-    // Update active filter UI tags (keeps your original tag rendering)
-    function updateActiveFiltersUI() {
-        activeFiltersList.innerHTML = '';
-        let hasFilters = false;
-
-        if (activeFilters.search && activeFilters.search.trim() !== '') {
-            hasFilters = true;
-            activeFiltersList.appendChild(createFilterTag('🔍 ' + activeFilters.search, 'search'));
-        }
-
-        activeFilters.categories.forEach(cat => {
-            if (cat !== 'all') activeFiltersList.appendChild(createFilterTag(getCategoryLabel(cat), 'cat-' + cat));
-        });
-
-
-        if (activeFilters.price.min > 0 || activeFilters.price.max < 5000) {
-            hasFilters = true;
-            activeFiltersList.appendChild(createFilterTag(`₹${activeFilters.price.min} - ₹${activeFilters.price.max}`, 'price'));
-        }
-
-        if (activeFilters.stock.length > 0) {
-            hasFilters = true;
-            activeFilters.stock.forEach(stock => activeFiltersList.appendChild(createFilterTag(stock === 'in-stock' ? 'In Stock' : 'Out of Stock', 'stock-' + stock)));
-        }
-        activeFiltersContainer.style.display = hasFilters ? 'block' : 'none';
-
-        if (activeFilters.dosage_form) {
-            hasFilters = true;
-            const name = dosageFormMap[activeFilters.dosage_form] || activeFilters.dosage_form;
-            activeFiltersList.appendChild(createFilterTag(`Dosage: ${name}`, 'dosage'));
-        }
-
-        if (activeFilters.age_group) {
-            hasFilters = true;
-            const name = ageGroupMap[activeFilters.age_group] || activeFilters.age_group;
-            activeFiltersList.appendChild(createFilterTag(`Age: ${name}`, 'age'));
+        function getCategoryLabel(catId) {
+            return categoryMap[catId] || catId;
         }
 
 
-    }
-
-    function createFilterTag(label, filterId) {
-        const tag = document.createElement('span');
-        tag.className = 'filter-tag';
-        tag.innerHTML = `
-            ${label}
-            <button class="filter-tag-remove" onclick="removeFilter('${filterId}')">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-        return tag;
-    }
-
-    // Expose removeFilter to window so inline onclick works
-    window.removeFilter = function(filterId) {
-        if (!filterId) return;
-
-        if (filterId === 'search') {
-            activeFilters.search = '';
-            searchInput.value = '';
-            clearSearch.style.display = 'none';
-        } else if (filterId.startsWith('cat-')) {
-            const cat = filterId.replace('cat-', '');
-            activeFilters.categories = activeFilters.categories.filter(c => c !== cat);
-            // fallback to 'all' if none left
-            if (activeFilters.categories.length === 0) activeFilters.categories = ['all'];
-            // also uncheck the sidebar checkbox if exists
-            const cb = document.querySelector(`#category-${cat}`);
-            if (cb) cb.checked = false;
-        } else if (filterId === 'price') {
-            activeFilters.price = { min: 0, max: 5000 };
-            document.getElementById('minPrice').value = 0;
-            document.getElementById('maxPrice').value = 5000;
-            document.getElementById('priceSlider').value = 5000;
-        } else if (filterId.startsWith('stock-')) {
-            const stock = filterId.replace('stock-', '');
-            activeFilters.stock = activeFilters.stock.filter(s => s !== stock);
-            if (stock === 'in-stock') document.getElementById('inStock').checked = false;
-            if (stock === 'out-of-stock') document.getElementById('outOfStock').checked = false;
-        } else if (filterId === 'dosage') {
-            activeFilters.dosage_form = null;
-            document.querySelectorAll('.dosage-filter:checked').forEach(cb => cb.checked = false);
-        } else if (filterId === 'age') {
-            activeFilters.age_group = null;
-            document.querySelectorAll('.age-filter:checked').forEach(cb => cb.checked = false);
+        // small debouncer for search
+        let debounceTimer = null;
+        function debounceFetch() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                loadMedicines({ page: 1, append: false });
+            }, 400);
         }
 
-        updateActiveFiltersUI();
-        loadMedicines({ page: 1, append: false });
-    };
-
-
-    function getCategoryLabel(catId) {
-        return categoryMap[catId] || catId;
-    }
-
-
-    // small debouncer for search
-    let debounceTimer = null;
-    function debounceFetch() {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            initEventListeners();
+            updateActiveFiltersUI();
             loadMedicines({ page: 1, append: false });
-        }, 400);
-    }
 
-    // Init
-    document.addEventListener('DOMContentLoaded', () => {
-        initEventListeners();
-        updateActiveFiltersUI();
-        loadMedicines({ page: 1, append: false });
+            // show initial welcome toast (keeps existing UX)
+            setTimeout(() => showToast('Welcome to Curexa! 🏥', 'Your trusted online pharmacy'), 1000);
+        });
 
-        // show initial welcome toast (keeps existing UX)
-        setTimeout(() => showToast('Welcome to Curexa! 🏥', 'Your trusted online pharmacy'), 1000);
-    });
+        // Small helper: keep your earlier showToast/hideToast/createConfetti in page;
+        // If they are not present, define minimal versions here (they will be overwritten by your existing functions).
+        window.showToast = window.showToast || function(title = '', message = '', type = 'success') {
+            try {
+                const icon = toastNotification.querySelector('.toast-icon i');
+                const titleEl = toastNotification.querySelector('.toast-title');
+                const messageEl = toastNotification.querySelector('.toast-message');
+                titleEl.textContent = title;
+                messageEl.textContent = message;
+                if (type === 'success') { icon.className = 'fas fa-check'; toastNotification.style.borderLeftColor = 'var(--accent-green)'; }
+                else if (type === 'error') { icon.className = 'fas fa-times'; toastNotification.style.borderLeftColor = 'var(--accent-red)'; }
+                else if (type === 'warning') { icon.className = 'fas fa-exclamation'; toastNotification.style.borderLeftColor = '#ffc107'; }
+                else { icon.className = 'fas fa-info'; toastNotification.style.borderLeftColor = 'var(--medical-teal)'; }
+                toastNotification.classList.add('show');
+                setTimeout(() => window.hideToast && window.hideToast(), 3000);
+            } catch (e) { console.log(title, message); }
+        };
+        window.hideToast = window.hideToast || function() {
+            try { toastNotification.classList.remove('show'); } catch (e) {}
+        };
+        window.createConfetti = window.createConfetti || function() {
+            const colors = ['#1ba8b6', '#2a6fd6', '#28a745', '#ffc107'];
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-10px';
+                confetti.style.width = '8px';
+                confetti.style.height = '8px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.zIndex = '9999';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.animation = `fall ${Math.random() * 2 + 1.5}s linear`;
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 4000);
+            }
+        };
 
-    // Small helper: keep your earlier showToast/hideToast/createConfetti in page;
-    // If they are not present, define minimal versions here (they will be overwritten by your existing functions).
-    window.showToast = window.showToast || function(title = '', message = '', type = 'success') {
-        try {
-            const icon = toastNotification.querySelector('.toast-icon i');
-            const titleEl = toastNotification.querySelector('.toast-title');
-            const messageEl = toastNotification.querySelector('.toast-message');
-            titleEl.textContent = title;
-            messageEl.textContent = message;
-            if (type === 'success') { icon.className = 'fas fa-check'; toastNotification.style.borderLeftColor = 'var(--accent-green)'; }
-            else if (type === 'error') { icon.className = 'fas fa-times'; toastNotification.style.borderLeftColor = 'var(--accent-red)'; }
-            else if (type === 'warning') { icon.className = 'fas fa-exclamation'; toastNotification.style.borderLeftColor = '#ffc107'; }
-            else { icon.className = 'fas fa-info'; toastNotification.style.borderLeftColor = 'var(--medical-teal)'; }
-            toastNotification.classList.add('show');
-            setTimeout(() => window.hideToast && window.hideToast(), 3000);
-        } catch (e) { console.log(title, message); }
-    };
-    window.hideToast = window.hideToast || function() {
-        try { toastNotification.classList.remove('show'); } catch (e) {}
-    };
-    window.createConfetti = window.createConfetti || function() {
-        const colors = ['#1ba8b6', '#2a6fd6', '#28a745', '#ffc107'];
-        for (let i = 0; i < 30; i++) {
-            const confetti = document.createElement('div');
-            confetti.style.position = 'fixed';
-            confetti.style.left = Math.random() * 100 + '%';
-            confetti.style.top = '-10px';
-            confetti.style.width = '8px';
-            confetti.style.height = '8px';
-            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.borderRadius = '50%';
-            confetti.style.zIndex = '9999';
-            confetti.style.pointerEvents = 'none';
-            confetti.style.animation = `fall ${Math.random() * 2 + 1.5}s linear`;
-            document.body.appendChild(confetti);
-            setTimeout(() => confetti.remove(), 4000);
-        }
-    };
+    })();
 
-})();
+   function goToMedicineDetails(medicineId) {
+    window.location.href = `/medicine/details/?id=${medicineId}`;
+}
+
 </script>
 
 

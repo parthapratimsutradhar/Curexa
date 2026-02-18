@@ -1,25 +1,43 @@
 {% extends "enduser/base.html" %}
-{% block title %}{{medicine.name}} | Curexa{% endblock %}
+{% block title %}{{ medicine.name }} - Buy Online | Curexa{% endblock %}
 {% load static %}
 {% block content %}
     <style>
-        /* CSS Variables */
+        /* CSS Variables - same as original */
         :root {
-            --primary-blue: #0d8aff;
-            --light-blue: #f0f9ff;
-            --teal: #0d9488;
-            --soft-green: #10b981;
-            --dark-text: #1e293b;
-            --medium-text: #64748b;
-            --light-text: #94a3b8;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #60a5fa;
+            --primary-soft: #dbeafe;
+            --secondary: #0d9488;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --medium: #475569;
+            --light: #94a3b8;
             --white: #ffffff;
-            --light-gray: #f8fafc;
-            --border-radius: 12px;
-            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --transition: all 0.3s ease;
+            --bg-light: #f8fafc;
+            --bg-soft: #f1f5f9;
+            --border: #e2e8f0;
+            
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            --gradient-success: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            
+            --radius: 0.75rem;
+            --radius-sm: 0.375rem;
+            --radius-lg: 1rem;
+            --radius-full: 9999px;
+            
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Reset */
+        /* All original CSS styles remain exactly as you provided */
         * {
             margin: 0;
             padding: 0;
@@ -27,23 +45,30 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            color: var(--dark-text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--dark);
             line-height: 1.6;
-            background-color: var(--light-gray);
+            background: var(--bg-light);
+            -webkit-font-smoothing: antialiased;
         }
 
         h1, h2, h3, h4 {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
             font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--dark);
         }
 
-        .container {
-            width: 100%;
-            max-width: 1200px;
+        .product-container {
+            max-width: 1280px;
             margin: 0 auto;
-            padding-top: 0px !important;
-            padding-bottom: 0px !important;
+            padding: 2rem 2rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .section {
@@ -51,242 +76,763 @@
         }
 
         .card {
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            box-shadow: var(--box-shadow);
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            border-color: var(--primary-light);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .card:hover::before {
+            opacity: 1;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 0.875rem 1.5rem;
-            border-radius: 8px;
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius);
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
             transition: var(--transition);
             border: none;
-            gap: 8px;
+            gap: 0.75rem;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-primary {
-            background-color: var(--primary-blue);
+            background: var(--gradient-primary);
             color: var(--white);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
         }
 
         .btn-primary:hover {
-            background-color: #0a7ae6;
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(13, 138, 255, 0.2);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
         }
 
         .btn-secondary {
-            background-color: var(--white);
-            color: var(--primary-blue);
-            border: 2px solid var(--primary-blue);
+            background: var(--white);
+            color: var(--primary);
+            border: 2px solid var(--primary);
         }
 
         .btn-secondary:hover {
-            background-color: var(--light-blue);
+            background: var(--primary-soft);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
-        /* Header */
+        .btn.ripple {
+            animation: ripple 0.6s ease-out;
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(0, 0); opacity: 1; }
+            100% { opacity: 0; transform: scale(40, 40); }
+        }
+
+        .btn.success {
+            background: var(--gradient-success) !important;
+            border-color: var(--success) !important;
+            color: var(--white) !important;
+            animation: successPulse 0.5s ease;
+        }
+
+        .btn.success i {
+            animation: iconSpin 0.5s ease;
+        }
+
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes iconSpin {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(20deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .cart-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--gradient-success);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border-radius: var(--radius-full);
+            box-shadow: var(--shadow-xl);
+            z-index: 9999;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(8px);
+        }
+
+        .cart-popup.show {
+            transform: translateX(0);
+        }
+
+        .cart-popup i {
+            font-size: 1.25rem;
+        }
+
+        .cart-popup .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: rgba(255,255,255,0.5);
+            width: 100%;
+            animation: progress 3s linear;
+        }
+
+        @keyframes progress {
+            0% { width: 100%; }
+            100% { width: 0%; }
+        }
+
+        .checkout-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .checkout-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            color: var(--dark);
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--medium);
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--dark);
+            transform: rotate(90deg);
+        }
+
+        .checkout-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-soft);
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+        }
+
+        .checkout-item img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .checkout-details h4 {
+            margin: 0 0 0.25rem;
+        }
+
+        .checkout-details p {
+            margin: 0;
+            color: var(--medium);
+            font-size: 0.875rem;
+        }
+
+        .checkout-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-top: 2px dashed var(--border);
+            font-weight: 700;
+            font-size: 1.125rem;
+            margin-top: 1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .fa-cart-plus.animate,
+        .fa-bolt.animate {
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            border-radius: 0;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .shake {
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
         header {
-            background-color: var(--white);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
         .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 20px;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
         }
 
         .logo {
-            display: flex;
-            align-items: center;
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--primary-blue);
+            color: var(--primary);
         }
 
         .logo i {
-            margin-right: 8px;
-            color: var(--teal);
+            margin-right: 0.5rem;
+            color: var(--secondary);
         }
 
         .breadcrumb {
-            padding: 1rem 20px;
-            background-color: var(--light-gray);
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0.75rem 2rem;
             font-size: 0.875rem;
-            color: var(--medium-text);
+            color: var(--medium);
         }
 
         .breadcrumb a {
-            color: var(--medium-text);
+            color: var(--medium);
             text-decoration: none;
+            transition: var(--transition);
         }
 
         .breadcrumb a:hover {
-            color: var(--primary-blue);
+            color: var(--primary);
         }
 
-        /* Medicine Hero */
         .medicine-hero {
             display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 2rem;
+            grid-template-columns: 1.2fr 1.8fr;
+            gap: 2.5rem;
             margin: 2rem 0;
         }
 
         @media (max-width: 768px) {
             .medicine-hero {
                 grid-template-columns: 1fr;
+                gap: 2rem;
             }
         }
 
-        .medicine-image {
+        .medicine-gallery {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            height: 450px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .main-image-container {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            height: 300px;
+            overflow: hidden;
+            cursor: zoom-in;
+            height: 350px;
+            background: linear-gradient(145deg, var(--bg-soft), var(--white));
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            transition: var(--transition);
         }
 
-        .medicine-image img {
-            max-height: 100%;
+        .main-image-container:hover {
+            border-color: var(--primary-light);
+        }
+
+        .main-image-container img {
+            max-width: 90%;
+            max-height: 90%;
             object-fit: contain;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+        }
+
+        .main-image-container:hover img {
+            transform: scale(1.8);
+        }
+
+        .image-preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-preview-modal.active {
+            display: flex;
+        }
+
+        .preview-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+
+        .preview-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: var(--radius);
+        }
+
+        .close-preview {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: var(--white);
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .close-preview:hover {
+            color: var(--primary-light);
+            transform: scale(1.1);
+        }
+
+        .thumbnail-container {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-light) var(--bg-soft);
+        }
+
+        .thumbnail-container::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .thumbnail-container::-webkit-scrollbar-track {
+            background: var(--bg-soft);
+            border-radius: var(--radius-full);
+        }
+
+        .thumbnail-container::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: var(--radius-full);
+        }
+
+        .thumbnail {
+            width: 75px;
+            height: 75px;
+            border: 3px solid transparent;
+            border-radius: var(--radius);
+            cursor: pointer;
+            opacity: 0.6;
+            transition: var(--transition);
+            flex-shrink: 0;
+            overflow: hidden;
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .thumbnail:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .thumbnail.active {
+            border-color: var(--primary);
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--white);
+            border: 1px solid var(--border);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--dark);
+            transition: var(--transition);
+            z-index: 10;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-arrow:hover {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-arrow.prev {
+            left: 10px;
+        }
+
+        .nav-arrow.next {
+            right: 10px;
+        }
+
+        .medicine-info {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
         }
 
         .medicine-info h1 {
-            font-size: 1.75rem;
+            font-size: 2rem;
             margin-bottom: 0.5rem;
+            color: var(--dark);
         }
 
         .medicine-salt {
-            color: var(--teal);
+            color: var(--secondary);
             font-size: 1.125rem;
+            font-weight: 500;
             margin-bottom: 1rem;
         }
 
         .badge {
             display: inline-flex;
             align-items: center;
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
+            padding: 0.35rem 1rem;
+            border-radius: var(--radius-full);
             font-size: 0.75rem;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
             margin-right: 0.5rem;
             margin-bottom: 0.5rem;
+            border: 1px solid transparent;
         }
 
         .badge-rx {
-            background-color: #ffebee;
-            color: #d32f2f;
+            background: #fee2e2;
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+
+        .badge-rx.not-required {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #bbf7d0;
         }
 
         .badge-stock {
-            background-color: #e8f5e9;
-            color: var(--soft-green);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge-stock i {
+            font-size: 1rem;
+        }
+
+        .badge-stock.in-stock {
+            background-color: #52c41a;
+            color: white;
+        }
+
+        .badge-stock.low-stock {
+            background-color: #faad14;
+            color: white;
+        }
+
+        .badge-stock.out-of-stock {
+            background-color: #ff4d4f;
+            color: white;
         }
 
         .rating {
             display: inline-flex;
             align-items: center;
-            background-color: #fff8e1;
-            color: #ff9800;
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
+            background: #fef3c7;
+            color: #b45309;
+            padding: 0.35rem 1rem;
+            border-radius: var(--radius-full);
             font-weight: 600;
             font-size: 0.875rem;
             margin: 0.5rem 0;
         }
 
         .rating i {
-            margin-right: 4px;
+            margin-right: 0.25rem;
+            color: #f59e0b;
         }
 
         .price-container {
             display: flex;
-            align-items: center;
+            align-items: baseline;
             gap: 1rem;
-            margin: 1rem 0;
+            margin: 1.5rem 0;
+            padding: 1rem 0;
+            border-top: 2px dashed var(--border);
+            border-bottom: 2px dashed var(--border);
         }
 
         .current-price {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            color: var(--dark-text);
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .current-price::before {
+            content: '₹';
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-right: 2px;
+            color: var(--medium);
         }
 
         .original-price {
             font-size: 1.25rem;
-            color: var(--light-text);
+            color: var(--light);
             text-decoration: line-through;
         }
 
         .discount {
-            background-color: #ffebee;
-            color: #d32f2f;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            color: var(--white);
+            padding: 0.35rem 1rem;
+            border-radius: var(--radius-full);
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: auto;
+            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
         }
 
         .delivery-info {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: var(--medium-text);
-            margin: 0.5rem 0;
+            color: var(--medium);
+            margin: 1rem 0;
+            font-size: 0.9375rem;
         }
 
         .delivery-info i {
-            color: var(--soft-green);
+            color: var(--success);
+            font-size: 1.125rem;
         }
 
         .quantity-selector {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            border: 1px solid var(--light-text);
-            border-radius: 8px;
-            width: fit-content;
-            overflow: hidden;
+            background: var(--bg-soft);
+            border-radius: var(--radius);
+            padding: 0.25rem;
             margin: 1rem 0;
+            border: 1px solid var(--border);
         }
 
         .qty-btn {
-            background-color: var(--light-gray);
+            background: var(--white);
             border: none;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             font-size: 1.25rem;
             font-weight: 600;
-            color: var(--dark-text);
+            color: var(--primary);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .qty-btn:hover {
+            background: var(--primary);
+            color: var(--white);
+            transform: scale(1.05);
+        }
+
+        .qty-btn:active {
+            transform: scale(0.95);
         }
 
         .qty-input {
-            width: 60px;
-            height: 40px;
+            width: 70px;
+            height: 44px;
             border: none;
             text-align: center;
             font-size: 1.125rem;
             font-weight: 600;
-            color: var(--dark-text);
-            background-color: var(--white);
+            color: var(--dark);
+            background: transparent;
         }
 
         .action-buttons {
@@ -304,11 +850,10 @@
             }
         }
 
-        /* Quick Info */
         .quick-info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+            gap: 1.25rem;
             margin-top: 1rem;
         }
 
@@ -316,49 +861,84 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 1rem;
-            background-color: var(--light-gray);
-            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            background: linear-gradient(145deg, var(--bg-soft), var(--white));
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .info-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-light);
+        }
+
+        .info-item:hover::before {
+            opacity: 1;
         }
 
         .info-icon {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--light-blue);
-            color: var(--primary-blue);
-            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: var(--radius);
+            font-size: 1.25rem;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
         }
 
-        /* Tabs for Details */
         .tabs {
             display: flex;
-            border-bottom: 1px solid #e2e8f0;
-            margin-bottom: 1.5rem;
-            overflow-x: auto;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: var(--bg-soft);
+            border-radius: var(--radius-lg);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
         }
 
         .tab {
             padding: 1rem 1.5rem;
-            background: none;
+            background: transparent;
             border: none;
             font-weight: 600;
-            color: var(--medium-text);
+            color: var(--medium);
             cursor: pointer;
-            white-space: nowrap;
-            border-bottom: 3px solid transparent;
+            border-radius: var(--radius);
             transition: var(--transition);
+            flex: 1;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.5px;
         }
 
         .tab.active {
-            color: var(--primary-blue);
-            border-bottom-color: var(--primary-blue);
+            background: var(--white);
+            color: var(--primary);
+            box-shadow: var(--shadow-md);
         }
 
-        .tab:hover:not(.active) {
-            color: var(--dark-text);
+        .tab:not(.active):hover {
+            background: rgba(255,255,255,0.5);
+            color: var(--dark);
         }
 
         .tab-content {
@@ -369,27 +949,37 @@
             display: block;
         }
 
-        /* Key Points */
         .key-points {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
+            gap: 2rem;
         }
 
         .point-card {
             padding: 1.5rem;
+            background: var(--bg-soft);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .point-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-light);
         }
 
         .point-card h3 {
-            margin-bottom: 1rem;
-            color: var(--dark-text);
+            margin-bottom: 1.25rem;
+            color: var(--primary);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            font-size: 1.125rem;
         }
 
         .point-card h3 i {
-            color: var(--teal);
+            color: var(--success);
         }
 
         .point-list {
@@ -397,10 +987,12 @@
         }
 
         .point-list li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #f1f5f9;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: flex-start;
+            color: var(--medium);
+            font-size: 0.9375rem;
         }
 
         .point-list li:last-child {
@@ -408,105 +1000,118 @@
         }
 
         .point-list i {
-            color: var(--soft-green);
+            color: var(--success);
             margin-right: 0.75rem;
             margin-top: 0.25rem;
+            font-size: 0.875rem;
         }
 
-        /* Safety Section */
         .safety-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
         .safety-item {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            background-color: var(--light-gray);
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            background: var(--white);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .safety-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            transition: var(--transition);
+        }
+
+        .safety-item.safe::before {
+            background: var(--success);
+        }
+
+        .safety-item.caution::before {
+            background: var(--warning);
+        }
+
+        .safety-item.avoid::before {
+            background: var(--danger);
+        }
+
+        .safety-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
         }
 
         .safety-icon {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
+            border-radius: var(--radius);
             font-size: 1.25rem;
+            color: var(--white);
         }
 
-        .safe .safety-icon {
-            background-color: #e8f5e9;
-            color: var(--soft-green);
+        .safety-item.safe .safety-icon {
+            background: linear-gradient(135deg, var(--success), #059669);
         }
 
-        .caution .safety-icon {
-            background-color: #fff8e1;
-            color: #ff9800;
+        .safety-item.caution .safety-icon {
+            background: linear-gradient(135deg, var(--warning), #d97706);
         }
 
-        .avoid .safety-icon {
-            background-color: #ffebee;
-            color: #d32f2f;
+        .safety-item.avoid .safety-icon {
+            background: linear-gradient(135deg, var(--danger), #b91c1c);
         }
 
-        /* Reviews */
-        .review-summary {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background-color: var(--light-blue);
-            border-radius: var(--border-radius);
+        .card > div[style*="background-color: #fff8e1"] {
+            background: linear-gradient(135deg, #fff3cd, #ffe69c) !important;
+            border-left: 4px solid #f59e0b !important;
+            padding: 1.25rem !important;
+            border-radius: var(--radius) !important;
+            margin-top: 1.5rem !important;
         }
 
-        .overall-rating {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-        }
-
-        .review-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .review-card {
-            padding: 1.5rem;
-        }
-
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .reviewer-name {
-            font-weight: 600;
-        }
-
-        .review-date {
-            color: var(--light-text);
-            font-size: 0.875rem;
-        }
-
-        /* Trust Badges */
         .trust-badges {
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
             gap: 2rem;
             flex-wrap: wrap;
-            padding: 2rem;
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            margin-top: 2rem;
+            padding: 2.5rem;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-lg);
+            margin: 3rem 0 2rem;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .trust-badges::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .trust-badge {
@@ -515,80 +1120,67 @@
             align-items: center;
             text-align: center;
             min-width: 120px;
+            color: var(--white);
+            position: relative;
+            z-index: 1;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .trust-badge:nth-child(2) { animation-delay: 0.2s; }
+        .trust-badge:nth-child(3) { animation-delay: 0.4s; }
+        .trust-badge:nth-child(4) { animation-delay: 0.6s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
 
         .trust-icon {
-            width: 50px;
-            height: 50px;
+            width: 70px;
+            height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--light-blue);
-            color: var(--teal);
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            border: 2px solid rgba(255,255,255,0.3);
             border-radius: 50%;
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Footer */
-        footer {
-            background-color: var(--white);
-            padding: 2rem 0;
-            border-top: 1px solid #e2e8f0;
-            margin-top: 3rem;
-        }
-
-        .footer-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .footer-disclaimer {
-            color: var(--medium-text);
-            max-width: 800px;
-            margin: 1.5rem 0;
-            font-size: 0.875rem;
-            line-height: 1.8;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .footer-links a {
-            color: var(--medium-text);
-            text-decoration: none;
+            font-size: 2rem;
+            margin-bottom: 1rem;
             transition: var(--transition);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
-        .footer-links a:hover {
-            color: var(--primary-blue);
+        .trust-badge:hover .trust-icon {
+            transform: scale(1.1) rotate(360deg);
+            background: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.5);
         }
 
-        .copyright {
-            color: var(--light-text);
-            font-size: 0.875rem;
+        .trust-badge div {
+            font-weight: 600;
+            font-size: 0.9375rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        /* Mobile Sticky Button */
         .mobile-sticky-btn {
             display: none;
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: var(--white);
-            padding: 1rem;
-            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
+            background: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
             z-index: 100;
             gap: 1rem;
             align-items: center;
+            backdrop-filter: blur(8px);
+            animation: slideUp 0.3s ease-out;
         }
 
         @media (max-width: 768px) {
@@ -597,97 +1189,215 @@
             }
         }
 
-        /* Responsive */
+        .mobile-sticky-btn .btn {
+            flex: 1;
+            margin: 0;
+        }
+
         @media (max-width: 768px) {
+            .product-container {
+                padding: 1rem;
+            }
+            
             .medicine-info h1 {
                 font-size: 1.5rem;
             }
             
             .current-price {
-                font-size: 1.75rem;
+                font-size: 2rem;
             }
             
             .quick-info-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                width: 100%;
+                text-align: center;
             }
             
             .key-points {
                 grid-template-columns: 1fr;
             }
+            
+            .trust-badges {
+                padding: 2rem 1rem;
+                gap: 1.5rem;
+            }
+            
+            .trust-badge {
+                min-width: 100px;
+            }
         }
 
         @media (max-width: 576px) {
-            .quick-info-grid {
-                grid-template-columns: 1fr;
+            .price-container {
+                flex-wrap: wrap;
             }
             
-            .review-summary {
-                flex-direction: column;
+            .discount {
+                margin-left: 0;
+                width: 100%;
                 text-align: center;
-                gap: 1rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+            }
+        }
+
+        @media print {
+            .btn, .mobile-sticky-btn, .cart-popup, .checkout-modal {
+                display: none !important;
             }
         }
     </style>
 
+    <!-- Image Preview Modal -->
+    <div class="image-preview-modal" id="imagePreviewModal">
+        <div class="preview-content">
+            <button class="close-preview" onclick="closePreview()">&times;</button>
+            <img id="previewImage" src="" alt="Full size preview">
+        </div>
+    </div>
 
-    <main class="container">
-        <!-- Medicine Hero -->
-        <section class="medicine-hero">
-            <div class="medicine-image">
-                <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Dolo 650 Tablet">
+    <!-- Cart Popup Notification -->
+    <div id="cartPopup" class="cart-popup">
+        <i class="fas fa-check-circle"></i>
+        <span id="cartPopupMessage">Item added to cart successfully!</span>
+        <div class="progress-bar"></div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="checkout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Your Order</h3>
+                <button class="close-modal" onclick="closeCheckoutModal()">&times;</button>
             </div>
+            <div class="checkout-item">
+                <!-- Use medicine image if available, otherwise placeholder -->
+                <img src="{% if medicine.image %}{{ medicine.image.url }}{% else %}https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80{% endif %}" alt="{{ medicine.name }}">
+                <div class="checkout-details">
+                    <h4>{{ medicine.name }}</h4>
+                    <p>{% if medicine.pack_size %}Pack Size: {{ medicine.pack_size }}{% endif %}</p>
+                    <p>Quantity: <span id="modalQuantity">1</span></p>
+                </div>
+            </div>
+            <div class="checkout-total">
+                <span>Total Amount:</span>
+                <span id="modalTotal">₹{{ medicine.retail_price|floatformat:2 }}</span>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeCheckoutModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="proceedToCheckout()">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="product-container">
+        <!-- Medicine Hero with Carousel -->
+        <section class="medicine-hero">
+            <div class="medicine-gallery">
+                <div class="main-image-container" id="mainImageContainer" onclick="openPreview(currentImageSrc)">
+                    <img id="mainImage" src="{% if medicine.image %}{{ medicine.image.url }}{% else %}https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80{% endif %}" alt="{{ medicine.name }}">
+                </div>
+                <div class="thumbnail-container" id="thumbnailContainer">
+                    <!-- Create thumbnails from medicine.images list if available, else use placeholders -->
+                    {% if medicine.images %}
+                        {% for img in medicine.images %}
+                            <div class="thumbnail {% if forloop.first %}active{% endif %}" onclick="changeImage({{ forloop.counter0 }})">
+                                <img src="{{ img.url }}" alt="Thumbnail {{ forloop.counter }}">
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Default placeholder thumbnails -->
+                        <div class="thumbnail active" onclick="changeImage(0)">
+                            <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Thumbnail 1">
+                        </div>
+                        <div class="thumbnail" onclick="changeImage(1)">
+                            <img src="https://images.unsplash.com/photo-1631549916762-4119b4123e6f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Thumbnail 2">
+                        </div>
+                        <div class="thumbnail" onclick="changeImage(2)">
+                            <img src="https://images.unsplash.com/photo-1550574697-3ee776182a09?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Thumbnail 3">
+                        </div>
+                        <div class="thumbnail" onclick="changeImage(3)">
+                            <img src="https://images.unsplash.com/photo-1471864190281-a93a3070b6de?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Thumbnail 4">
+                        </div>
+                    {% endif %}
+                </div>
+                <button class="nav-arrow prev" onclick="previousImage()">‹</button>
+                <button class="nav-arrow next" onclick="nextImage()">›</button>
+            </div>
+            
             <div class="medicine-info">
                 <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
-                    <span class="badge badge-rx">
-                        <i class="fas fa-prescription-bottle-alt"></i>
-                        Prescription Required
-                    </span>
-                    <span class="badge badge-stock">
-                        <i class="fas fa-check-circle"></i>
-                        In Stock
-                    </span>
+                    {% if medicine.is_prescription_required %}
+                        <span class="badge badge-rx required">
+                            <i class="fas fa-file-prescription"></i>  
+                            Prescription Required
+                        </span>
+                    {% else %}
+                        <span class="badge badge-rx not-required">
+                            <i class="fas fa-capsules"></i>
+                            OTC / Prescription Not Required
+                        </span>
+                    {% endif %}
+
+                    {% if medicine.stock_status == "IN_STOCK" %}
+                        <span class="badge-stock in-stock">
+                            <i class="fas fa-check-circle"></i>
+                            In Stock
+                        </span>
+                    {% elif medicine.stock_status == "LOW_STOCK" %}
+                        <span class="badge-stock low-stock">
+                            <i class="fas fa-exclamation-circle"></i>
+                            Low Stock
+                        </span>
+                    {% elif medicine.stock_status == "OUT_OF_STOCK" %}
+                        <span class="badge-stock out-of-stock">
+                            <i class="fas fa-times-circle"></i>
+                            Out of Stock
+                        </span>
+                    {% endif %}
                 </div>
                 
-                <h1>Dolo 650 Tablet</h1>
-                <p class="medicine-salt">Paracetamol (650mg)</p>
-                
-                <div class="rating">
-                    <i class="fas fa-star"></i>
-                    <span>4.5</span>
-                    <span>(2,847 reviews)</span>
-                </div>
-                
-                <p style="color: var(--medium-text); margin: 0.5rem 0;">Manufactured by Micro Labs Ltd</p>
-                
-                <div class="delivery-info">
-                    <i class="fas fa-shipping-fast"></i>
-                    <span>Delivery by tomorrow, 10 AM</span>
-                </div>
+                <h1>{{ medicine.name }}</h1>
+                <p class="medicine-salt">{{ medicine.salt_composition }} ({{ medicine.dosage_strength }})</p>
+                                
+                <p style="color: var(--medium-text); margin: 0.5rem 0;">Manufactured by {{ medicine.manufacturer|default:"Unknown" }}</p>
                 
                 <div class="price-container">
-                    <div class="current-price">₹25.99</div>
-                    <div class="original-price">₹35.99</div>
-                    <div class="discount">28% OFF</div>
+                    <div class="current-price">{{ medicine.retail_price|floatformat:2 }}</div>
+                    {% if medicine.discount > 0 %}
+                        <div class="original-price">₹{{ medicine.original_price|floatformat:2 }}</div>
+                        <div class="discount">{{ medicine.discount }}% OFF</div>
+                    {% endif %}
                 </div>
-                
+
                 <div class="quantity-selector">
                     <button class="qty-btn minus">−</button>
                     <input type="text" class="qty-input" value="1" readonly>
                     <button class="qty-btn plus">+</button>
-                    <span style="margin-left: 1rem; color: var(--medium-text);">Strip of 15 tablets</span>
+                    <span style="margin-left: 1rem; color: var(--medium-text);">Strip of {{ medicine.pack_size|default:"N/A" }}</span>
                 </div>
                 
                 <div class="action-buttons">
-                    <button class="btn btn-primary">
+                    <button class="btn btn-primary" id="addToCartBtn" onclick="handleAddToCart(this)">
                         <i class="fas fa-cart-plus"></i>
                         Add to Cart
                     </button>
-                    <button class="btn btn-secondary">
+                    <button class="btn btn-secondary" id="buyNowBtn" onclick="handleBuyNow(this)">
                         <i class="fas fa-bolt"></i>
                         Buy Now
-                    </button>
-                    <button class="btn" style="background: none; color: var(--medium-text);">
-                        <i class="far fa-heart"></i>
                     </button>
                 </div>
             </div>
@@ -696,33 +1406,33 @@
         <!-- Quick Info -->
         <section class="section">
             <div class="card">
-                <h3 style="margin-bottom: 1rem;">Key Information</h3>
+                <h3 style="margin-bottom: 1rem;">Medicine Information</h3>
                 <div class="quick-info-grid">
                     <div class="info-item">
                         <div class="info-icon">
                             <i class="fas fa-tablets"></i>
                         </div>
                         <div>
-                            <div style="font-weight: 600;">Form</div>
-                            <div style="color: var(--medium-text);">Tablet</div>
+                            <div style="font-weight: 600;">Dosage Form</div>
+                            <div style="color: var(--medium-text);">{{ medicine.dosage_form|default:"N/A" }}</div>
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="info-icon">
-                            <i class="fas fa-user-friends"></i>
+                            <i class="fas fa-weight"></i>
                         </div>
                         <div>
-                            <div style="font-weight: 600;">For</div>
-                            <div style="color: var(--medium-text);">Adults & Children 12+</div>
+                            <div style="font-weight: 600;">Strength</div>
+                            <div style="color: var(--medium-text);">{{ medicine.dosage_strength|default:"N/A" }}</div>
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="info-icon">
-                            <i class="fas fa-clock"></i>
+                            <i class="fas fa-box"></i>
                         </div>
                         <div>
-                            <div style="font-weight: 600;">Duration</div>
-                            <div style="color: var(--medium-text);">4-6 hours relief</div>
+                            <div style="font-weight: 600;">Age Group</div>
+                            <div style="color: var(--medium-text);">{{ medicine.age_group|default:"All ages" }}</div>
                         </div>
                     </div>
                     <div class="info-item">
@@ -730,8 +1440,8 @@
                             <i class="fas fa-shield-alt"></i>
                         </div>
                         <div>
-                            <div style="font-weight: 600;">Safety</div>
-                            <div style="color: var(--medium-text);">Generally Safe</div>
+                            <div style="font-weight: 600;">Manufacturer</div>
+                            <div style="color: var(--medium-text);">{{ medicine.manufacturer|default:"N/A" }}</div>
                         </div>
                     </div>
                 </div>
@@ -744,33 +1454,36 @@
                 <button class="tab active" data-tab="uses">Uses & Benefits</button>
                 <button class="tab" data-tab="dosage">How to Use</button>
                 <button class="tab" data-tab="safety">Safety Info</button>
-                <button class="tab" data-tab="reviews">Reviews</button>
             </div>
             
             <!-- Uses & Benefits -->
             <div id="uses" class="tab-content active">
                 <div class="card">
-                    <h3 style="margin-bottom: 1rem;">What is Dolo 650 used for?</h3>
-                    <p style="color: var(--medium-text); margin-bottom: 1.5rem;">Dolo 650 is a pain reliever and fever reducer. It effectively treats headaches, body aches, fever, dental pain, and pain from cold/flu.</p>
+                    <h3 style="margin-bottom: 1rem;">What is {{ medicine.name }} used for?</h3>
+                    <p style="color: var(--medium-text); margin-bottom: 1.5rem;">
+                        {{ medicine.uses_benefits.description|default:"No description available." }}
+                    </p>
                     
                     <div class="key-points">
                         <div class="point-card">
                             <h3><i class="fas fa-check-circle"></i> Key Benefits</h3>
                             <ul class="point-list">
-                                <li><i class="fas fa-check"></i> Fast relief from fever</li>
-                                <li><i class="fas fa-check"></i> Effective pain relief</li>
-                                <li><i class="fas fa-check"></i> Minimal stomach irritation</li>
-                                <li><i class="fas fa-check"></i> Safe for most adults when used as directed</li>
+                                {% for benefit in medicine.uses_benefits.key_benefits|default:"" %}
+                                    <li><i class="fas fa-check"></i> {{ benefit }}</li>
+                                {% empty %}
+                                    <li><i class="fas fa-check"></i> Information not available</li>
+                                {% endfor %}
                             </ul>
                         </div>
                         
                         <div class="point-card">
                             <h3><i class="fas fa-exclamation-circle"></i> Important Notes</h3>
                             <ul class="point-list">
-                                <li><i class="fas fa-info-circle"></i> Do not exceed 4 tablets (2600mg) in 24 hours</li>
-                                <li><i class="fas fa-info-circle"></i> Consult doctor if fever persists for more than 3 days</li>
-                                <li><i class="fas fa-info-circle"></i> Avoid alcohol while taking this medicine</li>
-                                <li><i class="fas fa-info-circle"></i> Not recommended for children under 12 without doctor's advice</li>
+                                {% for note in medicine.uses_benefits.important_notes|default:"" %}
+                                    <li><i class="fas fa-info-circle"></i> {{ note }}</li>
+                                {% empty %}
+                                    <li><i class="fas fa-info-circle"></i> Information not available</li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
@@ -786,20 +1499,25 @@
                         <div class="point-card">
                             <h3><i class="fas fa-capsules"></i> Recommended Dose</h3>
                             <ul class="point-list">
-                                <li><i class="fas fa-user"></i> <strong>Adults:</strong> 1 tablet every 4-6 hours</li>
-                                <li><i class="fas fa-baby"></i> <strong>Children (12+):</strong> As directed by doctor</li>
-                                <li><i class="fas fa-ban"></i> <strong>Max per day:</strong> 4 tablets (2600mg)</li>
-                                <li><i class="fas fa-clock"></i> <strong>Duration:</strong> As needed, not more than 10 days without consultation</li>
+                                {% for dose in medicine.how_to_use.recommended_dose|default:"" %}
+                                    <li>
+                                        <i class="fas fa-user"></i> 
+                                        <strong>{{ dose.label }}:</strong> {{ dose.value }}
+                                    </li>
+                                {% empty %}
+                                    <li><i class="fas fa-user"></i> Information not available</li>
+                                {% endfor %}
                             </ul>
                         </div>
                         
                         <div class="point-card">
                             <h3><i class="fas fa-utensils"></i> How to Take</h3>
                             <ul class="point-list">
-                                <li><i class="fas fa-glass-water"></i> Swallow whole with water</li>
-                                <li><i class="fas fa-utensil-spoon"></i> Can be taken with or without food</li>
-                                <li><i class="fas fa-exclamation-triangle"></i> If stomach upset occurs, take with food</li>
-                                <li><i class="fas fa-wine-glass-alt"></i> Avoid alcohol completely</li>
+                                {% for step in medicine.how_to_use.how_to_take|default:"" %}
+                                    <li><i class="fas fa-glass-water"></i> {{ step }}</li>
+                                {% empty %}
+                                    <li><i class="fas fa-glass-water"></i> Information not available</li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
@@ -812,45 +1530,29 @@
                     <h3 style="margin-bottom: 1rem;">Safety Information</h3>
                     
                     <div class="safety-grid" style="margin-bottom: 1.5rem;">
-                        <div class="safety-item safe">
-                            <div class="safety-icon">
-                                <i class="fas fa-female"></i>
-                            </div>
-                            <div>
-                                <div style="font-weight: 600;">Pregnancy</div>
-                                <div style="color: var(--medium-text); font-size: 0.875rem;">Generally safe (consult doctor)</div>
-                            </div>
-                        </div>
-                        
-                        <div class="safety-item safe">
-                            <div class="safety-icon">
-                                <i class="fas fa-baby"></i>
-                            </div>
-                            <div>
-                                <div style="font-weight: 600;">Breastfeeding</div>
-                                <div style="color: var(--medium-text); font-size: 0.875rem;">Safe in small amounts</div>
-                            </div>
-                        </div>
-                        
-                        <div class="safety-item caution">
-                            <div class="safety-icon">
-                                <i class="fas fa-liver"></i>
-                            </div>
-                            <div>
-                                <div style="font-weight: 600;">Liver Disease</div>
-                                <div style="color: var(--medium-text); font-size: 0.875rem;">Consult doctor first</div>
-                            </div>
-                        </div>
-                        
-                        <div class="safety-item avoid">
-                            <div class="safety-icon">
-                                <i class="fas fa-wine-glass-alt"></i>
-                            </div>
-                            <div>
-                                <div style="font-weight: 600;">Alcohol</div>
-                                <div style="color: var(--medium-text); font-size: 0.875rem;">Avoid completely</div>
-                            </div>
-                        </div>
+                        {% for key, info in medicine.safety_info.items %}
+                            {% if key != 'important_warning' %}
+                                <div class="safety-item {% if info.status == 'safe' %}safe{% elif info.status == 'caution' %}caution{% else %}avoid{% endif %}">
+                                    <div class="safety-icon">
+                                        {% if key == 'pregnancy' %}
+                                            <i class="fas fa-female"></i>
+                                        {% elif key == 'breastfeeding' %}
+                                            <i class="fas fa-baby"></i>
+                                        {% elif key == 'liver_disease' %}
+                                            <i class="fas fa-liver"></i>
+                                        {% elif key == 'alcohol' %}
+                                            <i class="fas fa-wine-glass-alt"></i>
+                                        {% else %}
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600;">{{ key|capfirst }}</div>
+                                        <div style="color: var(--medium-text); font-size: 0.875rem;">{{ info.note }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                     
                     <div style="background-color: #fff8e1; padding: 1rem; border-radius: 8px; border-left: 4px solid #ff9800;">
@@ -858,60 +1560,11 @@
                             <i class="fas fa-exclamation-triangle"></i> Important Warning
                         </h4>
                         <p style="color: var(--dark-text); font-size: 0.875rem;">
-                            <strong>Do not exceed the recommended dose.</strong> Overdose can cause serious liver damage. 
-                            Stop use and consult doctor if you experience yellowing of skin/eyes, dark urine, or severe nausea.
+                            {{ medicine.safety_info.important_warning|default:"No warnings specified." }}
                         </p>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Reviews -->
-            <div id="reviews" class="tab-content">
-                <div class="card">
-                    <div class="review-summary">
-                        <div class="overall-rating">4.5</div>
-                        <div>
-                            <div class="rating" style="background: transparent; padding: 0;">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                            </div>
-                            <p style="color: var(--medium-text); margin-top: 0.5rem;">Based on 2,847 verified reviews</p>
-                        </div>
-                    </div>
-                    
-                    <div class="review-cards">
-                        <div class="review-card" style="background-color: var(--light-gray);">
-                            <div class="review-header">
-                                <div class="reviewer-name">Rahul Sharma</div>
-                                <div class="review-date">2 weeks ago</div>
-                            </div>
-                            <div class="rating" style="background: transparent; padding: 0; margin-bottom: 0.5rem;">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                            </div>
-                            <p style="color: var(--medium-text);">Effective for fever. Works within 30 minutes. Genuine product delivered on time.</p>
-                        </div>
-                        
-                        <div class="review-card" style="background-color: var(--light-gray);">
-                            <div class="review-header">
-                                <div class="reviewer-name">Priya Patel</div>
-                                <div class="review-date">1 month ago</div>
-                            </div>
-                            <div class="rating" style="background: transparent; padding: 0; margin-bottom: 0.5rem;">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                            </div>
-                            <p style="color: var(--medium-text);">Good for headache relief. Delivery was fast and packaging was secure.</p>
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-secondary" style="margin-top: 1.5rem; width: 100%;">
-                        <i class="fas fa-comment-alt"></i>
-                        View All Reviews
-                    </button>
-                </div>
-            </div>
+            </div>           
         </section>
 
         <!-- Trust Badges -->
@@ -946,37 +1599,118 @@
     <!-- Mobile Sticky Button -->
     <div class="mobile-sticky-btn">
         <div style="flex-grow: 1;">
-            <div style="font-weight: 700; font-size: 1.25rem;">₹25.99</div>
-            <div style="font-size: 0.875rem; color: var(--medium-text);">In stock • Free delivery</div>
+            <div style="font-weight: 700; font-size: 1.25rem;">₹{{ medicine.retail_price|floatformat:2 }}</div>
+            <div style="font-size: 0.875rem; color: var(--medium-text);">
+                {% if medicine.stock_status == "OUT_OF_STOCK" %}
+                    Out of stock
+                {% else %}
+                    In stock • Free delivery
+                {% endif %}
+            </div>
         </div>
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" onclick="handleAddToCart(this)" {% if medicine.stock_status == "OUT_OF_STOCK" %}disabled{% endif %}>
             <i class="fas fa-cart-plus"></i>
             Add to Cart
         </button>
     </div>
 
-
     <script>
-        // Tab functionality
+        // Pass Django variables to JavaScript
+        window.medicineData = {
+            name: "{{ medicine.name|escapejs }}",
+            price: {{ medicine.retail_price }},
+            packSize: "{{ medicine.pack_size|escapejs }}",
+            discount: {{ medicine.discount|default:0 }},
+            originalPrice: {{ medicine.original_price|default:0 }}
+        };
+
+        // Image carousel data
+        {% if medicine.images %}
+            const images = [
+                {% for img in medicine.images %}
+                    "{{ img.url|escapejs }}",
+                {% endfor %}
+            ];
+        {% else %}
+            const images = [
+                'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                'https://images.unsplash.com/photo-1631549916762-4119b4123e6f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                'https://images.unsplash.com/photo-1550574697-3ee776182a09?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+            ];
+        {% endif %}
+        
+        let currentIndex = 0;
+        let currentImageSrc = images[0];
+
+        function changeImage(index) {
+            currentIndex = index;
+            currentImageSrc = images[index];
+            document.getElementById('mainImage').src = images[index];
+            
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach((thumb, i) => {
+                if (i === index) {
+                    thumb.classList.add('active');
+                } else {
+                    thumb.classList.remove('active');
+                }
+            });
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            changeImage(currentIndex);
+        }
+
+        function previousImage() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            changeImage(currentIndex);
+        }
+
+        function openPreview(src) {
+            document.getElementById('previewImage').src = src;
+            document.getElementById('imagePreviewModal').classList.add('active');
+        }
+
+        function closePreview() {
+            document.getElementById('imagePreviewModal').classList.remove('active');
+        }
+
+        document.getElementById('imagePreviewModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePreview();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('imagePreviewModal').classList.contains('active')) {
+                if (e.key === 'Escape') {
+                    closePreview();
+                } else if (e.key === 'ArrowRight') {
+                    nextImage();
+                    document.getElementById('previewImage').src = images[currentIndex];
+                } else if (e.key === 'ArrowLeft') {
+                    previousImage();
+                    document.getElementById('previewImage').src = images[currentIndex];
+                }
+            }
+        });
+
         const tabs = document.querySelectorAll('.tab');
         const tabContents = document.querySelectorAll('.tab-content');
         
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                // Remove active class from all tabs and contents
                 tabs.forEach(t => t.classList.remove('active'));
                 tabContents.forEach(content => content.classList.remove('active'));
                 
-                // Add active class to clicked tab
                 tab.classList.add('active');
-                
-                // Show corresponding content
                 const tabId = tab.getAttribute('data-tab');
                 document.getElementById(tabId).classList.add('active');
             });
         });
         
-        // Quantity selector
         const minusBtn = document.querySelector('.qty-btn.minus');
         const plusBtn = document.querySelector('.qty-btn.plus');
         const qtyInput = document.querySelector('.qty-input');
@@ -991,7 +1725,6 @@
             if (value < 10) qtyInput.value = value + 1;
         });
         
-        // Mobile sticky button visibility
         window.addEventListener('scroll', () => {
             const stickyBtn = document.querySelector('.mobile-sticky-btn');
             if (window.innerWidth <= 768) {
@@ -1002,15 +1735,97 @@
                 }
             }
         });
-        
-        // Add to cart buttons
-        const addToCartButtons = document.querySelectorAll('.btn-primary');
-        addToCartButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const qty = qtyInput.value;
-                alert(`Added ${qty} strip(s) of Dolo 650 to your cart!`);
-            });
+
+        function showCartPopup(message) {
+            const popup = document.getElementById('cartPopup');
+            const messageEl = document.getElementById('cartPopupMessage');
+            messageEl.textContent = message;
+            popup.classList.add('show');
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 3000);
+        }
+
+        function createRipple(button) {
+            button.classList.add('ripple');
+            setTimeout(() => {
+                button.classList.remove('ripple');
+            }, 600);
+        }
+
+        function animateIcon(button) {
+            const icon = button.querySelector('i');
+            icon.classList.add('animate');
+            setTimeout(() => {
+                icon.classList.remove('animate');
+            }, 500);
+        }
+
+        function showSuccess(button) {
+            const originalText = button.innerHTML;
+            button.classList.add('success');
+            button.innerHTML = '<i class="fas fa-check"></i> Added!';
+            setTimeout(() => {
+                button.classList.remove('success');
+                button.innerHTML = originalText;
+            }, 1500);
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                document.body.appendChild(confetti);
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+
+        function handleAddToCart(button) {
+            const qty = parseInt(document.querySelector('.qty-input').value);
+            createRipple(button);
+            animateIcon(button);
+            showSuccess(button);
+            showCartPopup(`Added ${qty} strip(s) of ${window.medicineData.name} to your cart!`);
+            document.querySelector('.quantity-selector').classList.add('shake');
+            setTimeout(() => {
+                document.querySelector('.quantity-selector').classList.remove('shake');
+            }, 500);
+        }
+
+        function handleBuyNow(button) {
+            const qty = parseInt(document.querySelector('.qty-input').value);
+            const price = window.medicineData.price;
+            const total = (qty * price).toFixed(2);
+            createRipple(button);
+            animateIcon(button);
+            document.getElementById('modalQuantity').textContent = qty;
+            document.getElementById('modalTotal').textContent = `₹${total}`;
+            document.getElementById('checkoutModal').classList.add('active');
+            createConfetti();
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').classList.remove('active');
+        }
+
+        function proceedToCheckout() {
+            const qty = document.getElementById('modalQuantity').textContent;
+            showCartPopup(`Proceeding to checkout with ${qty} item(s)...`);
+            closeCheckoutModal();
+            setTimeout(() => {
+                window.location.href = '/checkout/';
+            }, 1500);
+        }
+
+        document.getElementById('checkoutModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCheckoutModal();
+            }
         });
     </script>
-
-{% endblock content %}
+{% endblock %}

@@ -5,13 +5,20 @@ from apps.core.constants.default_values import DosageForm, AGE_GROUP
 class Medicine(BaseModel):
     SKU= models.CharField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
-    cost_price = models.DecimalField(max_digits=10, decimal_places=2)
-    retail_price = models.DecimalField(max_digits=10, decimal_places=2)
+    cost_price = models.DecimalField(max_digits=10, decimal_places=2) # internal
+    retail_price = models.DecimalField(max_digits=10, decimal_places=2) # external
+    original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)  # strikethrough
     medicine_images = models.JSONField(
     default=list,
     blank=True,
     null=True    
     )
+    pack_size = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True
+    )
+
     is_prescription_required = models.BooleanField(default=False)
     category = models.ForeignKey(
         'medistore.Category',
@@ -33,6 +40,9 @@ class Medicine(BaseModel):
         blank=True,
         null=True
     )
+    uses_benefits = models.JSONField(blank=True, null=True, default=dict)
+    how_to_use = models.JSONField(blank=True, null=True, default=dict)
+    safety_info = models.JSONField(blank=True, null=True, default=dict)
     is_generic = models.BooleanField(default=False)
     dosage_strength = models.CharField(max_length=100)
     manufacturer = models.CharField(max_length=255, blank=True, null=True)

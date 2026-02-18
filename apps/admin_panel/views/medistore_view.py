@@ -20,6 +20,7 @@ class MedicineEditView(View):
         # This would typically involve form processing and saving to the database
         return redirect('medication_list')    
 
+
 class MedicineAddView(View):
     def get(self, request):
         categories = category_services.get_all_category()

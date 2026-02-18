@@ -2,6 +2,8 @@ from apps.medistore.models.medicines_model import Medicine
 from django.db.models import Count
 from apps.core.constants.default_values import AGE_GROUP, DosageForm
 from apps.core.services.util_services import enum_name
+from django.shortcuts import get_object_or_404
+from django.db.models import F, Case, When, Value,CharField
 
 def get_all_medicines():
     return Medicine.objects.all()
@@ -85,3 +87,25 @@ def medicine_count_by_age():
         for item in qs
     ]
 
+def get_medicine_details_id(medicine_id):
+    medicine_qs = Medicine.objects.filter(id=medicine_id, is_active=True).select_related('inventory', 'category').annotate(
+        stock_status=Case(
+            When(inventory__quantity__gt=F("inventory__stock_alert_level"), then=Value("IN_STOCK")),
+            When(inventory__quantity__gt=0, inventory__quantity__lte=F("inventory__stock_alert_level"), then=Value("LOW_STOCK")),
+            default=Value("OUT_OF_STOCK"),
+            output_field=CharField()
+        )
+    )
+    medicine = medicine_qs.first()
+    if not medicine:
+        raise None
+     # Calculate discount % safely
+    if medicine.original_price and medicine.original_price > medicine.retail_price:
+        medicine.discount = round(
+            (medicine.original_price - medicine.retail_price) * 100 / medicine.original_price
+        )
+    else:
+        medicine.discount = 0
+    medicine.dosage_form=enum_name(DosageForm, medicine.dosage_form).capitalize()
+    medicine.age_group=enum_name(AGE_GROUP, medicine.age_group).capitalize()
+    return medicine

@@ -17,6 +17,7 @@ class MedicineListSerializer(serializers.ModelSerializer):
         read_only=True
     )
     
+    stock_status = serializers.CharField(read_only=True)  # comes from annotation
      # 🔹 Include annotated field
     in_stock = serializers.BooleanField(read_only=True)
 
@@ -45,6 +46,7 @@ class MedicineListSerializer(serializers.ModelSerializer):
             "is_active",
             "created_at",
             "in_stock",  # 🔹 include here
+            "stock_status"
         ]
 
 
