@@ -46,7 +46,7 @@ def add_new_medicine(
     return medicine
 
 def medicine_count():
-    Medicine.objects.all().count()
+    return Medicine.objects.all().count()
 
 def medicine_count_by_category():
     return (

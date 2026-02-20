@@ -51,19 +51,19 @@
                 </div>
                 
                 <!-- Quick Stats with animation -->
-                <div class="d-none d-lg-flex align-items-center ms-4">
+                <div class="d-none d-lg-flex align-items-center ms-4 medicine-catalog">
                     <div class="quick-stats d-flex">
                         <div class="stat-item me-4">
-                            <div class="stat-value" data-target="1245">0</div>
+                            <div class="stat-value" data-target="{{total_medicine}}">{{total_medicine}}</div>
                             <div class="stat-label">Medicines</div>
                         </div>
                         <div class="stat-item me-4">
-                            <div class="stat-value" data-target="98">0%</div>
+                            <div class="stat-value" id="in-stock-counter" data-target="{{stock_percentage}}">0%</div>
                             <div class="stat-label">In Stock</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value" data-target="247">0</div>
-                            <div class="stat-label">24x7 Support</div>
+                            <div class="stat-value support-24x7" data-target="{{support_24x7}}">{{support_24x7}}</div>
+                            <div class="stat-label">Support</div>
                         </div>
                     </div>
                 </div>
@@ -1017,6 +1017,40 @@
    function goToMedicineDetails(medicineId) {
     window.location.href = `/medicine/details/?id=${medicineId}`;
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const stat = document.getElementById('in-stock-counter');
+    const targetStr = stat.getAttribute('data-target');
+    const target = parseInt(targetStr.replace('%', ''));
+
+    let current = 0;
+    const duration = 2000; // animation duration in ms
+    const stepTime = Math.max(Math.floor(duration / target), 20);
+
+    const counter = setInterval(() => {
+        current++;
+
+        // Update the counter text
+        stat.textContent = `${current}%`;
+
+        // Change color based on range
+        if (current <= 25) {
+            stat.style.color = '#D32F2F'; // Red → Low stock
+        } else if (current <= 50) {
+            stat.style.color = '#FBC02D'; // Yellow → Medium stock
+        } else if (current <= 75) {
+            stat.style.color = '#1976D2'; // Blue → Good stock
+        } else {
+            stat.style.color = '#388E3C'; // Green → Healthy stock
+        }
+
+        if (current >= target) {
+            clearInterval(counter);
+            stat.textContent = `${target}%`;
+        }
+    }, stepTime);
+});
 
 </script>
 

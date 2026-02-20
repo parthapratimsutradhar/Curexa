@@ -1,6 +1,6 @@
 from django.views import View
 from django.shortcuts import render, redirect
-from apps.medistore.services import medicine_services, category_services
+from apps.medistore.services import medicine_services, category_services, inventory_services
 from apps.medistore.models import Medicine
 from rest_framework.generics import ListAPIView
 from rest_framework.filters import SearchFilter
@@ -16,11 +16,16 @@ import json
 class MedicineListView(View):
     def get(self, request):
         context = {
+            'total_medicine':medicine_services.medicine_count(),
+            "stock_percentage":inventory_services.overall_stock_percentage(),
+            "support_24x7": '24/7',
             'category':medicine_services.medicine_count_by_category(),
             'dosage_form':medicine_services.medicine_count_by_dosage(),
             'age_group':medicine_services.medicine_count_by_age(),
             'slug':category_services.get_all_slug()
-        }     
+        }
+        
+        print(context["total_medicine"])
 
         return render (request, "enduser/medistore/medicine_products_catalog.html", context)
     
