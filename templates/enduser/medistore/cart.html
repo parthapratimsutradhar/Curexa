@@ -2,926 +2,8 @@
 {% block title %}Your Cart | Curexa{% endblock %}
 {% load static %}
 {% block content %}
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
 
-        :root {
-            --primary-blue: #0A7AFF;
-            --primary-teal: #00B8A9;
-            --light-blue: #E8F4FF;
-            --light-teal: #E6F7F6;
-            --dark-gray: #1A1D2B;
-            --light-gray: #F8FAFC;
-            --medium-gray: #E2E8F0;
-            --text-gray: #64748B;
-            --success-green: #10B981;
-            --warning-orange: #F59E0B;
-            --danger-red: #EF4444;
-            --white: #FFFFFF;
-            --shadow-soft: rgba(0, 0, 0, 0.04);
-            --shadow-medium: rgba(0, 0, 0, 0.08);
-            --shadow-deep: rgba(0, 0, 0, 0.12);
-            --gradient-primary: linear-gradient(135deg, #0A7AFF 0%, #00B8A9 100%);
-            --gradient-light: linear-gradient(135deg, #E8F4FF 0%, #E6F7F6 100%);
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        body {
-            background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
-            color: var(--dark-gray);
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1440px;
-            margin: 0 auto;
-            padding: 20px 40px;
-        }
-
-        /* Premium Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            margin-bottom: 30px;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo {
-            width: 48px;
-            height: 48px;
-            background: var(--gradient-primary);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 12px rgba(10, 122, 255, 0.2);
-        }
-
-        .logo-text {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            padding: 12px 24px;
-            border-radius: 16px;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 4px 20px var(--shadow-soft);
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: var(--dark-gray);
-            font-weight: 500;
-            transition: var(--transition-fast);
-            position: relative;
-            padding: 6px 0;
-        }
-
-        .nav-link:hover {
-            color: var(--primary-blue);
-        }
-
-        .nav-link.active {
-            color: var(--primary-blue);
-            font-weight: 600;
-        }
-
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--gradient-primary);
-            border-radius: 2px;
-        }
-
-        .cart-count {
-            background: var(--gradient-primary);
-            color: white;
-            font-size: 0.75rem;
-            font-weight: 700;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            top: -8px;
-            right: -12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Page Header */
-        .page-header {
-            margin-bottom: 40px;
-        }
-
-        .page-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, var(--dark-gray) 0%, #334155 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-        }
-
-        .page-subtitle {
-            color: var(--text-gray);
-            font-size: 1.1rem;
-            max-width: 600px;
-        }
-
-        /* Main Layout */
-        .cart-layout {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 40px;
-            margin-bottom: 60px;
-        }
-
-        /* Cart Items Container */
-        .cart-items-container {
-            background: var(--white);
-            border-radius: 24px;
-            padding: 32px;
-            box-shadow: 0 8px 32px var(--shadow-soft);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-        }
-
-        .cart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--medium-gray);
-        }
-
-        .cart-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .cart-title i {
-            color: var(--primary-teal);
-            font-size: 1.3rem;
-        }
-
-        .clear-cart {
-            background: transparent;
-            border: none;
-            color: var(--text-gray);
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: var(--transition-fast);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .clear-cart:hover {
-            color: var(--danger-red);
-            background: rgba(239, 68, 68, 0.05);
-        }
-
-        /* Cart Item Cards */
-        .cart-item {
-            display: flex;
-            padding: 28px 0;
-            border-bottom: 1px solid var(--medium-gray);
-            position: relative;
-            transition: var(--transition-smooth);
-            animation: slideIn 0.5s ease forwards;
-        }
-
-        .cart-item:hover {
-            transform: translateY(-2px);
-        }
-
-        .item-image-container {
-            position: relative;
-            width: 140px;
-            height: 140px;
-            border-radius: 18px;
-            background: var(--gradient-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 28px;
-            overflow: hidden;
-            flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .item-image-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--gradient-primary);
-            opacity: 0;
-            transition: opacity 0.3s;
-            border-radius: 18px;
-        }
-
-        .cart-item:hover .item-image-container::before {
-            opacity: 0.03;
-        }
-
-        .item-image {
-            max-width: 80%;
-            max-height: 80%;
-            object-fit: contain;
-            z-index: 1;
-            transition: var(--transition-smooth);
-        }
-
-        .cart-item:hover .item-image {
-            transform: scale(1.05);
-        }
-
-        .item-details {
-            flex: 1;
-        }
-
-        .item-name-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-        }
-
-        .item-name {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: var(--dark-gray);
-        }
-
-        .item-brand {
-            color: var(--primary-teal);
-            font-weight: 600;
-            margin-bottom: 12px;
-            display: block;
-            font-size: 1rem;
-        }
-
-        .item-meta {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .item-type {
-            background: var(--light-blue);
-            color: var(--primary-blue);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .prescription-badge {
-            background: var(--light-teal);
-            color: var(--primary-teal);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .doctor-approved {
-            background: linear-gradient(135deg, rgba(10, 122, 255, 0.1) 0%, rgba(0, 184, 169, 0.1) 100%);
-            color: var(--primary-blue);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .item-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        .price-container {
-            display: flex;
-            align-items: baseline;
-            gap: 16px;
-        }
-
-        .current-price {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--dark-gray);
-        }
-
-        .original-price {
-            font-size: 1.2rem;
-            color: var(--text-gray);
-            text-decoration: line-through;
-        }
-
-        .discount-badge {
-            background: var(--gradient-primary);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(10, 122, 255, 0.2);
-        }
-
-        /* Enhanced Quantity Selector */
-        .quantity-selector {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--light-gray);
-            padding: 8px;
-            border-radius: 12px;
-        }
-
-        .qty-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: var(--white);
-            border: 1px solid var(--medium-gray);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition-fast);
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--dark-gray);
-            box-shadow: 0 2px 4px var(--shadow-soft);
-        }
-
-        .qty-btn:hover {
-            background: var(--primary-blue);
-            border-color: var(--primary-blue);
-            color: white;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(10, 122, 255, 0.2);
-        }
-
-        .qty-btn:active {
-            transform: translateY(0);
-        }
-
-        .qty-value {
-            font-size: 1.3rem;
-            font-weight: 700;
-            min-width: 50px;
-            text-align: center;
-            color: var(--dark-gray);
-        }
-
-        .remove-btn {
-            position: absolute;
-            top: 28px;
-            right: 0;
-            background: var(--white);
-            border: 1px solid var(--medium-gray);
-            color: var(--text-gray);
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: var(--transition-fast);
-            padding: 10px;
-            border-radius: 10px;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 4px var(--shadow-soft);
-        }
-
-        .remove-btn:hover {
-            color: var(--danger-red);
-            border-color: var(--danger-red);
-            background: rgba(239, 68, 68, 0.05);
-            transform: scale(1.05);
-        }
-
-        /* Premium Order Summary */
-        .order-summary {
-            background: var(--white);
-            border-radius: 24px;
-            padding: 32px;
-            box-shadow: 0 8px 32px var(--shadow-soft);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            position: sticky;
-            top: 30px;
-            height: fit-content;
-        }
-
-        .summary-title {
-            font-size: 1.6rem;
-            font-weight: 800;
-            margin-bottom: 28px;
-            color: var(--dark-gray);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .summary-title i {
-            color: var(--primary-teal);
-            font-size: 1.4rem;
-        }
-
-        .summary-section {
-            margin-bottom: 24px;
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 18px;
-            padding-bottom: 18px;
-            border-bottom: 1px dashed var(--medium-gray);
-        }
-
-        .summary-row.total {
-            border-bottom: none;
-            margin-top: 10px;
-            padding-top: 20px;
-            border-top: 2px solid var(--medium-gray);
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--dark-gray);
-        }
-
-        .summary-label {
-            color: var(--text-gray);
-            font-weight: 500;
-        }
-
-        .summary-value {
-            font-weight: 600;
-            color: var(--dark-gray);
-        }
-
-        .delivery-free {
-            color: var(--success-green);
-            font-weight: 700;
-        }
-
-        .tax-breakdown {
-            font-size: 0.85rem;
-            color: var(--text-gray);
-            margin-top: 4px;
-            padding-left: 12px;
-            border-left: 2px solid var(--medium-gray);
-        }
-
-        /* Prescription Upload Section */
-        .prescription-required {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            border-radius: 16px;
-            padding: 20px;
-            margin: 24px 0;
-            transition: var(--transition-smooth);
-        }
-
-        .prescription-required:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
-        }
-
-        .prescription-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .prescription-header i {
-            color: var(--warning-orange);
-            font-size: 1.4rem;
-        }
-
-        .prescription-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .upload-prescription {
-            background: var(--white);
-            border: 2px dashed var(--primary-blue);
-            color: var(--primary-blue);
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition-fast);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            justify-content: center;
-        }
-
-        .upload-prescription:hover {
-            background: var(--light-blue);
-            transform: translateY(-1px);
-        }
-
-        .view-prescription {
-            background: var(--light-gray);
-            border: 1px solid var(--medium-gray);
-            color: var(--dark-gray);
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition-fast);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            justify-content: center;
-        }
-
-        .view-prescription:hover {
-            background: var(--medium-gray);
-        }
-
-        /* Premium Buttons */
-        .btn-checkout {
-            width: 100%;
-            padding: 20px;
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            border-radius: 16px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            margin-top: 20px;
-            box-shadow: 0 6px 20px rgba(10, 122, 255, 0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-checkout:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(10, 122, 255, 0.3);
-        }
-
-        .btn-checkout:active {
-            transform: translateY(-1px);
-        }
-
-        .btn-continue {
-            width: 100%;
-            padding: 18px;
-            background: transparent;
-            color: var(--primary-blue);
-            border: 2px solid var(--primary-blue);
-            border-radius: 16px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            margin-top: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .btn-continue:hover {
-            background: rgba(10, 122, 255, 0.05);
-            transform: translateY(-2px);
-        }
-
-        /* Trust & Safety Section */
-        .trust-section {
-            margin-top: 32px;
-            padding-top: 28px;
-            border-top: 1px solid var(--medium-gray);
-        }
-
-        .trust-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-gray);
-            margin-bottom: 20px;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .trust-badges {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-        }
-
-        .trust-badge {
-            background: var(--light-gray);
-            border-radius: 12px;
-            padding: 16px 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            color: var(--dark-gray);
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: var(--transition-fast);
-            text-align: center;
-        }
-
-        .trust-badge:hover {
-            background: var(--white);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px var(--shadow-soft);
-        }
-
-        .trust-badge i {
-            font-size: 1.8rem;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Empty Cart State */
-        .empty-cart {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 80px 20px;
-            text-align: center;
-        }
-
-        .empty-cart-icon {
-            font-size: 8rem;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 30px;
-            opacity: 0.7;
-        }
-
-        .empty-cart h3 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 16px;
-            color: var(--dark-gray);
-        }
-
-        .empty-cart p {
-            color: var(--text-gray);
-            max-width: 500px;
-            margin-bottom: 40px;
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 40px 0 20px;
-            color: var(--text-gray);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--medium-gray);
-            margin-top: 40px;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
-        }
-
-        .footer-link {
-            color: var(--text-gray);
-            text-decoration: none;
-            transition: var(--transition-fast);
-        }
-
-        .footer-link:hover {
-            color: var(--primary-blue);
-        }
-
-        /* Animations */
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .cart-item {
-            animation: slideIn 0.5s ease forwards;
-        }
-
-        .order-summary {
-            animation: fadeIn 0.6s ease 0.2s forwards;
-            opacity: 0;
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .container {
-                padding: 20px 30px;
-            }
-            
-            .cart-layout {
-                gap: 30px;
-            }
-        }
-
-        @media (max-width: 1024px) {
-            .cart-layout {
-                grid-template-columns: 1fr;
-            }
-            
-            .order-summary {
-                position: static;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            
-            .cart-item {
-                flex-direction: column;
-            }
-            
-            .item-image-container {
-                width: 100%;
-                height: 200px;
-                margin-right: 0;
-                margin-bottom: 24px;
-            }
-            
-            .item-controls {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 24px;
-            }
-            
-            .remove-btn {
-                top: 20px;
-                right: 0;
-            }
-            
-            .page-title {
-                font-size: 2rem;
-            }
-            
-            .trust-badges {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Accessibility */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-
-        /* Focus states for accessibility */
-        button:focus, 
-        input:focus, 
-        a:focus {
-            outline: 2px solid var(--primary-blue);
-            outline-offset: 2px;
-        }
-
-        /* Loading Animation */
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--dark-gray);
-            color: white;
-            padding: 16px 24px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 1000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: transform 0.3s, opacity 0.3s;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast i {
-            font-size: 1.2rem;
-        }
-
-        .toast.success i {
-            color: var(--success-green);
-        }
-
-        .toast.error i {
-            color: var(--danger-red);
-        }
-    </style>
-
+<link rel="stylesheet" href="/static/css/cart.css">
         <!-- Page Header -->
         <div class="page-header">
             <h1 class="page-title">Your Medicine Cart</h1>
@@ -941,134 +23,62 @@
                     </button>
                 </div>
 
-                <div class="cart-item" id="item1">
+                {% for item in cart.items %}
+                <div class="cart-item" id="item{{ item.cart_item_id }}">
                     <div class="item-image-container">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3149/3149871.png" alt="Azithromycin tablets" class="item-image">
+                        {% if item.images %}
+                        <img src="{{ item.images.0.url }}" alt="{{ item.name }}" class="item-image">
+                        {% else %}
+                        <img src="https://cdn-icons-png.flaticon.com/512/3149/3149871.png" alt="{{ item.name }}" class="item-image">
+                        {% endif %}
                     </div>
                     <div class="item-details">
                         <div class="item-name-row">
                             <div>
-                                <h3 class="item-name">Azithromycin</h3>
-                                <span class="item-brand">Cipla Limited • Prescription Medicine</span>
+                                <h3 class="item-name">{{ item.name }}</h3>
+                                <span class="item-brand">{{ item.manufacturer }}{% if item.is_prescription_required %} • Prescription Medicine{% else %} • OTC Medicine{% endif %}</span>
                             </div>
                         </div>
                         <div class="item-meta">
                             <span class="item-type">
-                                <i class="fas fa-pills"></i> Tablet • 500mg
+                                <i class="fas fa-pills"></i> {{ item.pack_size }}
                             </span>
+                            {% if item.is_prescription_required %}
                             <span class="prescription-badge">
                                 <i class="fas fa-file-prescription"></i> Prescription Required
                             </span>
+                            {% endif %}
                             <span class="doctor-approved">
                                 <i class="fas fa-user-md"></i> Doctor Approved
                             </span>
                         </div>
                         <div class="item-controls">
                             <div class="price-container">
-                                <span class="current-price">₹245.00</span>
-                                <span class="original-price">₹310.00</span>
-                                <span class="discount-badge">Save 21%</span>
+                                <span class="current-price">₹{{ item.retail_price }}</span>
+                                <span class="original-price">₹{{ item.original_price }}</span>
+                                {% if item.discount > 0 %}
+                                <span class="discount-badge">Save {{ item.discount }}%</span>
+                                {% endif %}
                             </div>
                             <div class="quantity-selector">
-                                <button class="qty-btn minus" data-item="item1" aria-label="Decrease quantity">
+                                <button class="qty-btn minus" data-item="item{{ item.cart_item_id }}" aria-label="Decrease quantity">
                                     <i class="fas fa-minus"></i>
                                 </button>
-                                <span class="qty-value" id="qty-item1">1</span>
-                                <button class="qty-btn plus" data-item="item1" aria-label="Increase quantity">
+                                <span class="qty-value" id="qty-item{{ item.cart_item_id }}">{{ item.quantity }}</span>
+                                <button class="qty-btn plus" data-item="item{{ item.cart_item_id }}" aria-label="Increase quantity">
                                     <i class="fas fa-plus"></i>
                                 </button>
-                                <span style="margin-left: 12px; color: var(--text-gray); font-size: 0.9rem;">Pack of 10 tablets</span>
+                                <span style="margin-left: 12px; color: var(--text-gray); font-size: 0.9rem;">Pack of {{ item.pack_size }} {{item.dosage_name}} (Total: {{ item.total_units }} units)</span>
                             </div>
                         </div>
                     </div>
-                    <button class="remove-btn" data-item="item1" aria-label="Remove item">
+                    <button class="remove-btn" data-item="item{{ item.cart_item_id }}" aria-label="Remove item">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
-
-                <div class="cart-item" id="item2">
-                    <div class="item-image-container">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3050/3050155.png" alt="Paracetamol tablets" class="item-image">
-                    </div>
-                    <div class="item-details">
-                        <div class="item-name-row">
-                            <div>
-                                <h3 class="item-name">Paracetamol</h3>
-                                <span class="item-brand">GSK Pharma • OTC Medicine</span>
-                            </div>
-                        </div>
-                        <div class="item-meta">
-                            <span class="item-type">
-                                <i class="fas fa-pills"></i> Tablet • 650mg
-                            </span>
-                            <span class="doctor-approved">
-                                <i class="fas fa-user-md"></i> Doctor Approved
-                            </span>
-                        </div>
-                        <div class="item-controls">
-                            <div class="price-container">
-                                <span class="current-price">₹32.50</span>
-                                <span class="original-price">₹40.00</span>
-                                <span class="discount-badge">Save 19%</span>
-                            </div>
-                            <div class="quantity-selector">
-                                <button class="qty-btn minus" data-item="item2" aria-label="Decrease quantity">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <span class="qty-value" id="qty-item2">2</span>
-                                <button class="qty-btn plus" data-item="item2" aria-label="Increase quantity">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                <span style="margin-left: 12px; color: var(--text-gray); font-size: 0.9rem;">Strip of 15 tablets</span>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="remove-btn" data-item="item2" aria-label="Remove item">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-
-                <div class="cart-item" id="item3">
-                    <div class="item-image-container">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3022/3022560.png" alt="Vitamin D3 capsules" class="item-image">
-                    </div>
-                    <div class="item-details">
-                        <div class="item-name-row">
-                            <div>
-                                <h3 class="item-name">Vitamin D3</h3>
-                                <span class="item-brand">Sun Pharma • Dietary Supplement</span>
-                            </div>
-                        </div>
-                        <div class="item-meta">
-                            <span class="item-type">
-                                <i class="fas fa-capsules"></i> Capsule • 60k IU
-                            </span>
-                            <span class="doctor-approved">
-                                <i class="fas fa-user-md"></i> Doctor Recommended
-                            </span>
-                        </div>
-                        <div class="item-controls">
-                            <div class="price-container">
-                                <span class="current-price">₹425.00</span>
-                                <span class="original-price">₹500.00</span>
-                                <span class="discount-badge">Save 15%</span>
-                            </div>
-                            <div class="quantity-selector">
-                                <button class="qty-btn minus" data-item="item3" aria-label="Decrease quantity">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <span class="qty-value" id="qty-item3">1</span>
-                                <button class="qty-btn plus" data-item="item3" aria-label="Increase quantity">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                <span style="margin-left: 12px; color: var(--text-gray); font-size: 0.9rem;">Bottle of 4 capsules</span>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="remove-btn" data-item="item3" aria-label="Remove item">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
+                {% empty %}
+                <p style="padding: 1rem; text-align: center; color: var(--text-gray);">Your cart is empty.</p>
+                {% endfor %}
             </div>
 
             <!-- Premium Order Summary -->
@@ -1079,8 +89,8 @@
                 
                 <div class="summary-section">
                     <div class="summary-row">
-                        <span class="summary-label">Subtotal (3 items)</span>
-                        <span class="summary-value" id="subtotal">₹702.50</span>
+                        <span class="summary-label">Subtotal ({{total_items}} items)</span>
+                        <span class="summary-value" id="subtotal">₹{{cart.subtotal}}</span>
                     </div>
                     
                     <div class="summary-row">
@@ -1090,9 +100,9 @@
                     
                     <div class="summary-row">
                         <span class="summary-label">Tax (GST 12%)</span>
-                        <span class="summary-value" id="tax">₹84.30</span>
+                        <span class="summary-value" id="tax">₹{{cart.gst_amount}}</span>
                     </div>
-                    <div class="tax-breakdown">CGST 6%: ₹42.15 • SGST 6%: ₹42.15</div>
+                    <div class="tax-breakdown">CGST 6%: ₹{{cart.cgst}} • SGST 6%: ₹{{cart.sgst}}</div>
                 </div>
                 
                 <div class="prescription-required">
@@ -1115,7 +125,7 @@
                 
                 <div class="summary-row total">
                     <span class="summary-label">Total Payable</span>
-                    <span class="summary-value" id="total">₹786.80</span>
+                    <span class="summary-value" id="total">₹{{cart.total_price}}</span>
                 </div>
                 
                 <button class="btn-checkout" id="checkoutBtn">
@@ -1165,25 +175,47 @@
         <span id="toastMessage">Item updated successfully</span>
     </div>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script type="application/json" id="cart-data">
+  [
+    {% for item in cart.items %}
+      {
+        "cart_item_id": "{{ item.cart_item_id }}",
+        "id": "{{ item.medicine_id }}",
+        "name": "{{ item.name|escapejs }}",
+        "quantity": {{ item.quantity }},
+        "retail_price": "{{ item.retail_price }}",
+        "original_price": "{{ item.original_price }}",
+        "discount": {{ item.discount }},
+        "pack_size": "{{ item.pack_size }}",
+        "total_units": "{{ item.total_units }}",
+        "dosage_name": "{{ item.dosage_name|escapejs }}",
+        "manufacturer": "{{ item.manufacturer|escapejs }}",
+        "is_prescription_required": {{ item.is_prescription_required|yesno:"true,false" }}
+      }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ]
+</script>
+
     <script>
-        // Initialize cart data
-        const cartItems = {
-            'item1': { 
-                price: 245.00, 
-                quantity: 1,
-                name: 'Azithromycin'
-            },
-            'item2': { 
-                price: 32.50, 
-                quantity: 2,
-                name: 'Paracetamol'
-            },
-            'item3': { 
-                price: 425.00, 
-                quantity: 1,
-                name: 'Vitamin D3'
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
-        };
+        }
+    }
+    return cookieValue;
+}
+
+
+
 
         // Toast notification function
         function showToast(message, type = 'success') {
@@ -1201,131 +233,18 @@
 
         // Calculate and update totals
         function updateCartTotals() {
-            let subtotal = 0;
-            let itemCount = 0;
-            
-            // Calculate subtotal and item count
-            for (const itemId in cartItems) {
-                const item = cartItems[itemId];
-                subtotal += item.price * item.quantity;
-                itemCount += item.quantity;
-            }
-            
-            // Calculate tax (12% GST)
-            const tax = subtotal * 0.12;
-            const total = subtotal + tax;
-            
-            // Format currency with Indian Rupee symbol
-            const formatCurrency = (amount) => {
-                return `₹${amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
-            };
-            
-            // Update DOM
-            document.getElementById('subtotal').textContent = formatCurrency(subtotal);
-            document.getElementById('tax').textContent = formatCurrency(tax);
-            document.getElementById('total').textContent = formatCurrency(total);
-            
-            // Update cart count in header
-            document.querySelector('.cart-count').textContent = Object.keys(cartItems).length;
-            
-            // Update subtotal label
-            document.querySelector('.summary-row .summary-label').textContent = `Subtotal (${itemCount} ${itemCount === 1 ? 'item' : 'items'})`;
-            
-            // Show empty cart if no items
-            if (Object.keys(cartItems).length === 0) {
-                document.querySelector('.cart-items-container').style.display = 'none';
-                document.querySelector('.order-summary').style.display = 'none';
-                document.getElementById('emptyCart').style.display = 'flex';
-            } else {
-                document.querySelector('.cart-items-container').style.display = 'block';
-                document.querySelector('.order-summary').style.display = 'block';
-                document.getElementById('emptyCart').style.display = 'none';
-            }
         }
 
         // Update quantity for an item
         function updateQuantity(itemId, change) {
-            const item = cartItems[itemId];
-            const newQuantity = item.quantity + change;
-            
-            // Ensure quantity doesn't go below 1
-            if (newQuantity < 1) {
-                // Remove item if quantity becomes 0
-                removeItem(itemId);
-                return;
-            }
-            
-            // Update quantity
-            item.quantity = newQuantity;
-            
-            // Update UI
-            document.getElementById(`qty-${itemId}`).textContent = newQuantity;
-            
-            // Update totals
-            updateCartTotals();
-            
-            // Show toast notification
-            const action = change > 0 ? 'increased' : 'decreased';
-            showToast(`${item.name} quantity ${action} to ${newQuantity}`, 'success');
-            
-            // Add animation feedback
-            const qtyBtn = document.querySelector(`[data-item="${itemId}"]`);
-            qtyBtn.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                qtyBtn.style.transform = 'scale(1)';
-            }, 150);
         }
 
         // Remove item from cart
         function removeItem(itemId) {
-            const itemName = cartItems[itemId].name;
-            
-            // Remove from cartItems object
-            delete cartItems[itemId];
-            
-            // Remove from UI with animation
-            const itemElement = document.getElementById(itemId);
-            itemElement.style.transform = 'translateX(-100%)';
-            itemElement.style.opacity = '0';
-            
-            setTimeout(() => {
-                itemElement.remove();
-                updateCartTotals();
-                showToast(`${itemName} removed from cart`, 'error');
-            }, 300);
         }
 
         // Clear entire cart
         function clearCart() {
-            if (Object.keys(cartItems).length === 0) {
-                showToast('Cart is already empty', 'error');
-                return;
-            }
-            
-            if (confirm('Are you sure you want to clear your cart?')) {
-                // Clear cart items
-                for (const itemId in cartItems) {
-                    const itemElement = document.getElementById(itemId);
-                    if (itemElement) {
-                        itemElement.style.transform = 'translateX(-100%)';
-                        itemElement.style.opacity = '0';
-                        setTimeout(() => {
-                            itemElement.remove();
-                        }, 300);
-                    }
-                }
-                
-                // Clear cart data
-                for (const key in cartItems) {
-                    delete cartItems[key];
-                }
-                
-                // Update UI
-                setTimeout(() => {
-                    updateCartTotals();
-                    showToast('Cart cleared successfully', 'error');
-                }, 500);
-            }
         }
 
         // Event Listeners for quantity buttons
@@ -1355,31 +274,81 @@
         document.getElementById('clearCartBtn').addEventListener('click', clearCart);
 
         // Proceed to Checkout button
-        document.getElementById('checkoutBtn').addEventListener('click', function() {
-            if (Object.keys(cartItems).length === 0) {
-                showToast('Your cart is empty. Add items before checkout.', 'error');
-                return;
-            }
-            
-            // Show loading state
-            const originalText = this.innerHTML;
-            this.innerHTML = '<div class="loading-spinner"></div> Processing...';
-            this.disabled = true;
-            
-            // Simulate checkout process
-            setTimeout(() => {
-                // In a real app, this would redirect to checkout
-                showToast('Redirecting to secure checkout...', 'success');
-                
-                // Reset button after delay
-                setTimeout(() => {
-                    this.innerHTML = originalText;
-                    this.disabled = false;
-                    // Simulate navigation
-                    alert('Checkout page would load here in a production system');
-                }, 1000);
-            }, 1500);
+document.getElementById('checkoutBtn').addEventListener('click', async function() {
+
+    // Parse cart items from template JSON
+    const cartItems = JSON.parse(document.getElementById("cart-data").textContent);
+
+    if (Object.keys(cartItems).length === 0) return showToast('Cart is empty','error');
+
+    try {
+
+        // Grab csrf token from cookie
+const csrftoken = getCookie('csrftoken');
+        // Transform into dictionary if needed
+        const cartDict = {};
+        cartItems.forEach(item => {
+            cartDict[`item${item.cart_item_id}`] = item;
         });
+
+        const billing_address = document.getElementById('billingAddress')?.value || "";
+
+        // Prepare items for backend
+        const items = Object.values(cartDict).map(item => ({
+            medicine_id: item.id,
+            quantity: item.quantity,
+            retail_price: item.retail_price
+        }));
+
+        // 1️⃣ Call Django checkout API
+        const res = await fetch('/order/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({ cart_items: items, billing_address, tax_rate: 12 })
+        });
+
+        const data = await res.json();
+        if (!data.success) return showToast(data.error, 'error');
+
+        const paymentData = data.data.payment; // { key_id, amount, order_id }
+
+        // 2️⃣ Initialize Razorpay payment
+        const options = {
+            key: paymentData.key_id,
+            amount: paymentData.amount,
+            currency: "INR",
+            name: "Curexa",
+            order_id: paymentData.order_id,
+            handler: async function(response){
+                await fetch('/payments/verify-razorpay/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify(response)
+                });
+                alert("Payment Successful!");
+                window.location.reload();
+            },
+            prefill: {
+                name: data.data.customer_name || "",
+                email: data.data.customer_email || ""
+            },
+            theme: { color: "#00bfa5" }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+    } catch (err) {
+        console.error(err);
+        showToast("Checkout failed", "error");
+    }
+});
 
         // Continue Shopping button
         document.querySelector('.btn-continue').addEventListener('click', function() {

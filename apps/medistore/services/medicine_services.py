@@ -109,3 +109,6 @@ def get_medicine_details_id(medicine_id):
     medicine.dosage_form=enum_name(DosageForm, medicine.dosage_form).capitalize()
     medicine.age_group=enum_name(AGE_GROUP, medicine.age_group).capitalize()
     return medicine
+
+def get_medicine(medicine_id):
+    return get_object_or_404(Medicine, id=medicine_id, is_active=True)

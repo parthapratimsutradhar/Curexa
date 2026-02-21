@@ -222,3 +222,7 @@ API_SECRET= env("API_SECRET")
 
 # Default file storage (optional, for all media files)
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Razorpay
+RAZORPAY_TEST_KEY_ID=env("RAZORPAY_TEST_KEY_ID")
+RAZORPAY_TEST_KEY_SECRET=env("RAZORPAY_TEST_KEY_SECRET")

@@ -13,7 +13,6 @@ class Order(BaseModel):
         choices=[(status.value, status.name) for status in OrderStatus],
         default=OrderStatus.PROCESSING.value,
     )
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Total Amount")
 
     class Meta:
         db_table = 'orders'

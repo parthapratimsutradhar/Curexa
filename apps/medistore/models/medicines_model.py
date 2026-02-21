@@ -13,11 +13,7 @@ class Medicine(BaseModel):
     blank=True,
     null=True    
     )
-    pack_size = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True
-    )
+    pack_size = models.IntegerField(blank=True, null=True)
 
     is_prescription_required = models.BooleanField(default=False)
     category = models.ForeignKey(

@@ -32,8 +32,8 @@ class PaymentStatus(Enum):
     REFUNDED = 4
     
 class PaymentMethod(Enum):
-    CREDIT_CARD = 1
-    ONLINE = 2
+    RAZORPAY = 1
+    STRIPE = 2
     CASH_ON_DELIVERY = 3
 
 class OrderStatus(Enum):

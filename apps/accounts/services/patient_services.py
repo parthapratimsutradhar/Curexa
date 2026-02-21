@@ -1,5 +1,6 @@
 from apps.accounts.models.patientprofile_model import PatientProfile
-from apps.core.services.util_services import *
+from apps.core.services.util_services import full_name, age_from_dob
+from django.shortcuts import get_object_or_404
 
 def all_patients():
     qs = PatientProfile.objects.all().values(
@@ -26,3 +27,6 @@ def all_patients():
 
     return qs
 
+
+def get_patient(user_id):
+    return get_object_or_404(PatientProfile, patient_id=user_id)

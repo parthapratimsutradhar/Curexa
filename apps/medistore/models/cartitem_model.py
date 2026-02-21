@@ -16,6 +16,7 @@ class CartItem(BaseModel):
 
     class Meta:
         db_table = 'cart_items'
+        unique_together = ('cart', 'medicine')
 
     def __str__(self):
-        return f"{self.medicine.name} | Quantity: {self.quantity} | Cart Owner: {self.cart.cart_owner.patient.get_full_name()}"
+        return f"{self.medicine.name} | Quantity: {self.quantity} | Cart Owner: {self.cart.owner.patient.get_full_name()}"
