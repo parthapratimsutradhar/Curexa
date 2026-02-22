@@ -339,7 +339,7 @@ document.getElementById("checkoutBtn").addEventListener("click", async function 
 
     try {
         // 1️⃣ Call backend checkout API
-        const res = await fetch("/order/checkout", {
+        const res = await fetch("/orders/checkout", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -356,6 +356,7 @@ document.getElementById("checkoutBtn").addEventListener("click", async function 
         }
 
         const payment = data.data.payment;
+        const DB_ORDER_ID = payment.order_id;
 
         // 2️⃣ Razorpay Options
         const options = {
@@ -364,11 +365,11 @@ document.getElementById("checkoutBtn").addEventListener("click", async function 
             currency: payment.currency,
             name: "Curexa",
             description: "Medicine Purchase",
-            order_id: payment.order_id,
+            order_id: payment.razorpay_order_id,
 
             handler: async function (response) {
                 // 3️⃣ Verify payment
-                const verifyRes = await fetch("/payments/verify-razorpay/", {
+                const verifyRes = await fetch("/payment/verify-razorpay", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -385,7 +386,7 @@ document.getElementById("checkoutBtn").addEventListener("click", async function 
 
                 if (verifyData.success) {
                     alert("Payment Successful!");
-                    window.location.href = "/orders/success/";
+                    window.location.href = `/orders/${DB_ORDER_ID}/details`;
                 } else {
                     alert("Payment verification failed");
                 }

@@ -31,7 +31,8 @@ def create_razorpay_order(invoice):
     )
 
     return {
-        "order_id": razorpay_order["id"],   # 🔥 frontend expects this
+        "order_id":invoice.order.id,
+        "razorpay_order_id": razorpay_order["id"],   # 🔥 frontend expects this
         "key_id": settings.RAZORPAY_TEST_KEY_ID,
         "amount": amount_paise,
         "currency": "INR"
