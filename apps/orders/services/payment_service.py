@@ -4,13 +4,17 @@ from django.conf import settings
 from apps.core.utilities.razorpay_client import client
 from apps.orders.models import Invoice, Payment
 from apps.core.constants.default_values import PaymentStatus, PaymentMethod
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 
+def create_razorpay_order(invoice):
 
-def create_razorpay_order(invoice_id):
-    invoice = Invoice.objects.get(id=invoice_id)
+    if Payment.objects.filter(
+        invoice=invoice,
+        status=PaymentStatus.PENDING.value
+    ).exists():
+        raise ValueError("Payment already initiated")
 
-    amount_paise = int(invoice.total_amount * Decimal("100"))
+    amount_paise = int(invoice.total_amount * 100)
 
     razorpay_order = client.order.create({
         "amount": amount_paise,
@@ -18,8 +22,8 @@ def create_razorpay_order(invoice_id):
         "payment_capture": 1
     })
 
-    payment = Payment.objects.create(
-        transaction_id=razorpay_order["id"],  # Razorpay order_id
+    Payment.objects.create(
+        transaction_id=razorpay_order["id"],
         invoice=invoice,
         amount=invoice.total_amount,
         payment_method=PaymentMethod.RAZORPAY.value,
@@ -27,13 +31,11 @@ def create_razorpay_order(invoice_id):
     )
 
     return {
-        "razorpay_order_id": razorpay_order["id"],
-        "razorpay_key": settings.RAZORPAY_TEST_KEY_ID,
+        "order_id": razorpay_order["id"],   # 🔥 frontend expects this
+        "key_id": settings.RAZORPAY_TEST_KEY_ID,
         "amount": amount_paise,
-        "currency": "INR",
-        "invoice_number": invoice.invoice_number
-    } 
-   
+        "currency": "INR"
+    }
 
 
 # apps/payments/views.py

@@ -1,5 +1,6 @@
 from django.db import models
 from apps.core.models.base_model import BaseModel
+from django.db.models import Q
 
 class CartItem(BaseModel):
     medicine = models.ForeignKey(
@@ -16,7 +17,13 @@ class CartItem(BaseModel):
 
     class Meta:
         db_table = 'cart_items'
-        unique_together = ('cart', 'medicine')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['cart', 'medicine'],
+                condition=Q(is_active=True),
+                name='unique_active_cart_medicine'
+            )
+        ]
 
     def __str__(self):
         return f"{self.medicine.name} | Quantity: {self.quantity} | Cart Owner: {self.cart.owner.patient.get_full_name()}"

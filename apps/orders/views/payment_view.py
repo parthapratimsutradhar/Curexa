@@ -45,7 +45,7 @@ def test_razorpay_order(request):
         invoice = Invoice.objects.create(
             patient=patient,
             content_object=order,
-            invoice_number="INV001",
+            invoice_number="INV172",
             subtotal=500,
             tax_amount=50,
             discount_amount=0,

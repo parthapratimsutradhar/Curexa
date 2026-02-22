@@ -1,6 +1,7 @@
 from apps.orders.models.orders_model import Order 
 from apps.orders.models.order_item_model import OrderItem
 from decimal import Decimal
+from apps.medistore.services import cart_services
 
 def order_create(patient, ):
     return Order.objects.create(
@@ -36,51 +37,54 @@ def bulk_create_order_items(order, items):
     
     
     
-from decimal import Decimal, ROUND_HALF_UP
 from django.db import transaction
-from apps.orders.models import Order, OrderItem
 from apps.orders.services import create_invoice
 from apps.orders.services.payment_service import create_razorpay_order
 
-def checkout_cart(patient, cart_items, billing_address=None, tax_rate=Decimal("12")):
-    """
-    Complete checkout service: creates Order, OrderItems, Invoice, and Payment.
-    Wrapped in a single atomic transaction.
-    """
-    if not cart_items:
+
+def checkout_cart(patient, cart_items):
+    if not cart_items.exists():
         raise ValueError("Cart is empty")
 
     with transaction.atomic():
+
         # 1️⃣ Create Order
-        total_amount = sum(Decimal(item["retail_price"]) * item["quantity"] for item in cart_items)
         order = Order.objects.create(patient=patient)
 
-        # 2️⃣ Create OrderItems
-        order_items_bulk = [
-            OrderItem(
-                order=order,
-                medicine_id=item["medicine_id"],
-                quantity=item["quantity"],
-                price=Decimal(item["retail_price"])
-            )
-            for item in cart_items
-        ]
-        OrderItem.objects.bulk_create(order_items_bulk)
+        subtotal = Decimal("0.00")
 
-        # 3️⃣ Create Invoice
+        # 2️⃣ Create OrderItems & calculate subtotal
+        for cart_item in cart_items.select_related("medicine"):
+            unit_price = cart_item.medicine.retail_price
+
+            order_item = OrderItem.objects.create(
+                order=order,
+                medicine=cart_item.medicine,
+                quantity=cart_item.quantity,
+                unit_price=unit_price
+            )
+
+            subtotal += order_item.total_price
+
+        # 3️⃣ Tax calculation
+        TAX_RATE = Decimal("12.00")
+        tax_amount = (subtotal * TAX_RATE) / Decimal("100")
+        total_amount = subtotal + tax_amount
+        
+        cart_services.clear_cart(patient)
+
+        # 4️⃣ Create Invoice (explicit FK)
         invoice = create_invoice(
             patient=patient,
-            content_object=order,
-            billing_address=billing_address,
-            subtotal=total_amount,
-            tax_rate=tax_rate
+            order=order,
+            subtotal=subtotal,
+            tax_rate=TAX_RATE
         )
 
-        # 4️⃣ Create Payment (Razorpay/Stripe)
-        payment_data = create_razorpay_order(invoice.id)  # Returns payment info (order_id/session_id)
+        # 5️⃣ Clear cart
+        cart_items.delete()
 
-        return {
-            "order_id": order.id,
-            "invoice_id": invoice.id,
-            "payment": payment_data
-        }    
+        # 6️⃣ Create Razorpay Order + Payment
+        payment_payload = create_razorpay_order(invoice)
+
+        return payment_payload

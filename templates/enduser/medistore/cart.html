@@ -177,45 +177,8 @@
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-<script type="application/json" id="cart-data">
-  [
-    {% for item in cart.items %}
-      {
-        "cart_item_id": "{{ item.cart_item_id }}",
-        "id": "{{ item.medicine_id }}",
-        "name": "{{ item.name|escapejs }}",
-        "quantity": {{ item.quantity }},
-        "retail_price": "{{ item.retail_price }}",
-        "original_price": "{{ item.original_price }}",
-        "discount": {{ item.discount }},
-        "pack_size": "{{ item.pack_size }}",
-        "total_units": "{{ item.total_units }}",
-        "dosage_name": "{{ item.dosage_name|escapejs }}",
-        "manufacturer": "{{ item.manufacturer|escapejs }}",
-        "is_prescription_required": {{ item.is_prescription_required|yesno:"true,false" }}
-      }{% if not forloop.last %},{% endif %}
-    {% endfor %}
-  ]
-</script>
 
     <script>
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            cookie = cookie.trim();
-            if (cookie.startsWith(name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-
-
 
         // Toast notification function
         function showToast(message, type = 'success') {
@@ -273,82 +236,6 @@ function getCookie(name) {
         // Clear cart button
         document.getElementById('clearCartBtn').addEventListener('click', clearCart);
 
-        // Proceed to Checkout button
-document.getElementById('checkoutBtn').addEventListener('click', async function() {
-
-    // Parse cart items from template JSON
-    const cartItems = JSON.parse(document.getElementById("cart-data").textContent);
-
-    if (Object.keys(cartItems).length === 0) return showToast('Cart is empty','error');
-
-    try {
-
-        // Grab csrf token from cookie
-const csrftoken = getCookie('csrftoken');
-        // Transform into dictionary if needed
-        const cartDict = {};
-        cartItems.forEach(item => {
-            cartDict[`item${item.cart_item_id}`] = item;
-        });
-
-        const billing_address = document.getElementById('billingAddress')?.value || "";
-
-        // Prepare items for backend
-        const items = Object.values(cartDict).map(item => ({
-            medicine_id: item.id,
-            quantity: item.quantity,
-            retail_price: item.retail_price
-        }));
-
-        // 1️⃣ Call Django checkout API
-        const res = await fetch('/order/checkout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
-            },
-            body: JSON.stringify({ cart_items: items, billing_address, tax_rate: 12 })
-        });
-
-        const data = await res.json();
-        if (!data.success) return showToast(data.error, 'error');
-
-        const paymentData = data.data.payment; // { key_id, amount, order_id }
-
-        // 2️⃣ Initialize Razorpay payment
-        const options = {
-            key: paymentData.key_id,
-            amount: paymentData.amount,
-            currency: "INR",
-            name: "Curexa",
-            order_id: paymentData.order_id,
-            handler: async function(response){
-                await fetch('/payments/verify-razorpay/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrftoken
-                    },
-                    body: JSON.stringify(response)
-                });
-                alert("Payment Successful!");
-                window.location.reload();
-            },
-            prefill: {
-                name: data.data.customer_name || "",
-                email: data.data.customer_email || ""
-            },
-            theme: { color: "#00bfa5" }
-        };
-
-        const rzp = new Razorpay(options);
-        rzp.open();
-
-    } catch (err) {
-        console.error(err);
-        showToast("Checkout failed", "error");
-    }
-});
 
         // Continue Shopping button
         document.querySelector('.btn-continue').addEventListener('click', function() {
@@ -419,4 +306,117 @@ const csrftoken = getCookie('csrftoken');
             }
         });
     </script>
+
+
+
+<script>
+/* ===============================
+   CSRF Helper
+================================ */
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
+/* ===============================
+   Checkout Logic
+================================ */
+document.getElementById("checkoutBtn").addEventListener("click", async function () {
+
+    this.disabled = true;
+
+    try {
+        // 1️⃣ Call backend checkout API
+        const res = await fetch("/order/checkout", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            }
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+            alert(data.error || "Checkout failed");
+            this.disabled = false;
+            return;
+        }
+
+        const payment = data.data.payment;
+
+        // 2️⃣ Razorpay Options
+        const options = {
+            key: payment.key_id,
+            amount: payment.amount,
+            currency: payment.currency,
+            name: "Curexa",
+            description: "Medicine Purchase",
+            order_id: payment.order_id,
+
+            handler: async function (response) {
+                // 3️⃣ Verify payment
+                const verifyRes = await fetch("/payments/verify-razorpay/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": csrftoken
+                    },
+                    body: JSON.stringify({
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_signature: response.razorpay_signature
+                    })
+                });
+
+                const verifyData = await verifyRes.json();
+
+                if (verifyData.success) {
+                    alert("Payment Successful!");
+                    window.location.href = "/orders/success/";
+                } else {
+                    alert("Payment verification failed");
+                }
+            },
+
+            prefill: {
+                name: data.data.customer_name || "",
+                email: data.data.customer_email || ""
+            },
+
+            theme: {
+                color: "#00bfa5"
+            }
+        };
+
+        // 4️⃣ Open Razorpay
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+        rzp.on("payment.failed", function (response) {
+            alert(response.error.description || "Payment failed");
+        });
+
+    } catch (err) {
+        console.error(err);
+        alert("Something went wrong");
+    } finally {
+        this.disabled = false;
+    }
+});
+</script>
+
+
 {% endblock content %}

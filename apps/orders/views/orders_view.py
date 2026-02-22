@@ -41,12 +41,12 @@ class OrderCreateView(View):
         })
 
 
+# /////////////////////////////////////////////////////////////// API VIEWs \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from apps.orders.services.orders_services import checkout_cart
-from decimal import Decimal, ROUND_HALF_UP
 
 
 
@@ -54,30 +54,24 @@ class CheckoutOrderAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        """
-        Expects payload:
-        {
-            "cart_items": [
-                {"medicine_id": 1, "quantity": 2, "retail_price": "245.00"},
-                ...
-            ],
-            "billing_address": "123 MG Road, Kolkata",
-            "tax_rate": 12
-        }
-        """
         patient = patient_services.get_patient(request.user.id)
-        
-        cart_items = request.data.get("cart_items", [])
-        billing_address = request.data.get("billing_address")
-        tax_rate = Decimal(request.data.get("tax_rate", "12"))
+        cart_items = cart_services.get_cart_item(patient)
 
         try:
-            data = checkout_cart(patient, cart_items, billing_address, tax_rate)
-            return Response({"success": True, "data": data})
+            payment_payload = orders_services.checkout_cart(patient, cart_items)
+
+            return Response({
+                "success": True,
+                "data": {
+                    "payment": payment_payload,
+                    "customer_name": patient.patient.get_full_name(),
+                    "customer_email": patient.patient.email
+                }
+            })
+
         except ValueError as ve:
             return Response({"success": False, "error": str(ve)}, status=400)
-        except Exception as e:
-            # log exception here
+        except Exception:
             import traceback
-            print(traceback.format_exc())  # temporarily
-            return Response({"success": False, "error": "Checkout failed"}, status=500)        
+            print(traceback.format_exc())
+            return Response({"success": False, "error": "Checkout failed"}, status=500)

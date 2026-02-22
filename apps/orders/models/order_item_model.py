@@ -13,7 +13,7 @@ class OrderItem(BaseModel):
         related_name='fk_order_items_medicine_medicine_id'
     )
     quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2) # Snapshot of medicine price at checkout time
 
     class Meta:
         db_table = 'order_items'
@@ -23,4 +23,4 @@ class OrderItem(BaseModel):
 
     @property
     def total_price(self):
-        return self.quantity * self.price
+        return self.quantity * self.unit_price

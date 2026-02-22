@@ -100,7 +100,7 @@ def clear_cart(patient):
     cart = get_or_create_cart(patient)
     
     # Get all active cart items
-    items = CartItem.objects.filter(cart=cart, quantity__gt=0)
+    items = CartItem.objects.filter(cart=cart, quantity__gt=0, is_active=True)
     
     # Mark them as inactive
     for item in items:
@@ -113,3 +113,8 @@ def clear_cart(patient):
 def cart_total(patient):
     cart = get_or_create_cart(patient)
     return sum(item.medicine.price * item.quantity for item in cart.items.all())
+
+def get_cart_item(patient):
+    cart = get_or_create_cart(patient)
+    return CartItem.objects.filter(cart=cart, is_active=True).select_related('medicine')
+    

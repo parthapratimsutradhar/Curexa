@@ -1,7 +1,7 @@
 from django.db import models
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
 from apps.core.models.base_model import BaseModel
+from django.db.models import Q
+
 
 class Invoice(BaseModel):
     patient = models.ForeignKey(
@@ -10,11 +10,29 @@ class Invoice(BaseModel):
         related_name='fk_patient_invoices_patient_id'
     )
 
-    # Generic relation to Order, TestBooking, Appointment
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.UUIDField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+    order = models.OneToOneField(
+        'orders.Order',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='fk_order_invoices_order_id'
+    )
 
+    test_booking = models.OneToOneField(
+        'labtests.TestBooking',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='fk_test_booking_invoices_test_booking_id'
+    )
+
+    appointment = models.OneToOneField(
+        'docbook.Appointment',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='fk_appointment_invoices_appointment_id'
+    )
     invoice_number = models.CharField(max_length=20, unique=True)
     billing_address = models.TextField(null=True, blank=True)
 
@@ -29,6 +47,22 @@ class Invoice(BaseModel):
     class Meta:
         db_table = 'invoices'
         ordering = ['-issued_at']
+        constraints = [
+            models.CheckConstraint(
+                condition=(
+                    Q(order__isnull=False, test_booking__isnull=True, appointment__isnull=True) |
+                    Q(order__isnull=True, test_booking__isnull=False, appointment__isnull=True) |
+                    Q(order__isnull=True, test_booking__isnull=True, appointment__isnull=False)
+                ),
+                name="invoice_exactly_one_target"
+            )
+        ]
 
     def __str__(self):
-        return f"Invoice #{self.invoice_number} for {self.content_object}"
+        if self.order:
+            return f"Invoice #{self.invoice_number} for Order #{self.order.id}"
+        if self.test_booking:
+            return f"Invoice #{self.invoice_number} for TestBooking #{self.test_booking.id}"
+        if self.appointment:
+            return f"Invoice #{self.invoice_number} for Appointment #{self.appointment.id}"
+        return f"Invoice #{self.invoice_number}"
