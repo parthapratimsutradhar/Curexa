@@ -72,24 +72,22 @@
                         </a>
                     </li>
                 </ul>
+                <!-- User Actions -->
+                <div class="user-actions d-flex align-items-center gap-2">
 
-<!-- User Actions -->
-<div class="user-actions d-flex align-items-center gap-2">
+                    <!-- Auth section (filled by JS) -->
+                    <div id="auth-section"></div>
 
-    <!-- Auth section (filled by JS) -->
-    <div id="auth-section"></div>
+                    <!-- Cart Button -->
+                    <div class="nav-item cart-btn">
+                        <a href="{% url 'cart' %}" class="btn btn-primary position-relative">
+                            <i class="fas fa-shopping-cart me-2"></i>
+                            <span class="d-none d-md-inline">Cart</span>
+                            <span id="cart-count" class="cart-count">{{cart_count}}</span>
+                        </a>
+                    </div>
 
-    <!-- Cart Button -->
-    <div class="nav-item cart-btn">
-        <a href="{% url 'cart' %}" class="btn btn-primary position-relative">
-            <i class="fas fa-shopping-cart me-2"></i>
-            <span class="d-none d-md-inline">Cart</span>
-            <span id="cart-count" class="cart-count">0</span>
-        </a>
-    </div>
-
-</div>
-
+                </div>
             </div>
         </div>
     </nav>
@@ -277,7 +275,7 @@
                         </li>
                         <li class="contact-item">
                             <span class="contact-icon"><i class="fas fa-envelope"></i></span>
-                            support@curexa.com
+                            noreply.curexa@gmail.com
                         </li>
                         <li class="contact-item">
                             <span class="contact-icon"><i class="fas fa-ambulance"></i></span>
@@ -314,16 +312,6 @@
 
     <!-- Custom JavaScript -->
     <script>
-        // Initialize cart count
-        function updateCartCount() {
-            const cartCount = localStorage.getItem('cartCount') || 0;
-            const cartElement = document.getElementById('cart-count');
-            
-            if (cartElement) {
-                cartElement.textContent = cartCount;
-                cartElement.style.display = cartCount == 0 ? 'none' : 'flex';
-            }
-        }
 
         // Set active navigation link
         function setActiveNavLink() {

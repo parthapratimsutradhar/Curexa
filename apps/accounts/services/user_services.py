@@ -8,48 +8,6 @@ from apps.accounts.models.patientprofile_model import PatientProfile
 from apps.doctors.models.doctorprofile_model import DoctorProfile
 from django.shortcuts import get_object_or_404
 
-OTP_EXPIRY_SECONDS = 300  # 5 minutes
-OTP_ATTEMPT_LIMIT = 5
-OTP_SEND_LIMIT = 5
-OTP_RESEND_COOLDOWN = 30  # seconds
-
-def user_create_or_check(email):
-    """
-    Create a user if it doesn't exist or return the existing user.
-    """
-    user, created = User.objects.get_or_create(
-        email=email
-    )
-
-    if created:
-        user.set_password('12345')
-        user.save()
-
-    return user
-
-def create_patient_user(first_name, middle_name, last_name, email):
-    """
-    Create a user with patient role.
-    """
-    user = User(
-        first_name=first_name,
-        middle_name=middle_name,
-        last_name=last_name,
-        email=email,        
-        role=Role.PATIENT.value,
-    )
-    temp_password = secrets.token_urlsafe(12)
-    user.set_password(temp_password)
-    ensure_user_profile(user)
-    send_mail(
-        subject="Your Password for Patient Account",
-        message=f"Your temporary password is {temp_password}. Please log in and change your password.",
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[email],
-        fail_silently=False,
-    )
-    user.save()
-    return user
 
 def create_doctor_user(first_name, middle_name, last_name, email):
     """

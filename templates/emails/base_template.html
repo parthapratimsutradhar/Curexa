@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ subject }}</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+        background: #f4f7ff;
+        font-size: 14px;
+        color: #434343;
+      }
+      .container {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 45px 30px 60px;
+        background: #f4f7ff;
+        width: 100%;
+      }
+      main {
+        background: #fff;
+        border-radius: 20px;
+        padding: 50px 30px;
+        text-align: center;
+        line-height: 1.5;
+      }
+      h1 {
+        font-size: 24px;
+        color: #1f1f1f;
+        margin: 0;
+      }
+      p {
+        margin: 0;
+        margin-top: 15px;
+      }
+      .otp {
+        margin-top: 40px;
+        font-size: 36px;
+        font-weight: 600;
+        letter-spacing: 10px;
+        color: #ba3d4f;
+      }
+      .otp-validity {
+        font-size: 12px;
+        color: #888;
+        margin-top: 10px;
+      }
+      .cta-button {
+        display: inline-block;
+        padding: 12px 25px;
+        background: #1f1f1f;
+        color: #fff;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        margin-top: 30px;
+      }
+      footer {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 12px;
+        color: #434343;
+      }
+      footer a {
+        margin: 0 5px;
+        display: inline-block;
+      }
+
+      /* Mobile responsiveness */
+      @media only screen and (max-width: 480px) {
+        main {
+          padding: 30px 15px;
+        }
+        h1 {
+          font-size: 20px;
+        }
+        p {
+          font-size: 14px;
+        }
+        .otp {
+          font-size: 28px;
+          letter-spacing: 6px;
+        }
+        .cta-button {
+          padding: 10px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header style="text-align: center;">
+        <img src="{{ logo_url }}" alt="Company Logo" height="40" style="margin-bottom: 10px;" />
+        <p style="color: #888; font-size: 12px;">{{ current_date }}</p>
+      </header>
+
+      <!-- Main Content -->
+      <main>
+        <h1>{{ title }}</h1>
+        <p style="margin-top: 20px; font-size: 16px;">Hey {{ user_name }},</p>
+        <p style="margin-top: 15px; font-size: 14px; color: #555;">{{ message_content }}</p>
+
+        {% if otp %}
+        <p class="otp">{{ otp }}</p>
+        <p class="otp-validity">OTP valid for {{ expiry_minutes }} minutes</p>
+        {% endif %}
+
+        {% if cta_url and cta_text %}
+        <p>
+          <a href="{{ cta_url }}" class="cta-button">{{ cta_text }}</a>
+        </p>
+        {% endif %}
+      </main>
+
+      <!-- Footer -->
+      <footer>
+        <p>{{ company_name }}</p>
+        <p>{{ company_address }}</p>
+        <div style="margin-top: 10px;">
+          {% for icon in social_icons %}
+            <a href="{{ icon.url }}"><img src="{{ icon.img }}" width="36" alt="{{ icon.alt }}" /></a>
+          {% endfor %}
+        </div>
+        <p style="margin-top: 10px;">© {{ current_year }} {{ company_name }}. All rights reserved.</p>
+      </footer>
+    </div>
+  </body>
+</html>

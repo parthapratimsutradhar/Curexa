@@ -117,4 +117,7 @@ def cart_total(patient):
 def get_cart_item(patient):
     cart = get_or_create_cart(patient)
     return CartItem.objects.filter(cart=cart, is_active=True).select_related('medicine')
-    
+
+def cart_count(patient):
+    cart= get_or_create_cart(patient)
+    return CartItem.objects.filter(cart=cart, is_active=True).count()

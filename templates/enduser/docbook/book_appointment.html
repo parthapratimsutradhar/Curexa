@@ -2065,3 +2065,766 @@
 
 
 {% endblock content %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>Curexa · Find the right doctor</title>
+    <style>
+        /* ---------- GLOBAL & VARIABLES ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #f6f9fc;   /* light medical background */
+            color: #1a2e3b;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* medical blue / teal + soft green accents */
+        :root {
+            --primary: #0b6e6f;        /* deep teal – trust */
+            --primary-light: #e0f2f1;   /* very light teal for backgrounds */
+            --secondary: #7eb09e;       /* soft green – freshness */
+            --accent-available: #2b7d6c; /* green for available */
+            --accent-busy: #c44545;      /* soft red for busy */
+            --gray-light: #f0f4f7;
+            --gray-border: #d9e2e9;
+            --card-shadow: 0 8px 20px rgba(0, 40, 40, 0.06), 0 2px 6px rgba(0, 30, 30, 0.03);
+            --hover-shadow: 0 14px 30px rgba(6, 60, 60, 0.12);
+            --text-dark: #183b4a;
+            --text-soft: #436573;
+            --bg-soft: #f9fdfe;
+        }
+
+        /* ---------- TYPOGRAPHY & UTILS ---------- */
+        h1, h2, h3 {
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.2rem;
+            width: 100%;
+        }
+
+        /* ---------- HEADER & BREADCRUMB ---------- */
+        .main-header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .brand {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        .brand span {
+            color: var(--secondary);
+            font-weight: 400;
+            font-size: 1rem;
+            margin-left: 4px;
+        }
+
+        .breadcrumb {
+            padding: 0.8rem 0 0.2rem 0;
+            font-size: 0.95rem;
+            color: var(--text-soft);
+        }
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .breadcrumb .separator {
+            margin: 0 0.5rem;
+            color: #b0c8d4;
+        }
+
+        /* ---------- STICKY FILTER BAR ---------- */
+        .filter-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gray-border);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,30,30,0.03);
+        }
+
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.8rem 1.2rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex: 1 1 180px;
+            flex-direction: column;
+            min-width: 150px;
+        }
+        .filter-group label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .filter-group input, .filter-group select {
+            background: white;
+            border: 1px solid var(--gray-border);
+            border-radius: 40px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.15s;
+            width: 100%;
+        }
+
+        .filter-group input:focus, .filter-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(11,110,111,0.15);
+        }
+
+        .reset-btn {
+            background: transparent;
+            border: 1px dashed var(--primary);
+            color: var(--primary);
+            border-radius: 40px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.15s;
+            white-space: nowrap;
+            margin-left: auto;
+        }
+        .reset-btn:hover {
+            background: var(--primary-light);
+            border: 1px solid var(--primary);
+        }
+
+        /* ---------- RESULTS HEADER & LOAD MORE ---------- */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        .results-count {
+            font-size: 1.1rem;
+            color: var(--text-soft);
+        }
+        .results-count strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .load-more-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin: 2.8rem 0 2rem;
+        }
+        .load-more-btn {
+            background: white;
+            border: 1.5px solid var(--primary);
+            color: var(--primary);
+            padding: 0.8rem 3rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .load-more-btn:hover:not(:disabled) {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--hover-shadow);
+        }
+        .load-more-btn:disabled {
+            opacity: 0.5;
+            cursor: default;
+            border-color: #b0d0d0;
+        }
+        .showing-hint {
+            color: var(--text-soft);
+            font-size: 0.95rem;
+        }
+
+        /* ---------- DOCTOR CARDS GRID ---------- */
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: 1fr;           /* mobile default: 1 card */
+            gap: 1.8rem;
+            transition: 0.2s;
+        }
+
+        @media (min-width: 600px) {
+            .doctors-grid {
+                grid-template-columns: repeat(2, 1fr);  /* tablet */
+            }
+        }
+        @media (min-width: 992px) {
+            .doctors-grid {
+                grid-template-columns: repeat(3, 1fr);  /* small desktop */
+            }
+        }
+        @media (min-width: 1400px) {
+            .doctors-grid {
+                grid-template-columns: repeat(4, 1fr);  /* large desktop */
+            }
+        }
+
+        /* ---------- DOCTOR CARD STYLES ---------- */
+        .doctor-card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem 1.2rem 1.5rem 1.2rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            border: 1px solid rgba(215, 235, 240, 0.6);
+            backdrop-filter: blur(2px);
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--hover-shadow);
+            border-color: var(--primary-light);
+        }
+
+        /* circular photo (initial-based) */
+        .doctor-photo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, var(--primary), #2a8b8c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.3rem;
+            font-weight: 400;
+            color: white;
+            text-transform: uppercase;
+            box-shadow: 0 4px 12px rgba(11,110,111,0.25);
+            margin-bottom: 1rem;
+            border: 3px solid white;
+            outline: 1px solid #e0f0f0;
+        }
+
+        .doctor-info {
+            width: 100%;
+        }
+
+        .doctor-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.3;
+            margin-bottom: 0.2rem;
+        }
+
+        .doctor-specialty {
+            color: var(--primary);
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            background: var(--primary-light);
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+        }
+
+        .doctor-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.2rem;
+            margin: 0.8rem 0 0.9rem;
+            font-size: 0.95rem;
+            color: #2f566b;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .rating {
+            color: #f7b731;
+            font-weight: 600;
+        }
+        .rating span {
+            color: #2f566b;
+            font-weight: 400;
+            margin-left: 2px;
+        }
+
+        .fee {
+            font-weight: 700;
+            color: var(--text-dark);
+            background: #ecf9f7;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+        }
+
+        .availability-badge {
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin: 0.2rem 0 1rem 0;
+        }
+        .badge-available {
+            background: #dff5f0;
+            color: var(--accent-available);
+            border-left: 4px solid var(--accent-available);
+        }
+        .badge-busy {
+            background: #ffe9e9;
+            color: var(--accent-busy);
+            border-left: 4px solid var(--accent-busy);
+        }
+
+        .book-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            padding: 0.8rem 1rem;
+            width: 100%;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: 0.15s;
+            margin-top: 0.6rem;
+            box-shadow: 0 4px 8px rgba(11,110,111,0.2);
+        }
+
+        .book-btn:hover {
+            background: #085a5b;
+            transform: scale(1.02);
+        }
+
+        /* ---------- SKELETON LOADER ---------- */
+        .skeleton-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.8rem;
+        }
+        @media (min-width: 600px) {
+            .skeleton-grid { grid-template-columns: repeat(2,1fr); }
+        }
+        @media (min-width: 992px) {
+            .skeleton-grid { grid-template-columns: repeat(3,1fr); }
+        }
+        @media (min-width: 1400px) {
+            .skeleton-grid { grid-template-columns: repeat(4,1fr); }
+        }
+
+        .skeleton-card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem 1.2rem 1.5rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #eaf1f5;
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, #f0f4f8 25%, #e2e9f0 50%, #f0f4f8 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.6s infinite;
+            border-radius: 60px;
+        }
+
+        .skeleton-photo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
+        .skeleton-line {
+            height: 18px;
+            width: 70%;
+            margin: 12px 0 8px;
+            border-radius: 30px;
+        }
+        .skeleton-line.short { width: 45%; }
+        .skeleton-line.long { width: 90%; }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* ---------- EMPTY STATE ---------- */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: white;
+            border-radius: 48px;
+            box-shadow: var(--card-shadow);
+            grid-column: 1 / -1;
+            color: var(--text-soft);
+        }
+        .empty-state h3 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        /* ---------- FOOTER (simple) ---------- */
+        .footer {
+            margin-top: 3rem;
+            padding: 1.2rem 0;
+            text-align: center;
+            color: #99b8c5;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--gray-border);
+        }
+
+        /* hide/show helpers */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-inner">
+            <div class="brand">Curexa <span>· medical & appointment</span></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="#">Home</a> <span class="separator">/</span> <span>Doctors</span>
+        </div>
+    </div>
+
+    <!-- Sticky filter bar -->
+    <div class="filter-bar">
+        <div class="container filter-container">
+            <div class="filter-group">
+                <label>🔍 Search</label>
+                <input type="text" id="searchInput" placeholder="Doctor name ..." autocomplete="off">
+            </div>
+            <div class="filter-group">
+                <label>📋 Specialization</label>
+                <select id="specializationSelect">
+                    <option value="">All Specializations</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>⏳ Availability</label>
+                <select id="availabilitySelect">
+                    <option value="">All</option>
+                    <option value="available">Available</option>
+                    <option value="busy">Busy</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>📊 Sort by</label>
+                <select id="sortSelect">
+                    <option value="">Default</option>
+                    <option value="experience">Experience (high to low)</option>
+                    <option value="rating">Rating (high to low)</option>
+                    <option value="fee_low">Fee (low to high)</option>
+                </select>
+            </div>
+            <button class="reset-btn" id="resetFiltersBtn">Clear filters</button>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="results-header">
+            <div class="results-count" id="resultsCount">Loading doctors...</div>
+            <div class="showing-hint" id="showingHint"></div>
+        </div>
+
+        <!-- Skeleton loader (visible initially) -->
+        <div id="skeletonLoader" class="skeleton-grid">
+            <div class="skeleton-card"><div class="skeleton-photo shimmer"></div><div class="skeleton-line shimmer"></div><div class="skeleton-line short shimmer"></div><div class="skeleton-line long shimmer"></div></div>
+            <div class="skeleton-card"><div class="skeleton-photo shimmer"></div><div class="skeleton-line shimmer"></div><div class="skeleton-line short shimmer"></div><div class="skeleton-line long shimmer"></div></div>
+            <div class="skeleton-card"><div class="skeleton-photo shimmer"></div><div class="skeleton-line shimmer"></div><div class="skeleton-line short shimmer"></div><div class="skeleton-line long shimmer"></div></div>
+            <div class="skeleton-card"><div class="skeleton-photo shimmer"></div><div class="skeleton-line shimmer"></div><div class="skeleton-line short shimmer"></div><div class="skeleton-line long shimmer"></div></div>
+            <div class="skeleton-card"><div class="skeleton-photo shimmer"></div><div class="skeleton-line shimmer"></div><div class="skeleton-line short shimmer"></div><div class="skeleton-line long shimmer"></div></div>
+            <div class="skeleton-card"><div class="skeleton-photo shimmer"></div><div class="skeleton-line shimmer"></div><div class="skeleton-line short shimmer"></div><div class="skeleton-line long shimmer"></div></div>
+        </div>
+
+        <!-- Dynamic doctors grid (hidden initially) -->
+        <div id="doctorsGrid" class="doctors-grid hidden"></div>
+
+        <!-- Load more & pagination area -->
+        <div class="load-more-container" id="loadMoreContainer">
+            <button class="load-more-btn" id="loadMoreBtn">Load more doctors</button>
+            <span class="showing-hint" id="loadMoreHint"></span>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">© Curexa — trusted care, online.</div>
+    </footer>
+
+    <script>
+        (function() {
+            // ---------- DEMO DOCTORS DATASET ----------
+            const doctors = [
+                { id: 1, name: "Dr. Sarah Johnson", specialization: "Cardiologist", experience: 15, rating: 4.8, fee: 120, available: true },
+                { id: 2, name: "Dr. Michael Chen", specialization: "Dermatologist", experience: 10, rating: 4.5, fee: 90, available: false },
+                { id: 3, name: "Dr. Emily Rodriguez", specialization: "Neurologist", experience: 12, rating: 4.9, fee: 150, available: true },
+                { id: 4, name: "Dr. David Kim", specialization: "Pediatrician", experience: 8, rating: 4.3, fee: 80, available: true },
+                { id: 5, name: "Dr. Lisa Patel", specialization: "Orthopedist", experience: 20, rating: 5.0, fee: 200, available: false },
+                { id: 6, name: "Dr. James Wilson", specialization: "Ophthalmologist", experience: 7, rating: 4.2, fee: 70, available: true },
+                { id: 7, name: "Dr. Maria Garcia", specialization: "Dermatologist", experience: 9, rating: 4.6, fee: 95, available: true },
+                { id: 8, name: "Dr. Robert Brown", specialization: "Cardiologist", experience: 25, rating: 4.9, fee: 180, available: false },
+                { id: 9, name: "Dr. Jennifer Lee", specialization: "Neurologist", experience: 5, rating: 4.0, fee: 110, available: true },
+                { id: 10, name: "Dr. William Taylor", specialization: "Pediatrician", experience: 18, rating: 4.7, fee: 130, available: false },
+                { id: 11, name: "Dr. Olivia Martinez", specialization: "Dermatologist", experience: 14, rating: 4.8, fee: 145, available: true },
+                { id: 12, name: "Dr. Benjamin Adams", specialization: "Cardiologist", experience: 22, rating: 4.6, fee: 210, available: true },
+            ];
+
+            // ---------- DOM elements ----------
+            const skeletonEl = document.getElementById('skeletonLoader');
+            const gridEl = document.getElementById('doctorsGrid');
+            const searchInput = document.getElementById('searchInput');
+            const specSelect = document.getElementById('specializationSelect');
+            const availSelect = document.getElementById('availabilitySelect');
+            const sortSelect = document.getElementById('sortSelect');
+            const resetBtn = document.getElementById('resetFiltersBtn');
+            const resultsCountSpan = document.getElementById('resultsCount');
+            const showingHint = document.getElementById('showingHint');
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            const loadMoreHint = document.getElementById('loadMoreHint');
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+            // ---------- STATE ----------
+            let filteredDoctors = [...doctors];
+            let visibleCount = 6;                // initial cards shown
+            const STEP = 6;                       // load more increment
+            let currentFilters = {
+                search: '',
+                specialization: '',
+                availability: '',
+                sort: ''
+            };
+
+            // ---------- populate specialization options (unique) ----------
+            const specializations = [...new Set(doctors.map(d => d.specialization))].sort();
+            specializations.forEach(spec => {
+                const option = document.createElement('option');
+                option.value = spec;
+                option.textContent = spec;
+                specSelect.appendChild(option);
+            });
+
+            // ---------- helper: filter & sort data (based on currentFilters) ----------
+            function getFilteredDoctors() {
+                let filtered = doctors.filter(doc => {
+                    // search by name (case insensitive)
+                    if (currentFilters.search && !doc.name.toLowerCase().includes(currentFilters.search.toLowerCase())) return false;
+                    // specialization
+                    if (currentFilters.specialization && doc.specialization !== currentFilters.specialization) return false;
+                    // availability
+                    if (currentFilters.availability === 'available' && !doc.available) return false;
+                    if (currentFilters.availability === 'busy' && doc.available) return false;
+                    return true;
+                });
+
+                // sorting
+                if (currentFilters.sort === 'experience') {
+                    filtered.sort((a, b) => b.experience - a.experience);
+                } else if (currentFilters.sort === 'rating') {
+                    filtered.sort((a, b) => b.rating - a.rating);
+                } else if (currentFilters.sort === 'fee_low') {
+                    filtered.sort((a, b) => a.fee - b.fee);
+                } else {
+                    // default: keep original order (id)
+                    filtered.sort((a, b) => a.id - b.id);
+                }
+                return filtered;
+            }
+
+            // ---------- render cards (slice based on visibleCount) ----------
+            function renderDoctors() {
+                filteredDoctors = getFilteredDoctors();
+                const total = filteredDoctors.length;
+                const visibleDoctors = filteredDoctors.slice(0, visibleCount);
+
+                // update results count
+                resultsCountSpan.innerHTML = `<strong>${total}</strong> doctor${total !== 1 ? 's' : ''} available`;
+
+                // empty state
+                if (total === 0) {
+                    gridEl.innerHTML = `<div class="empty-state"><h3>✨ No matching doctors</h3><p>Try adjusting filters or search.</p></div>`;
+                    loadMoreContainer.classList.add('hidden');
+                    showingHint.innerText = '';
+                } else {
+                    // build cards HTML
+                    let htmlStr = '';
+                    visibleDoctors.forEach(doc => {
+                        const initial = doc.name.replace(/[^a-zA-Z]/g, '')[0] || 'D'; // first letter
+                        const availabilityClass = doc.available ? 'badge-available' : 'badge-busy';
+                        const availabilityText = doc.available ? 'Available' : 'Busy';
+                        const ratingStars = '★'; // we just use one star symbol
+                        htmlStr += `
+                            <div class="doctor-card">
+                                <div class="doctor-photo">${initial}</div>
+                                <div class="doctor-info">
+                                    <div class="doctor-name">${doc.name}</div>
+                                    <div class="doctor-specialty">${doc.specialization}</div>
+                                    <div class="doctor-details">
+                                        <span class="detail-item">🕊️ ${doc.experience} yrs</span>
+                                        <span class="detail-item rating">${ratingStars} ${doc.rating}<span>/5</span></span>
+                                        <span class="detail-item fee">$${doc.fee}</span>
+                                    </div>
+                                    <div class="availability-badge ${availabilityClass}">${availabilityText}</div>
+                                    <button class="book-btn" data-id="${doc.id}">Book appointment</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    gridEl.innerHTML = htmlStr;
+
+                    // load more button logic
+                    if (visibleCount >= total) {
+                        loadMoreBtn.disabled = true;
+                        loadMoreHint.innerText = `All ${total} doctors shown`;
+                    } else {
+                        loadMoreBtn.disabled = false;
+                        loadMoreHint.innerText = `Showing ${visibleCount} of ${total}`;
+                    }
+                    loadMoreContainer.classList.remove('hidden');
+                    showingHint.innerText = `${visibleDoctors.length} displayed`;
+                }
+
+                // attach booking listeners (simulate action)
+                document.querySelectorAll('.book-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        alert(`✅ Appointment request sent for doctor ID ${btn.dataset.id} (demo)`);
+                    });
+                });
+            }
+
+            // ---------- update filters and reset pagination ----------
+            function updateFiltersAndRender() {
+                // reset visible count when filter changes
+                visibleCount = STEP;
+                // hide grid, show skeleton briefly? optional: we can skip skeleton for filter (instant)
+                // but for consistency we do a quick skeleton flash? not necessary. Just render.
+                renderDoctors();
+            }
+
+            // ---------- event listeners ----------
+            searchInput.addEventListener('input', (e) => {
+                currentFilters.search = e.target.value;
+                updateFiltersAndRender();
+            });
+
+            specSelect.addEventListener('change', (e) => {
+                currentFilters.specialization = e.target.value;
+                updateFiltersAndRender();
+            });
+
+            availSelect.addEventListener('change', (e) => {
+                currentFilters.availability = e.target.value;
+                updateFiltersAndRender();
+            });
+
+            sortSelect.addEventListener('change', (e) => {
+                currentFilters.sort = e.target.value;
+                updateFiltersAndRender();
+            });
+
+            resetBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                specSelect.value = '';
+                availSelect.value = '';
+                sortSelect.value = '';
+                currentFilters = { search: '', specialization: '', availability: '', sort: '' };
+                updateFiltersAndRender();
+            });
+
+            loadMoreBtn.addEventListener('click', () => {
+                const total = filteredDoctors.length;
+                if (visibleCount + STEP <= total) {
+                    visibleCount += STEP;
+                } else {
+                    visibleCount = total;
+                }
+                renderDoctors();
+            });
+
+            // ---------- SIMULATE LOADING (skeleton then render) ----------
+            function initialLoad() {
+                // hide grid, show skeleton
+                gridEl.classList.add('hidden');
+                skeletonEl.classList.remove('hidden');
+                loadMoreContainer.classList.add('hidden');
+                resultsCountSpan.innerText = 'Loading doctors...';
+
+                // Simulate network delay (premium feel)
+                setTimeout(() => {
+                    // populate initial filters (all specializations already set)
+                    // render doctors
+                    renderDoctors();
+                    // hide skeleton, show grid
+                    skeletonEl.classList.add('hidden');
+                    gridEl.classList.remove('hidden');
+                }, 800); // 800ms shimmer
+            }
+
+            initialLoad();
+        })();
+    </script>
+</body>
+</html>

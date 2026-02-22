@@ -16,8 +16,16 @@ def is_valid_contact(contact):
     email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
     phone_regex = r'^\+?\d{10,15}$'
     return bool(re.match(email_regex, contact) or re.match(phone_regex, contact))
+from apps.core.utilities.email import send_email_template
+
 
 def send_otp_code(contact, purpose="login"):
+    """
+    Send an OTP code using the reusable HTML email template.
+    
+    contact: user's email address
+    purpose: string describing purpose, e.g., login, password_reset
+    """
     if not is_valid_contact(contact):
         return None, "Invalid contact"
 
@@ -31,21 +39,34 @@ def send_otp_code(contact, purpose="login"):
     if send_count >= OTP_SEND_LIMIT:
         return None, "OTP send limit reached. Try later."
 
+    # Generate OTP
     otp_code = generate_otp()
+
+    # Save OTP and rate-limiting info in cache
     cache.set(f"otp:{contact}:{purpose}", otp_code, timeout=OTP_EXPIRY_SECONDS)
-    cache.set(send_key, send_count + 1, timeout=3600)  # 1 hour send limit
+    cache.set(send_key, send_count + 1, timeout=3600)  # 1-hour limit
     cache.set(last_sent_key, True, timeout=OTP_RESEND_COOLDOWN)  # cooldown
 
-    send_mail(
-        subject="Your OTP Code",
-        message=f"Your OTP code is {otp_code}. It will expire in {OTP_EXPIRY_SECONDS // 60} minutes.",
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[contact],
-        fail_silently=False,
-    )
-    print(f"[DEBUG] OTP for {contact} is {otp_code}")
+    # Prepare email context
+    context = {
+        "user_name": contact.split("@")[0],  # use the local-part of email as username
+        "title": "Your OTP Code",
+        "message_content": f"Use the following OTP to complete the {purpose} process.",
+        "otp": otp_code,
+        "expiry_minutes": OTP_EXPIRY_SECONDS // 60
+    }
 
+    # Send using reusable template
+    send_email_template(
+        subject="Your OTP Code",
+        recipient_email=contact,
+        template_name="emails/base_template.html",
+        context=context
+    )
+
+    print(f"[DEBUG] OTP for {contact} is {otp_code}")
     return otp_code, None
+
 
 def verify_otp_code(contact, otp_code, purpose="login"):
     cache_key = f"otp:{contact}:{purpose}"
