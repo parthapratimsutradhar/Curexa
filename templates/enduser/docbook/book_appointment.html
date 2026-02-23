@@ -2,2595 +2,926 @@
 {% block title %}Book Doctor Appointment | Curexa{% endblock %}
 {% load static %}
 {% block content %}
-    <style>
-        :root {
-            --primary-blue: #2a86ff;
-            --primary-blue-dark: #1a75ff;
-            --soft-blue: #e8f2ff;
-            --light-green: #e7f7ef;
-            --dark-green: #28a745;
-            --text-dark: #1a202c;
-            --text-light: #718096;
-            --white: #ffffff;
-            --gray-bg: #f8f9fa;
-            --border-color: #e2e8f0;
-            --shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-            --shadow-hover: 0 15px 35px rgba(42, 134, 255, 0.1);
-            --radius: 16px;
-            --radius-sm: 10px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --gradient-primary: linear-gradient(135deg, #2a86ff 0%, #1a75ff 100%);
-            --gradient-success: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text-dark);
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            color: var(--primary-blue);
-        }
-
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--gradient-primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 20px rgba(42, 134, 255, 0.2);
-        }
-
-        .logo-icon i {
-            font-size: 24px;
-            color: white;
-        }
-
-        .logo h1 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 800;
-            font-size: 36px;
-            letter-spacing: -0.5px;
-        }
-
-        .subtitle {
-            color: var(--text-light);
-            font-size: 17px;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.7;
-        }
-
-        /* NEW: Horizontal Booking Journey */
-        .booking-journey-container {
-            display: flex;
-            justify-content: center;
-            margin: 40px 0 50px 0;
-            position: relative;
-        }
-
-        .booking-journey {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 30px 40px;
-            box-shadow: var(--shadow);
-            width: 100%;
-            max-width: 900px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .journey-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 30px;
-        }
-
-        .journey-header h2 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: 22px;
-            color: var(--text-dark);
-            margin: 0;
-        }
-
-        .journey-header i {
-            color: var(--primary-blue);
-            font-size: 20px;
-        }
-
-        .step-indicator-horizontal {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-        }
-
-        .step-indicator-horizontal::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gray-bg);
-            transform: translateY(-50%);
-            z-index: 1;
-            border-radius: 3px;
-        }
-
-        .step-horizontal {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            position: relative;
-            z-index: 2;
-            flex: 1;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .step-horizontal:hover {
-            transform: translateY(-5px);
-        }
-
-        .step-number-container {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--white);
-            border: 3px solid var(--gray-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            transition: var(--transition);
-        }
-
-        .step-horizontal.active .step-number-container {
-            background: var(--gradient-primary);
-            border-color: var(--primary-blue);
-            transform: scale(1.1);
-            box-shadow: 0 8px 20px rgba(42, 134, 255, 0.3);
-        }
-
-        .step-horizontal.completed .step-number-container {
-            background: var(--gradient-success);
-            border-color: var(--dark-green);
-        }
-
-        .step-number {
-            font-weight: 700;
-            font-size: 18px;
-            color: var(--text-light);
-            transition: var(--transition);
-        }
-
-        .step-horizontal.active .step-number {
-            color: var(--white);
-        }
-
-        .step-horizontal.completed .step-number {
-            color: var(--white);
-        }
-
-        .step-info-horizontal {
-            text-align: center;
-            max-width: 120px;
-        }
-
-        .step-info-horizontal h3 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 15px;
-            margin-bottom: 4px;
-            color: var(--text-light);
-            transition: var(--transition);
-        }
-
-        .step-horizontal.active .step-info-horizontal h3 {
-            color: var(--primary-blue);
-            font-weight: 700;
-        }
-
-        .step-info-horizontal p {
-            font-size: 12px;
-            color: var(--text-light);
-            opacity: 0.8;
-        }
-
-        .step-horizontal.completed .step-info-horizontal h3 {
-            color: var(--dark-green);
-        }
-
-        /* Connection lines between steps */
-        .step-horizontal:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            top: 25px;
-            left: 60%;
-            right: -40%;
-            height: 3px;
-            background: var(--gray-bg);
-            z-index: 1;
-            transition: var(--transition);
-        }
-
-        .step-horizontal.active:not(:last-child)::after {
-            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--gray-bg) 100%);
-        }
-
-        .step-horizontal.completed:not(:last-child)::after {
-            background: var(--dark-green);
-        }
-
-        .content-area {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .step-section {
-            background-color: var(--white);
-            border-radius: var(--radius);
-            padding: 40px;
-            box-shadow: var(--shadow);
-            display: none;
-            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        @keyframes slideIn {
-            from { 
-                opacity: 0; 
-                transform: translateY(20px) scale(0.98); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0) scale(1); 
-            }
-        }
-
-        .step-section.active {
-            display: block;
-        }
-
-        .section-header {
-            margin-bottom: 35px;
-        }
-
-        .section-header h2 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: 28px;
-            color: var(--text-dark);
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-        }
-
-        .section-header p {
-            color: var(--text-light);
-            font-size: 17px;
-            max-width: 700px;
-        }
-
-        /* Doctor Cards */
-        .doctor-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-        }
-
-        .doctor-card {
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 25px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .doctor-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: var(--gradient-primary);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .doctor-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-hover);
-            border-color: var(--primary-blue);
-        }
-
-        .doctor-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .doctor-card.selected {
-            border-color: var(--primary-blue);
-            background-color: var(--soft-blue);
-            box-shadow: 0 15px 35px rgba(42, 134, 255, 0.15);
-        }
-
-        .doctor-card.selected::before {
-            transform: scaleX(1);
-        }
-
-        .doctor-avatar {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-bottom: 20px;
-            border: 4px solid var(--soft-blue);
-            transition: var(--transition);
-        }
-
-        .doctor-card:hover .doctor-avatar {
-            border-color: var(--primary-blue);
-            transform: scale(1.05);
-        }
-
-        .doctor-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .doctor-info h3 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: 20px;
-            margin-bottom: 8px;
-        }
-
-        .doctor-specialty {
-            color: var(--primary-blue);
-            font-weight: 600;
-            margin-bottom: 10px;
-            padding: 6px 16px;
-            background: var(--soft-blue);
-            border-radius: 20px;
-            display: inline-block;
-        }
-
-        .doctor-experience {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 15px;
-            color: var(--text-light);
-            margin-bottom: 15px;
-        }
-
-        .doctor-rating {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            color: #ffc107;
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-
-        .doctor-availability {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            color: var(--dark-green);
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .doctor-availability i {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .select-btn {
-            background: var(--gradient-primary);
-            color: var(--white);
-            border: none;
-            padding: 12px 24px;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            min-width: 140px;
-            box-shadow: 0 4px 12px rgba(42, 134, 255, 0.25);
-        }
-
-        .select-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(42, 134, 255, 0.35);
-        }
-
-        .doctor-card.selected .select-btn {
-            background: var(--gradient-success);
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.25);
-        }
-
-        /* Patient Details Form */
-        .patient-form {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-        }
-
-        @media (min-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        label {
-            font-weight: 600;
-            color: var(--text-dark);
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .required {
-            color: #ff4757;
-            font-size: 20px;
-        }
-
-        .input-container {
-            position: relative;
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-            font-size: 18px;
-        }
-
-        input, select, textarea {
-            padding: 16px 20px 16px 50px;
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            font-family: 'Inter', sans-serif;
-            font-size: 16px;
-            transition: var(--transition);
-            background-color: var(--white);
-            width: 100%;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 4px rgba(42, 134, 255, 0.15);
-        }
-
-        textarea {
-            min-height: 140px;
-            resize: vertical;
-            padding-left: 20px;
-            line-height: 1.6;
-        }
-
-        .character-count {
-            text-align: right;
-            font-size: 13px;
-            color: var(--text-light);
-            margin-top: 5px;
-        }
-
-        .checkbox-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 12px;
-            margin-top: 5px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            background: var(--gray-bg);
-            border-radius: var(--radius-sm);
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .checkbox-item:hover {
-            background: var(--soft-blue);
-            transform: translateY(-2px);
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: var(--primary-blue);
-            cursor: pointer;
-        }
-
-        .form-note {
-            font-size: 14px;
-            color: var(--text-light);
-            margin-top: 6px;
-            padding: 12px;
-            background: var(--soft-blue);
-            border-radius: var(--radius-sm);
-            border-left: 4px solid var(--primary-blue);
-        }
-
-        .symptoms-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 5px;
-        }
-
-        .symptom-tag {
-            padding: 10px 18px;
-            background-color: var(--gray-bg);
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            border: 2px solid transparent;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .symptom-tag:hover {
-            background-color: var(--soft-blue);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
-        }
-
-        .symptom-tag.selected {
-            background: var(--gradient-primary);
-            color: var(--white);
-            border-color: var(--primary-blue);
-            box-shadow: 0 4px 12px rgba(42, 134, 255, 0.2);
-        }
-
-        .symptom-tag i {
-            font-size: 12px;
-        }
-
-        /* Date & Time Selector */
-        .date-selector {
-            display: flex;
-            flex-direction: column;
-            gap: 35px;
-        }
-
-        .calendar-navigation {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .calendar-nav-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid var(--border-color);
-            background: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .calendar-nav-btn:hover {
-            border-color: var(--primary-blue);
-            background: var(--soft-blue);
-            transform: scale(1.1);
-        }
-
-        .calendar-title {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: 20px;
-            color: var(--text-dark);
-        }
-
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .calendar-header {
-            font-weight: 600;
-            text-align: center;
-            padding: 15px;
-            color: var(--text-light);
-            font-size: 14px;
-        }
-
-        .calendar-day {
-            padding: 18px 0;
-            text-align: center;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            font-weight: 500;
-            border: 2px solid transparent;
-        }
-
-        .calendar-day:hover {
-            background-color: var(--soft-blue);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
-        }
-
-        .calendar-day.selected {
-            background: var(--gradient-primary);
-            color: var(--white);
-            box-shadow: 0 6px 20px rgba(42, 134, 255, 0.25);
-        }
-
-        .calendar-day.today {
-            border: 2px solid var(--primary-blue);
-            background: var(--soft-blue);
-        }
-
-        .calendar-day.disabled {
-            color: #cbd5e0;
-            cursor: not-allowed;
-            background: var(--gray-bg);
-        }
-
-        .calendar-day.disabled:hover {
-            background: var(--gray-bg);
-            transform: none;
-            box-shadow: none;
-        }
-
-        .time-slots {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
-        }
-
-        .time-slot {
-            padding: 16px;
-            text-align: center;
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 500;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .time-slot:hover {
-            border-color: var(--primary-blue);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
-        }
-
-        .time-slot.selected {
-            background: var(--gradient-primary);
-            color: var(--white);
-            border-color: var(--primary-blue);
-            box-shadow: 0 6px 20px rgba(42, 134, 255, 0.25);
-        }
-
-        .time-slot.booked {
-            background: var(--gray-bg);
-            color: var(--text-light);
-            cursor: not-allowed;
-            position: relative;
-        }
-
-        .time-slot.booked::after {
-            content: 'Booked';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            background: rgba(0,0,0,0.1);
-            padding: 2px 10px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        /* Consultation Types */
-        .consultation-types {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        @media (min-width: 768px) {
-            .consultation-types {
-                flex-direction: row;
-            }
-        }
-
-        .consultation-type {
-            flex: 1;
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 35px 25px;
-            cursor: pointer;
-            transition: var(--transition);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .consultation-type::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: var(--gradient-primary);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .consultation-type:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-hover);
-            border-color: var(--primary-blue);
-        }
-
-        .consultation-type:hover::before {
-            transform: scaleX(1);
-        }
-
-        .consultation-type.selected {
-            border-color: var(--primary-blue);
-            background-color: var(--soft-blue);
-            box-shadow: 0 15px 35px rgba(42, 134, 255, 0.15);
-        }
-
-        .consultation-type.selected::before {
-            transform: scaleX(1);
-        }
-
-        .consultation-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-            color: var(--primary-blue);
-            transition: var(--transition);
-        }
-
-        .consultation-type:hover .consultation-icon {
-            transform: scale(1.1);
-        }
-
-        .consultation-type h3 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            margin-bottom: 15px;
-            font-size: 22px;
-        }
-
-        .consultation-type p {
-            color: var(--text-light);
-            margin-bottom: 20px;
-            line-height: 1.7;
-        }
-
-        .price {
-            font-weight: 800;
-            color: var(--dark-green);
-            font-size: 24px;
-            margin-top: 15px;
-            display: inline-block;
-            padding: 8px 20px;
-            background: rgba(40, 167, 69, 0.1);
-            border-radius: 50px;
-        }
-
-        /* Summary */
-        .summary-content {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 40px;
-        }
-
-        @media (min-width: 768px) {
-            .summary-content {
-                grid-template-columns: 2fr 1fr;
-            }
-        }
-
-        .summary-details {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
-            border-radius: var(--radius-sm);
-            transition: var(--transition);
-            background: var(--gray-bg);
-        }
-
-        .summary-item:hover {
-            background: var(--soft-blue);
-            transform: translateX(5px);
-        }
-
-        .summary-label {
-            color: var(--text-light);
-            font-weight: 500;
-        }
-
-        .summary-value {
-            font-weight: 600;
-            text-align: right;
-            max-width: 60%;
-        }
-
-        .doctor-summary {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 25px;
-            background: var(--soft-blue);
-            border-radius: var(--radius);
-            border-left: 5px solid var(--primary-blue);
-        }
-
-        .price-breakdown {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: var(--radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            height: fit-content;
-        }
-
-        .price-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 18px;
-            padding-bottom: 18px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .price-total {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 2px solid var(--border-color);
-            font-weight: 700;
-            font-size: 22px;
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .btn {
-            padding: 16px 32px;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 160px;
-            justify-content: center;
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--primary-blue);
-            border: 2px solid var(--primary-blue);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--soft-blue);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
-        }
-
-        .btn-primary {
-            background: var(--gradient-primary);
-            color: var(--white);
-            box-shadow: 0 6px 20px rgba(42, 134, 255, 0.25);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(42, 134, 255, 0.35);
-        }
-
-        .btn-payment {
-            background: var(--gradient-success);
-            color: var(--white);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.25);
-        }
-
-        .btn-payment:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.35);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-
-        /* Progress Bar - REMOVED since we have horizontal journey */
-
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            padding: 20px 25px;
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transform: translateX(150%);
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-            border-left: 5px solid var(--primary-blue);
-        }
-
-        .notification.show {
-            transform: translateX(0);
-        }
-
-        .notification-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--gradient-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-        }
-
-        .notification-content h4 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .notification-content p {
-            color: var(--text-light);
-            font-size: 14px;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 60px;
-            padding-top: 30px;
-            border-top: 1px solid var(--border-color);
-            color: var(--text-light);
-            font-size: 15px;
-        }
-
-        /* Mobile responsiveness for horizontal journey */
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .booking-journey {
-                padding: 20px;
-                overflow-x: auto;
-            }
-            
-            .step-indicator-horizontal {
-                min-width: 500px;
-            }
-            
-            .step-horizontal:not(:last-child)::after {
-                left: 55%;
-                right: -35%;
-            }
-            
-            .step-section {
-                padding: 25px;
-            }
-            
-            .doctor-cards {
-                grid-template-columns: 1fr;
-            }
-            
-            .time-slots {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            }
-            
-            .btn {
-                min-width: 120px;
-                padding: 14px 20px;
-            }
-        }
-
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
-
-    <div class="container">
-        <header>
-            <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-heartbeat"></i>
-                </div>
-                <h1>MedCare</h1>
-            </div>
-            <p class="subtitle">Experience seamless healthcare booking with our modern, intuitive platform. Connect with specialists in just a few clicks.</p>
-        </header>
-
-        <!-- NEW: Horizontal Booking Journey -->
-        <div class="booking-journey-container">
-            <div class="booking-journey">
-                <div class="journey-header">
-                    <i class="fas fa-road"></i>
-                    <h2>Booking Journey</h2>
-                </div>
-                <div class="step-indicator-horizontal">
-                    <div class="step-horizontal active" data-step="1">
-                        <div class="step-number-container">
-                            <div class="step-number">1</div>
-                        </div>
-                        <div class="step-info-horizontal">
-                            <h3>Select Doctor</h3>
-                            <p>Choose your specialist</p>
-                        </div>
-                    </div>
-                    <div class="step-horizontal" data-step="2">
-                        <div class="step-number-container">
-                            <div class="step-number">2</div>
-                        </div>
-                        <div class="step-info-horizontal">
-                            <h3>Patient Details</h3>
-                            <p>Share your health info</p>
-                        </div>
-                    </div>
-                    <div class="step-horizontal" data-step="3">
-                        <div class="step-number-container">
-                            <div class="step-number">3</div>
-                        </div>
-                        <div class="step-info-horizontal">
-                            <h3>Date & Time</h3>
-                            <p>Pick your slot</p>
-                        </div>
-                    </div>
-                    <div class="step-horizontal" data-step="4">
-                        <div class="step-number-container">
-                            <div class="step-number">4</div>
-                        </div>
-                        <div class="step-info-horizontal">
-                            <h3>Consultation Type</h3>
-                            <p>Online or in-clinic</p>
-                        </div>
-                    </div>
-                    <div class="step-horizontal" data-step="5">
-                        <div class="step-number-container">
-                            <div class="step-number">5</div>
-                        </div>
-                        <div class="step-info-horizontal">
-                            <h3>Confirm Booking</h3>
-                            <p>Review and pay</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<style>
+    /* ---------- MERGED STYLES (including enhanced doctor cards) ---------- */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --primary: #0b6e6f;
+        --primary-light: #e0f2f1;
+        --secondary: #7eb09e;
+        --accent-available: #2b7d6c;
+        --accent-busy: #c44545;
+        --gray-light: #f0f4f7;
+        --gray-border: #d9e2e9;
+        --card-shadow: 0 8px 20px rgba(0, 40, 40, 0.06), 0 2px 6px rgba(0, 30, 30, 0.03);
+        --hover-shadow: 0 14px 30px rgba(6, 60, 60, 0.12);
+        --text-dark: #183b4a;
+        --text-soft: #436573;
+        --bg-soft: #f9fdfe;
+        --primary-blue: #2a86ff;
+        --primary-blue-dark: #1a75ff;
+        --soft-blue: #e8f2ff;
+        --light-green: #e7f7ef;
+        --dark-green: #28a745;
+        --white: #ffffff;
+        --border-color: #e2e8f0;
+        --radius: 16px;
+        --radius-sm: 10px;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Additional from previous doctor cards */
+        --star-color: #fbbf24;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        color: var(--text-dark);
+        line-height: 1.6;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 1.2rem;
+    }
+
+    .main-header {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        padding: 0.8rem 0;
+        border-bottom: 1px solid var(--gray-border);
+    }
+    .header-inner {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+    .brand {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--primary);
+        letter-spacing: -0.5px;
+    }
+    .brand span {
+        color: var(--secondary);
+        font-weight: 400;
+        font-size: 1rem;
+        margin-left: 4px;
+    }
+    .breadcrumb {
+        padding: 0.8rem 0 0.2rem 0;
+        font-size: 0.95rem;
+        color: var(--text-soft);
+    }
+    .breadcrumb a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .booking-journey-container {
+        display: flex;
+        justify-content: center;
+        margin: 40px 0 50px 0;
+    }
+    .booking-journey {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: 30px 40px;
+        box-shadow: var(--card-shadow);
+        width: 100%;
+        max-width: 900px;
+    }
+    .journey-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+    .journey-header h2 {
+        font-weight: 700;
+        font-size: 22px;
+        color: var(--text-dark);
+    }
+    .step-indicator-horizontal {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+    }
+    .step-indicator-horizontal::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--gray-light);
+        transform: translateY(-50%);
+        z-index: 1;
+    }
+    .step-horizontal {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+        z-index: 2;
+        flex: 1;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    .step-number-container {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--white);
+        border: 3px solid var(--gray-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+    }
+    .step-horizontal.active .step-number-container {
+        background: var(--primary);
+        border-color: var(--primary);
+        transform: scale(1.1);
+        box-shadow: 0 8px 20px rgba(11,110,111,0.3);
+    }
+    .step-horizontal.completed .step-number-container {
+        background: var(--dark-green);
+        border-color: var(--dark-green);
+    }
+    .step-number {
+        font-weight: 700;
+        font-size: 18px;
+        color: var(--text-light);
+    }
+    .step-horizontal.active .step-number,
+    .step-horizontal.completed .step-number {
+        color: var(--white);
+    }
+    .step-info-horizontal {
+        text-align: center;
+        max-width: 120px;
+    }
+    .step-info-horizontal h3 {
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 4px;
+        color: var(--text-light);
+    }
+    .step-horizontal.active .step-info-horizontal h3 {
+        color: var(--primary);
+        font-weight: 700;
+    }
+
+    .content-area {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+    .step-section {
+        background-color: var(--white);
+        border-radius: var(--radius);
+        padding: 40px;
+        box-shadow: var(--card-shadow);
+        display: none;
+        animation: slideIn 0.5s ease forwards;
+    }
+    .step-section.active {
+        display: block;
+    }
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(20px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .filter-bar {
+        background: rgba(255,255,255,0.92);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--gray-border);
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(0,30,30,0.03);
+    }
+    .filter-container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.8rem 1.2rem;
+    }
+    .filter-group {
+        display: flex;
+        flex: 1 1 180px;
+        flex-direction: column;
+        min-width: 150px;
+    }
+    .filter-group label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: var(--primary);
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+    .filter-group input, .filter-group select {
+        background: white;
+        border: 1px solid var(--gray-border);
+        border-radius: 40px;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.95rem;
+        color: var(--text-dark);
+        outline: none;
+        transition: 0.15s;
+        width: 100%;
+    }
+    .filter-group input:focus, .filter-group select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(11,110,111,0.15);
+    }
+    .reset-btn {
+        background: transparent;
+        border: 1px dashed var(--primary);
+        color: var(--primary);
+        border-radius: 40px;
+        padding: 0.6rem 1.5rem;
+        font-weight: 500;
+        font-size: 0.9rem;
+        cursor: pointer;
+        white-space: nowrap;
+        margin-left: auto;
+    }
+    .reset-btn:hover {
+        background: var(--primary-light);
+        border: 1px solid var(--primary);
+    }
+
+    /* ---------- Enhanced Doctor Cards (from previous design) ---------- */
+    .doctors-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.8rem;
+        transition: 0.2s;
+    }
+    @media (min-width: 600px) { .doctors-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 992px) { .doctors-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 1400px) { .doctors-grid { grid-template-columns: repeat(4, 1fr); } }
+
+    .doctor-card {
+        background-color: var(--white);
+        border-radius: var(--radius);
+        padding: 20px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        position: relative;
+    }
+    .doctor-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-hover);
+    }
+    .doctor-card.selected {
+        border: 2px solid var(--primary);
+        background-color: var(--primary-light);
+    }
+
+    .doctor-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 16px;
+    }
+
+    .doctor-badges {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .badge {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .badge-top-rated {
+        background-color: #fff8e1;
+        color: #d97706;
+    }
+    .badge-available {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+    }
+    .badge-verified {
+        background-color: #e3f2fd;
+        color: var(--primary-blue);
+    }
+    .badge-telemedicine {
+        background-color: #f0f9ff;
+        color: #0369a1;
+    }
+
+    .save-btn {
+        background: none;
+        border: none;
+        color: var(--medium-gray);
+        cursor: pointer;
+        transition: var(--transition);
+        padding: 4px;
+        border-radius: 4px;
+    }
+    .save-btn:hover, .save-btn.active {
+        color: var(--primary-blue);
+    }
+
+    .doctor-info {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .doctor-photo {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--soft-blue);
+    }
+
+    .doctor-details {
+        flex-grow: 1;
+    }
+
+    .doctor-name {
+        font-size: 18px;
+        margin-bottom: 4px;
+        color: var(--text-dark);
+    }
+
+    .doctor-specialization {
+        color: var(--primary);
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .doctor-education {
+        color: var(--text-soft);
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+
+    .doctor-experience {
+        color: var(--text-soft);
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+
+    .rating {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+
+    .stars {
+        color: var(--star-color);
+        font-size: 14px;
+    }
+
+    .rating-value {
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .rating-count {
+        color: var(--text-soft);
+        font-size: 13px;
+    }
+
+    .doctor-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 16px;
+    }
+
+    .tag {
+        background-color: var(--gray-light);
+        color: var(--text-soft);
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .tag.same-day {
+        background-color: #e0f2fe;
+        color: #0369a1;
+    }
+
+    .tag.telemedicine {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+
+    .doctor-details-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: var(--text-soft);
+    }
+
+    .detail-item i {
+        color: var(--primary);
+        width: 16px;
+    }
+
+    .availability-badge {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 4px;
+    }
+    .availability-online { background-color: #10B981; }
+    .availability-busy { background-color: #F59E0B; }
+    .availability-offline { background-color: #6B7280; }
+
+    .doctor-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid var(--border-color);
+        padding-top: 16px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .consultation-fee {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .consultation-fee span {
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--text-soft);
+        display: block;
+    }
+
+    .doctor-actions {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .btn {
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        border: none;
+        font-size: 14px;
+        flex: 1;
+        text-align: center;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-primary {
+        background-color: var(--primary);
+        color: var(--white);
+    }
+
+    .btn-primary:hover {
+        background-color: #085a5b;
+        transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+        background-color: var(--gray-light);
+        color: var(--primary);
+        border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+        background-color: #e5e7eb;
+        transform: translateY(-2px);
+    }
+
+    .skeleton-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.8rem;
+    }
+    @media (min-width: 600px) { .skeleton-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (min-width: 992px) { .skeleton-grid { grid-template-columns: repeat(3,1fr); } }
+    @media (min-width: 1400px) { .skeleton-grid { grid-template-columns: repeat(4,1fr); } }
+    .skeleton-card {
+        background: white;
+        border-radius: 28px;
+        padding: 1.8rem 1.2rem 1.5rem;
+        box-shadow: var(--card-shadow);
+        border: 1px solid #eaf1f5;
+    }
+    .shimmer {
+        background: linear-gradient(90deg, #f0f4f8 25%, #e2e9f0 50%, #f0f4f8 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.6s infinite;
+        border-radius: 60px;
+    }
+    .skeleton-photo {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        margin-bottom: 1rem;
+    }
+    .skeleton-line {
+        height: 18px;
+        width: 70%;
+        margin: 12px 0 8px;
+        border-radius: 30px;
+    }
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    .load-more-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        margin: 2.8rem 0 2rem;
+    }
+    .load-more-btn {
+        background: white;
+        border: 1.5px solid var(--primary);
+        color: var(--primary);
+        padding: 0.8rem 3rem;
+        border-radius: 60px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .load-more-btn:hover:not(:disabled) {
+        background: var(--primary);
+        color: white;
+    }
+    .load-more-btn:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+
+    /* Patient form and other steps remain unchanged */
+    .patient-form { display: flex; flex-direction: column; gap: 25px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+    .form-group { display: flex; flex-direction: column; gap: 10px; }
+    label { font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 6px; }
+    .input-container { position: relative; }
+    .input-icon {
+        position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+        color: var(--text-light); font-size: 18px;
+    }
+    input, select, textarea {
+        padding: 16px 20px 16px 50px;
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        font-size: 16px;
+        transition: var(--transition);
+        width: 100%;
+    }
+    input:focus, select:focus, textarea:focus {
+        outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(11,110,111,0.15);
+    }
+    textarea { min-height: 140px; padding-left: 20px; }
+    .symptoms-tags {
+        display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px;
+    }
+    .symptom-tag {
+        padding: 10px 18px; background-color: var(--gray-light); border-radius: 50px;
+        font-size: 14px; font-weight: 500; cursor: pointer; transition: var(--transition);
+        display: flex; align-items: center; gap: 8px;
+    }
+    .symptom-tag.selected {
+        background: var(--primary); color: white;
+    }
+    .checkbox-group {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;
+    }
+    .checkbox-item {
+        display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+        background: var(--gray-light); border-radius: var(--radius-sm); cursor: pointer;
+    }
+    .checkbox-item input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); }
+
+    /* Modern date & time styles */
+    .calendar-navigation {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        background: var(--white);
+        padding: 15px 20px;
+        border-radius: 60px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        border: 1px solid var(--gray-border);
+    }
+    .calendar-nav-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--white);
+        border: 1px solid var(--gray-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.2rem;
+        color: var(--primary);
+        transition: var(--transition);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+    .calendar-nav-btn:hover {
+        background: var(--primary-light);
+        border-color: var(--primary);
+        transform: scale(1.05);
+    }
+    #calendar-title {
+        font-weight: 700;
+        font-size: 1.4rem;
+        color: var(--text-dark);
+    }
+
+    .calendar {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+        margin-bottom: 30px;
+        background: var(--white);
+        padding: 20px;
+        border-radius: var(--radius);
+        border: 1px solid var(--gray-border);
+        box-shadow: var(--card-shadow);
+    }
+    .calendar-header {
+        font-weight: 600;
+        text-align: center;
+        padding: 12px;
+        color: var(--text-soft);
+        font-size: 0.9rem;
+    }
+    .calendar-day {
+        padding: 16px 0;
+        text-align: center;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 500;
+        background: var(--white);
+        border: 1px solid transparent;
+    }
+    .calendar-day:hover:not(.disabled) {
+        background: var(--primary-light);
+        border-color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(11,110,111,0.1);
+    }
+    .calendar-day.selected {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        box-shadow: 0 8px 16px rgba(11,110,111,0.2);
+    }
+    .calendar-day.today {
+        border: 2px solid var(--primary);
+        font-weight: 700;
+    }
+    .calendar-day.disabled {
+        color: #cbd5e0;
+        cursor: not-allowed;
+        background: #f8fafc;
+        opacity: 0.6;
+    }
+
+    .selected-date {
+        margin: 10px 0 20px;
+        font-weight: 600;
+        font-size: 1.2rem;
+        color: var(--primary);
+        background: var(--primary-light);
+        padding: 12px 20px;
+        border-radius: 60px;
+        display: inline-block;
+    }
+
+    .time-slots {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 15px;
+        margin: 25px 0;
+    }
+    .time-slot {
+        padding: 16px 8px;
+        text-align: center;
+        border: 1px solid var(--gray-border);
+        border-radius: 60px;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 500;
+        background: var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .time-slot i {
+        color: var(--primary);
+        font-size: 1rem;
+    }
+    .time-slot:hover:not(.booked) {
+        border-color: var(--primary);
+        background: var(--primary-light);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(11,110,111,0.08);
+    }
+    .time-slot.selected {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        box-shadow: 0 8px 16px rgba(11,110,111,0.2);
+    }
+    .time-slot.selected i {
+        color: white;
+    }
+    .time-slot.booked {
+        background: var(--gray-light);
+        color: var(--text-light);
+        cursor: not-allowed;
+        opacity: 0.7;
+        text-decoration: line-through;
+    }
+
+    .consultation-types {
+        display: flex; gap: 20px; flex-wrap: wrap;
+    }
+    .consultation-type {
+        flex: 1; border: 2px solid var(--border-color); border-radius: var(--radius);
+        padding: 35px 25px; cursor: pointer; transition: var(--transition); text-align: center;
+    }
+    .consultation-type:hover { transform: translateY(-8px); border-color: var(--primary); }
+    .consultation-type.selected { border-color: var(--primary); background: var(--primary-light); }
+    .consultation-icon { font-size: 48px; margin-bottom: 20px; color: var(--primary); }
+    .price { font-weight: 800; color: var(--dark-green); font-size: 24px; margin-top: 15px; }
+
+    .summary-content { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
+    .summary-details { display: flex; flex-direction: column; gap: 25px; }
+    .doctor-summary {
+        display: flex; align-items: center; gap: 20px; padding: 25px;
+        background: var(--primary-light); border-radius: var(--radius);
+    }
+    .price-breakdown {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: var(--radius); padding: 30px; height: fit-content;
+    }
+    .price-item { display: flex; justify-content: space-between; margin-bottom: 18px; }
+    .price-total { display: flex; justify-content: space-between; margin-top: 25px; font-weight: 700; font-size: 22px; }
+
+    .action-buttons {
+        display: flex; justify-content: space-between; margin-top: 40px; padding-top: 30px;
+        border-top: 1px solid var(--border-color);
+    }
+    .btn-payment { background: var(--dark-green); color: white; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .notification {
+        position: fixed; top: 30px; right: 30px; padding: 20px 25px; background: white;
+        border-radius: var(--radius); box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        display: flex; align-items: center; gap: 15px; transform: translateX(150%);
+        transition: transform 0.5s; z-index: 1000; border-left: 5px solid var(--primary);
+    }
+    .notification.show { transform: translateX(0); }
+    .hidden { display: none !important; }
+    footer { text-align: center; margin-top: 60px; color: var(--text-light); }
+</style>
+
+<header class="main-header">
+    <div class="container header-inner">
+        <div class="brand">Curexa <span>· medical & appointment</span></div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="breadcrumb">
+        <a href="#">Home</a> <span class="separator">/</span> <span>Doctors</span>
+    </div>
+</div>
+
+<!-- Progress bar (hidden until doctor is selected) -->
+<div class="booking-journey-container hidden" id="bookingJourney">
+    <div class="booking-journey">
+        <div class="journey-header">
+            <i class="fas fa-road"></i>
+            <h2>Booking Journey</h2>
         </div>
-
-        <div class="content-area">
-            <!-- Step 1: Doctor Selection -->
-            <section id="step-1" class="step-section active">
-                <div class="section-header">
-                    <h2>Find Your Specialist</h2>
-                    <p>Browse our curated list of top-rated healthcare professionals. Click on any doctor to view details and select.</p>
-                </div>
-                <div class="doctor-cards">
-                    <!-- Doctor cards will be generated here -->
-                </div>
-                <div class="action-buttons">
-                    <button class="btn btn-secondary" disabled>
-                        <i class="fas fa-arrow-left"></i>
-                        Previous
-                    </button>
-                    <button id="next-1" class="btn btn-primary" disabled>
-                        Next: Patient Details
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-            </section>
-
-            <!-- Step 2: Patient Details -->
-            <section id="step-2" class="step-section">
-                <div class="section-header">
-                    <h2>Your Health Profile</h2>
-                    <p>Help us understand your needs better. All information is kept confidential and secure.</p>
-                </div>
-                <div class="patient-form">
-                    <!-- ... (rest of the patient form remains the same) ... -->
-                </div>
-                <div class="action-buttons">
-                    <button id="prev-2" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i>
-                        Previous
-                    </button>
-                    <button id="next-2" class="btn btn-primary" disabled>
-                        Next: Date & Time
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-            </section>
-
-            <!-- Step 3: Date & Time Selection -->
-            <section id="step-3" class="step-section">
-                <div class="section-header">
-                    <h2>Schedule Your Visit</h2>
-                    <p>Choose a convenient time for your appointment. Available slots are shown in real-time.</p>
-                </div>
-                <div class="date-selector">
-                    <!-- ... (rest of the date selector remains the same) ... -->
-                </div>
-                <div class="action-buttons">
-                    <button id="prev-3" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i>
-                        Previous
-                    </button>
-                    <button id="next-3" class="btn btn-primary" disabled>
-                        Next: Consultation Type
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-            </section>
-
-            <!-- Step 4: Consultation Type -->
-            <section id="step-4" class="step-section">
-                <div class="section-header">
-                    <h2>Choose Consultation Mode</h2>
-                    <p>Select how you'd prefer to consult with your doctor. Both options provide the same quality of care.</p>
-                </div>
-                <div class="consultation-types">
-                    <!-- ... (rest of consultation types remains the same) ... -->
-                </div>
-                <div class="action-buttons">
-                    <button id="prev-4" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i>
-                        Previous
-                    </button>
-                    <button id="next-4" class="btn btn-primary" disabled>
-                        Next: Confirm Booking
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-            </section>
-
-            <!-- Step 5: Summary & Booking -->
-            <section id="step-5" class="step-section">
-                <div class="section-header">
-                    <h2>Confirm Your Appointment</h2>
-                    <p>Review all details carefully before proceeding to secure payment.</p>
-                </div>
-                <div class="summary-content">
-                    <!-- ... (rest of summary remains the same) ... -->
-                </div>
-                <div class="action-buttons">
-                    <button id="prev-5" class="btn btn-secondary">
-                        <i class="fas fa-edit"></i>
-                        Edit Details
-                    </button>
-                    <button id="next-5" class="btn btn-payment">
-                        <i class="fas fa-lock"></i>
-                        Secure Payment
-                    </button>
-                </div>
-            </section>
-        </div>
-
-        <!-- Notification -->
-        <div class="notification" id="notification">
-            <div class="notification-icon">
-                <i class="fas fa-check"></i>
+        <div class="step-indicator-horizontal">
+            <div class="step-horizontal active" data-step="1">
+                <div class="step-number-container"><div class="step-number">1</div></div>
+                <div class="step-info-horizontal"><h3>Select Doctor</h3><p>Choose your specialist</p></div>
             </div>
-            <div class="notification-content">
-                <h4>Appointment Booked!</h4>
-                <p>Your appointment has been confirmed successfully.</p>
+            <div class="step-horizontal" data-step="2">
+                <div class="step-number-container"><div class="step-number">2</div></div>
+                <div class="step-info-horizontal"><h3>Patient Details</h3><p>Share your health info</p></div>
+            </div>
+            <div class="step-horizontal" data-step="3">
+                <div class="step-number-container"><div class="step-number">3</div></div>
+                <div class="step-info-horizontal"><h3>Date & Time</h3><p>Pick your slot</p></div>
+            </div>
+            <div class="step-horizontal" data-step="4">
+                <div class="step-number-container"><div class="step-number">4</div></div>
+                <div class="step-info-horizontal"><h3>Consultation Type</h3><p>Online or in-clinic</p></div>
+            </div>
+            <div class="step-horizontal" data-step="5">
+                <div class="step-number-container"><div class="step-number">5</div></div>
+                <div class="step-info-horizontal"><h3>Confirm Booking</h3><p>Review and pay</p></div>
             </div>
         </div>
     </div>
-
-    <script>
-        // Enhanced Application State
-        const state = {
-            currentStep: 1,
-            selectedDoctor: null,
-            patientDetails: {
-                name: '',
-                age: '',
-                gender: '',
-                phone: '',
-                conditionTitle: '',
-                selectedSymptoms: [],
-                conditionDetails: '',
-                previousTreatment: false,
-                allergies: false,
-                currentMedication: false,
-                smoker: false,
-                chronicConditions: false,
-                surgeryHistory: false,
-                additionalNotes: ''
-            },
-            currentMonth: new Date().getMonth(),
-            currentYear: new Date().getFullYear(),
-            selectedDate: null,
-            selectedTime: null,
-            selectedConsultationType: null,
-            doctors: [
-                {
-                    id: 1,
-                    name: "Dr. Sarah Johnson",
-                    specialty: "Cardiology",
-                    experience: "12 years",
-                    rating: 4.8,
-                    availability: "Available Today",
-                    img: "https://randomuser.me/api/portraits/women/65.jpg",
-                    languages: ["English", "Spanish"],
-                    education: "Harvard Medical School"
-                },
-                {
-                    id: 2,
-                    name: "Dr. Michael Chen",
-                    specialty: "Neurology",
-                    experience: "15 years",
-                    rating: 4.9,
-                    availability: "Available Tomorrow",
-                    img: "https://randomuser.me/api/portraits/men/32.jpg",
-                    languages: ["English", "Mandarin"],
-                    education: "Johns Hopkins University"
-                },
-                {
-                    id: 3,
-                    name: "Dr. Amanda Rodriguez",
-                    specialty: "Pediatrics",
-                    experience: "8 years",
-                    rating: 4.7,
-                    availability: "Available This Week",
-                    img: "https://randomuser.me/api/portraits/women/44.jpg",
-                    languages: ["English", "Spanish", "French"],
-                    education: "Stanford University"
-                },
-                {
-                    id: 4,
-                    name: "Dr. James Wilson",
-                    specialty: "Dermatology",
-                    experience: "10 years",
-                    rating: 4.6,
-                    availability: "Available Today",
-                    img: "https://randomuser.me/api/portraits/men/75.jpg",
-                    languages: ["English", "German"],
-                    education: "Yale School of Medicine"
-                }
-            ],
-            commonSymptoms: [
-                { name: "Fever", icon: "fas fa-thermometer-full" },
-                { name: "Headache", icon: "fas fa-brain" },
-                { name: "Cough", icon: "fas fa-lungs" },
-                { name: "Fatigue", icon: "fas fa-tired" },
-                { name: "Nausea", icon: "fas fa-stomach" },
-                { name: "Dizziness", icon: "fas fa-dizzy" },
-                { name: "Chest Pain", icon: "fas fa-heartbeat" },
-                { name: "Shortness of Breath", icon: "fas fa-wind" },
-                { name: "Joint Pain", icon: "fas fa-bone" },
-                { name: "Back Pain", icon: "fas fa-spine" },
-                { name: "Abdominal Pain", icon: "fas fa-stomach" },
-                { name: "Rash", icon: "fas fa-allergies" },
-                { name: "Sore Throat", icon: "fas fa-throat" },
-                { name: "Runny Nose", icon: "fas fa-head-side-cough" },
-                { name: "Muscle Ache", icon: "fas fa-dumbbell" }
-            ],
-            bookedSlots: ['2024-01-15 10:30 AM', '2024-01-15 02:00 PM', '2024-01-16 09:00 AM']
-        };
-
-        // DOM Elements
-        const stepSections = document.querySelectorAll('.step-section');
-        const stepIndicators = document.querySelectorAll('.step-horizontal');
-        const notification = document.getElementById('notification');
-        const nextButtons = {
-            1: document.getElementById('next-1'),
-            2: document.getElementById('next-2'),
-            3: document.getElementById('next-3'),
-            4: document.getElementById('next-4'),
-            5: document.getElementById('next-5')
-        };
-        const prevButtons = {
-            2: document.getElementById('prev-2'),
-            3: document.getElementById('prev-3'),
-            4: document.getElementById('prev-4'),
-            5: document.getElementById('prev-5')
-        };
-
-        // Initialize the application
-        function init() {
-            renderDoctorCards();
-            renderSymptomsTags();
-            renderCalendar();
-            renderTimeSlots();
-            attachEventListeners();
-            updateStepIndicator();
-            
-            // Set today as default selected date
-            const today = new Date();
-            const formattedToday = today.toISOString().split('T')[0];
-            selectDate(formattedToday);
-        }
-
-        // Render doctor cards with enhanced info
-        function renderDoctorCards() {
-            const doctorCardsContainer = document.querySelector('.doctor-cards');
-            doctorCardsContainer.innerHTML = '';
-
-            state.doctors.forEach(doctor => {
-                const card = document.createElement('div');
-                card.className = 'doctor-card';
-                if (state.selectedDoctor && state.selectedDoctor.id === doctor.id) {
-                    card.classList.add('selected');
-                }
-
-                card.innerHTML = `
-                    <div class="doctor-avatar">
-                        <img src="${doctor.img}" alt="${doctor.name}">
-                    </div>
-                    <div class="doctor-info">
-                        <h3>${doctor.name}</h3>
-                        <div class="doctor-specialty">${doctor.specialty}</div>
-                        <div class="doctor-experience">
-                            <i class="far fa-clock"></i>
-                            <span>${doctor.experience} experience</span>
-                        </div>
-                        <div class="doctor-rating">
-                            ${generateStars(doctor.rating)}
-                            <span>${doctor.rating}/5.0</span>
-                        </div>
-                        <div class="doctor-availability">
-                            <i class="fas fa-circle"></i>
-                            <span>${doctor.availability}</span>
-                        </div>
-                        <button class="select-btn">
-                            ${state.selectedDoctor && state.selectedDoctor.id === doctor.id ? 
-                                '<i class="fas fa-check"></i> Selected' : 
-                                '<i class="fas fa-plus"></i> Select Doctor'}
-                        </button>
-                    </div>
-                `;
-
-                card.addEventListener('click', () => selectDoctor(doctor));
-                doctorCardsContainer.appendChild(card);
-            });
-
-            nextButtons[1].disabled = !state.selectedDoctor;
-        }
-
-        // Generate star rating
-        function generateStars(rating) {
-            let stars = '';
-            const fullStars = Math.floor(rating);
-            const hasHalfStar = rating % 1 >= 0.5;
-            
-            for (let i = 0; i < 5; i++) {
-                if (i < fullStars) {
-                    stars += '<i class="fas fa-star"></i>';
-                } else if (i === fullStars && hasHalfStar) {
-                    stars += '<i class="fas fa-star-half-alt"></i>';
-                } else {
-                    stars += '<i class="far fa-star"></i>';
-                }
-            }
-            return stars;
-        }
-
-        // Render symptoms tags with icons
-        function renderSymptomsTags() {
-            const symptomsContainer = document.getElementById('symptoms-tags');
-            symptomsContainer.innerHTML = '';
-            
-            state.commonSymptoms.forEach(symptom => {
-                const tag = document.createElement('div');
-                tag.className = 'symptom-tag';
-                if (state.patientDetails.selectedSymptoms.includes(symptom.name)) {
-                    tag.classList.add('selected');
-                }
-                tag.innerHTML = `
-                    <i class="${symptom.icon}"></i>
-                    <span>${symptom.name}</span>
-                `;
-                tag.dataset.symptom = symptom.name;
-                
-                tag.addEventListener('click', () => toggleSymptom(symptom.name));
-                symptomsContainer.appendChild(tag);
-            });
-        }
-
-        // Render calendar with navigation
-        function renderCalendar() {
-            const calendarContainer = document.getElementById('calendar');
-            const titleElement = document.getElementById('calendar-title');
-            calendarContainer.innerHTML = '';
-
-            // Set title
-            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                               'July', 'August', 'September', 'October', 'November', 'December'];
-            titleElement.textContent = `${monthNames[state.currentMonth]} ${state.currentYear}`;
-
-            // Add day headers
-            const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-            days.forEach(day => {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-header';
-                dayElement.textContent = day;
-                calendarContainer.appendChild(dayElement);
-            });
-
-            // Get first day of month
-            const firstDay = new Date(state.currentYear, state.currentMonth, 1);
-            const startingDay = firstDay.getDay();
-            const daysInMonth = new Date(state.currentYear, state.currentMonth + 1, 0).getDate();
-            const today = new Date();
-            const isCurrentMonth = state.currentMonth === today.getMonth() && state.currentYear === today.getFullYear();
-
-            // Add empty cells for previous month
-            for (let i = 0; i < startingDay; i++) {
-                const emptyElement = document.createElement('div');
-                emptyElement.className = 'calendar-day disabled';
-                calendarContainer.appendChild(emptyElement);
-            }
-
-            // Add days of current month
-            for (let day = 1; day <= daysInMonth; day++) {
-                const date = new Date(state.currentYear, state.currentMonth, day);
-                const dateString = date.toISOString().split('T')[0];
-                
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                dayElement.textContent = day;
-                dayElement.dataset.date = dateString;
-                
-                // Check if today
-                if (isCurrentMonth && day === today.getDate()) {
-                    dayElement.classList.add('today');
-                }
-                
-                // Check if selected
-                if (state.selectedDate === dateString) {
-                    dayElement.classList.add('selected');
-                }
-                
-                // Disable past dates
-                if (date < today.setHours(0, 0, 0, 0)) {
-                    dayElement.classList.add('disabled');
-                }
-                
-                if (!dayElement.classList.contains('disabled')) {
-                    dayElement.addEventListener('click', () => selectDate(dateString));
-                }
-                
-                calendarContainer.appendChild(dayElement);
-            }
-        }
-
-        // Render time slots with booking status
-        function renderTimeSlots() {
-            const timeSlotsContainer = document.getElementById('time-slots');
-            const dateDisplay = document.getElementById('selected-date-display');
-            timeSlotsContainer.innerHTML = '';
-
-            if (!state.selectedDate) return;
-
-            // Format date display
-            const dateObj = new Date(state.selectedDate);
-            const formattedDate = dateObj.toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                month: 'long', 
-                day: 'numeric' 
-            });
-            dateDisplay.textContent = formattedDate;
-
-            const timeSlots = [
-                '08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM',
-                '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM',
-                '04:00 PM', '05:00 PM'
-            ];
-            
-            timeSlots.forEach(time => {
-                const timeElement = document.createElement('div');
-                timeElement.className = 'time-slot';
-                timeElement.textContent = time;
-                
-                // Check if slot is booked
-                const slotKey = `${state.selectedDate} ${time}`;
-                if (state.bookedSlots.includes(slotKey)) {
-                    timeElement.classList.add('booked');
-                } else if (state.selectedTime === time) {
-                    timeElement.classList.add('selected');
-                }
-                
-                if (!timeElement.classList.contains('booked')) {
-                    timeElement.addEventListener('click', () => selectTime(time));
-                }
-                
-                timeSlotsContainer.appendChild(timeElement);
-            });
-        }
-
-        // Attach event listeners
-        function attachEventListeners() {
-            // Next button listeners
-            nextButtons[1].addEventListener('click', () => navigateToStep(2));
-            nextButtons[2].addEventListener('click', () => {
-                if (validatePatientDetails()) {
-                    navigateToStep(3);
-                }
-            });
-            nextButtons[3].addEventListener('click', () => navigateToStep(4));
-            nextButtons[4].addEventListener('click', () => navigateToStep(5));
-            
-            // Previous button listeners
-            prevButtons[2].addEventListener('click', () => navigateToStep(1));
-            prevButtons[3].addEventListener('click', () => navigateToStep(2));
-            prevButtons[4].addEventListener('click', () => navigateToStep(3));
-            prevButtons[5].addEventListener('click', () => navigateToStep(4));
-            
-            // Payment button
-            nextButtons[5].addEventListener('click', proceedToPayment);
-            
-            // Calendar navigation
-            document.getElementById('prev-month').addEventListener('click', () => {
-                state.currentMonth--;
-                if (state.currentMonth < 0) {
-                    state.currentMonth = 11;
-                    state.currentYear--;
-                }
-                renderCalendar();
-            });
-            
-            document.getElementById('next-month').addEventListener('click', () => {
-                state.currentMonth++;
-                if (state.currentMonth > 11) {
-                    state.currentMonth = 0;
-                    state.currentYear++;
-                }
-                renderCalendar();
-            });
-            
-            // Consultation type selection
-            document.querySelectorAll('.consultation-type').forEach(type => {
-                type.addEventListener('click', () => {
-                    const consultationType = type.dataset.type;
-                    selectConsultationType(consultationType);
-                });
-            });
-            
-            // Character count for condition details
-            const conditionTextarea = document.getElementById('condition-details');
-            const charCount = document.getElementById('char-count');
-            conditionTextarea.addEventListener('input', (e) => {
-                const count = e.target.value.length;
-                charCount.textContent = count;
-                if (count > 500) {
-                    charCount.style.color = '#ff4757';
-                } else {
-                    charCount.style.color = 'var(--text-light)';
-                }
-            });
-            
-            // Form validation
-            const patientFormInputs = ['patient-name', 'patient-age', 'patient-gender', 'patient-phone', 'condition-title', 'condition-details'];
-            patientFormInputs.forEach(inputId => {
-                const input = document.getElementById(inputId);
-                input.addEventListener('input', validatePatientDetails);
-                input.addEventListener('blur', () => {
-                    if (input.value.trim()) {
-                        input.style.borderColor = 'var(--dark-green)';
-                        input.style.boxShadow = '0 0 0 4px rgba(40, 167, 69, 0.15)';
-                    }
-                });
-            });
-            
-            // Checkbox listeners
-            const checkboxes = ['previous-treatment', 'allergies', 'current-medication', 'smoker', 'chronic-conditions', 'surgery-history'];
-            checkboxes.forEach(checkboxId => {
-                const checkbox = document.getElementById(checkboxId);
-                checkbox.addEventListener('change', (e) => {
-                    state.patientDetails[checkboxId.replace('-', '')] = e.target.checked;
-                });
-            });
-            
-            // Additional notes
-            document.getElementById('additional-notes').addEventListener('input', (e) => {
-                state.patientDetails.additionalNotes = e.target.value;
-            });
-            
-            // Step indicator click listeners
-            stepIndicators.forEach(step => {
-                step.addEventListener('click', () => {
-                    const stepNumber = parseInt(step.dataset.step);
-                    if (stepNumber <= state.currentStep) {
-                        navigateToStep(stepNumber);
-                    }
-                });
-            });
-        }
-
-        // Validate patient details form
-        function validatePatientDetails() {
-            // Get form values
-            state.patientDetails.name = document.getElementById('patient-name').value.trim();
-            state.patientDetails.age = document.getElementById('patient-age').value.trim();
-            state.patientDetails.gender = document.getElementById('patient-gender').value;
-            state.patientDetails.phone = document.getElementById('patient-phone').value.trim();
-            state.patientDetails.conditionTitle = document.getElementById('condition-title').value.trim();
-            state.patientDetails.conditionDetails = document.getElementById('condition-details').value.trim();
-            
-            // Check required fields
-            const isValid = state.patientDetails.name && 
-                          state.patientDetails.age && 
-                          parseInt(state.patientDetails.age) > 0 &&
-                          parseInt(state.patientDetails.age) <= 120 &&
-                          state.patientDetails.gender && 
-                          state.patientDetails.phone && 
-                          state.patientDetails.conditionTitle && 
-                          state.patientDetails.conditionDetails &&
-                          state.patientDetails.conditionDetails.length <= 500;
-            
-            // Visual feedback
-            const inputs = ['patient-name', 'patient-age', 'patient-gender', 'patient-phone', 'condition-title', 'condition-details'];
-            inputs.forEach(id => {
-                const input = document.getElementById(id);
-                if (input.value.trim()) {
-                    input.style.borderColor = 'var(--dark-green)';
-                } else {
-                    input.style.borderColor = 'var(--border-color)';
-                }
-            });
-            
-            // Enable/disable next button
-            nextButtons[2].disabled = !isValid;
-            if (isValid) {
-                nextButtons[2].classList.add('btn-primary');
-            }
-            
-            return isValid;
-        }
-
-        // Navigation functions
-        function navigateToStep(step) {
-            // Animation out
-            const currentSection = document.getElementById(`step-${state.currentStep}`);
-            currentSection.style.opacity = '0';
-            currentSection.style.transform = 'translateY(-20px) scale(0.98)';
-            
-            setTimeout(() => {
-                // Hide current step
-                currentSection.classList.remove('active');
-                currentSection.style.opacity = '';
-                currentSection.style.transform = '';
-                
-                // Update step indicator
-                updateStepIndicator();
-                
-                // Update current step
-                state.currentStep = step;
-                
-                // Show new step
-                const newSection = document.getElementById(`step-${step}`);
-                newSection.classList.add('active');
-                
-                // Update step indicator
-                updateStepIndicator();
-                
-                // Update summary if we're on step 5
-                if (step === 5) {
-                    updateSummary();
-                }
-                
-                // Scroll to top of section
-                newSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                
-            }, 300);
-        }
-
-        function updateStepIndicator() {
-            stepIndicators.forEach((indicator, index) => {
-                const stepNumber = index + 1;
-                
-                // Remove all classes first
-                indicator.classList.remove('active', 'completed');
-                
-                // Mark as completed if step has been passed
-                if (stepNumber < state.currentStep) {
-                    indicator.classList.add('completed');
-                }
-                // Mark as active if it's the current step
-                else if (stepNumber === state.currentStep) {
-                    indicator.classList.add('active');
-                }
-            });
-        }
-
-        // Selection functions
-        function selectDoctor(doctor) {
-            state.selectedDoctor = doctor;
-            showNotification('Doctor Selected', `You have selected ${doctor.name}`);
-            renderDoctorCards();
-            nextButtons[1].disabled = false;
-        }
-
-        function toggleSymptom(symptom) {
-            const index = state.patientDetails.selectedSymptoms.indexOf(symptom);
-            if (index === -1) {
-                state.patientDetails.selectedSymptoms.push(symptom);
-            } else {
-                state.patientDetails.selectedSymptoms.splice(index, 1);
-            }
-            renderSymptomsTags();
-        }
-
-        function selectDate(date) {
-            state.selectedDate = date;
-            renderCalendar();
-            renderTimeSlots();
-            
-            // Enable next button if time is also selected
-            nextButtons[3].disabled = !state.selectedTime;
-        }
-
-        function selectTime(time) {
-            state.selectedTime = time;
-            renderTimeSlots();
-            
-            // Enable next button
-            nextButtons[3].disabled = false;
-            
-            showNotification('Time Slot Selected', `Appointment scheduled for ${time}`);
-        }
-
-        function selectConsultationType(type) {
-            state.selectedConsultationType = type;
-            
-            // Update UI
-            document.querySelectorAll('.consultation-type').forEach(el => {
-                el.classList.remove('selected');
-            });
-            document.querySelector(`[data-type="${type}"]`).classList.add('selected');
-            
-            // Enable next button
-            nextButtons[4].disabled = false;
-            
-            const typeText = type === 'online' ? 'Virtual Consultation' : 'In-clinic Visit';
-            showNotification('Consultation Mode Selected', `You have chosen ${typeText}`);
-        }
-
-        // Update summary section
-        function updateSummary() {
-            // Doctor info
-            if (state.selectedDoctor) {
-                document.getElementById('summary-doctor-img').src = state.selectedDoctor.img;
-                document.getElementById('summary-doctor-name').textContent = state.selectedDoctor.name;
-                document.getElementById('summary-doctor-specialty').textContent = state.selectedDoctor.specialty;
-                document.getElementById('summary-doctor-experience').textContent = `${state.selectedDoctor.experience} experience`;
-            }
-            
-            // Patient info
-            if (state.patientDetails.name) {
-                const demographics = [];
-                if (state.patientDetails.age) demographics.push(`${state.patientDetails.age} years`);
-                if (state.patientDetails.gender) demographics.push(state.patientDetails.gender);
-                document.getElementById('summary-patient-info').textContent = 
-                    `${state.patientDetails.name} (${demographics.join(', ')})`;
-            }
-            
-            if (state.patientDetails.conditionTitle) {
-                document.getElementById('summary-condition').textContent = state.patientDetails.conditionTitle;
-            }
-            
-            if (state.patientDetails.selectedSymptoms.length > 0) {
-                const symptomsText = state.patientDetails.selectedSymptoms.slice(0, 4).join(', ');
-                const moreCount = state.patientDetails.selectedSymptoms.length - 4;
-                document.getElementById('summary-symptoms').textContent = 
-                    symptomsText + (moreCount > 0 ? `, +${moreCount} more` : '');
-            }
-            
-            // Appointment details
-            if (state.selectedDate) {
-                const dateObj = new Date(state.selectedDate);
-                const formattedDate = dateObj.toLocaleDateString('en-US', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                });
-                document.getElementById('summary-date').textContent = formattedDate;
-            }
-            
-            if (state.selectedTime) {
-                document.getElementById('summary-time').textContent = state.selectedTime;
-            }
-            
-            if (state.selectedConsultationType) {
-                const typeText = state.selectedConsultationType === 'online' ? 'Virtual Consultation' : 'In-clinic Visit';
-                document.getElementById('summary-consultation').textContent = typeText;
-                
-                // Update price
-                const consultationPrice = state.selectedConsultationType === 'online' ? 75 : 100;
-                document.getElementById('price-consultation').textContent = `$${consultationPrice}.00`;
-                document.getElementById('price-total').textContent = `$${consultationPrice + 8}.00`;
-            }
-        }
-
-        // Show notification
-        function showNotification(title, message) {
-            const notification = document.getElementById('notification');
-            const titleElement = notification.querySelector('h4');
-            const messageElement = notification.querySelector('p');
-            
-            titleElement.textContent = title;
-            messageElement.textContent = message;
-            
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        // Proceed to payment (simulated)
-        function proceedToPayment() {
-            // Simulate loading
-            const originalText = nextButtons[5].innerHTML;
-            nextButtons[5].innerHTML = '<div class="loading"></div> Processing...';
-            nextButtons[5].disabled = true;
-            
-            // Prepare appointment summary
-            const summary = `
-                APPOINTMENT CONFIRMATION
-                ========================
-                
-                DOCTOR INFORMATION:
-                • Name: ${state.selectedDoctor.name}
-                • Specialty: ${state.selectedDoctor.specialty}
-                • Experience: ${state.selectedDoctor.experience}
-                
-                PATIENT DETAILS:
-                • Name: ${state.patientDetails.name}
-                • Age & Gender: ${state.patientDetails.age} years, ${state.patientDetails.gender}
-                • Primary Concern: ${state.patientDetails.conditionTitle}
-                
-                APPOINTMENT DETAILS:
-                • Date: ${state.selectedDate}
-                • Time: ${state.selectedTime}
-                • Type: ${state.selectedConsultationType === 'online' ? 'Virtual Consultation' : 'In-clinic Visit'}
-                • Duration: 30-45 minutes
-                
-                PAYMENT:
-                • Consultation: $${state.selectedConsultationType === 'online' ? '75' : '100'}
-                • Total: $${state.selectedConsultationType === 'online' ? '83' : '108'}
-                
-                A confirmation email has been sent to your registered email address.
-                Please arrive 10 minutes before your scheduled time.
-            `;
-            
-            setTimeout(() => {
-                // Simulate payment processing
-                showNotification('Payment Successful', 'Your appointment has been confirmed!');
-                
-                // Reset button
-                nextButtons[5].innerHTML = originalText;
-                nextButtons[5].disabled = false;
-                
-                // Show success modal
-                alert(`✅ Appointment Confirmed!\n\n${summary}\n\nYou will receive a confirmation email shortly.`);
-                
-                // Reset form after delay
-                setTimeout(() => {
-                    resetForm();
-                    navigateToStep(1);
-                }, 2000);
-                
-            }, 2000);
-        }
-
-        // Reset form
-        function resetForm() {
-            state.currentStep = 1;
-            state.selectedDoctor = null;
-            state.patientDetails = {
-                name: '',
-                age: '',
-                gender: '',
-                phone: '',
-                conditionTitle: '',
-                selectedSymptoms: [],
-                conditionDetails: '',
-                previousTreatment: false,
-                allergies: false,
-                currentMedication: false,
-                smoker: false,
-                chronicConditions: false,
-                surgeryHistory: false,
-                additionalNotes: ''
-            };
-            state.selectedDate = null;
-            state.selectedTime = null;
-            state.selectedConsultationType = null;
-            
-            // Reset UI
-            stepSections.forEach(section => section.classList.remove('active'));
-            document.getElementById('step-1').classList.add('active');
-            
-            updateStepIndicator();
-            
-            // Reset buttons
-            nextButtons[1].disabled = true;
-            nextButtons[2].disabled = true;
-            nextButtons[3].disabled = true;
-            nextButtons[4].disabled = true;
-            
-            // Reset form fields
-            document.getElementById('patient-name').value = '';
-            document.getElementById('patient-age').value = '';
-            document.getElementById('patient-gender').value = '';
-            document.getElementById('patient-phone').value = '';
-            document.getElementById('condition-title').value = '';
-            document.getElementById('condition-details').value = '';
-            document.getElementById('additional-notes').value = '';
-            document.getElementById('char-count').textContent = '0';
-            
-            // Reset checkboxes
-            ['previous-treatment', 'allergies', 'current-medication', 'smoker', 'chronic-conditions', 'surgery-history'].forEach(id => {
-                document.getElementById(id).checked = false;
-            });
-            
-            // Re-render components
-            renderDoctorCards();
-            renderSymptomsTags();
-            renderCalendar();
-            renderTimeSlots();
-            
-            // Reset consultation type selection
-            document.querySelectorAll('.consultation-type').forEach(el => {
-                el.classList.remove('selected');
-            });
-        }
-
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', init);
-
-
-{% endblock content %}
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
-    <title>Curexa · Find the right doctor</title>
-    <style>
-        /* ---------- GLOBAL & VARIABLES ---------- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-        }
-
-        body {
-            background-color: #f6f9fc;   /* light medical background */
-            color: #1a2e3b;
-            line-height: 1.5;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* medical blue / teal + soft green accents */
-        :root {
-            --primary: #0b6e6f;        /* deep teal – trust */
-            --primary-light: #e0f2f1;   /* very light teal for backgrounds */
-            --secondary: #7eb09e;       /* soft green – freshness */
-            --accent-available: #2b7d6c; /* green for available */
-            --accent-busy: #c44545;      /* soft red for busy */
-            --gray-light: #f0f4f7;
-            --gray-border: #d9e2e9;
-            --card-shadow: 0 8px 20px rgba(0, 40, 40, 0.06), 0 2px 6px rgba(0, 30, 30, 0.03);
-            --hover-shadow: 0 14px 30px rgba(6, 60, 60, 0.12);
-            --text-dark: #183b4a;
-            --text-soft: #436573;
-            --bg-soft: #f9fdfe;
-        }
-
-        /* ---------- TYPOGRAPHY & UTILS ---------- */
-        h1, h2, h3 {
-            font-weight: 500;
-            letter-spacing: -0.01em;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 1.2rem;
-            width: 100%;
-        }
-
-        /* ---------- HEADER & BREADCRUMB ---------- */
-        .main-header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            padding: 0.8rem 0;
-            border-bottom: 1px solid var(--gray-border);
-        }
-
-        .header-inner {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .brand {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--primary);
-            letter-spacing: -0.5px;
-            line-height: 1.2;
-        }
-        .brand span {
-            color: var(--secondary);
-            font-weight: 400;
-            font-size: 1rem;
-            margin-left: 4px;
-        }
-
-        .breadcrumb {
-            padding: 0.8rem 0 0.2rem 0;
-            font-size: 0.95rem;
-            color: var(--text-soft);
-        }
-        .breadcrumb a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-        .breadcrumb .separator {
-            margin: 0 0.5rem;
-            color: #b0c8d4;
-        }
-
-        /* ---------- STICKY FILTER BAR ---------- */
-        .filter-bar {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(255,255,255,0.92);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--gray-border);
-            padding: 1rem 0;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 12px rgba(0,30,30,0.03);
-        }
-
-        .filter-container {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 0.8rem 1.2rem;
-        }
-
-        .filter-group {
-            display: flex;
-            flex: 1 1 180px;
-            flex-direction: column;
-            min-width: 150px;
-        }
-        .filter-group label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            color: var(--primary);
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .filter-group input, .filter-group select {
-            background: white;
-            border: 1px solid var(--gray-border);
-            border-radius: 40px;
-            padding: 0.6rem 1.2rem;
-            font-size: 0.95rem;
-            color: var(--text-dark);
-            outline: none;
-            transition: all 0.15s;
-            width: 100%;
-        }
-
-        .filter-group input:focus, .filter-group select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(11,110,111,0.15);
-        }
-
-        .reset-btn {
-            background: transparent;
-            border: 1px dashed var(--primary);
-            color: var(--primary);
-            border-radius: 40px;
-            padding: 0.6rem 1.5rem;
-            font-weight: 500;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: 0.15s;
-            white-space: nowrap;
-            margin-left: auto;
-        }
-        .reset-btn:hover {
-            background: var(--primary-light);
-            border: 1px solid var(--primary);
-        }
-
-        /* ---------- RESULTS HEADER & LOAD MORE ---------- */
-        .results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            flex-wrap: wrap;
-            margin-bottom: 1.5rem;
-        }
-        .results-count {
-            font-size: 1.1rem;
-            color: var(--text-soft);
-        }
-        .results-count strong {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .load-more-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            margin: 2.8rem 0 2rem;
-        }
-        .load-more-btn {
-            background: white;
-            border: 1.5px solid var(--primary);
-            color: var(--primary);
-            padding: 0.8rem 3rem;
-            border-radius: 60px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
-        .load-more-btn:hover:not(:disabled) {
-            background: var(--primary);
-            color: white;
-            box-shadow: var(--hover-shadow);
-        }
-        .load-more-btn:disabled {
-            opacity: 0.5;
-            cursor: default;
-            border-color: #b0d0d0;
-        }
-        .showing-hint {
-            color: var(--text-soft);
-            font-size: 0.95rem;
-        }
-
-        /* ---------- DOCTOR CARDS GRID ---------- */
-        .doctors-grid {
-            display: grid;
-            grid-template-columns: 1fr;           /* mobile default: 1 card */
-            gap: 1.8rem;
-            transition: 0.2s;
-        }
-
-        @media (min-width: 600px) {
-            .doctors-grid {
-                grid-template-columns: repeat(2, 1fr);  /* tablet */
-            }
-        }
-        @media (min-width: 992px) {
-            .doctors-grid {
-                grid-template-columns: repeat(3, 1fr);  /* small desktop */
-            }
-        }
-        @media (min-width: 1400px) {
-            .doctors-grid {
-                grid-template-columns: repeat(4, 1fr);  /* large desktop */
-            }
-        }
-
-        /* ---------- DOCTOR CARD STYLES ---------- */
-        .doctor-card {
-            background: white;
-            border-radius: 28px;
-            padding: 1.8rem 1.2rem 1.5rem 1.2rem;
-            box-shadow: var(--card-shadow);
-            transition: all 0.25s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            border: 1px solid rgba(215, 235, 240, 0.6);
-            backdrop-filter: blur(2px);
-        }
-
-        .doctor-card:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--hover-shadow);
-            border-color: var(--primary-light);
-        }
-
-        /* circular photo (initial-based) */
-        .doctor-photo {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, var(--primary), #2a8b8c);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.3rem;
-            font-weight: 400;
-            color: white;
-            text-transform: uppercase;
-            box-shadow: 0 4px 12px rgba(11,110,111,0.25);
-            margin-bottom: 1rem;
-            border: 3px solid white;
-            outline: 1px solid #e0f0f0;
-        }
-
-        .doctor-info {
-            width: 100%;
-        }
-
-        .doctor-name {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            line-height: 1.3;
-            margin-bottom: 0.2rem;
-        }
-
-        .doctor-specialty {
-            color: var(--primary);
-            font-weight: 500;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-            background: var(--primary-light);
-            display: inline-block;
-            padding: 0.2rem 1rem;
-            border-radius: 40px;
-        }
-
-        .doctor-details {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem 1.2rem;
-            margin: 0.8rem 0 0.9rem;
-            font-size: 0.95rem;
-            color: #2f566b;
-        }
-
-        .detail-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .rating {
-            color: #f7b731;
-            font-weight: 600;
-        }
-        .rating span {
-            color: #2f566b;
-            font-weight: 400;
-            margin-left: 2px;
-        }
-
-        .fee {
-            font-weight: 700;
-            color: var(--text-dark);
-            background: #ecf9f7;
-            padding: 0.2rem 0.8rem;
-            border-radius: 30px;
-        }
-
-        .availability-badge {
-            display: inline-block;
-            padding: 0.2rem 1rem;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            margin: 0.2rem 0 1rem 0;
-        }
-        .badge-available {
-            background: #dff5f0;
-            color: var(--accent-available);
-            border-left: 4px solid var(--accent-available);
-        }
-        .badge-busy {
-            background: #ffe9e9;
-            color: var(--accent-busy);
-            border-left: 4px solid var(--accent-busy);
-        }
-
-        .book-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 60px;
-            padding: 0.8rem 1rem;
-            width: 100%;
-            font-weight: 600;
-            font-size: 1.1rem;
-            letter-spacing: 0.3px;
-            cursor: pointer;
-            transition: 0.15s;
-            margin-top: 0.6rem;
-            box-shadow: 0 4px 8px rgba(11,110,111,0.2);
-        }
-
-        .book-btn:hover {
-            background: #085a5b;
-            transform: scale(1.02);
-        }
-
-        /* ---------- SKELETON LOADER ---------- */
-        .skeleton-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.8rem;
-        }
-        @media (min-width: 600px) {
-            .skeleton-grid { grid-template-columns: repeat(2,1fr); }
-        }
-        @media (min-width: 992px) {
-            .skeleton-grid { grid-template-columns: repeat(3,1fr); }
-        }
-        @media (min-width: 1400px) {
-            .skeleton-grid { grid-template-columns: repeat(4,1fr); }
-        }
-
-        .skeleton-card {
-            background: white;
-            border-radius: 28px;
-            padding: 1.8rem 1.2rem 1.5rem;
-            box-shadow: var(--card-shadow);
-            border: 1px solid #eaf1f5;
-        }
-
-        .shimmer {
-            background: linear-gradient(90deg, #f0f4f8 25%, #e2e9f0 50%, #f0f4f8 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.6s infinite;
-            border-radius: 60px;
-        }
-
-        .skeleton-photo {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            margin-bottom: 1rem;
-        }
-        .skeleton-line {
-            height: 18px;
-            width: 70%;
-            margin: 12px 0 8px;
-            border-radius: 30px;
-        }
-        .skeleton-line.short { width: 45%; }
-        .skeleton-line.long { width: 90%; }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        /* ---------- EMPTY STATE ---------- */
-        .empty-state {
-            text-align: center;
-            padding: 4rem 1rem;
-            background: white;
-            border-radius: 48px;
-            box-shadow: var(--card-shadow);
-            grid-column: 1 / -1;
-            color: var(--text-soft);
-        }
-        .empty-state h3 {
-            font-size: 1.8rem;
-            font-weight: 400;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-        .empty-state p {
-            font-size: 1.1rem;
-        }
-
-        /* ---------- FOOTER (simple) ---------- */
-        .footer {
-            margin-top: 3rem;
-            padding: 1.2rem 0;
-            text-align: center;
-            color: #99b8c5;
-            font-size: 0.9rem;
-            border-top: 1px solid var(--gray-border);
-        }
-
-        /* hide/show helpers */
-        .hidden {
-            display: none !important;
-        }
-    </style>
-</head>
-<body>
-    <header class="main-header">
-        <div class="container header-inner">
-            <div class="brand">Curexa <span>· medical & appointment</span></div>
+</div>
+
+<!-- Main content: step sections -->
+<div class="content-area">
+    <!-- STEP 1: Doctor Selection (enhanced cards) -->
+    <section id="step-1" class="step-section active">
+        <div class="filter-bar" style="margin-top: 0;">
+            <div class="filter-container">
+                <div class="filter-group">
+                    <label>🔍 Search</label>
+                    <input type="text" id="searchInput" placeholder="Doctor name ..." autocomplete="off">
+                </div>
+                <div class="filter-group">
+                    <label>📋 Specialization</label>
+                    <select id="specializationSelect">
+                        <option value="">All Specializations</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>⏳ Availability</label>
+                    <select id="availabilitySelect">
+                        <option value="">All</option>
+                        <option value="available">Available</option>
+                        <option value="busy">Busy</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>📊 Sort by</label>
+                    <select id="sortSelect">
+                        <option value="">Default</option>
+                        <option value="experience">Experience (high to low)</option>
+                        <option value="rating">Rating (high to low)</option>
+                        <option value="fee_low">Fee (low to high)</option>
+                    </select>
+                </div>
+                <button class="reset-btn" id="resetFiltersBtn">Clear filters</button>
+            </div>
         </div>
-    </header>
 
-    <div class="container">
-        <div class="breadcrumb">
-            <a href="#">Home</a> <span class="separator">/</span> <span>Doctors</span>
-        </div>
-    </div>
-
-    <!-- Sticky filter bar -->
-    <div class="filter-bar">
-        <div class="container filter-container">
-            <div class="filter-group">
-                <label>🔍 Search</label>
-                <input type="text" id="searchInput" placeholder="Doctor name ..." autocomplete="off">
-            </div>
-            <div class="filter-group">
-                <label>📋 Specialization</label>
-                <select id="specializationSelect">
-                    <option value="">All Specializations</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label>⏳ Availability</label>
-                <select id="availabilitySelect">
-                    <option value="">All</option>
-                    <option value="available">Available</option>
-                    <option value="busy">Busy</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label>📊 Sort by</label>
-                <select id="sortSelect">
-                    <option value="">Default</option>
-                    <option value="experience">Experience (high to low)</option>
-                    <option value="rating">Rating (high to low)</option>
-                    <option value="fee_low">Fee (low to high)</option>
-                </select>
-            </div>
-            <button class="reset-btn" id="resetFiltersBtn">Clear filters</button>
-        </div>
-    </div>
-
-    <main class="container">
         <div class="results-header">
             <div class="results-count" id="resultsCount">Loading doctors...</div>
             <div class="showing-hint" id="showingHint"></div>
         </div>
 
-        <!-- Skeleton loader (visible initially) -->
         <div id="skeletonLoader" class="skeleton-grid">
             <div class="skeleton-card"><div class="skeleton-photo shimmer"></div><div class="skeleton-line shimmer"></div><div class="skeleton-line short shimmer"></div><div class="skeleton-line long shimmer"></div></div>
             <div class="skeleton-card"><div class="skeleton-photo shimmer"></div><div class="skeleton-line shimmer"></div><div class="skeleton-line short shimmer"></div><div class="skeleton-line long shimmer"></div></div>
@@ -2600,231 +931,746 @@
             <div class="skeleton-card"><div class="skeleton-photo shimmer"></div><div class="skeleton-line shimmer"></div><div class="skeleton-line short shimmer"></div><div class="skeleton-line long shimmer"></div></div>
         </div>
 
-        <!-- Dynamic doctors grid (hidden initially) -->
         <div id="doctorsGrid" class="doctors-grid hidden"></div>
 
-        <!-- Load more & pagination area -->
         <div class="load-more-container" id="loadMoreContainer">
             <button class="load-more-btn" id="loadMoreBtn">Load more doctors</button>
             <span class="showing-hint" id="loadMoreHint"></span>
         </div>
-    </main>
 
-    <footer class="footer">
-        <div class="container">© Curexa — trusted care, online.</div>
-    </footer>
+        <div class="action-buttons">
+            <button class="btn btn-secondary" disabled><i class="fas fa-arrow-left"></i> Previous</button>
+            <button id="next-1" class="btn btn-primary" disabled>Next: Patient Details <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </section>
 
-    <script>
-        (function() {
-            // ---------- DEMO DOCTORS DATASET ----------
-            const doctors = [
-                { id: 1, name: "Dr. Sarah Johnson", specialization: "Cardiologist", experience: 15, rating: 4.8, fee: 120, available: true },
-                { id: 2, name: "Dr. Michael Chen", specialization: "Dermatologist", experience: 10, rating: 4.5, fee: 90, available: false },
-                { id: 3, name: "Dr. Emily Rodriguez", specialization: "Neurologist", experience: 12, rating: 4.9, fee: 150, available: true },
-                { id: 4, name: "Dr. David Kim", specialization: "Pediatrician", experience: 8, rating: 4.3, fee: 80, available: true },
-                { id: 5, name: "Dr. Lisa Patel", specialization: "Orthopedist", experience: 20, rating: 5.0, fee: 200, available: false },
-                { id: 6, name: "Dr. James Wilson", specialization: "Ophthalmologist", experience: 7, rating: 4.2, fee: 70, available: true },
-                { id: 7, name: "Dr. Maria Garcia", specialization: "Dermatologist", experience: 9, rating: 4.6, fee: 95, available: true },
-                { id: 8, name: "Dr. Robert Brown", specialization: "Cardiologist", experience: 25, rating: 4.9, fee: 180, available: false },
-                { id: 9, name: "Dr. Jennifer Lee", specialization: "Neurologist", experience: 5, rating: 4.0, fee: 110, available: true },
-                { id: 10, name: "Dr. William Taylor", specialization: "Pediatrician", experience: 18, rating: 4.7, fee: 130, available: false },
-                { id: 11, name: "Dr. Olivia Martinez", specialization: "Dermatologist", experience: 14, rating: 4.8, fee: 145, available: true },
-                { id: 12, name: "Dr. Benjamin Adams", specialization: "Cardiologist", experience: 22, rating: 4.6, fee: 210, available: true },
-            ];
+    <!-- STEP 2: Patient Details (unchanged) -->
+    <section id="step-2" class="step-section hidden">
+        <!-- ... (same as before) ... -->
+        <div class="section-header">
+            <h2>Your Health Profile</h2>
+            <p>Help us understand your needs better. All information is kept confidential.</p>
+        </div>
+        <div class="patient-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Full Name <span class="required">*</span></label>
+                    <div class="input-container">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" id="patient-name" placeholder="Enter your full name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-alt"></i> Age <span class="required">*</span></label>
+                    <div class="input-container">
+                        <i class="fas fa-calendar-alt input-icon"></i>
+                        <input type="number" id="patient-age" placeholder="Your age" min="1" max="120">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-venus-mars"></i> Gender <span class="required">*</span></label>
+                    <select id="patient-gender">
+                        <option value="">Select gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-phone-alt"></i> Phone <span class="required">*</span></label>
+                    <div class="input-container">
+                        <i class="fas fa-phone-alt input-icon"></i>
+                        <input type="tel" id="patient-phone" placeholder="Your contact number">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-head-side-brain"></i> Primary Concern / Condition Title <span class="required">*</span></label>
+                <input type="text" id="condition-title" placeholder="e.g., Persistent headache, chest pain">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-thermometer-half"></i> Common Symptoms (select all that apply)</label>
+                <div class="symptoms-tags" id="symptoms-tags"></div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-notes-medical"></i> Describe your condition in detail <span class="required">*</span></label>
+                <textarea id="condition-details" placeholder="Please describe your symptoms, when they started, any triggers..."></textarea>
+                <div class="character-count"><span id="char-count">0</span>/500</div>
+            </div>
+            <div class="form-group">
+                <label>Medical History (optional)</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-item"><input type="checkbox" id="previous-treatment"> Previous treatment</label>
+                    <label class="checkbox-item"><input type="checkbox" id="allergies"> Allergies</label>
+                    <label class="checkbox-item"><input type="checkbox" id="current-medication"> Current medication</label>
+                    <label class="checkbox-item"><input type="checkbox" id="smoker"> Smoker</label>
+                    <label class="checkbox-item"><input type="checkbox" id="chronic-conditions"> Chronic conditions</label>
+                    <label class="checkbox-item"><input type="checkbox" id="surgery-history"> Surgery history</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-pen"></i> Additional notes</label>
+                <textarea id="additional-notes" placeholder="Anything else you'd like the doctor to know..."></textarea>
+            </div>
+            <div class="form-note">
+                <i class="fas fa-info-circle"></i> Your information is secure and will only be used for your consultation.
+            </div>
+        </div>
+        <div class="action-buttons">
+            <button id="prev-2" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Previous</button>
+            <button id="next-2" class="btn btn-primary" disabled>Next: Date & Time <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </section>
 
-            // ---------- DOM elements ----------
-            const skeletonEl = document.getElementById('skeletonLoader');
-            const gridEl = document.getElementById('doctorsGrid');
-            const searchInput = document.getElementById('searchInput');
-            const specSelect = document.getElementById('specializationSelect');
-            const availSelect = document.getElementById('availabilitySelect');
-            const sortSelect = document.getElementById('sortSelect');
-            const resetBtn = document.getElementById('resetFiltersBtn');
-            const resultsCountSpan = document.getElementById('resultsCount');
-            const showingHint = document.getElementById('showingHint');
-            const loadMoreBtn = document.getElementById('loadMoreBtn');
-            const loadMoreHint = document.getElementById('loadMoreHint');
-            const loadMoreContainer = document.getElementById('loadMoreContainer');
+    <!-- STEP 3: Date & Time (unchanged) -->
+    <section id="step-3" class="step-section hidden">
+        <div class="section-header">
+            <h2>Select Date & Time</h2>
+            <p>Choose your preferred appointment slot.</p>
+        </div>
+        <div class="calendar-navigation">
+            <button class="calendar-nav-btn" id="prev-month"><i class="fas fa-chevron-left"></i></button>
+            <span id="calendar-title">March 2025</span>
+            <button class="calendar-nav-btn" id="next-month"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div id="calendar" class="calendar"></div>
+        <div class="selected-date" id="selected-date-display"></div>
+        <label style="margin-bottom: 10px; display: block;"><i class="fas fa-clock"></i> Available Time Slots</label>
+        <div id="time-slots" class="time-slots"></div>
+        <div class="action-buttons">
+            <button id="prev-3" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Previous</button>
+            <button id="next-3" class="btn btn-primary" disabled>Next: Consultation Type <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </section>
 
-            // ---------- STATE ----------
-            let filteredDoctors = [...doctors];
-            let visibleCount = 6;                // initial cards shown
-            const STEP = 6;                       // load more increment
-            let currentFilters = {
-                search: '',
-                specialization: '',
-                availability: '',
-                sort: ''
-            };
+    <!-- STEP 4: Consultation Type (unchanged) -->
+    <section id="step-4" class="step-section hidden">
+        <div class="section-header">
+            <h2>Choose Consultation Mode</h2>
+            <p>Select how you'd prefer to consult with your doctor.</p>
+        </div>
+        <div class="consultation-types">
+            <div class="consultation-type" data-type="online">
+                <div class="consultation-icon"><i class="fas fa-video"></i></div>
+                <h3>Virtual Consultation</h3>
+                <p>Video call with your doctor from anywhere</p>
+                <div class="price">$75</div>
+            </div>
+            <div class="consultation-type" data-type="in-clinic">
+                <div class="consultation-icon"><i class="fas fa-clinic-medical"></i></div>
+                <h3>In-clinic Visit</h3>
+                <p>Meet the doctor in person at our clinic</p>
+                <div class="price">$100</div>
+            </div>
+        </div>
+        <div class="action-buttons">
+            <button id="prev-4" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Previous</button>
+            <button id="next-4" class="btn btn-primary" disabled>Next: Confirm Booking <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </section>
 
-            // ---------- populate specialization options (unique) ----------
-            const specializations = [...new Set(doctors.map(d => d.specialization))].sort();
-            specializations.forEach(spec => {
-                const option = document.createElement('option');
-                option.value = spec;
-                option.textContent = spec;
-                specSelect.appendChild(option);
-            });
+    <!-- STEP 5: Summary & Booking (unchanged) -->
+    <section id="step-5" class="step-section hidden">
+        <div class="section-header">
+            <h2>Confirm Your Appointment</h2>
+            <p>Review all details carefully before proceeding.</p>
+        </div>
+        <div class="summary-content">
+            <div class="summary-details">
+                <div class="doctor-summary">
+                    <img src="" alt="" id="summary-doctor-img" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+                    <div>
+                        <h3 id="summary-doctor-name">Dr. Name</h3>
+                        <p id="summary-doctor-specialty">Specialty</p>
+                        <p id="summary-doctor-experience">Experience</p>
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Patient:</span>
+                    <span class="summary-value" id="summary-patient-info">-</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Primary concern:</span>
+                    <span class="summary-value" id="summary-condition">-</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Symptoms:</span>
+                    <span class="summary-value" id="summary-symptoms">-</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Date:</span>
+                    <span class="summary-value" id="summary-date">-</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Time:</span>
+                    <span class="summary-value" id="summary-time">-</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Consultation type:</span>
+                    <span class="summary-value" id="summary-consultation">-</span>
+                </div>
+            </div>
+            <div class="price-breakdown">
+                <h3>Price Details</h3>
+                <div class="price-item">
+                    <span>Consultation fee</span>
+                    <span id="price-consultation">$0</span>
+                </div>
+                <div class="price-item">
+                    <span>Platform fee</span>
+                    <span>$8.00</span>
+                </div>
+                <div class="price-total">
+                    <span>Total</span>
+                    <span id="price-total">$0</span>
+                </div>
+            </div>
+        </div>
+        <div class="action-buttons">
+            <button id="prev-5" class="btn btn-secondary"><i class="fas fa-edit"></i> Edit Details</button>
+            <button id="next-5" class="btn btn-payment"><i class="fas fa-lock"></i> Secure Payment</button>
+        </div>
+    </section>
+</div>
 
-            // ---------- helper: filter & sort data (based on currentFilters) ----------
-            function getFilteredDoctors() {
-                let filtered = doctors.filter(doc => {
-                    // search by name (case insensitive)
-                    if (currentFilters.search && !doc.name.toLowerCase().includes(currentFilters.search.toLowerCase())) return false;
-                    // specialization
-                    if (currentFilters.specialization && doc.specialization !== currentFilters.specialization) return false;
-                    // availability
-                    if (currentFilters.availability === 'available' && !doc.available) return false;
-                    if (currentFilters.availability === 'busy' && doc.available) return false;
-                    return true;
-                });
+<!-- Notification -->
+<div class="notification" id="notification">
+    <div class="notification-icon"><i class="fas fa-check"></i></div>
+    <div class="notification-content">
+        <h4>Appointment Booked!</h4>
+        <p>Your appointment has been confirmed.</p>
+    </div>
+</div>
 
-                // sorting
-                if (currentFilters.sort === 'experience') {
-                    filtered.sort((a, b) => b.experience - a.experience);
-                } else if (currentFilters.sort === 'rating') {
-                    filtered.sort((a, b) => b.rating - a.rating);
-                } else if (currentFilters.sort === 'fee_low') {
-                    filtered.sort((a, b) => a.fee - b.fee);
-                } else {
-                    // default: keep original order (id)
-                    filtered.sort((a, b) => a.id - b.id);
-                }
-                return filtered;
+<script>
+(function() {
+    // ---------- STATE (enriched doctor data) ----------
+    const state = {
+        currentStep: 1,
+        selectedDoctor: null,
+        patientDetails: {
+            name: '', age: '', gender: '', phone: '', conditionTitle: '',
+            selectedSymptoms: [], conditionDetails: '', previousTreatment: false,
+            allergies: false, currentMedication: false, smoker: false,
+            chronicConditions: false, surgeryHistory: false, additionalNotes: ''
+        },
+        currentMonth: new Date().getMonth(),
+        currentYear: new Date().getFullYear(),
+        selectedDate: null,
+        selectedTime: null,
+        selectedConsultationType: null,
+        doctors: [
+            { id: 1, name: "Dr. Sarah Johnson", specialization: "Cardiologist", education: "Harvard Medical School", experience: 15, rating: 4.7, ratingCount: 128, fee: 120, available: true, img: "https://randomuser.me/api/portraits/women/65.jpg", hospital: "Heart Center NYC", distance: "2.3 miles", nextAvailable: "Today, 3:30 PM", badges: ["top-rated", "verified", "telemedicine"], tags: ["Same Day", "Telemedicine"], availability: "online" },
+            { id: 2, name: "Dr. Michael Chen", specialization: "Dermatologist", education: "Johns Hopkins", experience: 10, rating: 4.5, ratingCount: 234, fee: 90, available: false, img: "https://randomuser.me/api/portraits/men/32.jpg", hospital: "Skin Care Specialists", distance: "5.1 miles", nextAvailable: "Tomorrow, 10:00 AM", badges: ["verified"], tags: ["Cosmetic"], availability: "offline" },
+            { id: 3, name: "Dr. Emily Rodriguez", specialization: "Neurologist", education: "Stanford", experience: 12, rating: 4.9, ratingCount: 189, fee: 150, available: true, img: "https://randomuser.me/api/portraits/women/44.jpg", hospital: "NeuroCare Institute", distance: "3.7 miles", nextAvailable: "Friday, 2:15 PM", badges: ["top-rated", "verified"], tags: ["Headache Specialist", "Telemedicine"], availability: "online" },
+            { id: 4, name: "Dr. David Kim", specialization: "Pediatrician", education: "UCLA", experience: 8, rating: 4.3, ratingCount: 156, fee: 80, available: true, img: "https://randomuser.me/api/portraits/men/75.jpg", hospital: "Children's Health", distance: "1.8 miles", nextAvailable: "Today, 4:45 PM", badges: ["available-today", "verified"], tags: ["New Patients", "Evenings"], availability: "busy" },
+            { id: 5, name: "Dr. Lisa Patel", specialization: "Orthopedist", education: "Mayo Clinic", experience: 20, rating: 5.0, ratingCount: 210, fee: 200, available: false, img: "https://randomuser.me/api/portraits/women/68.jpg", hospital: "OrthoCare Center", distance: "6.2 miles", nextAvailable: "Monday, 9:00 AM", badges: ["top-rated", "verified"], tags: ["Sports Medicine"], availability: "offline" },
+            { id: 6, name: "Dr. James Wilson", specialization: "Ophthalmologist", education: "Yale", experience: 7, rating: 4.2, ratingCount: 143, fee: 70, available: true, img: "https://randomuser.me/api/portraits/men/52.jpg", hospital: "Eye Care Clinic", distance: "4.5 miles", nextAvailable: "Wednesday, 11:30 AM", badges: ["verified"], tags: ["Same Day"], availability: "online" },
+            { id: 7, name: "Dr. Maria Garcia", specialization: "Dermatologist", education: "Harvard", experience: 9, rating: 4.6, ratingCount: 98, fee: 95, available: true, img: "https://randomuser.me/api/portraits/women/17.jpg", hospital: "Dermatology Associates", distance: "2.8 miles", nextAvailable: "Today, 2:00 PM", badges: ["telemedicine", "verified"], tags: ["Telemedicine"], availability: "online" },
+            { id: 8, name: "Dr. Robert Brown", specialization: "Cardiologist", education: "Johns Hopkins", experience: 25, rating: 4.9, ratingCount: 312, fee: 180, available: false, img: "https://randomuser.me/api/portraits/men/36.jpg", hospital: "Heart Institute", distance: "7.1 miles", nextAvailable: "Thursday, 10:30 AM", badges: ["top-rated"], tags: ["Evenings"], availability: "busy" },
+            { id: 9, name: "Dr. Jennifer Lee", specialization: "Neurologist", education: "Columbia", experience: 5, rating: 4.0, ratingCount: 67, fee: 110, available: true, img: "https://randomuser.me/api/portraits/women/50.jpg", hospital: "Neurology Center", distance: "3.2 miles", nextAvailable: "Tomorrow, 1:15 PM", badges: ["telemedicine"], tags: ["Telemedicine"], availability: "online" },
+            { id: 10, name: "Dr. William Taylor", specialization: "Pediatrician", education: "Duke", experience: 18, rating: 4.7, ratingCount: 177, fee: 130, available: false, img: "https://randomuser.me/api/portraits/men/42.jpg", hospital: "Pediatric Care", distance: "5.5 miles", nextAvailable: "Friday, 4:00 PM", badges: ["verified"], tags: ["Weekends"], availability: "offline" },
+            { id: 11, name: "Dr. Olivia Martinez", specialization: "Dermatologist", education: "Stanford", experience: 14, rating: 4.8, ratingCount: 203, fee: 145, available: true, img: "https://randomuser.me/api/portraits/women/23.jpg", hospital: "Skin Health", distance: "2.1 miles", nextAvailable: "Today, 11:30 AM", badges: ["available-today", "verified"], tags: ["Same Day", "Cosmetic"], availability: "online" },
+            { id: 12, name: "Dr. Benjamin Adams", specialization: "Cardiologist", education: "Harvard", experience: 22, rating: 4.6, ratingCount: 189, fee: 210, available: true, img: "https://randomuser.me/api/portraits/men/62.jpg", hospital: "Cardiac Wellness", distance: "4.0 miles", nextAvailable: "Wednesday, 3:30 PM", badges: ["top-rated", "telemedicine"], tags: ["Telemedicine"], availability: "online" }
+        ],
+        bookedSlots: ['2025-02-22 10:00 AM', '2025-02-22 02:00 PM', '2025-02-23 09:00 AM'],
+        commonSymptoms: [
+            { name: "Fever", icon: "fas fa-thermometer-full" }, { name: "Headache", icon: "fas fa-brain" },
+            { name: "Cough", icon: "fas fa-lungs" }, { name: "Fatigue", icon: "fas fa-tired" },
+            { name: "Nausea", icon: "fas fa-stomach" }, { name: "Dizziness", icon: "fas fa-dizzy" },
+            { name: "Chest Pain", icon: "fas fa-heartbeat" }, { name: "Shortness of Breath", icon: "fas fa-wind" }
+        ],
+        filterCriteria: { search: '', specialization: '', availability: '', sort: '' },
+        visibleCount: 6
+    };
+
+    // Helper: generate star rating HTML
+    function generateStars(rating) {
+        let stars = '';
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 >= 0.5;
+        for (let i = 1; i <= 5; i++) {
+            if (i <= fullStars) stars += '<i class="fas fa-star"></i>';
+            else if (i === fullStars + 1 && hasHalfStar) stars += '<i class="fas fa-star-half-alt"></i>';
+            else stars += '<i class="far fa-star"></i>';
+        }
+        return stars;
+    }
+
+    // Helper: generate badge HTML
+    function generateBadges(badges) {
+        let badgesHTML = '';
+        badges.forEach(badge => {
+            switch(badge) {
+                case 'top-rated': badgesHTML += '<span class="badge badge-top-rated"><i class="fas fa-crown"></i> Top Rated</span>'; break;
+                case 'available-today': badgesHTML += '<span class="badge badge-available"><i class="fas fa-calendar-check"></i> Available Today</span>'; break;
+                case 'verified': badgesHTML += '<span class="badge badge-verified"><i class="fas fa-check-circle"></i> Verified Doctor</span>'; break;
+                case 'telemedicine': badgesHTML += '<span class="badge badge-telemedicine"><i class="fas fa-video"></i> Telemedicine</span>'; break;
             }
+        });
+        return badgesHTML;
+    }
 
-            // ---------- render cards (slice based on visibleCount) ----------
-            function renderDoctors() {
-                filteredDoctors = getFilteredDoctors();
-                const total = filteredDoctors.length;
-                const visibleDoctors = filteredDoctors.slice(0, visibleCount);
+    // Helper: get availability badge dot and text
+    function getAvailabilityBadge(availability) {
+        switch(availability) {
+            case 'online': return '<span class="availability-badge availability-online"></span> Online';
+            case 'busy': return '<span class="availability-badge availability-busy"></span> Busy';
+            default: return '<span class="availability-badge availability-offline"></span> Offline';
+        }
+    }
 
-                // update results count
-                resultsCountSpan.innerHTML = `<strong>${total}</strong> doctor${total !== 1 ? 's' : ''} available`;
+    // Helper: generate tags HTML
+    function generateTags(tags) {
+        let tagsHTML = '';
+        tags.forEach(tag => {
+            if (tag === "Same Day") tagsHTML += '<span class="tag same-day">Same Day</span>';
+            else if (tag === "Telemedicine") tagsHTML += '<span class="tag telemedicine">Telemedicine</span>';
+            else tagsHTML += `<span class="tag">${tag}</span>`;
+        });
+        return tagsHTML;
+    }
 
-                // empty state
-                if (total === 0) {
-                    gridEl.innerHTML = `<div class="empty-state"><h3>✨ No matching doctors</h3><p>Try adjusting filters or search.</p></div>`;
-                    loadMoreContainer.classList.add('hidden');
-                    showingHint.innerText = '';
-                } else {
-                    // build cards HTML
-                    let htmlStr = '';
-                    visibleDoctors.forEach(doc => {
-                        const initial = doc.name.replace(/[^a-zA-Z]/g, '')[0] || 'D'; // first letter
-                        const availabilityClass = doc.available ? 'badge-available' : 'badge-busy';
-                        const availabilityText = doc.available ? 'Available' : 'Busy';
-                        const ratingStars = '★'; // we just use one star symbol
-                        htmlStr += `
-                            <div class="doctor-card">
-                                <div class="doctor-photo">${initial}</div>
-                                <div class="doctor-info">
-                                    <div class="doctor-name">${doc.name}</div>
-                                    <div class="doctor-specialty">${doc.specialization}</div>
-                                    <div class="doctor-details">
-                                        <span class="detail-item">🕊️ ${doc.experience} yrs</span>
-                                        <span class="detail-item rating">${ratingStars} ${doc.rating}<span>/5</span></span>
-                                        <span class="detail-item fee">$${doc.fee}</span>
-                                    </div>
-                                    <div class="availability-badge ${availabilityClass}">${availabilityText}</div>
-                                    <button class="book-btn" data-id="${doc.id}">Book appointment</button>
+    // Filtering and rendering
+    function filterDoctors() {
+        let filtered = state.doctors.filter(doc => {
+            if (state.filterCriteria.search && !doc.name.toLowerCase().includes(state.filterCriteria.search.toLowerCase())) return false;
+            if (state.filterCriteria.specialization && doc.specialization !== state.filterCriteria.specialization) return false;
+            if (state.filterCriteria.availability === 'available' && !doc.available) return false;
+            if (state.filterCriteria.availability === 'busy' && doc.available) return false;
+            return true;
+        });
+        switch (state.filterCriteria.sort) {
+            case 'experience': filtered.sort((a,b) => b.experience - a.experience); break;
+            case 'rating': filtered.sort((a,b) => b.rating - a.rating); break;
+            case 'fee_low': filtered.sort((a,b) => a.fee - b.fee); break;
+            default: filtered.sort((a,b) => a.id - b.id);
+        }
+        return filtered;
+    }
+
+    function renderDoctorGrid() {
+        const filtered = filterDoctors();
+        const total = filtered.length;
+        const visible = filtered.slice(0, state.visibleCount);
+
+        resultsCountSpan.innerHTML = `<strong>${total}</strong> doctor${total!==1?'s':''} available`;
+
+        if (total === 0) {
+            gridEl.innerHTML = `<div class="empty-state"><h3>✨ No matching doctors</h3><p>Try adjusting filters.</p></div>`;
+            loadMoreContainer.classList.add('hidden');
+            showingHint.innerText = '';
+        } else {
+            let html = '';
+            visible.forEach(doc => {
+                const isSelected = state.selectedDoctor && state.selectedDoctor.id === doc.id;
+                // Map available to online/busy if not explicitly set
+                const availability = doc.availability || (doc.available ? 'online' : 'offline');
+                html += `
+                    <div class="doctor-card ${isSelected ? 'selected' : ''}" data-id="${doc.id}">
+                        <div class="doctor-card-header">
+                            <div class="doctor-badges">
+                                ${generateBadges(doc.badges)}
+                            </div>
+                            <!-- Save button omitted for simplicity -->
+                        </div>
+                        <div class="doctor-info">
+                            <img src="${doc.img}" alt="${doc.name}" class="doctor-photo">
+                            <div class="doctor-details">
+                                <h3 class="doctor-name">${doc.name}</h3>
+                                <p class="doctor-specialization">${doc.specialization}</p>
+                                <p class="doctor-education">${doc.education}</p>
+                                <p class="doctor-experience">
+                                    <i class="fas fa-briefcase-medical"></i> ${doc.experience}+ Years Experience
+                                </p>
+                                <div class="rating">
+                                    <div class="stars">${generateStars(doc.rating)}</div>
+                                    <span class="rating-value">${doc.rating}</span>
+                                    <span class="rating-count">(${doc.ratingCount} reviews)</span>
+                                </div>
+                                <div class="doctor-tags">
+                                    ${generateTags(doc.tags)}
                                 </div>
                             </div>
-                        `;
-                    });
-                    gridEl.innerHTML = htmlStr;
+                        </div>
+                        <div class="doctor-details-info">
+                            <div class="detail-item">
+                                <i class="fas fa-location-dot"></i>
+                                <span>${doc.distance} • ${doc.hospital}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="far fa-clock"></i>
+                                <span>Next: ${doc.nextAvailable}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-circle"></i>
+                                <span>${getAvailabilityBadge(availability)}</span>
+                            </div>
+                        </div>
+                        <div class="doctor-footer">
+                            <div class="consultation-fee">
+                                $${doc.fee} <span>per consultation</span>
+                            </div>
+                            <div class="doctor-actions">
+                                <button class="btn btn-primary book-btn" data-id="${doc.id}">
+                                    <i class="fas fa-calendar-plus"></i> Book Now
+                                </button>
+                                <button class="btn btn-secondary" onclick="viewProfile(2)">
+                                    <i class="fas fa-user-md"></i> View Profile
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            gridEl.innerHTML = html;
 
-                    // load more button logic
-                    if (visibleCount >= total) {
-                        loadMoreBtn.disabled = true;
-                        loadMoreHint.innerText = `All ${total} doctors shown`;
-                    } else {
-                        loadMoreBtn.disabled = false;
-                        loadMoreHint.innerText = `Showing ${visibleCount} of ${total}`;
-                    }
-                    loadMoreContainer.classList.remove('hidden');
-                    showingHint.innerText = `${visibleDoctors.length} displayed`;
-                }
+            if (state.visibleCount >= total) {
+                loadMoreBtn.disabled = true;
+                loadMoreHint.innerText = `All ${total} doctors shown`;
+            } else {
+                loadMoreBtn.disabled = false;
+                loadMoreHint.innerText = `Showing ${state.visibleCount} of ${total}`;
+            }
+            loadMoreContainer.classList.remove('hidden');
+            showingHint.innerText = `${visible.length} displayed`;
 
-                // attach booking listeners (simulate action)
-                document.querySelectorAll('.book-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        alert(`✅ Appointment request sent for doctor ID ${btn.dataset.id} (demo)`);
-                    });
+            // Attach event listeners
+            document.querySelectorAll('.doctor-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('book-btn')) return;
+                    const id = parseInt(card.dataset.id);
+                    const doctor = state.doctors.find(d => d.id === id);
+                    selectDoctor(doctor);
                 });
+            });
+            document.querySelectorAll('.book-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = parseInt(btn.dataset.id);
+                    const doctor = state.doctors.find(d => d.id === id);
+                    selectDoctor(doctor);
+                });
+            });
+        }
+    }
+
+    // ---------- SELECT DOCTOR ----------
+    function selectDoctor(doctor) {
+        state.selectedDoctor = doctor;
+        document.getElementById('next-1').disabled = false;
+        renderDoctorGrid();
+        showNotification('Doctor Selected', `You selected ${doctor.name}`);
+
+        if (bookingJourney.classList.contains('hidden')) {
+            bookingJourney.classList.remove('hidden');
+            document.getElementById('step-2').classList.remove('hidden');
+            document.getElementById('step-3').classList.remove('hidden');
+            document.getElementById('step-4').classList.remove('hidden');
+            document.getElementById('step-5').classList.remove('hidden');
+        }
+        navigateToStep(2);
+    }
+
+    // ---------- STEP NAVIGATION ----------
+    function navigateToStep(step) {
+        const current = document.getElementById(`step-${state.currentStep}`);
+        current.style.opacity = '0';
+        current.style.transform = 'translateY(-20px)';
+        setTimeout(() => {
+            current.classList.remove('active');
+            current.style.opacity = '';
+            current.style.transform = '';
+            state.currentStep = step;
+            document.getElementById(`step-${step}`).classList.add('active');
+            updateStepIndicator();
+            if (step === 5) updateSummary();
+            document.getElementById(`step-${step}`).scrollIntoView({ behavior:'smooth', block:'start' });
+        }, 300);
+    }
+
+    function updateStepIndicator() {
+        document.querySelectorAll('.step-horizontal').forEach((el,i) => {
+            const s = i+1;
+            el.classList.remove('active','completed');
+            if (s < state.currentStep) el.classList.add('completed');
+            else if (s === state.currentStep) el.classList.add('active');
+        });
+    }
+
+    // ---------- PATIENT DETAILS (unchanged) ----------
+    function renderSymptomsTags() {
+        const container = document.getElementById('symptoms-tags');
+        container.innerHTML = '';
+        state.commonSymptoms.forEach(s => {
+            const tag = document.createElement('div');
+            tag.className = `symptom-tag ${state.patientDetails.selectedSymptoms.includes(s.name) ? 'selected' : ''}`;
+            tag.innerHTML = `<i class="${s.icon}"></i><span>${s.name}</span>`;
+            tag.dataset.symptom = s.name;
+            tag.addEventListener('click', () => toggleSymptom(s.name));
+            container.appendChild(tag);
+        });
+    }
+
+    function toggleSymptom(symptom) {
+        const idx = state.patientDetails.selectedSymptoms.indexOf(symptom);
+        if (idx === -1) state.patientDetails.selectedSymptoms.push(symptom);
+        else state.patientDetails.selectedSymptoms.splice(idx, 1);
+        renderSymptomsTags();
+    }
+
+    function validatePatientDetails() {
+        const name = document.getElementById('patient-name').value.trim();
+        const age = document.getElementById('patient-age').value.trim();
+        const gender = document.getElementById('patient-gender').value;
+        const phone = document.getElementById('patient-phone').value.trim();
+        const cond = document.getElementById('condition-title').value.trim();
+        const details = document.getElementById('condition-details').value.trim();
+        const isValid = name && age && parseInt(age)>0 && parseInt(age)<=120 && gender && phone && cond && details && details.length <= 500;
+        document.getElementById('next-2').disabled = !isValid;
+        return isValid;
+    }
+
+    // ---------- DATE & TIME (unchanged) ----------
+    function renderCalendar() {
+        const calendar = document.getElementById('calendar');
+        const title = document.getElementById('calendar-title');
+        calendar.innerHTML = '';
+        const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        title.textContent = monthNames[state.currentMonth] + ' ' + state.currentYear;
+
+        const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+        days.forEach(d => { let div = document.createElement('div'); div.className = 'calendar-header'; div.textContent = d; calendar.appendChild(div); });
+
+        const firstDay = new Date(state.currentYear, state.currentMonth, 1);
+        const startingDay = firstDay.getDay();
+        const daysInMonth = new Date(state.currentYear, state.currentMonth + 1, 0).getDate();
+        const today = new Date(); today.setHours(0,0,0,0);
+
+        for (let i = 0; i < startingDay; i++) { let e = document.createElement('div'); e.className = 'calendar-day disabled'; calendar.appendChild(e); }
+        for (let d = 1; d <= daysInMonth; d++) {
+            const date = new Date(state.currentYear, state.currentMonth, d);
+            const dateStr = date.toISOString().split('T')[0];
+            const cell = document.createElement('div');
+            cell.className = 'calendar-day';
+            cell.textContent = d;
+            cell.dataset.date = dateStr;
+            if (date.toDateString() === today.toDateString()) cell.classList.add('today');
+            if (state.selectedDate === dateStr) cell.classList.add('selected');
+            if (date < today) cell.classList.add('disabled');
+            if (!cell.classList.contains('disabled')) {
+                cell.addEventListener('click', () => selectDate(dateStr));
             }
+            calendar.appendChild(cell);
+        }
+    }
 
-            // ---------- update filters and reset pagination ----------
-            function updateFiltersAndRender() {
-                // reset visible count when filter changes
-                visibleCount = STEP;
-                // hide grid, show skeleton briefly? optional: we can skip skeleton for filter (instant)
-                // but for consistency we do a quick skeleton flash? not necessary. Just render.
-                renderDoctors();
+    function selectDate(date) {
+        state.selectedDate = date;
+        renderCalendar();
+        renderTimeSlots();
+        document.getElementById('next-3').disabled = !state.selectedTime;
+    }
+
+    function renderTimeSlots() {
+        const container = document.getElementById('time-slots');
+        const display = document.getElementById('selected-date-display');
+        container.innerHTML = '';
+        if (!state.selectedDate) {
+            display.textContent = '';
+            return;
+        }
+        const d = new Date(state.selectedDate);
+        display.textContent = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+        const slots = ['09:00 AM','10:00 AM','11:00 AM','12:00 PM','01:00 PM','02:00 PM','03:00 PM','04:00 PM'];
+        slots.forEach(time => {
+            const slot = document.createElement('div');
+            slot.className = 'time-slot';
+            slot.innerHTML = `<i class="fas fa-clock"></i> ${time}`;
+            const key = `${state.selectedDate} ${time}`;
+            if (state.bookedSlots.includes(key)) slot.classList.add('booked');
+            else if (state.selectedTime === time) slot.classList.add('selected');
+            if (!slot.classList.contains('booked')) {
+                slot.addEventListener('click', () => selectTime(time));
             }
+            container.appendChild(slot);
+        });
+    }
 
-            // ---------- event listeners ----------
-            searchInput.addEventListener('input', (e) => {
-                currentFilters.search = e.target.value;
-                updateFiltersAndRender();
-            });
+    function selectTime(time) {
+        state.selectedTime = time;
+        renderTimeSlots();
+        document.getElementById('next-3').disabled = false;
+        showNotification('Time Slot Selected', `Appointment at ${time}`);
+    }
 
-            specSelect.addEventListener('change', (e) => {
-                currentFilters.specialization = e.target.value;
-                updateFiltersAndRender();
-            });
+    // ---------- CONSULTATION TYPE ----------
+    function selectConsultationType(type) {
+        state.selectedConsultationType = type;
+        document.querySelectorAll('.consultation-type').forEach(el => el.classList.remove('selected'));
+        document.querySelector(`[data-type="${type}"]`).classList.add('selected');
+        document.getElementById('next-4').disabled = false;
+    }
 
-            availSelect.addEventListener('change', (e) => {
-                currentFilters.availability = e.target.value;
-                updateFiltersAndRender();
-            });
+    // ---------- SUMMARY ----------
+    function updateSummary() {
+        if (state.selectedDoctor) {
+            document.getElementById('summary-doctor-img').src = state.selectedDoctor.img;
+            document.getElementById('summary-doctor-name').textContent = state.selectedDoctor.name;
+            document.getElementById('summary-doctor-specialty').textContent = state.selectedDoctor.specialization;
+            document.getElementById('summary-doctor-experience').textContent = `${state.selectedDoctor.experience} years`;
+        }
+        const pat = state.patientDetails;
+        document.getElementById('summary-patient-info').textContent = pat.name ? `${pat.name} (${pat.age} yrs, ${pat.gender})` : '-';
+        document.getElementById('summary-condition').textContent = pat.conditionTitle || '-';
+        document.getElementById('summary-symptoms').textContent = pat.selectedSymptoms.slice(0,3).join(', ') + (pat.selectedSymptoms.length>3?', +more':'') || '-';
+        if (state.selectedDate) {
+            const d = new Date(state.selectedDate);
+            document.getElementById('summary-date').textContent = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+        } else { document.getElementById('summary-date').textContent = '-'; }
+        document.getElementById('summary-time').textContent = state.selectedTime || '-';
+        const type = state.selectedConsultationType;
+        document.getElementById('summary-consultation').textContent = type === 'online' ? 'Virtual Consultation' : (type === 'in-clinic' ? 'In-clinic Visit' : '-');
+        const fee = type === 'online' ? 75 : (type === 'in-clinic' ? 100 : 0);
+        document.getElementById('price-consultation').textContent = `$${fee}.00`;
+        document.getElementById('price-total').textContent = `$${fee + 8}.00`;
+    }
 
-            sortSelect.addEventListener('change', (e) => {
-                currentFilters.sort = e.target.value;
-                updateFiltersAndRender();
-            });
+    function showNotification(title, msg) {
+        const n = document.getElementById('notification');
+        n.querySelector('h4').textContent = title;
+        n.querySelector('p').textContent = msg;
+        n.classList.add('show');
+        setTimeout(() => n.classList.remove('show'), 3000);
+    }
 
-            resetBtn.addEventListener('click', () => {
-                searchInput.value = '';
-                specSelect.value = '';
-                availSelect.value = '';
-                sortSelect.value = '';
-                currentFilters = { search: '', specialization: '', availability: '', sort: '' };
-                updateFiltersAndRender();
-            });
+    function proceedToPayment() {
+        const btn = document.getElementById('next-5');
+        btn.innerHTML = '<div class="loading"></div> Processing...'; btn.disabled = true;
+        setTimeout(() => {
+            showNotification('Payment Successful', 'Appointment confirmed!');
+            btn.innerHTML = '<i class="fas fa-lock"></i> Secure Payment'; btn.disabled = false;
+            alert('✅ Appointment Confirmed!\n\nCheck your email for details.');
+            setTimeout(() => { window.location.reload(); }, 2000);
+        }, 2000);
+    }
 
-            loadMoreBtn.addEventListener('click', () => {
-                const total = filteredDoctors.length;
-                if (visibleCount + STEP <= total) {
-                    visibleCount += STEP;
-                } else {
-                    visibleCount = total;
-                }
-                renderDoctors();
-            });
+    // ---------- FILTER EVENT HANDLERS ----------
+    function updateFiltersAndRender() {
+        state.visibleCount = 6;
+        renderDoctorGrid();
+    }
 
-            // ---------- SIMULATE LOADING (skeleton then render) ----------
-            function initialLoad() {
-                // hide grid, show skeleton
-                gridEl.classList.add('hidden');
-                skeletonEl.classList.remove('hidden');
-                loadMoreContainer.classList.add('hidden');
-                resultsCountSpan.innerText = 'Loading doctors...';
+    // DOM elements
+    const skeletonEl = document.getElementById('skeletonLoader');
+    const gridEl = document.getElementById('doctorsGrid');
+    const searchInput = document.getElementById('searchInput');
+    const specSelect = document.getElementById('specializationSelect');
+    const availSelect = document.getElementById('availabilitySelect');
+    const sortSelect = document.getElementById('sortSelect');
+    const resetBtn = document.getElementById('resetFiltersBtn');
+    const resultsCountSpan = document.getElementById('resultsCount');
+    const showingHint = document.getElementById('showingHint');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    const loadMoreHint = document.getElementById('loadMoreHint');
+    const loadMoreContainer = document.getElementById('loadMoreContainer');
+    const bookingJourney = document.getElementById('bookingJourney');
 
-                // Simulate network delay (premium feel)
-                setTimeout(() => {
-                    // populate initial filters (all specializations already set)
-                    // render doctors
-                    renderDoctors();
-                    // hide skeleton, show grid
-                    skeletonEl.classList.add('hidden');
-                    gridEl.classList.remove('hidden');
-                }, 800); // 800ms shimmer
-            }
+    searchInput.addEventListener('input', (e) => { state.filterCriteria.search = e.target.value; updateFiltersAndRender(); });
+    specSelect.addEventListener('change', (e) => { state.filterCriteria.specialization = e.target.value; updateFiltersAndRender(); });
+    availSelect.addEventListener('change', (e) => { state.filterCriteria.availability = e.target.value; updateFiltersAndRender(); });
+    sortSelect.addEventListener('change', (e) => { state.filterCriteria.sort = e.target.value; updateFiltersAndRender(); });
+    resetBtn.addEventListener('click', () => {
+        searchInput.value = ''; specSelect.value = ''; availSelect.value = ''; sortSelect.value = '';
+        state.filterCriteria = { search: '', specialization: '', availability: '', sort: '' };
+        updateFiltersAndRender();
+    });
+    loadMoreBtn.addEventListener('click', () => {
+        const total = filterDoctors().length;
+        if (state.visibleCount + 6 <= total) state.visibleCount += 6;
+        else state.visibleCount = total;
+        renderDoctorGrid();
+    });
 
-            initialLoad();
-        })();
-    </script>
-</body>
-</html>
+    // Populate specialization dropdown
+    const specializations = [...new Set(state.doctors.map(d => d.specialization))].sort();
+    specializations.forEach(spec => {
+        const option = document.createElement('option');
+        option.value = spec; option.textContent = spec;
+        specSelect.appendChild(option);
+    });
+
+    // Step navigation buttons
+    document.getElementById('next-1').addEventListener('click', () => { if (state.selectedDoctor) navigateToStep(2); });
+    document.getElementById('next-2').addEventListener('click', () => { if (validatePatientDetails()) navigateToStep(3); });
+    document.getElementById('next-3').addEventListener('click', () => navigateToStep(4));
+    document.getElementById('next-4').addEventListener('click', () => navigateToStep(5));
+    document.getElementById('next-5').addEventListener('click', proceedToPayment);
+
+    document.getElementById('prev-2').addEventListener('click', () => navigateToStep(1));
+    document.getElementById('prev-3').addEventListener('click', () => navigateToStep(2));
+    document.getElementById('prev-4').addEventListener('click', () => navigateToStep(3));
+    document.getElementById('prev-5').addEventListener('click', () => navigateToStep(4));
+
+    document.getElementById('prev-month').addEventListener('click', () => {
+        state.currentMonth--;
+        if (state.currentMonth < 0) { state.currentMonth = 11; state.currentYear--; }
+        renderCalendar();
+    });
+    document.getElementById('next-month').addEventListener('click', () => {
+        state.currentMonth++;
+        if (state.currentMonth > 11) { state.currentMonth = 0; state.currentYear++; }
+        renderCalendar();
+    });
+
+    document.querySelectorAll('.consultation-type').forEach(el => {
+        el.addEventListener('click', () => selectConsultationType(el.dataset.type));
+    });
+
+    // Patient form validation
+    ['patient-name','patient-age','patient-gender','patient-phone','condition-title','condition-details'].forEach(id => {
+        document.getElementById(id).addEventListener('input', validatePatientDetails);
+    });
+    document.getElementById('condition-details').addEventListener('input', (e) => {
+        document.getElementById('char-count').textContent = e.target.value.length;
+    });
+    ['previous-treatment','allergies','current-medication','smoker','chronic-conditions','surgery-history'].forEach(id => {
+        document.getElementById(id).addEventListener('change', (e) => {
+            state.patientDetails[id.replace('-','')] = e.target.checked;
+        });
+    });
+    document.getElementById('additional-notes').addEventListener('input', (e) => {
+        state.patientDetails.additionalNotes = e.target.value;
+    });
+
+    // Step indicator click
+    document.querySelectorAll('.step-horizontal').forEach(el => {
+        el.addEventListener('click', () => {
+            const step = parseInt(el.dataset.step);
+            if (step <= state.currentStep) navigateToStep(step);
+        });
+    });
+
+    // Initial load
+    function initialLoad() {
+        gridEl.classList.add('hidden');
+        skeletonEl.classList.remove('hidden');
+        loadMoreContainer.classList.add('hidden');
+        resultsCountSpan.innerText = 'Loading doctors...';
+
+        setTimeout(() => {
+            renderDoctorGrid();
+            skeletonEl.classList.add('hidden');
+            gridEl.classList.remove('hidden');
+        }, 800);
+    }
+
+    renderSymptomsTags();
+    renderCalendar();
+    renderTimeSlots();
+    initialLoad();
+})();
+</script>
+{% endblock %}

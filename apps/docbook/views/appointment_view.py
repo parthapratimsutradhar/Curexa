@@ -48,6 +48,7 @@ class AppointmentsListView(View):
     def get(swlf, request):
         return render(request, "enduser/docbook/my_appointments.html")
     
+
 class AppointmentBookView(View):
     def get(swlf, request):
         return render(request, "enduser/docbook/book_appointment.html")

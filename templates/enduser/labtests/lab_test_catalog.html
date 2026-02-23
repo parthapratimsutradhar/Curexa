@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse and book medical laboratory tests with real-time search, filtering, and instant appointment scheduling">
+    <title>Lab Tests Catalog - MedLab Booking</title>
+    <link rel="stylesheet" href="../css/main.css">
+  
+  <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fmedlabboo5371back.builtwithrocket.new&_be=https%3A%2F%2Fappanalytics.rocket.new&_v=0.1.17"></script>
+  <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
+  </head>
+<body class="bg-background">
+    <!-- Sticky Navigation Header -->
+    <header class="sticky top-0 z-sticky bg-surface border-b border-border shadow-sm">
+        <nav class="max-w-7xl mx-auto px-sm md:px-lg py-sm">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="../index.html" class="flex items-center gap-2 group">
+                    <svg class="w-10 h-10 transition-transform duration-250 group-hover:scale-105" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="40" height="40" rx="8" fill="#0F4C75"/>
+                        <path d="M20 10L28 15V25L20 30L12 25V15L20 10Z" fill="#3282B8"/>
+                        <circle cx="20" cy="20" r="4" fill="#D4A574"/>
+                        <path d="M20 16V24M16 20H24" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span class="text-xl font-heading font-semibold text-primary">MedLab<span class="text-accent">Booking</span></span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center gap-lg">
+                    <a href="../index.html" class="text-text-secondary hover:text-primary transition-colors duration-250 font-medium">Home</a>
+                    <a href="pages/lab_tests_catalog.html" class="text-primary font-semibold border-b-2 border-primary pb-1">Lab Tests</a>
+                    <a href="pages/booking_confirmation.html" class="text-text-secondary hover:text-primary transition-colors duration-250 font-medium">My Bookings</a>
+                    <a href="javascript:void(0)" class="text-text-secondary hover:text-primary transition-colors duration-250 font-medium">Contact</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-primary hover:bg-primary/10 rounded-md transition-colors touch-target" aria-label="Toggle mobile menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Navigation Menu -->
+            <div id="mobileMenu" class="hidden md:hidden mt-sm pt-sm border-t border-border">
+                <div class="flex flex-col gap-sm">
+                    <a href="../index.html" class="text-text-secondary hover:text-primary transition-colors duration-250 font-medium py-2">Home</a>
+                    <a href="pages/lab_tests_catalog.html" class="text-primary font-semibold py-2">Lab Tests</a>
+                    <a href="pages/booking_confirmation.html" class="text-text-secondary hover:text-primary transition-colors duration-250 font-medium py-2">My Bookings</a>
+                    <a href="javascript:void(0)" class="text-text-secondary hover:text-primary transition-colors duration-250 font-medium py-2">Contact</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-sm md:px-lg py-lg md:py-xl">
+        <!-- Page Header -->
+        <div class="mb-lg">
+            <h1 class="text-3xl md:text-4xl font-heading font-bold text-primary mb-2">Medical Laboratory Tests</h1>
+            <p class="text-text-secondary text-lg">Browse, compare, and book lab tests with instant confirmation</p>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="bg-surface rounded-lg border border-border p-sm md:p-lg mb-lg shadow-sm">
+            <!-- Search Bar -->
+            <div class="mb-md">
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search tests by name or category..." 
+                        class="input w-full pl-12 pr-4"
+                        aria-label="Search laboratory tests"
+                    >
+                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="flex flex-col lg:flex-row gap-md items-start lg:items-center justify-between">
+                <!-- Category Filters -->
+                <div class="w-full lg:w-auto">
+                    <label class="label mb-2">Test Categories</label>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="filter-chip active" data-category="all">
+                            All Tests
+                            <span class="ml-2 bg-primary-100 text-primary-800 px-2 py-0.5 rounded-full text-xs font-semibold">24</span>
+                        </button>
+                        <button class="filter-chip" data-category="blood">
+                            Blood Tests
+                            <span class="ml-2 bg-secondary-100 text-secondary-800 px-2 py-0.5 rounded-full text-xs font-semibold">12</span>
+                        </button>
+                        <button class="filter-chip" data-category="urine">
+                            Urine Tests
+                            <span class="ml-2 bg-accent-100 text-accent-800 px-2 py-0.5 rounded-full text-xs font-semibold">6</span>
+                        </button>
+                        <button class="filter-chip" data-category="imaging">
+                            Imaging
+                            <span class="ml-2 bg-success-100 text-success-800 px-2 py-0.5 rounded-full text-xs font-semibold">6</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sort and Filter Actions -->
+                <div class="flex flex-wrap gap-2 w-full lg:w-auto">
+                    <button id="filterToggleBtn" class="btn-outline flex items-center gap-2 lg:hidden">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                        </svg>
+                        Filters
+                    </button>
+                    <select id="sortSelect" class="input flex-1 lg:flex-initial" aria-label="Sort tests">
+                        <option value="popularity">Sort by Popularity</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="name">Alphabetical</option>
+                    </select>
+                    <button id="resetFiltersBtn" class="btn-ghost flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Price Range Filter (Desktop) -->
+            <div class="hidden lg:block mt-md pt-md border-t border-border">
+                <label class="label mb-2">Price Range: $<span id="priceRangeValue">0 - 500</span></label>
+                <div class="flex items-center gap-md">
+                    <input type="range" id="priceRangeMin" min="0" max="500" value="0" class="flex-1" aria-label="Minimum price">
+                    <span class="text-text-tertiary">to</span>
+                    <input type="range" id="priceRangeMax" min="0" max="500" value="500" class="flex-1" aria-label="Maximum price">
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-lg">
+            <!-- Test Cards Grid -->
+            <div class="lg:col-span-3">
+                <!-- Results Count -->
+                <div class="flex items-center justify-between mb-md">
+                    <p class="text-text-secondary">
+                        Showing <span id="resultsCount" class="font-semibold text-primary">24</span> tests
+                    </p>
+                </div>
+
+                <!-- Test Cards Container -->
+                <div id="testCardsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                    <!-- Test Card 1 -->
+                    <div class="test-card bg-surface rounded-lg border border-border p-md hover:shadow-md hover:border-primary transition-all duration-250 cursor-pointer group" data-category="blood" data-price="45" data-test-id="1">
+                        <div class="flex items-start justify-between mb-sm">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">Complete Blood Count (CBC)</h3>
+                                <span class="inline-block mt-1 px-2 py-1 bg-secondary-50 text-secondary-700 text-xs font-medium rounded-md">Blood Test</span>
+                            </div>
+                            <img src="https://img.rocket.new/generatedImages/rocket_gen_img_15c0ccfc9-1771524923469.png" alt="Blood test sample in laboratory" class="w-16 h-16 rounded-md object-cover ml-sm" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=100&auto=format&fit=crop'; this.onerror=null;">
+                        </div>
+                        <p class="text-text-secondary text-sm mb-md line-clamp-2">Comprehensive analysis of blood cells including red blood cells, white blood cells, and platelets to detect various conditions.</p>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-2xl font-bold text-primary">$45.00</span>
+                                <span class="text-text-tertiary text-sm ml-1">USD</span>
+                            </div>
+                            <button class="btn-primary book-now-btn" data-test-name="Complete Blood Count (CBC)" data-test-price="45.00">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Test Card 2 -->
+                    <div class="test-card bg-surface rounded-lg border border-border p-md hover:shadow-md hover:border-primary transition-all duration-250 cursor-pointer group" data-category="blood" data-price="65" data-test-id="2">
+                        <div class="flex items-start justify-between mb-sm">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">Lipid Profile</h3>
+                                <span class="inline-block mt-1 px-2 py-1 bg-secondary-50 text-secondary-700 text-xs font-medium rounded-md">Blood Test</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1614934273538-70f8ffc2e76e" alt="Cholesterol test vials" class="w-16 h-16 rounded-md object-cover ml-sm" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=100&auto=format&fit=crop'; this.onerror=null;">
+                        </div>
+                        <p class="text-text-secondary text-sm mb-md line-clamp-2">Measures cholesterol and triglyceride levels to assess cardiovascular health and risk factors for heart disease.</p>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-2xl font-bold text-primary">$65.00</span>
+                                <span class="text-text-tertiary text-sm ml-1">USD</span>
+                            </div>
+                            <button class="btn-primary book-now-btn" data-test-name="Lipid Profile" data-test-price="65.00">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Test Card 3 -->
+                    <div class="test-card bg-surface rounded-lg border border-border p-md hover:shadow-md hover:border-primary transition-all duration-250 cursor-pointer group" data-category="blood" data-price="55" data-test-id="3">
+                        <div class="flex items-start justify-between mb-sm">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">Thyroid Function Test</h3>
+                                <span class="inline-block mt-1 px-2 py-1 bg-secondary-50 text-secondary-700 text-xs font-medium rounded-md">Blood Test</span>
+                            </div>
+                            <img src="https://img.rocket.new/generatedImages/rocket_gen_img_1490722c2-1771770674164.png" alt="Thyroid hormone test tubes" class="w-16 h-16 rounded-md object-cover ml-sm" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=100&auto=format&fit=crop'; this.onerror=null;">
+                        </div>
+                        <p class="text-text-secondary text-sm mb-md line-clamp-2">Evaluates thyroid hormone levels (TSH, T3, T4) to diagnose thyroid disorders and metabolic conditions.</p>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-2xl font-bold text-primary">$55.00</span>
+                                <span class="text-text-tertiary text-sm ml-1">USD</span>
+                            </div>
+                            <button class="btn-primary book-now-btn" data-test-name="Thyroid Function Test" data-test-price="55.00">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Test Card 4 -->
+                    <div class="test-card bg-surface rounded-lg border border-border p-md hover:shadow-md hover:border-primary transition-all duration-250 cursor-pointer group" data-category="blood" data-price="85" data-test-id="4">
+                        <div class="flex items-start justify-between mb-sm">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">Comprehensive Metabolic Panel</h3>
+                                <span class="inline-block mt-1 px-2 py-1 bg-secondary-50 text-secondary-700 text-xs font-medium rounded-md">Blood Test</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1615631570866-4ff59a69093a" alt="Metabolic panel blood samples" class="w-16 h-16 rounded-md object-cover ml-sm" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=100&auto=format&fit=crop'; this.onerror=null;">
+                        </div>
+                        <p class="text-text-secondary text-sm mb-md line-clamp-2">Comprehensive blood chemistry panel measuring glucose, electrolytes, kidney and liver function markers.</p>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-2xl font-bold text-primary">$85.00</span>
+                                <span class="text-text-tertiary text-sm ml-1">USD</span>
+                            </div>
+                            <button class="btn-primary book-now-btn" data-test-name="Comprehensive Metabolic Panel" data-test-price="85.00">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Test Card 5 -->
+                    <div class="test-card bg-surface rounded-lg border border-border p-md hover:shadow-md hover:border-primary transition-all duration-250 cursor-pointer group" data-category="blood" data-price="75" data-test-id="5">
+                        <div class="flex items-start justify-between mb-sm">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">HbA1c (Diabetes Test)</h3>
+                                <span class="inline-block mt-1 px-2 py-1 bg-secondary-50 text-secondary-700 text-xs font-medium rounded-md">Blood Test</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1683727186226-910f31a9da45" alt="Diabetes blood glucose test" class="w-16 h-16 rounded-md object-cover ml-sm" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=100&auto=format&fit=crop'; this.onerror=null;">
+                        </div>
+                        <p class="text-text-secondary text-sm mb-md line-clamp-2">Measures average blood sugar levels over 2-3 months for diabetes diagnosis and management monitoring.</p>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-2xl font-bold text-primary">$75.00</span>
+                                <span class="text-text-tertiary text-sm ml-1">USD</span>
+                            </div>
+                            <button class="btn-primary book-now-btn" data-test-name="HbA1c (Diabetes Test)" data-test-price="75.00">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Test Card 6 -->
+                    <div class="test-card bg-surface rounded-lg border border-border p-md hover:shadow-md hover:border-primary transition-all duration-250 cursor-pointer group" data-category="blood" data-price="95" data-test-id="6">
+                        <div class="flex items-start justify-between mb-sm">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">Vitamin D Test</h3>
+                                <span class="inline-block mt-1 px-2 py-1 bg-secondary-50 text-secondary-700 text-xs font-medium rounded-md">Blood Test</span>
+                            </div>
+                            <img src="https://img.rocket.new/generatedImages/rocket_gen_img_16fdfe572-1769413597257.png" alt="Vitamin D blood test sample" class="w-16 h-16 rounded-md object-cover ml-sm" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=100&auto=format&fit=crop'; this.onerror=null;">
+                        </div>
+                        <p class="text-text-secondary text-sm mb-md line-clamp-2">Measures vitamin D levels to assess bone health, immune function, and identify deficiency risks.</p>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-2xl font-bold text-primary">$95.00</span>
+                                <span class="text-text-tertiary text-sm ml-1">USD</span>
+                            </div>
+                            <button class="btn-primary book-now-btn" data-test-name="Vitamin D Test" data-test-price="95.00">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Test Card 7 -->
+                    <div class="test-card bg-surface rounded-lg border border-border p-md hover:shadow-md hover:border-primary transition-all duration-250 cursor-pointer group" data-category="urine" data-price="35" data-test-id="7">
+                        <div class="flex items-start justify-between mb-sm">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">Urinalysis</h3>
+                                <span class="inline-block mt-1 px-2 py-1 bg-accent-50 text-accent-700 text-xs font-medium rounded-md">Urine Test</span>
+                            </div>
+                            <img src="https://img.rocket.new/generatedImages/rocket_gen_img_1dbf95d9f-1769521869339.png" alt="Urine sample analysis" class="w-16 h-16 rounded-md object-cover ml-sm" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=100&auto=format&fit=crop'; this.onerror=null;">
+                        </div>
+                        <p class="text-text-secondary text-sm mb-md line-clamp-2">Complete urine analysis to detect urinary tract infections, kidney disease, and metabolic disorders.</p>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-2xl font-bold text-primary">$35.00</span>
+                                <span class="text-text-tertiary text-sm ml-1">USD</span>
+                            </div>
+                            <button class="btn-primary book-now-btn" data-test-name="Urinalysis" data-test-price="35.00">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Test Card 8 -->
+                    <div class="test-card bg-surface rounded-lg border border-border p-md hover:shadow-md hover:border-primary transition-all duration-250 cursor-pointer group" data-category="urine" data-price="45" data-test-id="8">
+                        <div class="flex items-start justify-between mb-sm">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">Urine Culture</h3>
+                                <span class="inline-block mt-1 px-2 py-1 bg-accent-50 text-accent-700 text-xs font-medium rounded-md">Urine Test</span>
+                            </div>
+                            <img src="https://img.rocket.new/generatedImages/rocket_gen_img_1187f4d4b-1771770677566.png" alt="Urine culture test in laboratory" class="w-16 h-16 rounded-md object-cover ml-sm" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=100&auto=format&fit=crop'; this.onerror=null;">
+                        </div>
+                        <p class="text-text-secondary text-sm mb-md line-clamp-2">Identifies bacteria causing urinary tract infections and determines appropriate antibiotic treatment.</p>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-2xl font-bold text-primary">$45.00</span>
+                                <span class="text-text-tertiary text-sm ml-1">USD</span>
+                            </div>
+                            <button class="btn-primary book-now-btn" data-test-name="Urine Culture" data-test-price="45.00">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Test Card 9 -->
+                    <div class="test-card bg-surface rounded-lg border border-border p-md hover:shadow-md hover:border-primary transition-all duration-250 cursor-pointer group" data-category="imaging" data-price="150" data-test-id="9">
+                        <div class="flex items-start justify-between mb-sm">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">Chest X-Ray</h3>
+                                <span class="inline-block mt-1 px-2 py-1 bg-success-50 text-success-700 text-xs font-medium rounded-md">Imaging</span>
+                            </div>
+                            <img src="https://img.rocket.new/generatedImages/rocket_gen_img_1ea5bcf73-1765508504177.png" alt="Chest X-ray imaging" class="w-16 h-16 rounded-md object-cover ml-sm" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=100&auto=format&fit=crop'; this.onerror=null;">
+                        </div>
+                        <p class="text-text-secondary text-sm mb-md line-clamp-2">Radiographic imaging of chest to detect lung conditions, heart abnormalities, and bone issues.</p>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-2xl font-bold text-primary">$150.00</span>
+                                <span class="text-text-tertiary text-sm ml-1">USD</span>
+                            </div>
+                            <button class="btn-primary book-now-btn" data-test-name="Chest X-Ray" data-test-price="150.00">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Test Card 10 -->
+                    <div class="test-card bg-surface rounded-lg border border-border p-md hover:shadow-md hover:border-primary transition-all duration-250 cursor-pointer group" data-category="imaging" data-price="250" data-test-id="10">
+                        <div class="flex items-start justify-between mb-sm">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">Ultrasound Scan</h3>
+                                <span class="inline-block mt-1 px-2 py-1 bg-success-50 text-success-700 text-xs font-medium rounded-md">Imaging</span>
+                            </div>
+                            <img src="https://img.rocket.new/generatedImages/rocket_gen_img_184b253f9-1765773037168.png" alt="Ultrasound imaging procedure" class="w-16 h-16 rounded-md object-cover ml-sm" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=100&auto=format&fit=crop'; this.onerror=null;">
+                        </div>
+                        <p class="text-text-secondary text-sm mb-md line-clamp-2">Non-invasive imaging using sound waves to visualize internal organs and detect abnormalities.</p>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-2xl font-bold text-primary">$250.00</span>
+                                <span class="text-text-tertiary text-sm ml-1">USD</span>
+                            </div>
+                            <button class="btn-primary book-now-btn" data-test-name="Ultrasound Scan" data-test-price="250.00">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Test Card 11 -->
+                    <div class="test-card bg-surface rounded-lg border border-border p-md hover:shadow-md hover:border-primary transition-all duration-250 cursor-pointer group" data-category="blood" data-price="120" data-test-id="11">
+                        <div class="flex items-start justify-between mb-sm">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">Liver Function Test</h3>
+                                <span class="inline-block mt-1 px-2 py-1 bg-secondary-50 text-secondary-700 text-xs font-medium rounded-md">Blood Test</span>
+                            </div>
+                            <img src="https://img.rocket.new/generatedImages/rocket_gen_img_15a372303-1770037834515.png" alt="Liver function blood test" class="w-16 h-16 rounded-md object-cover ml-sm" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=100&auto=format&fit=crop'; this.onerror=null;">
+                        </div>
+                        <p class="text-text-secondary text-sm mb-md line-clamp-2">Evaluates liver enzymes and proteins to assess liver health and detect liver disease or damage.</p>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-2xl font-bold text-primary">$120.00</span>
+                                <span class="text-text-tertiary text-sm ml-1">USD</span>
+                            </div>
+                            <button class="btn-primary book-now-btn" data-test-name="Liver Function Test" data-test-price="120.00">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Test Card 12 -->
+                    <div class="test-card bg-surface rounded-lg border border-border p-md hover:shadow-md hover:border-primary transition-all duration-250 cursor-pointer group" data-category="blood" data-price="110" data-test-id="12">
+                        <div class="flex items-start justify-between mb-sm">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">Kidney Function Test</h3>
+                                <span class="inline-block mt-1 px-2 py-1 bg-secondary-50 text-secondary-700 text-xs font-medium rounded-md">Blood Test</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1656528811907-1badfb60cc67" alt="Kidney function test samples" class="w-16 h-16 rounded-md object-cover ml-sm" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=100&auto=format&fit=crop'; this.onerror=null;">
+                        </div>
+                        <p class="text-text-secondary text-sm mb-md line-clamp-2">Measures creatinine and blood urea nitrogen to evaluate kidney function and detect kidney disease.</p>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-2xl font-bold text-primary">$110.00</span>
+                                <span class="text-text-tertiary text-sm ml-1">USD</span>
+                            </div>
+                            <button class="btn-primary book-now-btn" data-test-name="Kidney Function Test" data-test-price="110.00">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Load More Button -->
+                <div class="mt-lg text-center">
+                    <button class="btn-outline">
+                        Load More Tests
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Booking Summary Sidebar (Desktop) -->
+            <aside class="hidden lg:block">
+                <div class="sticky top-24 bg-surface rounded-lg border border-border p-lg shadow-sm">
+                    <h3 class="text-xl font-heading font-semibold text-primary mb-md">Booking Summary</h3>
+                    
+                    <!-- Selected Tests -->
+                    <div id="selectedTestsList" class="space-y-sm mb-md">
+                        <div class="text-center py-xl text-text-tertiary">
+                            <svg class="w-16 h-16 mx-auto mb-sm opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                            <p class="text-sm">No tests selected yet</p>
+                            <p class="text-xs mt-1">Click "Book Now" to add tests</p>
+                        </div>
+                    </div>
+
+                    <!-- Total Price -->
+                    <div class="border-t border-border pt-md">
+                        <div class="flex items-center justify-between mb-sm">
+                            <span class="text-text-secondary">Subtotal</span>
+                            <span class="font-semibold text-text-primary">$<span id="subtotalAmount">0.00</span></span>
+                        </div>
+                        <div class="flex items-center justify-between mb-md">
+                            <span class="text-text-secondary">Service Fee</span>
+                            <span class="font-semibold text-text-primary">$<span id="serviceFee">0.00</span></span>
+                        </div>
+                        <div class="flex items-center justify-between text-lg font-bold">
+                            <span class="text-primary">Total</span>
+                            <span class="text-primary">$<span id="totalAmount">0.00</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Checkout Button -->
+                    <button id="checkoutBtn" class="btn-primary w-full mt-md" disabled>
+                        Proceed to Booking
+                    </button>
+
+                    <!-- Trust Signals -->
+                    <div class="mt-md pt-md border-t border-border">
+                        <div class="flex items-center gap-2 text-xs text-text-tertiary mb-2">
+                            <svg class="w-4 h-4 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>SSL Secured Booking</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs text-text-tertiary">
+                            <svg class="w-4 h-4 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>CLIA Certified Labs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Popular Tests Widget -->
+                <div class="mt-lg bg-gradient-to-br from-primary-50 to-secondary-50 rounded-lg border border-primary-200 p-lg">
+                    <h4 class="text-lg font-heading font-semibold text-primary mb-sm">Popular Tests</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center gap-2 text-sm text-text-secondary">
+                            <svg class="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            <span>Complete Blood Count</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-sm text-text-secondary">
+                            <svg class="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            <span>Lipid Profile</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-sm text-text-secondary">
+                            <svg class="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            <span>HbA1c Test</span>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Trending Health Packages Section -->
+        <section class="mt-3xl">
+            <div class="flex items-center justify-between mb-lg">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-heading font-bold text-primary mb-2">Trending Health Packages</h2>
+                    <p class="text-text-secondary">Comprehensive test bundles at discounted prices</p>
+                </div>
+                <a href="javascript:void(0)" class="hidden md:flex items-center gap-2 text-primary hover:text-secondary font-medium transition-colors">
+                    View All
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+                <!-- Package Card 1 -->
+                <div class="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-lg border border-primary-200 p-lg hover:shadow-lg transition-all duration-250 group">
+                    <div class="flex items-start justify-between mb-sm">
+                        <div>
+                            <span class="inline-block px-2 py-1 bg-accent text-accent-foreground text-xs font-semibold rounded-md mb-2">SAVE 25%</span>
+                            <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">Complete Wellness Package</h3>
+                        </div>
+                        <img src="https://img.rocket.new/generatedImages/rocket_gen_img_10b81117b-1769435297206.png" alt="Complete wellness health package" class="w-16 h-16 rounded-md object-cover" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=80&auto=format&fit=crop'; this.onerror=null;">
+                    </div>
+                    <p class="text-text-secondary text-sm mb-md">CBC, Lipid Profile, Thyroid, Liver & Kidney Function Tests</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-text-tertiary line-through text-sm">$450.00</span>
+                            <span class="text-2xl font-bold text-primary ml-2">$337.50</span>
+                        </div>
+                        <button class="btn-accent">Book Package</button>
+                    </div>
+                </div>
+
+                <!-- Package Card 2 -->
+                <div class="bg-gradient-to-br from-secondary-50 to-accent-50 rounded-lg border border-secondary-200 p-lg hover:shadow-lg transition-all duration-250 group">
+                    <div class="flex items-start justify-between mb-sm">
+                        <div>
+                            <span class="inline-block px-2 py-1 bg-success text-success-foreground text-xs font-semibold rounded-md mb-2">SAVE 20%</span>
+                            <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">Diabetes Care Package</h3>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1626092806645-ae053131caff" alt="Diabetes care health package" class="w-16 h-16 rounded-md object-cover" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=80&auto=format&fit=crop'; this.onerror=null;">
+                    </div>
+                    <p class="text-text-secondary text-sm mb-md">HbA1c, Fasting Glucose, Lipid Profile, Kidney Function</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-text-tertiary line-through text-sm">$320.00</span>
+                            <span class="text-2xl font-bold text-primary ml-2">$256.00</span>
+                        </div>
+                        <button class="btn-accent">Book Package</button>
+                    </div>
+                </div>
+
+                <!-- Package Card 3 -->
+                <div class="bg-gradient-to-br from-accent-50 to-primary-50 rounded-lg border border-accent-200 p-lg hover:shadow-lg transition-all duration-250 group">
+                    <div class="flex items-start justify-between mb-sm">
+                        <div>
+                            <span class="inline-block px-2 py-1 bg-warning text-warning-foreground text-xs font-semibold rounded-md mb-2">SAVE 30%</span>
+                            <h3 class="text-xl font-heading font-semibold text-primary group-hover:text-secondary transition-colors">Heart Health Package</h3>
+                        </div>
+                        <img src="https://img.rocket.new/generatedImages/rocket_gen_img_155a73474-1767017282944.png" alt="Heart health package" class="w-16 h-16 rounded-md object-cover" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=80&auto=format&fit=crop'; this.onerror=null;">
+                    </div>
+                    <p class="text-text-secondary text-sm mb-md">Lipid Profile, ECG, Chest X-Ray, Cardiac Enzymes</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-text-tertiary line-through text-sm">$520.00</span>
+                            <span class="text-2xl font-bold text-primary ml-2">$364.00</span>
+                        </div>
+                        <button class="btn-accent">Book Package</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal-overlay hidden" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+        <div class="modal-content">
+            <div class="flex items-center justify-between mb-lg">
+                <h2 id="modalTitle" class="text-2xl font-heading font-bold text-primary">Book Your Test</h2>
+                <button id="closeModalBtn" class="p-2 hover:bg-primary/10 rounded-md transition-colors touch-target" aria-label="Close booking modal">
+                    <svg class="w-6 h-6 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Selected Test Info -->
+            <div id="selectedTestInfo" class="bg-primary-50 rounded-md p-md mb-lg border border-primary-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="font-heading font-semibold text-primary mb-1" id="modalTestName">Test Name</h3>
+                        <p class="text-text-secondary text-sm">Professional laboratory analysis</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-2xl font-bold text-primary">$<span id="modalTestPrice">0.00</span></span>
+                        <p class="text-text-tertiary text-xs">USD</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Form -->
+            <form id="bookingForm" class="space-y-md">
+                <!-- Patient Name -->
+                <div>
+                    <label for="patientName" class="label">Full Name *</label>
+                    <input 
+                        type="text" 
+                        id="patientName" 
+                        name="patientName" 
+                        class="input w-full" 
+                        placeholder="Enter your full name"
+                        required
+                        aria-required="true"
+                    >
+                    <p class="text-error text-xs mt-1 hidden" id="nameError">Please enter your full name</p>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="patientEmail" class="label">Email Address *</label>
+                    <input 
+                        type="email" 
+                        id="patientEmail" 
+                        name="patientEmail" 
+                        class="input w-full" 
+                        placeholder="your.email@example.com"
+                        required
+                        aria-required="true"
+                    >
+                    <p class="text-error text-xs mt-1 hidden" id="emailError">Please enter a valid email address</p>
+                </div>
+
+                <!-- Phone -->
+                <div>
+                    <label for="patientPhone" class="label">Phone Number *</label>
+                    <input 
+                        type="tel" 
+                        id="patientPhone" 
+                        name="patientPhone" 
+                        class="input w-full" 
+                        placeholder="(555) 123-4567"
+                        required
+                        aria-required="true"
+                    >
+                    <p class="text-error text-xs mt-1 hidden" id="phoneError">Please enter a valid phone number</p>
+                </div>
+
+                <!-- Appointment Date -->
+                <div>
+                    <label for="appointmentDate" class="label">Preferred Date *</label>
+                    <input 
+                        type="date" 
+                        id="appointmentDate" 
+                        name="appointmentDate" 
+                        class="input w-full" 
+                        required
+                        aria-required="true"
+                    >
+                    <p class="text-error text-xs mt-1 hidden" id="dateError">Please select an appointment date</p>
+                </div>
+
+                <!-- Time Slot -->
+                <div>
+                    <label for="timeSlot" class="label">Preferred Time Slot *</label>
+                    <select 
+                        id="timeSlot" 
+                        name="timeSlot" 
+                        class="input w-full" 
+                        required
+                        aria-required="true"
+                    >
+                        <option value="">Select a time slot</option>
+                        <option value="08:00-09:00">08:00 AM - 09:00 AM</option>
+                        <option value="09:00-10:00">09:00 AM - 10:00 AM</option>
+                        <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
+                        <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
+                        <option value="14:00-15:00">02:00 PM - 03:00 PM</option>
+                        <option value="15:00-16:00">03:00 PM - 04:00 PM</option>
+                        <option value="16:00-17:00">04:00 PM - 05:00 PM</option>
+                    </select>
+                    <p class="text-error text-xs mt-1 hidden" id="timeError">Please select a time slot</p>
+                </div>
+
+                <!-- Special Instructions -->
+                <div>
+                    <label for="specialNotes" class="label">Special Instructions (Optional)</label>
+                    <textarea 
+                        id="specialNotes" 
+                        name="specialNotes" 
+                        rows="3" 
+                        class="input w-full resize-none" 
+                        placeholder="Any special requirements or medical conditions we should know about..."
+                    ></textarea>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="flex flex-col sm:flex-row gap-sm pt-md border-t border-border">
+                    <button type="button" id="cancelBookingBtn" class="btn-outline flex-1">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-primary flex-1">
+                        Confirm Booking
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-primary-foreground mt-3xl">
+        <div class="max-w-7xl mx-auto px-sm md:px-lg py-xl">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-lg mb-lg">
+                <!-- Brand -->
+                <div>
+                    <div class="flex items-center gap-2 mb-md">
+                        <svg class="w-8 h-8" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="40" height="40" rx="8" fill="#3282B8"/>
+                            <path d="M20 10L28 15V25L20 30L12 25V15L20 10Z" fill="#D4A574"/>
+                            <circle cx="20" cy="20" r="4" fill="white"/>
+                        </svg>
+                        <span class="text-xl font-heading font-semibold">MedLab<span class="text-accent">Booking</span></span>
+                    </div>
+                    <p class="text-primary-100 text-sm">Professional laboratory testing with instant booking and confirmation.</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="font-heading font-semibold mb-md">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="../index.html" class="text-primary-100 hover:text-accent transition-colors">Home</a></li>
+                        <li><a href="pages/lab_tests_catalog.html" class="text-primary-100 hover:text-accent transition-colors">Lab Tests</a></li>
+                        <li><a href="pages/booking_confirmation.html" class="text-primary-100 hover:text-accent transition-colors">My Bookings</a></li>
+                        <li><a href="javascript:void(0)" class="text-primary-100 hover:text-accent transition-colors">About Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div>
+                    <h3 class="font-heading font-semibold mb-md">Services</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="javascript:void(0)" class="text-primary-100 hover:text-accent transition-colors">Blood Tests</a></li>
+                        <li><a href="javascript:void(0)" class="text-primary-100 hover:text-accent transition-colors">Urine Analysis</a></li>
+                        <li><a href="javascript:void(0)" class="text-primary-100 hover:text-accent transition-colors">Imaging Services</a></li>
+                        <li><a href="javascript:void(0)" class="text-primary-100 hover:text-accent transition-colors">Health Packages</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h3 class="font-heading font-semibold mb-md">Contact Us</h3>
+                    <ul class="space-y-2 text-sm text-primary-100">
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                            </svg>
+                            <span>support@medlabbooking.com</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                            </svg>
+                            <span>1-800-MEDLAB-1</span>
+                        </li>
+                    </ul>
+                    <!-- Social Media -->
+                    <div class="flex gap-sm mt-md">
+                        <a href="javascript:void(0)" class="w-8 h-8 flex items-center justify-center bg-primary-700 hover:bg-accent rounded-md transition-colors" aria-label="Facebook">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="w-8 h-8 flex items-center justify-center bg-primary-700 hover:bg-accent rounded-md transition-colors" aria-label="Twitter">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="w-8 h-8 flex items-center justify-center bg-primary-700 hover:bg-accent rounded-md transition-colors" aria-label="LinkedIn">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="border-t border-primary-700 pt-md text-center text-sm text-primary-100">
+                <p>© 2026 MedLab Booking. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Filter Chips
+        const filterChips = document.querySelectorAll('.filter-chip');
+        let activeCategory = 'all';
+
+        filterChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                filterChips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                activeCategory = chip.dataset.category;
+                filterTests();
+            });
+        });
+
+        // Search Functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', filterTests);
+
+        // Sort Functionality
+        const sortSelect = document.getElementById('sortSelect');
+        sortSelect.addEventListener('change', filterTests);
+
+        // Reset Filters
+        const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+        resetFiltersBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            sortSelect.value = 'popularity';
+            filterChips.forEach(c => c.classList.remove('active'));
+            filterChips[0].classList.add('active');
+            activeCategory = 'all';
+            filterTests();
+        });
+
+        // Filter Tests Function
+        function filterTests() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const testCards = document.querySelectorAll('.test-card');
+            let visibleCount = 0;
+
+            testCards.forEach(card => {
+                const category = card.dataset.category;
+                const testName = card.querySelector('h3').textContent.toLowerCase();
+                const matchesCategory = activeCategory === 'all' || category === activeCategory;
+                const matchesSearch = testName.includes(searchTerm);
+
+                if (matchesCategory && matchesSearch) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('resultsCount').textContent = visibleCount;
+        }
+
+        // Booking Modal
+        const bookingModal = document.getElementById('bookingModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelBookingBtn = document.getElementById('cancelBookingBtn');
+        const bookNowBtns = document.querySelectorAll('.book-now-btn');
+
+        bookNowBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const testName = btn.dataset.testName;
+                const testPrice = btn.dataset.testPrice;
+                
+                document.getElementById('modalTestName').textContent = testName;
+                document.getElementById('modalTestPrice').textContent = testPrice;
+                
+                bookingModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelBookingBtn.addEventListener('click', closeModal);
+
+        bookingModal.addEventListener('click', (e) => {
+            if (e.target === bookingModal) {
+                closeModal();
+            }
+        });
+
+        function closeModal() {
+            bookingModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            document.getElementById('bookingForm').reset();
+        }
+
+        // Form Validation and Submission
+        const bookingForm = document.getElementById('bookingForm');
+        
+        bookingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Validate form
+            let isValid = true;
+            const name = document.getElementById('patientName').value.trim();
+            const email = document.getElementById('patientEmail').value.trim();
+            const phone = document.getElementById('patientPhone').value.trim();
+            const date = document.getElementById('appointmentDate').value;
+            const time = document.getElementById('timeSlot').value;
+
+            // Reset errors
+            document.querySelectorAll('.text-error').forEach(el => el.classList.add('hidden'));
+
+            if (!name) {
+                document.getElementById('nameError').classList.remove('hidden');
+                isValid = false;
+            }
+
+            if (!email || !email.includes('@')) {
+                document.getElementById('emailError').classList.remove('hidden');
+                isValid = false;
+            }
+
+            if (!phone) {
+                document.getElementById('phoneError').classList.remove('hidden');
+                isValid = false;
+            }
+
+            if (!date) {
+                document.getElementById('dateError').classList.remove('hidden');
+                isValid = false;
+            }
+
+            if (!time) {
+                document.getElementById('timeError').classList.remove('hidden');
+                isValid = false;
+            }
+
+            if (isValid) {
+                // Simulate booking success
+                alert('Booking confirmed! You will receive a confirmation email shortly.');
+                closeModal();
+                // Redirect to confirmation page
+                window.location.href = 'pages/booking_confirmation.html';
+            }
+        });
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('appointmentDate').setAttribute('min', today);
+
+        // Price Range Filters (Desktop)
+        const priceRangeMin = document.getElementById('priceRangeMin');
+        const priceRangeMax = document.getElementById('priceRangeMax');
+        const priceRangeValue = document.getElementById('priceRangeValue');
+
+        if (priceRangeMin && priceRangeMax) {
+            function updatePriceRange() {
+                const min = parseInt(priceRangeMin.value);
+                const max = parseInt(priceRangeMax.value);
+                priceRangeValue.textContent = `${min} - ${max}`;
+                filterTestsByPrice(min, max);
+            }
+
+            priceRangeMin.addEventListener('input', updatePriceRange);
+            priceRangeMax.addEventListener('input', updatePriceRange);
+        }
+
+        function filterTestsByPrice(min, max) {
+            const testCards = document.querySelectorAll('.test-card');
+            testCards.forEach(card => {
+                const price = parseInt(card.dataset.price);
+                if (price >= min && price <= max) {
+                    if (card.style.display !== 'none') {
+                        card.style.display = 'block';
+                    }
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Booking Summary Sidebar
+        const selectedTests = [];
+        const selectedTestsList = document.getElementById('selectedTestsList');
+        const subtotalAmount = document.getElementById('subtotalAmount');
+        const serviceFee = document.getElementById('serviceFee');
+        const totalAmount = document.getElementById('totalAmount');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+
+        function updateBookingSummary() {
+            if (selectedTests.length === 0) {
+                selectedTestsList.innerHTML = `
+                    <div class="text-center py-xl text-text-tertiary">
+                        <svg class="w-16 h-16 mx-auto mb-sm opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                        <p class="text-sm">No tests selected yet</p>
+                        <p class="text-xs mt-1">Click "Book Now" to add tests</p>
+                    </div>
+                `;
+                checkoutBtn.disabled = true;
+                subtotalAmount.textContent = '0.00';
+                serviceFee.textContent = '0.00';
+                totalAmount.textContent = '0.00';
+            } else {
+                const subtotal = selectedTests.reduce((sum, test) => sum + parseFloat(test.price), 0);
+                const fee = subtotal * 0.05; // 5% service fee
+                const total = subtotal + fee;
+
+                selectedTestsList.innerHTML = selectedTests.map(test => `
+                    <div class="flex items-center justify-between p-sm bg-background rounded-md">
+                        <span class="text-sm text-text-primary">${test.name}</span>
+                        <span class="text-sm font-semibold text-primary">$${test.price}</span>
+                    </div>
+                `).join('');
+
+                subtotalAmount.textContent = subtotal.toFixed(2);
+                serviceFee.textContent = fee.toFixed(2);
+                totalAmount.textContent = total.toFixed(2);
+                checkoutBtn.disabled = false;
+            }
+        }
+
+        // Add CSS for filter chips
+        const style = document.createElement('style');
+        style.textContent = `
+            .filter-chip {
+                display: inline-flex;
+                align-items: center;
+                padding: 0.5rem 1rem;
+                border: 2px solid var(--color-border);
+                border-radius: var(--radius-md);
+                background: var(--color-surface);
+                color: var(--color-text-secondary);
+                font-size: 0.875rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all var(--transition-base);
+            }
+            .filter-chip:hover {
+                border-color: var(--color-primary);
+                color: var(--color-primary);
+                background: var(--color-primary-50);
+            }
+            .filter-chip.active {
+                border-color: var(--color-primary);
+                background: var(--color-primary);
+                color: var(--color-primary-foreground);
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
+</body>
+</html>
