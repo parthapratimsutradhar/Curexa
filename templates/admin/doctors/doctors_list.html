@@ -405,7 +405,7 @@ function renderPagination(page, pages) {
 function fetchDoctors() {
   const params = new URLSearchParams(state);
 
-  fetch(`/admin/api/doctors/?${params}`)
+  fetch(`/api/doctors/?${params}`)
     .then(res => res.json())
     .then(data => {
       tableBody.innerHTML = renderRows(data.results);

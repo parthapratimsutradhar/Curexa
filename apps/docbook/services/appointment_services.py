@@ -164,6 +164,7 @@ def get_doctor_grouped_appointments(
 
     return grouped
 
+
 def get_all_appointment_types_status():
     types = [
         {'name': t.name, 'value': t.value}

@@ -1,4 +1,5 @@
 from apps.doctors.models.doctorprofile_model import DoctorProfile
+from apps.doctors.models.qualification_model import Qualification
 from apps.docbook.services import appointment_services
 from django.db.models import Exists, OuterRef
 from apps.docbook.models.availability_model import Availability
@@ -33,13 +34,28 @@ def doctor_list_data(qs):
     result = []
 
     for obj in qs:
+        qualifications=Qualification.objects.filter(doctor=obj)
+        qualification_data = [
+            {
+                "degree": q.degree,
+                "institution": q.institution,
+                "completion_year": q.completion_year.year,
+            }
+            for q in qualifications
+        ]
         result.append({
             "id": obj.id,
             "name": obj.doctor.get_full_name(),
             "email": obj.doctor.email,
             "specialization": obj.specialization.name if obj.specialization else "",
+            "education":qualification_data,
             "contact_number": obj.contact_number,
             "profile_picture": obj.profile_picture.url if obj.profile_picture else "",
+            "department": obj.specialization.department.name if obj.specialization and obj.specialization.department else None,
+            "experience_years": obj.experience_years,
+            "clinic_address": obj.clinic_address,
+            "consultation_fee": obj.consultation_fee,
+            "age": util_services.age_from_dob(obj.dob),
             "is_available_today":obj.is_available_today,
             "appointment_today": obj.appointment_today or 0,
             "active_appointment_today": obj.active_appointment_today or 0,

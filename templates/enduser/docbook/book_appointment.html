@@ -33,8 +33,6 @@
         --radius: 16px;
         --radius-sm: 10px;
         --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        /* Additional from previous doctor cards */
-        --star-color: #fbbf24;
         --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
@@ -393,27 +391,7 @@
         margin-bottom: 12px;
     }
 
-    .rating {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin-bottom: 12px;
-    }
-
-    .stars {
-        color: var(--star-color);
-        font-size: 14px;
-    }
-
-    .rating-value {
-        font-weight: 600;
-        font-size: 14px;
-    }
-
-    .rating-count {
-        color: var(--text-soft);
-        font-size: 13px;
-    }
+    /* Rating section completely removed */
 
     .doctor-tags {
         display: flex;
@@ -537,6 +515,17 @@
     .btn-secondary:hover {
         background-color: #e5e7eb;
         transform: translateY(-2px);
+    }
+
+    /* Responsive button stacking for very small screens */
+    @media (max-width: 400px) {
+        .doctor-actions {
+            flex-direction: column;
+            gap: 8px;
+        }
+        .doctor-actions .btn {
+            width: 100%;
+        }
     }
 
     .skeleton-grid {
@@ -900,8 +889,8 @@
                     <label>⏳ Availability</label>
                     <select id="availabilitySelect">
                         <option value="">All</option>
-                        <option value="available">Available</option>
-                        <option value="busy">Busy</option>
+                        <option value="available">Available Today</option>
+                        <option value="busy">Not Available Today</option>
                     </select>
                 </div>
                 <div class="filter-group">
@@ -909,7 +898,6 @@
                     <select id="sortSelect">
                         <option value="">Default</option>
                         <option value="experience">Experience (high to low)</option>
-                        <option value="rating">Rating (high to low)</option>
                         <option value="fee_low">Fee (low to high)</option>
                     </select>
                 </div>
@@ -937,11 +925,12 @@
             <button class="load-more-btn" id="loadMoreBtn">Load more doctors</button>
             <span class="showing-hint" id="loadMoreHint"></span>
         </div>
-
-        <div class="action-buttons">
+ 
+        <div class="action-buttons hidden" id="step1-actions">
             <button class="btn btn-secondary" disabled><i class="fas fa-arrow-left"></i> Previous</button>
             <button id="next-1" class="btn btn-primary" disabled>Next: Patient Details <i class="fas fa-arrow-right"></i></button>
         </div>
+
     </section>
 
     <!-- STEP 2: Patient Details (unchanged) -->
@@ -1146,7 +1135,7 @@
 
 <script>
 (function() {
-    // ---------- STATE (enriched doctor data) ----------
+    // ---------- STATE ----------
     const state = {
         currentStep: 1,
         selectedDoctor: null,
@@ -1161,200 +1150,266 @@
         selectedDate: null,
         selectedTime: null,
         selectedConsultationType: null,
-        doctors: [
-            { id: 1, name: "Dr. Sarah Johnson", specialization: "Cardiologist", education: "Harvard Medical School", experience: 15, rating: 4.7, ratingCount: 128, fee: 120, available: true, img: "https://randomuser.me/api/portraits/women/65.jpg", hospital: "Heart Center NYC", distance: "2.3 miles", nextAvailable: "Today, 3:30 PM", badges: ["top-rated", "verified", "telemedicine"], tags: ["Same Day", "Telemedicine"], availability: "online" },
-            { id: 2, name: "Dr. Michael Chen", specialization: "Dermatologist", education: "Johns Hopkins", experience: 10, rating: 4.5, ratingCount: 234, fee: 90, available: false, img: "https://randomuser.me/api/portraits/men/32.jpg", hospital: "Skin Care Specialists", distance: "5.1 miles", nextAvailable: "Tomorrow, 10:00 AM", badges: ["verified"], tags: ["Cosmetic"], availability: "offline" },
-            { id: 3, name: "Dr. Emily Rodriguez", specialization: "Neurologist", education: "Stanford", experience: 12, rating: 4.9, ratingCount: 189, fee: 150, available: true, img: "https://randomuser.me/api/portraits/women/44.jpg", hospital: "NeuroCare Institute", distance: "3.7 miles", nextAvailable: "Friday, 2:15 PM", badges: ["top-rated", "verified"], tags: ["Headache Specialist", "Telemedicine"], availability: "online" },
-            { id: 4, name: "Dr. David Kim", specialization: "Pediatrician", education: "UCLA", experience: 8, rating: 4.3, ratingCount: 156, fee: 80, available: true, img: "https://randomuser.me/api/portraits/men/75.jpg", hospital: "Children's Health", distance: "1.8 miles", nextAvailable: "Today, 4:45 PM", badges: ["available-today", "verified"], tags: ["New Patients", "Evenings"], availability: "busy" },
-            { id: 5, name: "Dr. Lisa Patel", specialization: "Orthopedist", education: "Mayo Clinic", experience: 20, rating: 5.0, ratingCount: 210, fee: 200, available: false, img: "https://randomuser.me/api/portraits/women/68.jpg", hospital: "OrthoCare Center", distance: "6.2 miles", nextAvailable: "Monday, 9:00 AM", badges: ["top-rated", "verified"], tags: ["Sports Medicine"], availability: "offline" },
-            { id: 6, name: "Dr. James Wilson", specialization: "Ophthalmologist", education: "Yale", experience: 7, rating: 4.2, ratingCount: 143, fee: 70, available: true, img: "https://randomuser.me/api/portraits/men/52.jpg", hospital: "Eye Care Clinic", distance: "4.5 miles", nextAvailable: "Wednesday, 11:30 AM", badges: ["verified"], tags: ["Same Day"], availability: "online" },
-            { id: 7, name: "Dr. Maria Garcia", specialization: "Dermatologist", education: "Harvard", experience: 9, rating: 4.6, ratingCount: 98, fee: 95, available: true, img: "https://randomuser.me/api/portraits/women/17.jpg", hospital: "Dermatology Associates", distance: "2.8 miles", nextAvailable: "Today, 2:00 PM", badges: ["telemedicine", "verified"], tags: ["Telemedicine"], availability: "online" },
-            { id: 8, name: "Dr. Robert Brown", specialization: "Cardiologist", education: "Johns Hopkins", experience: 25, rating: 4.9, ratingCount: 312, fee: 180, available: false, img: "https://randomuser.me/api/portraits/men/36.jpg", hospital: "Heart Institute", distance: "7.1 miles", nextAvailable: "Thursday, 10:30 AM", badges: ["top-rated"], tags: ["Evenings"], availability: "busy" },
-            { id: 9, name: "Dr. Jennifer Lee", specialization: "Neurologist", education: "Columbia", experience: 5, rating: 4.0, ratingCount: 67, fee: 110, available: true, img: "https://randomuser.me/api/portraits/women/50.jpg", hospital: "Neurology Center", distance: "3.2 miles", nextAvailable: "Tomorrow, 1:15 PM", badges: ["telemedicine"], tags: ["Telemedicine"], availability: "online" },
-            { id: 10, name: "Dr. William Taylor", specialization: "Pediatrician", education: "Duke", experience: 18, rating: 4.7, ratingCount: 177, fee: 130, available: false, img: "https://randomuser.me/api/portraits/men/42.jpg", hospital: "Pediatric Care", distance: "5.5 miles", nextAvailable: "Friday, 4:00 PM", badges: ["verified"], tags: ["Weekends"], availability: "offline" },
-            { id: 11, name: "Dr. Olivia Martinez", specialization: "Dermatologist", education: "Stanford", experience: 14, rating: 4.8, ratingCount: 203, fee: 145, available: true, img: "https://randomuser.me/api/portraits/women/23.jpg", hospital: "Skin Health", distance: "2.1 miles", nextAvailable: "Today, 11:30 AM", badges: ["available-today", "verified"], tags: ["Same Day", "Cosmetic"], availability: "online" },
-            { id: 12, name: "Dr. Benjamin Adams", specialization: "Cardiologist", education: "Harvard", experience: 22, rating: 4.6, ratingCount: 189, fee: 210, available: true, img: "https://randomuser.me/api/portraits/men/62.jpg", hospital: "Cardiac Wellness", distance: "4.0 miles", nextAvailable: "Wednesday, 3:30 PM", badges: ["top-rated", "telemedicine"], tags: ["Telemedicine"], availability: "online" }
-        ],
-        bookedSlots: ['2025-02-22 10:00 AM', '2025-02-22 02:00 PM', '2025-02-23 09:00 AM'],
-        commonSymptoms: [
-            { name: "Fever", icon: "fas fa-thermometer-full" }, { name: "Headache", icon: "fas fa-brain" },
-            { name: "Cough", icon: "fas fa-lungs" }, { name: "Fatigue", icon: "fas fa-tired" },
-            { name: "Nausea", icon: "fas fa-stomach" }, { name: "Dizziness", icon: "fas fa-dizzy" },
-            { name: "Chest Pain", icon: "fas fa-heartbeat" }, { name: "Shortness of Breath", icon: "fas fa-wind" }
-        ],
+        doctors: [],
+        totalDoctors: 0,
+        currentPage: 1,
+        totalPages: 1,
+        loading: false,
         filterCriteria: { search: '', specialization: '', availability: '', sort: '' },
-        visibleCount: 6
+        commonSymptoms: [
+            { name: "Fever", icon: "fas fa-thermometer-full" },
+            { name: "Headache", icon: "fas fa-brain" },
+            { name: "Cough", icon: "fas fa-lungs" },
+            { name: "Fatigue", icon: "fas fa-tired" },
+            { name: "Nausea", icon: "fas fa-stomach" },
+            { name: "Dizziness", icon: "fas fa-dizzy" },
+            { name: "Chest Pain", icon: "fas fa-heartbeat" },
+            { name: "Shortness of Breath", icon: "fas fa-wind" }
+        ],
+        bookedSlots: ['2025-02-22 10:00 AM', '2025-02-22 02:00 PM', '2025-02-23 09:00 AM']
     };
 
-    // Helper: generate star rating HTML
-    function generateStars(rating) {
-        let stars = '';
-        const fullStars = Math.floor(rating);
-        const hasHalfStar = rating % 1 >= 0.5;
-        for (let i = 1; i <= 5; i++) {
-            if (i <= fullStars) stars += '<i class="fas fa-star"></i>';
-            else if (i === fullStars + 1 && hasHalfStar) stars += '<i class="fas fa-star-half-alt"></i>';
-            else stars += '<i class="far fa-star"></i>';
-        }
-        return stars;
-    }
+    const API_BASE = '/api/doctors/';
 
-    // Helper: generate badge HTML
-    function generateBadges(badges) {
+    // DOM elements
+    const skeletonEl = document.getElementById('skeletonLoader');
+    const gridEl = document.getElementById('doctorsGrid');
+    const searchInput = document.getElementById('searchInput');
+    const specSelect = document.getElementById('specializationSelect');
+    const availSelect = document.getElementById('availabilitySelect');
+    const sortSelect = document.getElementById('sortSelect');
+    const resetBtn = document.getElementById('resetFiltersBtn');
+    const resultsCountSpan = document.getElementById('resultsCount');
+    const showingHint = document.getElementById('showingHint');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    const loadMoreHint = document.getElementById('loadMoreHint');
+    const loadMoreContainer = document.getElementById('loadMoreContainer');
+    const bookingJourney = document.getElementById('bookingJourney');
+
+    // ---------- Helper functions for doctor cards ----------
+    function generateBadges(doctor) {
         let badgesHTML = '';
-        badges.forEach(badge => {
-            switch(badge) {
-                case 'top-rated': badgesHTML += '<span class="badge badge-top-rated"><i class="fas fa-crown"></i> Top Rated</span>'; break;
-                case 'available-today': badgesHTML += '<span class="badge badge-available"><i class="fas fa-calendar-check"></i> Available Today</span>'; break;
-                case 'verified': badgesHTML += '<span class="badge badge-verified"><i class="fas fa-check-circle"></i> Verified Doctor</span>'; break;
-                case 'telemedicine': badgesHTML += '<span class="badge badge-telemedicine"><i class="fas fa-video"></i> Telemedicine</span>'; break;
-            }
-        });
+        if (doctor.is_available_today) {
+            badgesHTML += '<span class="badge badge-available"><i class="fas fa-calendar-check"></i> Available Today</span>';
+        }
         return badgesHTML;
     }
 
-    // Helper: get availability badge dot and text
-    function getAvailabilityBadge(availability) {
-        switch(availability) {
-            case 'online': return '<span class="availability-badge availability-online"></span> Online';
-            case 'busy': return '<span class="availability-badge availability-busy"></span> Busy';
-            default: return '<span class="availability-badge availability-offline"></span> Offline';
-        }
-    }
-
-    // Helper: generate tags HTML
-    function generateTags(tags) {
+    function generateTags(doctor) {
         let tagsHTML = '';
-        tags.forEach(tag => {
-            if (tag === "Same Day") tagsHTML += '<span class="tag same-day">Same Day</span>';
-            else if (tag === "Telemedicine") tagsHTML += '<span class="tag telemedicine">Telemedicine</span>';
-            else tagsHTML += `<span class="tag">${tag}</span>`;
-        });
+        if (doctor.specialization && doctor.specialization.trim() !== '') {
+            tagsHTML += `<span class="tag">${doctor.specialization}</span>`;
+        }
         return tagsHTML;
     }
 
-    // Filtering and rendering
-    function filterDoctors() {
-        let filtered = state.doctors.filter(doc => {
-            if (state.filterCriteria.search && !doc.name.toLowerCase().includes(state.filterCriteria.search.toLowerCase())) return false;
-            if (state.filterCriteria.specialization && doc.specialization !== state.filterCriteria.specialization) return false;
-            if (state.filterCriteria.availability === 'available' && !doc.available) return false;
-            if (state.filterCriteria.availability === 'busy' && doc.available) return false;
-            return true;
-        });
-        switch (state.filterCriteria.sort) {
-            case 'experience': filtered.sort((a,b) => b.experience - a.experience); break;
-            case 'rating': filtered.sort((a,b) => b.rating - a.rating); break;
-            case 'fee_low': filtered.sort((a,b) => a.fee - b.fee); break;
-            default: filtered.sort((a,b) => a.id - b.id);
+    function getAvailabilityBadge(available) {
+        return available ? '<span class="availability-badge availability-online"></span> Online' : '<span class="availability-badge availability-offline"></span> Offline';
+    }
+
+    function getEducation(doctor) {
+        if (doctor.education && doctor.education.length > 0 && doctor.education[0].degree) {
+            const edu = doctor.education[0];
+            return `${edu.degree}${edu.institution ? ' from ' + edu.institution : ''}`;
         }
-        return filtered;
+        return '';
+    }
+
+    function getProfilePic(doctor) {
+        return doctor.profile_picture && doctor.profile_picture.trim() !== '' 
+            ? doctor.profile_picture 
+            : 'https://via.placeholder.com/80x80?text=Doctor';
+    }
+
+    // ---------- FETCH DOCTORS ----------
+    function fetchDoctors(resetPage = true) {
+        if (resetPage) {
+            state.currentPage = 1;
+            state.doctors = [];
+        }
+        state.loading = true;
+        skeletonEl.classList.remove('hidden');
+        gridEl.classList.add('hidden');
+        loadMoreContainer.classList.add('hidden');
+
+        const params = new URLSearchParams();
+        params.append('page', state.currentPage);
+        if (state.filterCriteria.search) params.append('search', state.filterCriteria.search);
+        if (state.filterCriteria.specialization) params.append('specialization', state.filterCriteria.specialization);
+        if (state.filterCriteria.availability === 'available') params.append('is_available_today', 'true');
+        else if (state.filterCriteria.availability === 'busy') params.append('is_available_today', 'false');
+        if (state.filterCriteria.sort === 'experience') params.append('ordering', '-experience_years');
+        else if (state.filterCriteria.sort === 'fee_low') params.append('ordering', 'consultation_fee');
+
+        const url = `${API_BASE}?${params.toString()}`;
+        console.log('Fetching:', url);
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                console.log('API response:', data);
+
+                // Handle both paginated { results, count } and array responses
+                let newDoctors = [];
+                let total = 0;
+
+                if (Array.isArray(data)) {
+                    newDoctors = data;
+                    total = data.length;
+                    state.totalPages = 1;
+                } else if (data.results && Array.isArray(data.results)) {
+                    newDoctors = data.results;
+                    total = data.count || newDoctors.length;
+                    const pageSize = newDoctors.length || 10;
+                    state.totalPages = Math.ceil(total / pageSize);
+                } else {
+                    console.error('Unexpected API response format:', data);
+                    newDoctors = [];
+                    total = 0;
+                    state.totalPages = 1;
+                }
+
+                if (resetPage) {
+                    state.doctors = newDoctors;
+                } else {
+                    state.doctors = [...state.doctors, ...newDoctors];
+                }
+                state.totalDoctors = total;
+
+                if (resetPage && state.totalDoctors > 0 && specSelect.options.length <= 1) {
+                    populateSpecializations(newDoctors);
+                }
+
+                renderDoctorGrid();
+                state.loading = false;
+                skeletonEl.classList.add('hidden');
+                gridEl.classList.remove('hidden');
+            })
+            .catch(err => {
+                console.error('Fetch error:', err);
+                state.loading = false;
+                skeletonEl.classList.add('hidden');
+                gridEl.innerHTML = '<div class="empty-state"><h3>Error loading doctors</h3><p>Please try again later.</p></div>';
+                gridEl.classList.remove('hidden');
+            });
+    }
+
+    function populateSpecializations(doctors) {
+        const specializations = [...new Set(doctors.map(d => d.specialization).filter(s => s && s.trim() !== ''))].sort();
+        specializations.forEach(spec => {
+            const option = document.createElement('option');
+            option.value = spec;
+            option.textContent = spec;
+            specSelect.appendChild(option);
+        });
     }
 
     function renderDoctorGrid() {
-        const filtered = filterDoctors();
-        const total = filtered.length;
-        const visible = filtered.slice(0, state.visibleCount);
+        const doctors = state.doctors;
+        const total = state.totalDoctors;
+        const visibleCount = doctors.length;
 
         resultsCountSpan.innerHTML = `<strong>${total}</strong> doctor${total!==1?'s':''} available`;
 
-        if (total === 0) {
+        if (total === 0 || doctors.length === 0) {
             gridEl.innerHTML = `<div class="empty-state"><h3>✨ No matching doctors</h3><p>Try adjusting filters.</p></div>`;
             loadMoreContainer.classList.add('hidden');
             showingHint.innerText = '';
-        } else {
-            let html = '';
-            visible.forEach(doc => {
-                const isSelected = state.selectedDoctor && state.selectedDoctor.id === doc.id;
-                // Map available to online/busy if not explicitly set
-                const availability = doc.availability || (doc.available ? 'online' : 'offline');
-                html += `
-                    <div class="doctor-card ${isSelected ? 'selected' : ''}" data-id="${doc.id}">
-                        <div class="doctor-card-header">
-                            <div class="doctor-badges">
-                                ${generateBadges(doc.badges)}
-                            </div>
-                            <!-- Save button omitted for simplicity -->
+            return;
+        }
+
+        let html = '';
+        doctors.forEach(doc => {
+            const isSelected = state.selectedDoctor && state.selectedDoctor.id === doc.id;
+            const available = doc.is_available_today || false;
+            const fee = parseFloat(doc.consultation_fee) || 0;
+            const docName = doc.name && doc.name.trim() !== '' ? doc.name : 'Doctor';
+            const specialization = doc.specialization && doc.specialization.trim() !== '' ? doc.specialization : 'General Physician';
+            const education = getEducation(doc);
+            const clinicAddress = doc.clinic_address && doc.clinic_address.trim() !== '' ? doc.clinic_address : 'Address not provided';
+            const nextAvailable = doc.is_available_today ? 'Today' : 'Check availability';
+
+            html += `
+                <div class="doctor-card ${isSelected ? 'selected' : ''}" data-id="${doc.id}">
+                    <div class="doctor-card-header">
+                        <div class="doctor-badges">
+                            ${generateBadges(doc)}
                         </div>
-                        <div class="doctor-info">
-                            <img src="${doc.img}" alt="${doc.name}" class="doctor-photo">
-                            <div class="doctor-details">
-                                <h3 class="doctor-name">${doc.name}</h3>
-                                <p class="doctor-specialization">${doc.specialization}</p>
-                                <p class="doctor-education">${doc.education}</p>
-                                <p class="doctor-experience">
-                                    <i class="fas fa-briefcase-medical"></i> ${doc.experience}+ Years Experience
-                                </p>
-                                <div class="rating">
-                                    <div class="stars">${generateStars(doc.rating)}</div>
-                                    <span class="rating-value">${doc.rating}</span>
-                                    <span class="rating-count">(${doc.ratingCount} reviews)</span>
-                                </div>
-                                <div class="doctor-tags">
-                                    ${generateTags(doc.tags)}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="doctor-details-info">
-                            <div class="detail-item">
-                                <i class="fas fa-location-dot"></i>
-                                <span>${doc.distance} • ${doc.hospital}</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="far fa-clock"></i>
-                                <span>Next: ${doc.nextAvailable}</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-circle"></i>
-                                <span>${getAvailabilityBadge(availability)}</span>
-                            </div>
-                        </div>
-                        <div class="doctor-footer">
-                            <div class="consultation-fee">
-                                $${doc.fee} <span>per consultation</span>
-                            </div>
-                            <div class="doctor-actions">
-                                <button class="btn btn-primary book-btn" data-id="${doc.id}">
-                                    <i class="fas fa-calendar-plus"></i> Book Now
-                                </button>
-                                <button class="btn btn-secondary" onclick="viewProfile(2)">
-                                    <i class="fas fa-user-md"></i> View Profile
-                                </button>
+                    </div>
+                    <div class="doctor-info">
+                        <img src="${getProfilePic(doc)}" alt="${docName}" class="doctor-photo">
+                        <div class="doctor-details">
+                            <h3 class="doctor-name">${docName}</h3>
+                            <p class="doctor-specialization">${specialization}</p>
+                            <p class="doctor-education">${education}</p>
+                            <p class="doctor-experience">
+                                <i class="fas fa-briefcase-medical"></i> ${doc.experience_years || 0}+ Years Experience
+                            </p>
+                            <div class="doctor-tags">
+                                ${generateTags(doc)}
                             </div>
                         </div>
                     </div>
-                `;
-            });
-            gridEl.innerHTML = html;
+                    <div class="doctor-details-info">
+                        <div class="detail-item">
+                            <i class="fas fa-location-dot"></i>
+                            <span>${clinicAddress}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="far fa-clock"></i>
+                            <span>Next: ${nextAvailable}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-circle"></i>
+                            <span>${getAvailabilityBadge(available)}</span>
+                        </div>
+                    </div>
+                    <div class="doctor-footer">
+                        <div class="consultation-fee">
+                            $${fee.toFixed(2)} <span>per consultation</span>
+                        </div>
+                        <div class="doctor-actions">
+                            <button class="btn btn-primary book-btn" data-id="${doc.id}">
+                                <i class="fas fa-calendar-plus"></i> Book Now
+                            </button>
+                            <button class="btn btn-secondary" onclick="viewProfile(${doc.id})">
+                                <i class="fas fa-user-md"></i> View Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
 
-            if (state.visibleCount >= total) {
-                loadMoreBtn.disabled = true;
-                loadMoreHint.innerText = `All ${total} doctors shown`;
-            } else {
-                loadMoreBtn.disabled = false;
-                loadMoreHint.innerText = `Showing ${state.visibleCount} of ${total}`;
-            }
+        gridEl.innerHTML = html;
+
+        if (state.currentPage < state.totalPages) {
+            loadMoreBtn.disabled = false;
+            loadMoreHint.innerText = `Showing ${visibleCount} of ${total}`;
             loadMoreContainer.classList.remove('hidden');
-            showingHint.innerText = `${visible.length} displayed`;
-
-            // Attach event listeners
-            document.querySelectorAll('.doctor-card').forEach(card => {
-                card.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('book-btn')) return;
-                    const id = parseInt(card.dataset.id);
-                    const doctor = state.doctors.find(d => d.id === id);
-                    selectDoctor(doctor);
-                });
-            });
-            document.querySelectorAll('.book-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const id = parseInt(btn.dataset.id);
-                    const doctor = state.doctors.find(d => d.id === id);
-                    selectDoctor(doctor);
-                });
-            });
+        } else {
+            loadMoreBtn.disabled = true;
+            loadMoreHint.innerText = `All ${total} doctors shown`;
+            loadMoreContainer.classList.remove('hidden');
         }
+        showingHint.innerText = `${visibleCount} displayed`;
+
+        document.querySelectorAll('.doctor-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.classList.contains('book-btn') || e.target.closest('.book-btn')) return;
+                const id = parseInt(card.dataset.id);
+                const doctor = state.doctors.find(d => d.id === id);
+                if (doctor) selectDoctor(doctor);
+            });
+        });
+        document.querySelectorAll('.book-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = parseInt(btn.dataset.id);
+                const doctor = state.doctors.find(d => d.id === id);
+                if (doctor) selectDoctor(doctor);
+            });
+        });
     }
 
     // ---------- SELECT DOCTOR ----------
@@ -1362,7 +1417,9 @@
         state.selectedDoctor = doctor;
         document.getElementById('next-1').disabled = false;
         renderDoctorGrid();
-        showNotification('Doctor Selected', `You selected ${doctor.name}`);
+        showNotification('Doctor Selected', `You selected ${doctor.name || 'Doctor'}`);
+
+        document.getElementById('step1-actions').classList.remove('hidden');
 
         if (bookingJourney.classList.contains('hidden')) {
             bookingJourney.classList.remove('hidden');
@@ -1387,6 +1444,18 @@
             document.getElementById(`step-${step}`).classList.add('active');
             updateStepIndicator();
             if (step === 5) updateSummary();
+
+            if (step === 1) {
+                const actionsDiv = document.getElementById('step1-actions');
+                const nextBtn = document.getElementById('next-1');
+                if (state.selectedDoctor) {
+                    actionsDiv.classList.remove('hidden');
+                    nextBtn.disabled = false;
+                } else {
+                    actionsDiv.classList.add('hidden');
+                    nextBtn.disabled = true;
+                }
+            }
             document.getElementById(`step-${step}`).scrollIntoView({ behavior:'smooth', block:'start' });
         }, 300);
     }
@@ -1400,7 +1469,7 @@
         });
     }
 
-    // ---------- PATIENT DETAILS (unchanged) ----------
+    // ---------- PATIENT DETAILS ----------
     function renderSymptomsTags() {
         const container = document.getElementById('symptoms-tags');
         container.innerHTML = '';
@@ -1433,7 +1502,7 @@
         return isValid;
     }
 
-    // ---------- DATE & TIME (unchanged) ----------
+    // ---------- DATE & TIME ----------
     function renderCalendar() {
         const calendar = document.getElementById('calendar');
         const title = document.getElementById('calendar-title');
@@ -1517,10 +1586,10 @@
     // ---------- SUMMARY ----------
     function updateSummary() {
         if (state.selectedDoctor) {
-            document.getElementById('summary-doctor-img').src = state.selectedDoctor.img;
-            document.getElementById('summary-doctor-name').textContent = state.selectedDoctor.name;
-            document.getElementById('summary-doctor-specialty').textContent = state.selectedDoctor.specialization;
-            document.getElementById('summary-doctor-experience').textContent = `${state.selectedDoctor.experience} years`;
+            document.getElementById('summary-doctor-img').src = getProfilePic(state.selectedDoctor);
+            document.getElementById('summary-doctor-name').textContent = state.selectedDoctor.name || 'Doctor';
+            document.getElementById('summary-doctor-specialty').textContent = state.selectedDoctor.specialization || 'General';
+            document.getElementById('summary-doctor-experience').textContent = `${state.selectedDoctor.experience_years || 0} years`;
         }
         const pat = state.patientDetails;
         document.getElementById('summary-patient-info').textContent = pat.name ? `${pat.name} (${pat.age} yrs, ${pat.gender})` : '-';
@@ -1558,51 +1627,29 @@
     }
 
     // ---------- FILTER EVENT HANDLERS ----------
-    function updateFiltersAndRender() {
-        state.visibleCount = 6;
-        renderDoctorGrid();
+    function applyFilters() {
+        state.currentPage = 1;
+        fetchDoctors(true);
     }
 
-    // DOM elements
-    const skeletonEl = document.getElementById('skeletonLoader');
-    const gridEl = document.getElementById('doctorsGrid');
-    const searchInput = document.getElementById('searchInput');
-    const specSelect = document.getElementById('specializationSelect');
-    const availSelect = document.getElementById('availabilitySelect');
-    const sortSelect = document.getElementById('sortSelect');
-    const resetBtn = document.getElementById('resetFiltersBtn');
-    const resultsCountSpan = document.getElementById('resultsCount');
-    const showingHint = document.getElementById('showingHint');
-    const loadMoreBtn = document.getElementById('loadMoreBtn');
-    const loadMoreHint = document.getElementById('loadMoreHint');
-    const loadMoreContainer = document.getElementById('loadMoreContainer');
-    const bookingJourney = document.getElementById('bookingJourney');
-
-    searchInput.addEventListener('input', (e) => { state.filterCriteria.search = e.target.value; updateFiltersAndRender(); });
-    specSelect.addEventListener('change', (e) => { state.filterCriteria.specialization = e.target.value; updateFiltersAndRender(); });
-    availSelect.addEventListener('change', (e) => { state.filterCriteria.availability = e.target.value; updateFiltersAndRender(); });
-    sortSelect.addEventListener('change', (e) => { state.filterCriteria.sort = e.target.value; updateFiltersAndRender(); });
+    searchInput.addEventListener('input', (e) => { state.filterCriteria.search = e.target.value; applyFilters(); });
+    specSelect.addEventListener('change', (e) => { state.filterCriteria.specialization = e.target.value; applyFilters(); });
+    availSelect.addEventListener('change', (e) => { state.filterCriteria.availability = e.target.value; applyFilters(); });
+    sortSelect.addEventListener('change', (e) => { state.filterCriteria.sort = e.target.value; applyFilters(); });
     resetBtn.addEventListener('click', () => {
         searchInput.value = ''; specSelect.value = ''; availSelect.value = ''; sortSelect.value = '';
         state.filterCriteria = { search: '', specialization: '', availability: '', sort: '' };
-        updateFiltersAndRender();
+        applyFilters();
     });
+
     loadMoreBtn.addEventListener('click', () => {
-        const total = filterDoctors().length;
-        if (state.visibleCount + 6 <= total) state.visibleCount += 6;
-        else state.visibleCount = total;
-        renderDoctorGrid();
+        if (state.currentPage < state.totalPages) {
+            state.currentPage++;
+            fetchDoctors(false);
+        }
     });
 
-    // Populate specialization dropdown
-    const specializations = [...new Set(state.doctors.map(d => d.specialization))].sort();
-    specializations.forEach(spec => {
-        const option = document.createElement('option');
-        option.value = spec; option.textContent = spec;
-        specSelect.appendChild(option);
-    });
-
-    // Step navigation buttons
+    // ---------- BUTTON EVENT LISTENERS ----------
     document.getElementById('next-1').addEventListener('click', () => { if (state.selectedDoctor) navigateToStep(2); });
     document.getElementById('next-2').addEventListener('click', () => { if (validatePatientDetails()) navigateToStep(3); });
     document.getElementById('next-3').addEventListener('click', () => navigateToStep(4));
@@ -1653,23 +1700,14 @@
         });
     });
 
-    // Initial load
+    // ---------- INITIAL LOAD ----------
     function initialLoad() {
-        gridEl.classList.add('hidden');
-        skeletonEl.classList.remove('hidden');
-        loadMoreContainer.classList.add('hidden');
-        resultsCountSpan.innerText = 'Loading doctors...';
-
-        setTimeout(() => {
-            renderDoctorGrid();
-            skeletonEl.classList.add('hidden');
-            gridEl.classList.remove('hidden');
-        }, 800);
+        renderSymptomsTags();
+        renderCalendar();
+        renderTimeSlots();
+        fetchDoctors(true);
     }
 
-    renderSymptomsTags();
-    renderCalendar();
-    renderTimeSlots();
     initialLoad();
 })();
 </script>

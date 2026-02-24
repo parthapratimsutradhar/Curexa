@@ -22,7 +22,7 @@ def create_doctor_user(first_name, middle_name, last_name, email):
     )
     temp_password = secrets.token_urlsafe(12)
     user.set_password(temp_password)
-    ensure_user_profile(user)
+    # ensure_user_profile(user)
     send_mail(
         subject="Your Password for Doctor Account",
         message=f"Your temporary password is {temp_password}. Please log in and change your password.",

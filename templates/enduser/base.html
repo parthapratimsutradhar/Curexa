@@ -358,27 +358,7 @@
                 }, index * 200);
             });
         }
-
-        // Cart functionality
-        function initCartFunctionality() {
-            document.querySelectorAll('.btn-primary[href*="cart"]').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    if (!window.location.pathname.includes('cart')) {
-                        let count = parseInt(localStorage.getItem('cartCount') || 0);
-                        localStorage.setItem('cartCount', count + 1);
-                        updateCartCount();
-                        
-                        // Button animation
-                        this.style.transform = 'scale(1.1)';
-                        setTimeout(() => {
-                            this.style.transform = '';
-                        }, 300);
-                    }
-                });
-            });
-        }
-
-       
+    
 
         // Enhanced Heartbeat Interaction
         function initEnhancedHeartbeat() {
@@ -617,12 +597,9 @@
 
         // Initialize everything on page load
         document.addEventListener('DOMContentLoaded', function() {
-            updateCartCount();
             setActiveNavLink();
             initCardEffects();
-            initHeroAnimation();
-            initCartFunctionality();
-            
+            initHeroAnimation(); 
             initEnhancedHeartbeat();
             
             // Close dropdowns when clicking outside
