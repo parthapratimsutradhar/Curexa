@@ -1165,8 +1165,7 @@
             { name: "Dizziness", icon: "fas fa-dizzy" },
             { name: "Chest Pain", icon: "fas fa-heartbeat" },
             { name: "Shortness of Breath", icon: "fas fa-wind" }
-        ],
-        bookedSlots: ['2025-02-22 10:00 AM', '2025-02-22 02:00 PM', '2025-02-23 09:00 AM']
+        ]
     };
 
     const API_BASE = '/api/doctors/';
@@ -1547,25 +1546,55 @@
         const container = document.getElementById('time-slots');
         const display = document.getElementById('selected-date-display');
         container.innerHTML = '';
+
         if (!state.selectedDate) {
             display.textContent = '';
             return;
         }
+
         const d = new Date(state.selectedDate);
-        display.textContent = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
-        const slots = ['09:00 AM','10:00 AM','11:00 AM','12:00 PM','01:00 PM','02:00 PM','03:00 PM','04:00 PM'];
-        slots.forEach(time => {
+        display.textContent = d.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Get available slots from the selected doctor
+        const doctor = state.selectedDoctor;
+        if (!doctor || !doctor.available_slots || doctor.available_slots.length === 0) {
+            container.innerHTML = '<div class="no-slots">No available slots for this doctor</div>';
+            document.getElementById('next-3').disabled = true;
+            return;
+        }
+
+        // Convert each start_time to a display format (e.g., "10:00 AM")
+        const availableTimes = doctor.available_slots.map(slot => {
+            const [hour, minute] = slot.start_time.split(':');
+            const h = parseInt(hour, 10);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const hour12 = h % 12 || 12;
+            return `${hour12}:${minute} ${ampm}`;
+        });
+
+        // Render each available time as a clickable slot
+        availableTimes.forEach(time => {
             const slot = document.createElement('div');
             slot.className = 'time-slot';
             slot.innerHTML = `<i class="fas fa-clock"></i> ${time}`;
-            const key = `${state.selectedDate} ${time}`;
-            if (state.bookedSlots.includes(key)) slot.classList.add('booked');
-            else if (state.selectedTime === time) slot.classList.add('selected');
-            if (!slot.classList.contains('booked')) {
-                slot.addEventListener('click', () => selectTime(time));
+
+            if (state.selectedTime === time) {
+                slot.classList.add('selected');
             }
+
+            slot.addEventListener('click', () => selectTime(time));
             container.appendChild(slot);
         });
+
+        // If no slots were added (shouldn't happen because we checked length), show message
+        if (availableTimes.length === 0) {
+            container.innerHTML = '<div class="no-slots">No available slots</div>';
+            document.getElementById('next-3').disabled = true;
+        }
     }
 
     function selectTime(time) {

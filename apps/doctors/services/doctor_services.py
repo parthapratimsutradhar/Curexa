@@ -6,49 +6,85 @@ from apps.docbook.models.availability_model import Availability
 from django.utils.timezone import localdate
 from django.shortcuts import get_object_or_404
 from apps.core.services import util_services
-from django.utils.timezone import localdate
+from django.db.models import Prefetch
 
 
 def get_doctor_by_id(pk):
     return get_object_or_404(DoctorProfile, id=pk)
 
-def doctor_queryset():
-    return DoctorProfile.objects.select_related(
+
+
+from django.utils.dateparse import parse_date
+
+
+def doctor_queryset(date=None, doctor_id=None):
+    selected_date = parse_date(date) if date else localdate()
+
+    qs = DoctorProfile.objects.select_related(
         "doctor", "specialization"
-    ).prefetch_related(
-        "fk_qualifications_doctor_profile_doctor_id"
+    )
+
+    if doctor_id:
+        qs = qs.filter(id=doctor_id)
+
+    return qs.prefetch_related(
+        "fk_qualifications_doctor_profile_doctor_id",
+        Prefetch(
+            "fk_doctor_availabilities_doctor_id",
+            queryset=Availability.objects.filter(
+                date=selected_date,
+                is_available=True,
+                is_leave=False,
+                is_active=True
+            ).exclude(
+                fk_availability_appointment_availability_id__isnull=False
+            ).only("start_time", "end_time"),
+            to_attr="selected_date_slots"
+        )
     ).annotate(
         is_available_today=Exists(
             Availability.objects.filter(
                 doctor=OuterRef("pk"),
-                date=localdate(),
+                date=selected_date,
                 is_active=True
             )
         ),
-        appointment_today=appointment_services.todays_appointments_count_by_doctor_ref(OuterRef("pk")),
-        active_appointment_today=appointment_services.active_appointments_count_by_doctor_ref(OuterRef("pk")),
+        appointment_today=appointment_services.todays_appointments_count_by_doctor_ref(
+            OuterRef("pk")
+        ),
+        active_appointment_today=appointment_services.active_appointments_count_by_doctor_ref(
+            OuterRef("pk")
+        ),
     )
-
-
+    
+    
 def doctor_list_data(qs):
     result = []
 
     for obj in qs:
-        qualifications=Qualification.objects.filter(doctor=obj)
         qualification_data = [
             {
                 "degree": q.degree,
                 "institution": q.institution,
                 "completion_year": q.completion_year.year,
             }
-            for q in qualifications
+            for q in obj.fk_qualifications_doctor_profile_doctor_id.all()
         ]
+
+        slots = [
+            {
+                "start_time": slot.start_time,
+                "end_time": slot.end_time,
+            }
+            for slot in getattr(obj, "selected_date_slots", [])
+        ]
+
         result.append({
             "id": obj.id,
             "name": obj.doctor.get_full_name(),
             "email": obj.doctor.email,
             "specialization": obj.specialization.name if obj.specialization else "",
-            "education":qualification_data,
+            "education": qualification_data,
             "contact_number": obj.contact_number,
             "profile_picture": obj.profile_picture.url if obj.profile_picture else "",
             "department": obj.specialization.department.name if obj.specialization and obj.specialization.department else None,
@@ -56,13 +92,18 @@ def doctor_list_data(qs):
             "clinic_address": obj.clinic_address,
             "consultation_fee": obj.consultation_fee,
             "age": util_services.age_from_dob(obj.dob),
-            "is_available_today":obj.is_available_today,
-            "appointment_today": obj.appointment_today or 0,
-            "active_appointment_today": obj.active_appointment_today or 0,
+
+            # 🔁 renamed logically
+            "is_available": obj.is_available_today,
+            "appointment_count": obj.appointment_today or 0,
+            "active_appointment_count": obj.active_appointment_today or 0,
+
+            # ✅ date-based slots
+            "available_slots": slots,
         })
 
     return result
-
+    
 def doctor_add(dr_user, license_number, license_expiry_date, profile_picture,
                consultation_fee, experience_years, bio, dob, clinic_address, specialization=None, city=None, pin_code=None, contact_number=None):
     return DoctorProfile.objects.create(
