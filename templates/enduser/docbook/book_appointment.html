@@ -634,142 +634,154 @@
     }
     .checkbox-item input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); }
 
-    /* Modern date & time styles */
-    .calendar-navigation {
+    /* ---------- COMPACT DATE & TIME LAYOUT (NEW) ---------- */
+    #step-3 .date-time-row {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 30px;
-        background: var(--white);
-        padding: 15px 20px;
-        border-radius: 60px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-        border: 1px solid var(--gray-border);
+        flex-wrap: wrap;
+        gap: 30px;
+        margin: 20px 0;
     }
-    .calendar-nav-btn {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: var(--white);
-        border: 1px solid var(--gray-border);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-size: 1.2rem;
-        color: var(--primary);
-        transition: var(--transition);
-        box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    #step-3 .calendar-col {
+        flex: 1 1 300px;
+        min-width: 280px;
     }
-    .calendar-nav-btn:hover {
-        background: var(--primary-light);
-        border-color: var(--primary);
-        transform: scale(1.05);
-    }
-    #calendar-title {
-        font-weight: 700;
-        font-size: 1.4rem;
-        color: var(--text-dark);
+    #step-3 .slots-col {
+        flex: 1 1 300px;
+        min-width: 280px;
     }
 
-    .calendar {
+    /* Compact calendar */
+    #calendar {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
-        gap: 10px;
-        margin-bottom: 30px;
-        background: var(--white);
-        padding: 20px;
-        border-radius: var(--radius);
+        gap: 4px;
+        background: #fff;
+        padding: 15px;
+        border-radius: 12px;
         border: 1px solid var(--gray-border);
         box-shadow: var(--card-shadow);
     }
     .calendar-header {
         font-weight: 600;
         text-align: center;
-        padding: 12px;
+        padding: 8px 0;
+        font-size: 0.8rem;
         color: var(--text-soft);
-        font-size: 0.9rem;
     }
     .calendar-day {
-        padding: 16px 0;
-        text-align: center;
-        border-radius: 50px;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        border-radius: 8px;
         cursor: pointer;
-        transition: var(--transition);
-        font-weight: 500;
-        background: var(--white);
+        background: #f9f9f9;
+        transition: background 0.2s;
         border: 1px solid transparent;
     }
     .calendar-day:hover:not(.disabled) {
         background: var(--primary-light);
         border-color: var(--primary);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(11,110,111,0.1);
     }
     .calendar-day.selected {
         background: var(--primary);
         color: white;
-        border-color: var(--primary);
-        box-shadow: 0 8px 16px rgba(11,110,111,0.2);
+        font-weight: 600;
     }
     .calendar-day.today {
-        border: 2px solid var(--primary);
-        font-weight: 700;
+        border: 1px solid var(--primary);
     }
     .calendar-day.disabled {
-        color: #cbd5e0;
+        background: #f0f0f0;
+        color: #ccc;
         cursor: not-allowed;
-        background: #f8fafc;
-        opacity: 0.6;
     }
 
-    .selected-date {
-        margin: 10px 0 20px;
-        font-weight: 600;
-        font-size: 1.2rem;
-        color: var(--primary);
-        background: var(--primary-light);
-        padding: 12px 20px;
-        border-radius: 60px;
-        display: inline-block;
-    }
+    /* Calendar navigation - enhanced */
+.calendar-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    padding: 12px 20px;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0, 40, 40, 0.08);
+    margin-bottom: 20px;
+    border: 1px solid var(--gray-border);
+}
 
-    .time-slots {
+.calendar-nav-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--primary);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+}
+
+.calendar-nav-btn:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(11,110,111,0.15);
+}
+
+.calendar-nav-btn:active {
+    transform: scale(0.98);
+}
+
+#calendar-title {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--text-dark);
+    letter-spacing: -0.3px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+    /* Compact time slots grid */
+    #time-slots {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 15px;
-        margin: 25px 0;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-top: 15px;
     }
     .time-slot {
-        padding: 16px 8px;
+        padding: 10px 4px;
         text-align: center;
         border: 1px solid var(--gray-border);
-        border-radius: 60px;
+        border-radius: 8px;
+        font-size: 0.8rem;
         cursor: pointer;
         transition: var(--transition);
-        font-weight: 500;
-        background: var(--white);
+        background: white;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        gap: 4px;
     }
     .time-slot i {
         color: var(--primary);
-        font-size: 1rem;
+        font-size: 0.8rem;
     }
-    .time-slot:hover:not(.booked) {
+    .time-slot:hover:not(.disabled):not(.booked) {
         border-color: var(--primary);
         background: var(--primary-light);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(11,110,111,0.08);
     }
     .time-slot.selected {
         background: var(--primary);
         color: white;
         border-color: var(--primary);
-        box-shadow: 0 8px 16px rgba(11,110,111,0.2);
     }
     .time-slot.selected i {
         color: white;
@@ -781,8 +793,71 @@
         opacity: 0.7;
         text-decoration: line-through;
     }
+    .time-slot.disabled {
+        opacity: 0.5;
+        background-color: #f5f5f5;
+        color: #999;
+        cursor: not-allowed;
+        border-color: #ddd;
+        pointer-events: none;
+        text-decoration: line-through;
+    }
 
-    .consultation-types {
+    /* Selected date display */
+    .selected-date {
+        margin: 0 0 15px 0;
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--primary);
+        background: var(--primary-light);
+        padding: 8px 16px;
+        border-radius: 40px;
+        display: inline-block;
+    }
+
+    /* No slots message */
+    .no-slots-message {
+        color: #d32f2f;
+        font-weight: 500;
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 2px solid #d32f2f;
+        grid-column: 1 / -1;
+    }
+
+    /* Loading spinner */
+    .loading-spinner {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+    }
+    .loading-spinner::after {
+        content: '';
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-left: 10px;
+        border: 2px solid #ccc;
+        border-top-color: #333;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Responsive: stack on narrow screens */
+    @media (max-width: 700px) {
+        #step-3 .date-time-row {
+            flex-direction: column;
+        }
+        #time-slots {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+        .consultation-types {
         display: flex; gap: 20px; flex-wrap: wrap;
     }
     .consultation-type {
@@ -794,8 +869,198 @@
     .consultation-icon { font-size: 48px; margin-bottom: 20px; color: var(--primary); }
     .price { font-weight: 800; color: var(--dark-green); font-size: 24px; margin-top: 15px; }
 
-    .summary-content { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
-    .summary-details { display: flex; flex-direction: column; gap: 25px; }
+/* ---------- ENHANCED SUMMARY STEP ---------- */
+.summary-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.summary-details-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 30px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--gray-border);
+}
+
+.summary-details-card h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid var(--primary-light);
+    padding-bottom: 12px;
+}
+
+.summary-details-card h3 i {
+    color: var(--primary);
+    font-size: 1.6rem;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 30px;
+}
+
+.summary-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.summary-item-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--primary-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.summary-item-content {
+    flex: 1;
+}
+
+.summary-item-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-soft);
+    margin-bottom: 4px;
+}
+
+.summary-item-value {
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.4;
+}
+
+.doctor-summary-compact {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: var(--primary-light);
+    padding: 20px 25px;
+    border-radius: var(--radius);
+    margin-bottom: 30px;
+    border: 1px solid var(--primary);
+}
+
+.doctor-summary-compact img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.doctor-summary-compact h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.doctor-summary-compact p {
+    color: var(--primary);
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.doctor-summary-compact .experience {
+    font-size: 0.9rem;
+    color: var(--text-soft);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.price-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: var(--radius);
+    padding: 30px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--gray-border);
+    height: fit-content;
+}
+
+.price-card h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid var(--primary-light);
+    padding-bottom: 12px;
+}
+
+.price-card h3 i {
+    color: var(--primary);
+}
+
+.price-breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--gray-border);
+    font-size: 1rem;
+}
+
+.price-breakdown-item:last-of-type {
+    border-bottom: none;
+}
+
+.price-total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid var(--primary);
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--primary);
+}
+
+.secure-badge {
+    background: rgba(11,110,111,0.1);
+    color: var(--primary);
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px dashed var(--primary);
+}
+
+.secure-badge i {
+    font-size: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .summary-container {
+        grid-template-columns: 1fr;
+    }
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
     .doctor-summary {
         display: flex; align-items: center; gap: 20px; padding: 25px;
         background: var(--primary-light); border-radius: var(--radius);
@@ -808,7 +1073,10 @@
     .price-total { display: flex; justify-content: space-between; margin-top: 25px; font-weight: 700; font-size: 22px; }
 
     .action-buttons {
-        display: flex; justify-content: space-between; margin-top: 40px; padding-top: 30px;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+        padding-top: 30px;
         border-top: 1px solid var(--border-color);
     }
     .btn-payment { background: var(--dark-green); color: white; }
@@ -825,17 +1093,6 @@
     footer { text-align: center; margin-top: 60px; color: var(--text-light); }
 </style>
 
-<header class="main-header">
-    <div class="container header-inner">
-        <div class="brand">Curexa <span>· medical & appointment</span></div>
-    </div>
-</header>
-
-<div class="container">
-    <div class="breadcrumb">
-        <a href="#">Home</a> <span class="separator">/</span> <span>Doctors</span>
-    </div>
-</div>
 
 <!-- Progress bar (hidden until doctor is selected) -->
 <div class="booking-journey-container hidden" id="bookingJourney">
@@ -1013,21 +1270,30 @@
         </div>
     </section>
 
-    <!-- STEP 3: Date & Time (unchanged) -->
+    <!-- STEP 3: Date & Time (COMPACT LAYOUT) -->
     <section id="step-3" class="step-section hidden">
         <div class="section-header">
             <h2>Select Date & Time</h2>
             <p>Choose your preferred appointment slot.</p>
         </div>
-        <div class="calendar-navigation">
-            <button class="calendar-nav-btn" id="prev-month"><i class="fas fa-chevron-left"></i></button>
-            <span id="calendar-title">March 2025</span>
-            <button class="calendar-nav-btn" id="next-month"><i class="fas fa-chevron-right"></i></button>
+        <div class="date-time-row">
+            <!-- Left column: Calendar -->
+            <div class="calendar-col">
+                <div class="calendar-navigation">
+                    <button class="calendar-nav-btn" id="prev-month"><i class="fas fa-chevron-left"></i></button>
+                    <span id="calendar-title">March 2025</span>
+                    <button class="calendar-nav-btn" id="next-month"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div id="calendar" class="calendar"></div>
+            </div>
+
+            <!-- Right column: Time slots -->
+            <div class="slots-col">
+                <div class="selected-date" id="selected-date-display"></div>
+                <label style="margin-bottom: 10px; display: block;"><i class="fas fa-clock"></i> Available Time Slots</label>
+                <div id="time-slots" class="time-slots"></div>
+            </div>
         </div>
-        <div id="calendar" class="calendar"></div>
-        <div class="selected-date" id="selected-date-display"></div>
-        <label style="margin-bottom: 10px; display: block;"><i class="fas fa-clock"></i> Available Time Slots</label>
-        <div id="time-slots" class="time-slots"></div>
         <div class="action-buttons">
             <button id="prev-3" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Previous</button>
             <button id="next-3" class="btn btn-primary" disabled>Next: Consultation Type <i class="fas fa-arrow-right"></i></button>
@@ -1066,62 +1332,104 @@
             <h2>Confirm Your Appointment</h2>
             <p>Review all details carefully before proceeding.</p>
         </div>
-        <div class="summary-content">
-            <div class="summary-details">
-                <div class="doctor-summary">
-                    <img src="" alt="" id="summary-doctor-img" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+
+        <div class="summary-container">
+            <!-- Left column: Detailed summary -->
+            <div class="summary-details-card">
+                <h3><i class="fas fa-clipboard-list"></i> Appointment Summary</h3>
+
+                <!-- Doctor compact card -->
+                <div class="doctor-summary-compact">
+                    <img src="" alt="" id="summary-doctor-img">
                     <div>
-                        <h3 id="summary-doctor-name">Dr. Name</h3>
+                        <h4 id="summary-doctor-name">Dr. Name</h4>
                         <p id="summary-doctor-specialty">Specialty</p>
-                        <p id="summary-doctor-experience">Experience</p>
+                        <div class="experience">
+                            <i class="fas fa-briefcase-medical"></i>
+                            <span id="summary-doctor-experience">Experience</span>
+                        </div>
                     </div>
                 </div>
-                <div class="summary-item">
-                    <span class="summary-label">Patient:</span>
-                    <span class="summary-value" id="summary-patient-info">-</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label">Primary concern:</span>
-                    <span class="summary-value" id="summary-condition">-</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label">Symptoms:</span>
-                    <span class="summary-value" id="summary-symptoms">-</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label">Date:</span>
-                    <span class="summary-value" id="summary-date">-</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label">Time:</span>
-                    <span class="summary-value" id="summary-time">-</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label">Consultation type:</span>
-                    <span class="summary-value" id="summary-consultation">-</span>
+
+                <!-- Patient & appointment details in grid -->
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-item-icon"><i class="fas fa-user"></i></div>
+                        <div class="summary-item-content">
+                            <div class="summary-item-label">Patient</div>
+                            <div class="summary-item-value" id="summary-patient-info">-</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-item">
+                        <div class="summary-item-icon"><i class="fas fa-head-side-brain"></i></div>
+                        <div class="summary-item-content">
+                            <div class="summary-item-label">Primary concern</div>
+                            <div class="summary-item-value" id="summary-condition">-</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-item">
+                        <div class="summary-item-icon"><i class="fas fa-thermometer-half"></i></div>
+                        <div class="summary-item-content">
+                            <div class="summary-item-label">Symptoms</div>
+                            <div class="summary-item-value" id="summary-symptoms">-</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-item">
+                        <div class="summary-item-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="summary-item-content">
+                            <div class="summary-item-label">Date</div>
+                            <div class="summary-item-value" id="summary-date">-</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-item">
+                        <div class="summary-item-icon"><i class="fas fa-clock"></i></div>
+                        <div class="summary-item-content">
+                            <div class="summary-item-label">Time</div>
+                            <div class="summary-item-value" id="summary-time">-</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-item">
+                        <div class="summary-item-icon"><i class="fas fa-video"></i></div>
+                        <div class="summary-item-content">
+                            <div class="summary-item-label">Consultation type</div>
+                            <div class="summary-item-value" id="summary-consultation">-</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="price-breakdown">
-                <h3>Price Details</h3>
-                <div class="price-item">
+
+            <!-- Right column: Price breakdown & payment -->
+            <div class="price-card">
+                <h3><i class="fas fa-credit-card"></i> Payment Details</h3>
+                <div class="price-breakdown-item">
                     <span>Consultation fee</span>
                     <span id="price-consultation">$0</span>
                 </div>
-                <div class="price-item">
+                <div class="price-breakdown-item">
                     <span>Platform fee</span>
                     <span>$8.00</span>
                 </div>
-                <div class="price-total">
+                <div class="price-total-row">
                     <span>Total</span>
                     <span id="price-total">$0</span>
                 </div>
+                <div class="secure-badge">
+                    <i class="fas fa-lock"></i> 100% secure payment
+                </div>
             </div>
         </div>
+
         <div class="action-buttons">
             <button id="prev-5" class="btn btn-secondary"><i class="fas fa-edit"></i> Edit Details</button>
             <button id="next-5" class="btn btn-payment"><i class="fas fa-lock"></i> Secure Payment</button>
         </div>
     </section>
+
 </div>
 
 <!-- Notification -->
@@ -1135,6 +1443,32 @@
 
 <script>
 (function() {
+    // ---------- INJECT STYLES FOR TIME SLOTS ----------
+    const style = document.createElement('style');
+    style.textContent = `
+        /* Disabled time slots – clearly not available */
+        .time-slot.disabled {
+            opacity: 0.5;
+            background-color: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+            border-color: #ddd;
+            pointer-events: none;
+            text-decoration: line-through;
+        }
+        /* Message when no slots are available – with a red line above */
+        .no-slots-message {
+            color: #d32f2f;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #d32f2f;
+            width: 100%;
+        }
+    `;
+    document.head.appendChild(style);
+
     // ---------- STATE ----------
     const state = {
         currentStep: 1,
@@ -1155,6 +1489,7 @@
         currentPage: 1,
         totalPages: 1,
         loading: false,
+        loadingSlots: false,               // loading state for time slots
         filterCriteria: { search: '', specialization: '', availability: '', sort: '' },
         commonSymptoms: [
             { name: "Fever", icon: "fas fa-thermometer-full" },
@@ -1501,7 +1836,47 @@
         return isValid;
     }
 
-    // ---------- DATE & TIME ----------
+    // ---------- DATE & TIME (MODIFIED) ----------
+    // NEW: function to fetch availability for a specific doctor and date
+    async function fetchDoctorAvailability(doctorId, date) {
+        const url = `${API_BASE}?doctor_id=${doctorId}&date=${date}`;
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            // Handle different possible response shapes
+            if (Array.isArray(data) && data.length > 0) {
+                return data[0].available_slots || [];
+            } else if (data.results && Array.isArray(data.results) && data.results.length > 0) {
+                return data.results[0].available_slots || [];
+            } else if (data.available_slots) {
+                return data.available_slots;
+            }
+            return [];
+        } catch (error) {
+            console.error('Error fetching availability:', error);
+            return [];
+        }
+    }
+
+    // Helper to generate all possible time slots from 9:00 AM to 9:00 PM (30‑minute intervals)
+    function generateAllTimeSlots() {
+        const slots = [];
+        const startHour = 9;   // 9 AM
+        const endHour = 21;    // 9 PM
+        for (let hour = startHour; hour <= endHour; hour++) {
+            for (let minute of [0, 30]) {
+                // Skip 9:30 PM (21:30) because we stop at 9:00 PM exactly
+                if (hour === endHour && minute === 30) continue;
+                const period = hour >= 12 ? 'PM' : 'AM';
+                const displayHour = hour % 12 || 12;
+                const minuteStr = minute.toString().padStart(2, '0');
+                slots.push(`${displayHour}:${minuteStr} ${period}`);
+            }
+        }
+        return slots;
+    }
+
     function renderCalendar() {
         const calendar = document.getElementById('calendar');
         const title = document.getElementById('calendar-title');
@@ -1535,13 +1910,29 @@
         }
     }
 
-    function selectDate(date) {
+    // MODIFIED: fetches slots and then renders all slots with available ones clickable
+    async function selectDate(date) {
         state.selectedDate = date;
-        renderCalendar();
-        renderTimeSlots();
+        state.selectedTime = null;               // Reset previously selected time
+        state.loadingSlots = true;                // Show loading indicator
+        renderCalendar();                          // Highlight selected date
+        renderTimeSlots();                         // Will show "Loading..."
+
+        const doctor = state.selectedDoctor;
+        if (doctor && doctor.id) {
+            const slots = await fetchDoctorAvailability(doctor.id, date);
+            // Update the doctor object with fresh slots for this date
+            if (state.selectedDoctor) {
+                state.selectedDoctor.available_slots = slots;
+            }
+        }
+
+        state.loadingSlots = false;
+        renderTimeSlots();                          // Re-render with fetched slots
         document.getElementById('next-3').disabled = !state.selectedTime;
     }
 
+    // MODIFIED: now shows ALL slots 9am‑9pm, with available ones clickable
     function renderTimeSlots() {
         const container = document.getElementById('time-slots');
         const display = document.getElementById('selected-date-display');
@@ -1559,47 +1950,58 @@
             day: 'numeric'
         });
 
-        // Get available slots from the selected doctor
-        const doctor = state.selectedDoctor;
-        if (!doctor || !doctor.available_slots || doctor.available_slots.length === 0) {
-            container.innerHTML = '<div class="no-slots">No available slots for this doctor</div>';
+        if (state.loadingSlots) {
+            container.innerHTML = '<div class="loading-spinner">Loading available slots...</div>';
             document.getElementById('next-3').disabled = true;
             return;
         }
 
-        // Convert each start_time to a display format (e.g., "10:00 AM")
-        const availableTimes = doctor.available_slots.map(slot => {
+        const doctor = state.selectedDoctor;
+        // Convert API slots to display format (e.g., "10:00 AM")
+        const availableTimes = doctor?.available_slots?.map(slot => {
             const [hour, minute] = slot.start_time.split(':');
             const h = parseInt(hour, 10);
             const ampm = h >= 12 ? 'PM' : 'AM';
             const hour12 = h % 12 || 12;
             return `${hour12}:${minute} ${ampm}`;
-        });
+        }) || [];
 
-        // Render each available time as a clickable slot
-        availableTimes.forEach(time => {
+        // Generate all possible slots from 9am to 9pm
+        const allSlots = generateAllTimeSlots();
+
+        // Create a slot element for each time
+        allSlots.forEach(time => {
             const slot = document.createElement('div');
             slot.className = 'time-slot';
             slot.innerHTML = `<i class="fas fa-clock"></i> ${time}`;
 
+            const isAvailable = availableTimes.includes(time);
             if (state.selectedTime === time) {
                 slot.classList.add('selected');
             }
-
-            slot.addEventListener('click', () => selectTime(time));
+            if (!isAvailable) {
+                slot.classList.add('disabled');  // visually grey, non‑clickable
+            } else {
+                // Only available slots get the click handler
+                slot.addEventListener('click', () => selectTime(time));
+            }
             container.appendChild(slot);
         });
 
-        // If no slots were added (shouldn't happen because we checked length), show message
+        // If no slots are available, show a message after the grid
         if (availableTimes.length === 0) {
-            container.innerHTML = '<div class="no-slots">No available slots</div>';
-            document.getElementById('next-3').disabled = true;
+            const msg = document.createElement('div');
+            msg.className = 'no-slots-message';
+            msg.textContent = 'No available slots for this date.';
+            container.appendChild(msg);
         }
+
+        // Next button enabled only if a time is selected (handled by selectTime)
     }
 
     function selectTime(time) {
         state.selectedTime = time;
-        renderTimeSlots();
+        renderTimeSlots();  // re-render to highlight selected slot
         document.getElementById('next-3').disabled = false;
         showNotification('Time Slot Selected', `Appointment at ${time}`);
     }
@@ -1733,7 +2135,7 @@
     function initialLoad() {
         renderSymptomsTags();
         renderCalendar();
-        renderTimeSlots();
+        renderTimeSlots();   // will show nothing because no date selected
         fetchDoctors(true);
     }
 
