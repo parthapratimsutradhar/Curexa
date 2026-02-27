@@ -11,7 +11,6 @@ from django.db.models import F, Case, When, Value, CharField
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from decimal import Decimal
-import json
 
 class MedicineListView(View):
     def get(self, request):
