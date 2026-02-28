@@ -15,6 +15,7 @@ class AppointmentBookAPIView(APIView):
         serializer = AppointmentCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         appointment = serializer.save()
+        appointment_services.appointment_checkout(appointment)
 
         return Response(
             {

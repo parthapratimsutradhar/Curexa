@@ -5,9 +5,11 @@ from itertools import groupby
 from operator import itemgetter
 from apps.core.services.util_services import *
 from apps.docbook.services.availability_services import *
-from django.db.models import OuterRef, Subquery, Count, IntegerField, Q
-from django.db.models.functions import Coalesce
+from django.db.models import Subquery, Count, IntegerField, Q
 from django.utils.timezone import localdate
+from apps.orders.services.payment_service import create_razorpay_order
+from apps.orders.services import invoice_services
+from apps.accounts.services import patient_services
 
 def active_appointments_count(doctor):
     return Appointment.objects.filter(
@@ -371,3 +373,15 @@ def doctor_total_completed_appointments_count(doctor_id):
         doctor_id=doctor_id,
         appointment_status = AppointmentStatus.COMPLETED.value
     ).count()
+        
+def appointment_checkout(appointment):
+    patient=patient_services.get_patient(appointment.patient)
+    invoice=invoice_services.create_invoice(
+        patient=patient,
+        appointment=appointment,
+        subtotal=subtotal,
+        tax_rate=tax_rate     
+    )
+    # 6️⃣ Create Razorpay Order + Payment
+    payment_payload = create_razorpay_order(invoice)
+    return payment_payload

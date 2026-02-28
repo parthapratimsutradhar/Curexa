@@ -31,6 +31,28 @@ class Appointment(BaseModel):
         related_name='fk_doctor_appointments_doctor_id'
     )
 
+    base_fee = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+    )
+
+    discount_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0.00
+    )
+
+    tax_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0.00
+    )
+
+    total_fee = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+    )
+
     notes = models.TextField(blank=True, null=True)
 
     class Meta:

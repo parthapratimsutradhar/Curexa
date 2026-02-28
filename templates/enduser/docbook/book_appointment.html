@@ -1777,6 +1777,12 @@
             state.currentStep = step;
             document.getElementById(`step-${step}`).classList.add('active');
             updateStepIndicator();
+
+            // ---- Populate patient form when entering step 2 ----
+            if (step === 2) {
+                populatePatientForm();
+            }
+
             if (step === 5) updateSummary();
 
             if (step === 1) {
@@ -1836,15 +1842,33 @@
         return isValid;
     }
 
+    // ---- Populate step 2 form from state ----
+    function populatePatientForm() {
+        const p = state.patientDetails;
+        document.getElementById('patient-name').value = p.name || '';
+        document.getElementById('patient-age').value = p.age || '';
+        document.getElementById('patient-gender').value = p.gender || '';
+        document.getElementById('patient-phone').value = p.phone || '';
+        document.getElementById('condition-title').value = p.conditionTitle || '';
+        document.getElementById('condition-details').value = p.conditionDetails || '';
+        renderSymptomsTags(); // already reflects selectedSymptoms
+        document.getElementById('previous-treatment').checked = p.previousTreatment || false;
+        document.getElementById('allergies').checked = p.allergies || false;
+        document.getElementById('current-medication').checked = p.currentMedication || false;
+        document.getElementById('smoker').checked = p.smoker || false;
+        document.getElementById('chronic-conditions').checked = p.chronicConditions || false;
+        document.getElementById('surgery-history').checked = p.surgeryHistory || false;
+        document.getElementById('additional-notes').value = p.additionalNotes || '';
+        document.getElementById('char-count').textContent = p.conditionDetails ? p.conditionDetails.length : 0;
+        validatePatientDetails();
+    }
+
     // ---------- DATE & TIME (MODIFIED) ----------
-    // NEW: function to fetch availability for a specific doctor and date
     async function fetchDoctorAvailability(doctorId, date) {
         const url = `${API_BASE}?doctor_id=${doctorId}&date=${date}`;
         try {
             const response = await fetch(url);
             const data = await response.json();
-
-            // Handle different possible response shapes
             if (Array.isArray(data) && data.length > 0) {
                 return data[0].available_slots || [];
             } else if (data.results && Array.isArray(data.results) && data.results.length > 0) {
@@ -1859,14 +1883,12 @@
         }
     }
 
-    // Helper to generate all possible time slots from 9:00 AM to 9:00 PM (30‑minute intervals)
     function generateAllTimeSlots() {
         const slots = [];
         const startHour = 9;   // 9 AM
         const endHour = 21;    // 9 PM
         for (let hour = startHour; hour <= endHour; hour++) {
             for (let minute of [0, 30]) {
-                // Skip 9:30 PM (21:30) because we stop at 9:00 PM exactly
                 if (hour === endHour && minute === 30) continue;
                 const period = hour >= 12 ? 'PM' : 'AM';
                 const displayHour = hour % 12 || 12;
@@ -1910,29 +1932,26 @@
         }
     }
 
-    // MODIFIED: fetches slots and then renders all slots with available ones clickable
     async function selectDate(date) {
         state.selectedDate = date;
-        state.selectedTime = null;               // Reset previously selected time
-        state.loadingSlots = true;                // Show loading indicator
-        renderCalendar();                          // Highlight selected date
-        renderTimeSlots();                         // Will show "Loading..."
+        state.selectedTime = null;
+        state.loadingSlots = true;
+        renderCalendar();
+        renderTimeSlots();
 
         const doctor = state.selectedDoctor;
         if (doctor && doctor.id) {
             const slots = await fetchDoctorAvailability(doctor.id, date);
-            // Update the doctor object with fresh slots for this date
             if (state.selectedDoctor) {
                 state.selectedDoctor.available_slots = slots;
             }
         }
 
         state.loadingSlots = false;
-        renderTimeSlots();                          // Re-render with fetched slots
+        renderTimeSlots();
         document.getElementById('next-3').disabled = !state.selectedTime;
     }
 
-    // MODIFIED: now shows ALL slots 9am‑9pm, with available ones clickable
     function renderTimeSlots() {
         const container = document.getElementById('time-slots');
         const display = document.getElementById('selected-date-display');
@@ -1957,7 +1976,6 @@
         }
 
         const doctor = state.selectedDoctor;
-        // Convert API slots to display format (e.g., "10:00 AM")
         const availableTimes = doctor?.available_slots?.map(slot => {
             const [hour, minute] = slot.start_time.split(':');
             const h = parseInt(hour, 10);
@@ -1966,10 +1984,8 @@
             return `${hour12}:${minute} ${ampm}`;
         }) || [];
 
-        // Generate all possible slots from 9am to 9pm
         const allSlots = generateAllTimeSlots();
 
-        // Create a slot element for each time
         allSlots.forEach(time => {
             const slot = document.createElement('div');
             slot.className = 'time-slot';
@@ -1980,28 +1996,24 @@
                 slot.classList.add('selected');
             }
             if (!isAvailable) {
-                slot.classList.add('disabled');  // visually grey, non‑clickable
+                slot.classList.add('disabled');
             } else {
-                // Only available slots get the click handler
                 slot.addEventListener('click', () => selectTime(time));
             }
             container.appendChild(slot);
         });
 
-        // If no slots are available, show a message after the grid
         if (availableTimes.length === 0) {
             const msg = document.createElement('div');
             msg.className = 'no-slots-message';
             msg.textContent = 'No available slots for this date.';
             container.appendChild(msg);
         }
-
-        // Next button enabled only if a time is selected (handled by selectTime)
     }
 
     function selectTime(time) {
         state.selectedTime = time;
-        renderTimeSlots();  // re-render to highlight selected slot
+        renderTimeSlots();
         document.getElementById('next-3').disabled = false;
         showNotification('Time Slot Selected', `Appointment at ${time}`);
     }
@@ -2107,13 +2119,33 @@
         el.addEventListener('click', () => selectConsultationType(el.dataset.type));
     });
 
-    // Patient form validation
-    ['patient-name','patient-age','patient-gender','patient-phone','condition-title','condition-details'].forEach(id => {
-        document.getElementById(id).addEventListener('input', validatePatientDetails);
+    // ---- Patient form: update state and validate ----
+    document.getElementById('patient-name').addEventListener('input', (e) => {
+        state.patientDetails.name = e.target.value;
+        validatePatientDetails();
+    });
+    document.getElementById('patient-age').addEventListener('input', (e) => {
+        state.patientDetails.age = e.target.value;
+        validatePatientDetails();
+    });
+    document.getElementById('patient-gender').addEventListener('change', (e) => {
+        state.patientDetails.gender = e.target.value;
+        validatePatientDetails();
+    });
+    document.getElementById('patient-phone').addEventListener('input', (e) => {
+        state.patientDetails.phone = e.target.value;
+        validatePatientDetails();
+    });
+    document.getElementById('condition-title').addEventListener('input', (e) => {
+        state.patientDetails.conditionTitle = e.target.value;
+        validatePatientDetails();
     });
     document.getElementById('condition-details').addEventListener('input', (e) => {
+        state.patientDetails.conditionDetails = e.target.value;
         document.getElementById('char-count').textContent = e.target.value.length;
+        validatePatientDetails();
     });
+
     ['previous-treatment','allergies','current-medication','smoker','chronic-conditions','surgery-history'].forEach(id => {
         document.getElementById(id).addEventListener('change', (e) => {
             state.patientDetails[id.replace('-','')] = e.target.checked;
