@@ -3,28 +3,32 @@ from django.views import View
 from django.shortcuts import redirect, render
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from apps.docbook.serializers.appointment_serializer import AppointmentCreateSerializer, AppointmentReadSerializer
 from apps.docbook.services import appointment_services
 
 
 class AppointmentBookAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = AppointmentCreateSerializer(data=request.data)
+        serializer = AppointmentCreateSerializer(
+            data=request.data,
+            context={'request': request}
+        )
         serializer.is_valid(raise_exception=True)
+
         appointment = serializer.save()
-        appointment_services.appointment_checkout(appointment)
+        payment_payload = appointment_services.appointment_checkout(appointment)
 
         return Response(
             {
-                "id": appointment.id,
+                "appointment_id": appointment.id,
+                "payment": payment_payload,
                 "message": "Appointment booked successfully"
             },
             status=status.HTTP_201_CREATED
         )
-
 
 class AppointmentsByDoctorAPIView(APIView):
     permission_classes = [IsAuthenticated]

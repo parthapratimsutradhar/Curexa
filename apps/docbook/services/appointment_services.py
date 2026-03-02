@@ -373,15 +373,16 @@ def doctor_total_completed_appointments_count(doctor_id):
         doctor_id=doctor_id,
         appointment_status = AppointmentStatus.COMPLETED.value
     ).count()
-        
+
 def appointment_checkout(appointment):
-    patient=patient_services.get_patient(appointment.patient)
-    invoice=invoice_services.create_invoice(
+    patient = patient_services.get_patient(appointment.patient)
+
+    invoice = invoice_services.create_invoice(
         patient=patient,
         appointment=appointment,
-        subtotal=subtotal,
-        tax_rate=tax_rate     
+        subtotal=appointment.base_fee,
+        tax_rate=appointment.tax_amount
     )
-    # 6️⃣ Create Razorpay Order + Payment
+
     payment_payload = create_razorpay_order(invoice)
     return payment_payload

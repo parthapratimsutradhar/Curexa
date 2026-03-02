@@ -48,11 +48,6 @@ class Appointment(BaseModel):
         default=0.00
     )
 
-    total_fee = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-    )
-
     notes = models.TextField(blank=True, null=True)
 
     class Meta:

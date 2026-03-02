@@ -1441,7 +1441,27 @@
     </div>
 </div>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <script>
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
 (function() {
     // ---------- INJECT STYLES FOR TIME SLOTS ----------
     const style = document.createElement('style');
@@ -1483,6 +1503,7 @@
         currentYear: new Date().getFullYear(),
         selectedDate: null,
         selectedTime: null,
+        selectedAvailabilityId: null,       // <-- NEW: store the ID of the selected slot
         selectedConsultationType: null,
         doctors: [],
         totalDoctors: 0,
@@ -1749,6 +1770,10 @@
     // ---------- SELECT DOCTOR ----------
     function selectDoctor(doctor) {
         state.selectedDoctor = doctor;
+        // Reset availability when doctor changes
+        state.selectedDate = null;
+        state.selectedTime = null;
+        state.selectedAvailabilityId = null;
         document.getElementById('next-1').disabled = false;
         renderDoctorGrid();
         showNotification('Doctor Selected', `You selected ${doctor.name || 'Doctor'}`);
@@ -1935,6 +1960,7 @@
     async function selectDate(date) {
         state.selectedDate = date;
         state.selectedTime = null;
+        state.selectedAvailabilityId = null;   // <-- reset slot ID
         state.loadingSlots = true;
         renderCalendar();
         renderTimeSlots();
@@ -1976,34 +2002,44 @@
         }
 
         const doctor = state.selectedDoctor;
-        const availableTimes = doctor?.available_slots?.map(slot => {
+        // availableSlots should be an array of objects like { id, start_time, end_time }
+        const availableSlots = doctor?.available_slots || [];
+
+        // Build a map from display time string to slot object
+        const slotMap = new Map();
+        availableSlots.forEach(slot => {
+            if (!slot.start_time) return;
             const [hour, minute] = slot.start_time.split(':');
             const h = parseInt(hour, 10);
             const ampm = h >= 12 ? 'PM' : 'AM';
             const hour12 = h % 12 || 12;
-            return `${hour12}:${minute} ${ampm}`;
-        }) || [];
+            const minuteStr = minute.padStart(2, '0');
+            const timeStr = `${hour12}:${minuteStr} ${ampm}`;
+            slotMap.set(timeStr, slot);
+        });
 
         const allSlots = generateAllTimeSlots();
 
         allSlots.forEach(time => {
-            const slot = document.createElement('div');
-            slot.className = 'time-slot';
-            slot.innerHTML = `<i class="fas fa-clock"></i> ${time}`;
+            const slotDiv = document.createElement('div');
+            slotDiv.className = 'time-slot';
+            slotDiv.innerHTML = `<i class="fas fa-clock"></i> ${time}`;
 
-            const isAvailable = availableTimes.includes(time);
+            const isAvailable = slotMap.has(time);
             if (state.selectedTime === time) {
-                slot.classList.add('selected');
+                slotDiv.classList.add('selected');
             }
             if (!isAvailable) {
-                slot.classList.add('disabled');
+                slotDiv.classList.add('disabled');
             } else {
-                slot.addEventListener('click', () => selectTime(time));
+                const slot = slotMap.get(time);
+                // Pass both time and slot ID to selectTime
+                slotDiv.addEventListener('click', () => selectTime(time, slot.id));
             }
-            container.appendChild(slot);
+            container.appendChild(slotDiv);
         });
 
-        if (availableTimes.length === 0) {
+        if (availableSlots.length === 0) {
             const msg = document.createElement('div');
             msg.className = 'no-slots-message';
             msg.textContent = 'No available slots for this date.';
@@ -2011,8 +2047,10 @@
         }
     }
 
-    function selectTime(time) {
+    // Updated to receive slotId
+    function selectTime(time, slotId) {
         state.selectedTime = time;
+        state.selectedAvailabilityId = slotId;
         renderTimeSlots();
         document.getElementById('next-3').disabled = false;
         showNotification('Time Slot Selected', `Appointment at ${time}`);
@@ -2058,15 +2096,34 @@
         setTimeout(() => n.classList.remove('show'), 3000);
     }
 
+    // ---------- PROCEED TO PAYMENT (UPDATED) ----------
     function proceedToPayment() {
-        const btn = document.getElementById('next-5');
-        btn.innerHTML = '<div class="loading"></div> Processing...'; btn.disabled = true;
-        setTimeout(() => {
-            showNotification('Payment Successful', 'Appointment confirmed!');
-            btn.innerHTML = '<i class="fas fa-lock"></i> Secure Payment'; btn.disabled = false;
-            alert('✅ Appointment Confirmed!\n\nCheck your email for details.');
-            setTimeout(() => { window.location.reload(); }, 2000);
-        }, 2000);
+        fetch('/appointments/book/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                availability: state.selectedAvailabilityId,   // <-- use state variable
+                appointment_type: state.selectedConsultationType === 'online' ? 1 : 2,
+                notes: state.patientDetails.conditionDetails
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            const options = {
+                key: data.payment.key_id,
+                amount: data.payment.amount,
+                currency: data.payment.currency,
+                order_id: data.payment.razorpay_order_id,
+                handler: function () {
+                    alert("✅ Appointment Confirmed!");
+                    window.location.reload();
+                }
+            };
+            new Razorpay(options).open();
+        });
     }
 
     // ---------- FILTER EVENT HANDLERS ----------

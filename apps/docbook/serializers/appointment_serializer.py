@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from apps.docbook.models import Appointment
 from apps.docbook.models import Availability
+from django.db import transaction
 
 
 class AppointmentCreateSerializer(serializers.ModelSerializer):
@@ -9,39 +10,45 @@ class AppointmentCreateSerializer(serializers.ModelSerializer):
         fields = (
             'appointment_type',
             'availability',
-            'patient',
-            'doctor',
             'notes',
         )
 
     def validate(self, attrs):
         availability: Availability = attrs['availability']
-        doctor = attrs['doctor']
+        request = self.context['request']
 
-        # Availability must be free
-        if not availability.is_available:
+        if availability.is_leave:
+            raise serializers.ValidationError(
+                {"availability": "Doctor is on leave on this day."}
+            )
+
+        if hasattr(availability, 'appointment'):
             raise serializers.ValidationError(
                 {"availability": "This slot is already booked."}
             )
 
-        # Availability must belong to the same doctor
-        if availability.doctor_id != doctor.id:
-            raise serializers.ValidationError(
-                {"doctor": "Doctor does not match availability slot."}
-            )
+        attrs['doctor'] = availability.doctor
+        attrs['patient'] = request.user.patientprofile
 
         return attrs
 
     def create(self, validated_data):
         availability = validated_data['availability']
 
-        appointment = Appointment.objects.create(**validated_data)
+        with transaction.atomic():
+            availability = Availability.objects.select_for_update().get(
+                id=availability.id
+            )
 
-        # Lock the slot
-        availability.is_available = False
-        availability.save(update_fields=['is_available'])
+            if hasattr(availability, 'appointment'):
+                raise serializers.ValidationError(
+                    {"availability": "This slot is already booked."}
+                )
+
+            appointment = Appointment.objects.create(**validated_data)
 
         return appointment
+
 
 class AppointmentReadSerializer(serializers.ModelSerializer):
     date = serializers.DateField(source='availability.date', read_only=True)
@@ -54,8 +61,8 @@ class AppointmentReadSerializer(serializers.ModelSerializer):
             'id',
             'appointment_type',
             'appointment_status',
-            'patient',
             'doctor',
+            'patient',
             'date',
             'start_time',
             'end_time',
