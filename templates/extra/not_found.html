@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 • lost in space</title>
+  <style>
+    /* ===== RESET & MODERN VARIABLES ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --depth-bg: #0b0f1c;
+      --glow-primary: #00c9ff;
+      --glow-secondary: #92fe9d;
+      --card-bg: rgba(18, 25, 40, 0.7);
+      --text-light: #f0f4ff;
+      --text-muted: #b0c0e0;
+      --accent: #3b82f6;
+      --accent-glow: #2563eb;
+      --border-glow: rgba(0, 201, 255, 0.3);
+      --font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--depth-bg);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-x: hidden;
+      position: relative;
+      /* 3D perspective for tilt effect */
+      perspective: 1200px;
+    }
+
+    /* ===== ANIMATED BACKGROUND SHAPES ===== */
+    .cosmic-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .shape {
+      position: absolute;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15) 0%, rgba(0, 201, 255, 0.05) 70%);
+      border-radius: 50%;
+      filter: blur(40px);
+      animation: floatShape 20s infinite alternate ease-in-out;
+    }
+
+    .shape-1 {
+      width: 50vmax;
+      height: 50vmax;
+      top: -10vmax;
+      left: -20vmax;
+      background: radial-gradient(circle, rgba(0, 201, 255, 0.15), rgba(146, 254, 157, 0.1));
+      animation-duration: 25s;
+    }
+
+    .shape-2 {
+      width: 40vmin;
+      height: 40vmin;
+      bottom: 5vh;
+      right: 5vw;
+      background: radial-gradient(circle, rgba(146, 254, 157, 0.2), rgba(0, 201, 255, 0.0));
+      filter: blur(60px);
+      animation: floatShape 18s reverse infinite;
+    }
+
+    .shape-3 {
+      width: 70vmin;
+      height: 70vmin;
+      top: 20vh;
+      right: 15vw;
+      background: radial-gradient(circle at 70% 20%, rgba(123, 97, 255, 0.2), transparent 70%);
+      animation: floatShape 30s infinite;
+    }
+
+    .shape-4 {
+      width: 25vmax;
+      height: 25vmax;
+      bottom: -5vmax;
+      left: 10vmax;
+      background: radial-gradient(circle, rgba(255, 215, 77, 0.15), transparent 80%);
+      filter: blur(50px);
+      animation: floatShape 22s alternate-reverse infinite;
+    }
+
+    @keyframes floatShape {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(4%, 6%) scale(1.2); }
+    }
+
+    /* ===== MAIN CARD – FROSTED + 3D TILT ===== */
+    .card-3d-wrapper {
+      width: 100%;
+      max-width: 680px;
+      z-index: 10;
+      transition: transform 0.2s ease-out;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px) saturate(180%);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      border-radius: 2.5rem;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.6),
+                  0 0 0 1px rgba(0, 201, 255, 0.15) inset,
+                  0 0 40px rgba(0, 201, 255, 0.2);
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--border-glow);
+      box-shadow: 0 40px 70px -15px black, 0 0 0 2px rgba(0, 201, 255, 0.3) inset, 0 0 60px var(--glow-primary);
+    }
+
+    /* ===== 404 BIG GLITCH/GRADIENT ===== */
+    .error-glow {
+      font-size: clamp(7rem, 20vw, 12rem);
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+      background: linear-gradient(135deg, #a0f0ff, #92fe9d, #ffd44d, #a0f0ff);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: gradientShift 6s ease infinite, floatText 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(0,201,255,0.7));
+      letter-spacing: -5px;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes floatText {
+      0% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-8px) scale(1.02); }
+      100% { transform: translateY(0px) scale(1); }
+    }
+
+    /* ===== TYPOGRAPHY & ELEMENTS ===== */
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin: 0.5rem 0 0.8rem;
+      background: linear-gradient(to right, #fff, #d0e0ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.02em;
+    }
+
+    .message {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      max-width: 380px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+      font-weight: 300;
+      backdrop-filter: blur(2px);
+    }
+
+    /* ===== INTERACTIVE BUTTON ===== */
+    .home-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(145deg, #1e2a47, #0f1a2f);
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.25rem;
+      padding: 0.9rem 2.5rem;
+      border-radius: 60px;
+      border: 1px solid rgba(0, 201, 255, 0.3);
+      box-shadow: 0 10px 20px -8px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 201, 255, 0.2);
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .home-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .home-button:hover {
+      background: linear-gradient(145deg, #25355a, #141f3a);
+      border-color: #00c9ff;
+      box-shadow: 0 15px 30px -5px #00c9ff33, 0 0 30px #00c9ff;
+      transform: scale(1.05);
+    }
+
+    .home-button:hover::before {
+      left: 100%;
+    }
+
+    .home-button:active {
+      transform: scale(0.98);
+    }
+
+    /* pulse ring */
+    .home-button::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 60px;
+      padding: 2px;
+      background: linear-gradient(135deg, #00c9ff, #92fe9d);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .home-button:hover::after {
+      opacity: 1;
+    }
+
+    /* ===== MICRO-INTERACTIONS ===== */
+    .glow-pulse {
+      animation: softPulse 3s infinite;
+    }
+
+    @keyframes softPulse {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+
+    /* extra decorative elements */
+    .orbit-icon {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      border-top-color: #00c9ff;
+      animation: spin 4s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 500px) {
+      .card { padding: 2rem 1.5rem; }
+      h1 { font-size: 2rem; }
+      .error-glow { font-size: 6rem; letter-spacing: -2px; }
+      .home-button { padding: 0.8rem 1.8rem; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- floating background shapes (cosmic) -->
+  <div class="cosmic-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+  </div>
+
+  <!-- 3D tilt container -->
+  <div class="card-3d-wrapper" id="tiltCard">
+    <main class="card">
+      <!-- big animated 404 -->
+      <div class="error-glow" aria-label="404">404</div>
+
+      <h1>lost in space</h1>
+      <p class="message">
+        The page you were looking for drifted into a black hole<br> 
+        <span style="display: inline-block; margin-top: 10px; font-size: 0.95rem; opacity: 0.8;">✨ let's get you back on course</span>
+      </p>
+
+      <!-- interactive home button with micro-animations -->
+      <a href="/" class="home-button">
+        <span class="orbit-icon"></span>
+        <span>return to earth</span>
+      </a>
+
+      <!-- subtle footer note (extra interaction) -->
+      <div style="margin-top: 2.5rem; font-size: 0.85rem; color: #5e7495; display: flex; justify-content: center; gap: 1.5rem;">
+        <span style="cursor: default; animation: softPulse 2s infinite;">🛸</span>
+        <span style="cursor: default;">• systems nominal •</span>
+        <span style="cursor: default; animation: softPulse 2s infinite reverse;">🌑</span>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function() {
+      // ===== 3D TILT EFFECT (INTERACTIVE) =====
+      const tiltContainer = document.getElementById('tiltCard');
+      const card = document.querySelector('.card'); // not necessary to select, but we tilt the container
+      let isHovering = false;
+      let requestFrame = null;
+      
+      // boundaries and sensitivity
+      const maxRotate = 8; // max rotation in degrees
+      const maxTranslate = 6; // max shift in px (optional)
+      
+      if (tiltContainer) {
+        // disable transition during mousemove for zero lag
+        const setTransition = (value) => {
+          tiltContainer.style.transition = value;
+        };
+
+        const handleMouseMove = (e) => {
+          if (!isHovering) return;
+          
+          // get mouse position relative to container
+          const rect = tiltContainer.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          
+          // calculate distance from center in percentage (-1 to 1)
+          const percentX = (e.clientX - centerX) / (rect.width / 2);
+          const percentY = (e.clientY - centerY) / (rect.height / 2);
+          
+          // apply rotation (invert Y for natural feel)
+          const rotateY = maxRotate * percentX;   // rotate around Y axis (left/right)
+          const rotateX = -maxRotate * percentY;  // rotate around X axis (up/down)
+          
+          // subtle translate for depth
+          const translateX = maxTranslate * percentX;
+          const translateY = maxTranslate * percentY;
+          
+          // apply transform with 3D
+          tiltContainer.style.transform = 
+            `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+        };
+
+        const handleMouseEnter = () => {
+          isHovering = true;
+          // disable transition for instant response
+          tiltContainer.style.transition = 'none';
+        };
+
+        const handleMouseLeave = () => {
+          isHovering = false;
+          // re-enable smooth transition and reset transform
+          tiltContainer.style.transition = 'transform 0.3s ease-out';
+          tiltContainer.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0)';
+        };
+
+        // bind events
+        tiltContainer.addEventListener('mouseenter', handleMouseEnter);
+        tiltContainer.addEventListener('mousemove', (e) => {
+          if (requestFrame) cancelAnimationFrame(requestFrame);
+          requestFrame = requestAnimationFrame(() => handleMouseMove(e));
+        });
+        tiltContainer.addEventListener('mouseleave', handleMouseLeave);
+      }
+
+      // ===== ADD A TOUCH OF PARALLAX TO SHAPES (optional interactive) =====
+      const shapes = document.querySelectorAll('.shape');
+      if (shapes.length) {
+        document.addEventListener('mousemove', (e) => {
+          const mouseX = e.clientX / window.innerWidth - 0.5;
+          const mouseY = e.clientY / window.innerHeight - 0.5;
+          
+          shapes.forEach((shape, index) => {
+            const speed = 0.02 + (index * 0.01); // different speeds
+            const moveX = mouseX * 30 * speed;
+            const moveY = mouseY * 20 * speed;
+            // subtle transform without overriding animation
+            shape.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.05)`;
+          });
+        });
+      }
+
+      // ===== small random stars (CSS can't do everything, but we inject a few divs for extra sparkle) =====
+      const cosmic = document.querySelector('.cosmic-shapes');
+      for (let i = 0; i < 12; i++) {
+        const star = document.createElement('div');
+        star.classList.add('shape', 'star-particle');
+        const size = Math.random() * 6 + 2;
+        star.style.cssText = `
+          position: absolute;
+          width: ${size}px;
+          height: ${size}px;
+          background: white;
+          border-radius: 50%;
+          top: ${Math.random() * 100}%;
+          left: ${Math.random() * 100}%;
+          filter: blur(${Math.random() * 3}px);
+          opacity: ${0.3 + Math.random() * 0.5};
+          animation: floatShape ${15 + Math.random() * 20}s infinite alternate ease-in-out;
+          box-shadow: 0 0 12px #92fe9d;
+          pointer-events: none;
+          z-index: 0;
+        `;
+        if (cosmic) cosmic.appendChild(star);
+      }
+    })();
+  </script>
+
+  <!-- small style for injected stars (no conflict) -->
+  <style>
+    .star-particle {
+      background: radial-gradient(circle, white, #a0f0ff) !important;
+      filter: blur(1px) drop-shadow(0 0 6px cyan);
+      mix-blend-mode: screen;
+    }
+    /* ensure shapes don't block clicks */
+    .cosmic-shapes * {
+      pointer-events: none;
+    }
+    /* custom cursor hint */
+    .card-3d-wrapper {
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="27" viewBox="0 0 24 27"><circle cx="12" cy="12" r="10" fill="none" stroke="%2300c9ff" stroke-width="2" /><path d="M12 2 L12 7 M12 20 L12 25 M2 12 L7 12 M20 12 L25 12" stroke="%2300c9ff" stroke-width="2" /></svg>') 12 12, auto;
+    }
+  </style>
+</body>
+</html>

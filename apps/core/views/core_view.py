@@ -7,4 +7,7 @@ class EmergencyView(View):
     
 class AboutView(View):
     def get(self, request):
-        return render (request, "enduser/about_curexa.html")    
+        return render (request, "enduser/about_curexa.html")
+
+def not_found_page(request, path=None):
+    return render(request, "extra/not_found.html", status=404)
