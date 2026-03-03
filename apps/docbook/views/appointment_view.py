@@ -3,13 +3,13 @@ from django.views import View
 from django.shortcuts import redirect, render
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from apps.docbook.serializers.appointment_serializer import AppointmentCreateSerializer, AppointmentReadSerializer
 from apps.docbook.services import appointment_services
 
 
 class AppointmentBookAPIView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = AppointmentCreateSerializer(

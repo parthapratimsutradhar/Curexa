@@ -1460,6 +1460,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
+// CSRF token may still be needed for other endpoints (if using session auth alongside JWT)
 const csrftoken = getCookie('csrftoken');
 
 (function() {
@@ -1503,14 +1504,14 @@ const csrftoken = getCookie('csrftoken');
         currentYear: new Date().getFullYear(),
         selectedDate: null,
         selectedTime: null,
-        selectedAvailabilityId: null,       // <-- NEW: store the ID of the selected slot
+        selectedAvailabilityId: null,
         selectedConsultationType: null,
         doctors: [],
         totalDoctors: 0,
         currentPage: 1,
         totalPages: 1,
         loading: false,
-        loadingSlots: false,               // loading state for time slots
+        loadingSlots: false,
         filterCriteria: { search: '', specialization: '', availability: '', sort: '' },
         commonSymptoms: [
             { name: "Fever", icon: "fas fa-thermometer-full" },
@@ -1524,7 +1525,8 @@ const csrftoken = getCookie('csrftoken');
         ]
     };
 
-    const API_BASE = '/api/doctors/';
+    const API_BASE = '/api/doctors';                // for doctor listing & availability
+    const BOOKING_URL = '/api/appointments/book/';  // for booking appointments
 
     // DOM elements
     const skeletonEl = document.getElementById('skeletonLoader');
@@ -1541,6 +1543,17 @@ const csrftoken = getCookie('csrftoken');
     const loadMoreContainer = document.getElementById('loadMoreContainer');
     const bookingJourney = document.getElementById('bookingJourney');
 
+    // ---------- Helper: escape HTML to prevent XSS ----------
+    function escapeHTML(str) {
+        return String(str).replace(/[&<>"]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            if (m === '"') return '&quot;';
+            return m;
+        });
+    }
+
     // ---------- Helper functions for doctor cards ----------
     function generateBadges(doctor) {
         let badgesHTML = '';
@@ -1553,7 +1566,7 @@ const csrftoken = getCookie('csrftoken');
     function generateTags(doctor) {
         let tagsHTML = '';
         if (doctor.specialization && doctor.specialization.trim() !== '') {
-            tagsHTML += `<span class="tag">${doctor.specialization}</span>`;
+            tagsHTML += `<span class="tag">${escapeHTML(doctor.specialization)}</span>`;
         }
         return tagsHTML;
     }
@@ -1565,7 +1578,7 @@ const csrftoken = getCookie('csrftoken');
     function getEducation(doctor) {
         if (doctor.education && doctor.education.length > 0 && doctor.education[0].degree) {
             const edu = doctor.education[0];
-            return `${edu.degree}${edu.institution ? ' from ' + edu.institution : ''}`;
+            return `${escapeHTML(edu.degree)}${edu.institution ? ' from ' + escapeHTML(edu.institution) : ''}`;
         }
         return '';
     }
@@ -1596,7 +1609,7 @@ const csrftoken = getCookie('csrftoken');
         if (state.filterCriteria.sort === 'experience') params.append('ordering', '-experience_years');
         else if (state.filterCriteria.sort === 'fee_low') params.append('ordering', 'consultation_fee');
 
-        const url = `${API_BASE}?${params.toString()}`;
+        const url = `${API_BASE}/?${params.toString()}`;
         console.log('Fetching:', url);
 
         fetch(url)
@@ -1678,10 +1691,10 @@ const csrftoken = getCookie('csrftoken');
             const isSelected = state.selectedDoctor && state.selectedDoctor.id === doc.id;
             const available = doc.is_available_today || false;
             const fee = parseFloat(doc.consultation_fee) || 0;
-            const docName = doc.name && doc.name.trim() !== '' ? doc.name : 'Doctor';
-            const specialization = doc.specialization && doc.specialization.trim() !== '' ? doc.specialization : 'General Physician';
-            const education = getEducation(doc);
-            const clinicAddress = doc.clinic_address && doc.clinic_address.trim() !== '' ? doc.clinic_address : 'Address not provided';
+            const docName = escapeHTML(doc.name && doc.name.trim() !== '' ? doc.name : 'Doctor');
+            const specialization = escapeHTML(doc.specialization && doc.specialization.trim() !== '' ? doc.specialization : 'General Physician');
+            const education = escapeHTML(getEducation(doc));
+            const clinicAddress = escapeHTML(doc.clinic_address && doc.clinic_address.trim() !== '' ? doc.clinic_address : 'Address not provided');
             const nextAvailable = doc.is_available_today ? 'Today' : 'Check availability';
 
             html += `
@@ -1692,7 +1705,7 @@ const csrftoken = getCookie('csrftoken');
                         </div>
                     </div>
                     <div class="doctor-info">
-                        <img src="${getProfilePic(doc)}" alt="${docName}" class="doctor-photo">
+                        <img src="${escapeHTML(getProfilePic(doc))}" alt="${docName}" class="doctor-photo">
                         <div class="doctor-details">
                             <h3 class="doctor-name">${docName}</h3>
                             <p class="doctor-specialization">${specialization}</p>
@@ -1862,7 +1875,9 @@ const csrftoken = getCookie('csrftoken');
         const phone = document.getElementById('patient-phone').value.trim();
         const cond = document.getElementById('condition-title').value.trim();
         const details = document.getElementById('condition-details').value.trim();
-        const isValid = name && age && parseInt(age)>0 && parseInt(age)<=120 && gender && phone && cond && details && details.length <= 500;
+        // Basic phone validation (10 digits)
+        const phoneValid = /^\d{10}$/.test(phone);
+        const isValid = name && age && parseInt(age)>0 && parseInt(age)<=120 && gender && phone && phoneValid && cond && details && details.length <= 500;
         document.getElementById('next-2').disabled = !isValid;
         return isValid;
     }
@@ -1888,22 +1903,20 @@ const csrftoken = getCookie('csrftoken');
         validatePatientDetails();
     }
 
-    // ---------- DATE & TIME (MODIFIED) ----------
+    // ---------- DATE & TIME (FIXED) ----------
     async function fetchDoctorAvailability(doctorId, date) {
-        const url = `${API_BASE}?doctor_id=${doctorId}&date=${date}`;
+        const url = `${API_BASE}/?doctor_id=${doctorId}&date=${date}`;
         try {
             const response = await fetch(url);
             const data = await response.json();
-            if (Array.isArray(data) && data.length > 0) {
-                return data[0].available_slots || [];
-            } else if (data.results && Array.isArray(data.results) && data.results.length > 0) {
+            // Handle paginated response: data.results[0].available_slots
+            if (data.results && Array.isArray(data.results) && data.results.length > 0) {
                 return data.results[0].available_slots || [];
-            } else if (data.available_slots) {
-                return data.available_slots;
             }
             return [];
         } catch (error) {
             console.error('Error fetching availability:', error);
+            showNotification('Error', 'Could not load available slots');
             return [];
         }
     }
@@ -1960,7 +1973,7 @@ const csrftoken = getCookie('csrftoken');
     async function selectDate(date) {
         state.selectedDate = date;
         state.selectedTime = null;
-        state.selectedAvailabilityId = null;   // <-- reset slot ID
+        state.selectedAvailabilityId = null;
         state.loadingSlots = true;
         renderCalendar();
         renderTimeSlots();
@@ -2002,7 +2015,6 @@ const csrftoken = getCookie('csrftoken');
         }
 
         const doctor = state.selectedDoctor;
-        // availableSlots should be an array of objects like { id, start_time, end_time }
         const availableSlots = doctor?.available_slots || [];
 
         // Build a map from display time string to slot object
@@ -2025,16 +2037,18 @@ const csrftoken = getCookie('csrftoken');
             slotDiv.className = 'time-slot';
             slotDiv.innerHTML = `<i class="fas fa-clock"></i> ${time}`;
 
-            const isAvailable = slotMap.has(time);
+            const slot = slotMap.get(time);
+            const isAvailable = !!slot;
+
             if (state.selectedTime === time) {
                 slotDiv.classList.add('selected');
             }
             if (!isAvailable) {
                 slotDiv.classList.add('disabled');
             } else {
-                const slot = slotMap.get(time);
-                // Pass both time and slot ID to selectTime
-                slotDiv.addEventListener('click', () => selectTime(time, slot.id));
+                // Use availability_id if present, otherwise fallback to id (defensive)
+                const slotId = slot.availability_id || slot.id;
+                slotDiv.addEventListener('click', () => selectTime(time, slotId));
             }
             container.appendChild(slotDiv);
         });
@@ -2047,7 +2061,6 @@ const csrftoken = getCookie('csrftoken');
         }
     }
 
-    // Updated to receive slotId
     function selectTime(time, slotId) {
         state.selectedTime = time;
         state.selectedAvailabilityId = slotId;
@@ -2090,27 +2103,52 @@ const csrftoken = getCookie('csrftoken');
 
     function showNotification(title, msg) {
         const n = document.getElementById('notification');
+        if (!n) return;
         n.querySelector('h4').textContent = title;
         n.querySelector('p').textContent = msg;
         n.classList.add('show');
         setTimeout(() => n.classList.remove('show'), 3000);
     }
 
-    // ---------- PROCEED TO PAYMENT (UPDATED) ----------
+    // ---------- PROCEED TO PAYMENT (JWT IN COOKIE VERSION) ----------
     function proceedToPayment() {
-        fetch('/appointments/book/', {
+        // Quick check to ensure a slot is selected
+        if (!state.selectedAvailabilityId) {
+            alert('Please select a time slot before proceeding.');
+            return;
+        }
+
+        // Map frontend type to backend expected integer
+        const typeMap = {
+            'online': 1,
+            'in-clinic': 2
+        };
+        const appointmentType = typeMap[state.selectedConsultationType];
+
+        // No need to add Authorization header – the JWT cookie is sent automatically
+        fetch(BOOKING_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
+                // If your backend also expects CSRF for JWT (unlikely), you can include it
+                // 'X-CSRFToken': csrftoken
             },
+            credentials: 'include', // Important: ensures cookies are sent with the request
             body: JSON.stringify({
-                availability: state.selectedAvailabilityId,   // <-- use state variable
-                appointment_type: state.selectedConsultationType === 'online' ? 1 : 2,
+                availability: state.selectedAvailabilityId,
+                appointment_type: appointmentType,
                 notes: state.patientDetails.conditionDetails
             })
         })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(err => {
+                    const detail = err.detail || err.message || 'Booking failed';
+                    throw new Error(detail);
+                });
+            }
+            return res.json();
+        })
         .then(data => {
             const options = {
                 key: data.payment.key_id,
@@ -2120,9 +2158,19 @@ const csrftoken = getCookie('csrftoken');
                 handler: function () {
                     alert("✅ Appointment Confirmed!");
                     window.location.reload();
+                },
+                modal: {
+                    ondismiss: function() {
+                        showNotification('Payment cancelled', 'You can try again later.');
+                    }
                 }
             };
-            new Razorpay(options).open();
+            const rzp = new Razorpay(options);
+            rzp.open();
+        })
+        .catch(error => {
+            // Show the error message from the backend (e.g., "User is inactive")
+            alert('Booking failed: ' + error.message);
         });
     }
 
@@ -2164,12 +2212,24 @@ const csrftoken = getCookie('csrftoken');
     document.getElementById('prev-month').addEventListener('click', () => {
         state.currentMonth--;
         if (state.currentMonth < 0) { state.currentMonth = 11; state.currentYear--; }
+        // Reset selected date/time when month changes
+        state.selectedDate = null;
+        state.selectedTime = null;
+        state.selectedAvailabilityId = null;
         renderCalendar();
+        renderTimeSlots();
+        document.getElementById('next-3').disabled = true;
     });
     document.getElementById('next-month').addEventListener('click', () => {
         state.currentMonth++;
         if (state.currentMonth > 11) { state.currentMonth = 0; state.currentYear++; }
+        // Reset selected date/time when month changes
+        state.selectedDate = null;
+        state.selectedTime = null;
+        state.selectedAvailabilityId = null;
         renderCalendar();
+        renderTimeSlots();
+        document.getElementById('next-3').disabled = true;
     });
 
     document.querySelectorAll('.consultation-type').forEach(el => {
@@ -2203,11 +2263,25 @@ const csrftoken = getCookie('csrftoken');
         validatePatientDetails();
     });
 
-    ['previous-treatment','allergies','current-medication','smoker','chronic-conditions','surgery-history'].forEach(id => {
-        document.getElementById(id).addEventListener('change', (e) => {
-            state.patientDetails[id.replace('-','')] = e.target.checked;
-        });
+    // Checkbox mapping
+    const checkboxMapping = {
+        'previous-treatment': 'previousTreatment',
+        'allergies': 'allergies',
+        'current-medication': 'currentMedication',
+        'smoker': 'smoker',
+        'chronic-conditions': 'chronicConditions',
+        'surgery-history': 'surgeryHistory'
+    };
+    Object.keys(checkboxMapping).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('change', (e) => {
+                const stateKey = checkboxMapping[id];
+                state.patientDetails[stateKey] = e.target.checked;
+            });
+        }
     });
+
     document.getElementById('additional-notes').addEventListener('input', (e) => {
         state.patientDetails.additionalNotes = e.target.value;
     });
@@ -2230,5 +2304,12 @@ const csrftoken = getCookie('csrftoken');
 
     initialLoad();
 })();
+
+// Define viewProfile globally so onclick works
+window.viewProfile = function(doctorId) {
+    // Redirect to doctor profile page (adjust URL as needed)
+    window.location.href = `/doctor/${doctorId}/`;
+};
+
 </script>
 {% endblock %}

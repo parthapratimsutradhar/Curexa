@@ -375,10 +375,10 @@ def doctor_total_completed_appointments_count(doctor_id):
     ).count()
 
 def appointment_checkout(appointment):
-    patient = patient_services.get_patient(appointment.patient)
+    # patient = patient_services.get_patient()
 
     invoice = invoice_services.create_invoice(
-        patient=patient,
+        patient=appointment.patient,
         appointment=appointment,
         subtotal=appointment.base_fee,
         tax_rate=appointment.tax_amount

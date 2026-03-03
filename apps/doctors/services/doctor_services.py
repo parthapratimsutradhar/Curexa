@@ -37,6 +37,7 @@ def doctor_queryset(date=None, doctor_id=None):
             queryset=Availability.objects.filter(
                 date=selected_date,
                 is_active=True,
+                is_available=True,
                 is_leave=False,
             ).select_related(
                 "fk_availability_appointment_availability_id"
@@ -92,8 +93,7 @@ def doctor_list_data(qs):
                 "availability_id": slot.id,
                 "start_time": slot.start_time,
                 "end_time": slot.end_time,
-                "is_available": slot.is_available and appointment is None,
-                "appointment_id": appointment.id if appointment else None,
+                "is_available": slot.is_available and appointment is None
             })
 
         result.append({
