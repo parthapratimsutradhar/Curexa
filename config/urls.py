@@ -27,7 +27,8 @@ urlpatterns = [
     path('', include('apps.docbook.urls')),
     path('', include('apps.doctors.urls')),
     path('', include('apps.medistore.urls')),
-    path('', include('apps.orders.urls')),    
+    path('', include('apps.orders.urls')),
+    path('', include('apps.labtests.urls')),
     
     # API URLs
     path('api/', include('apps.accounts.api_urls')),
