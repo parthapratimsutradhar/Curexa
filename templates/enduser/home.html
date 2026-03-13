@@ -3,1391 +3,1613 @@
 {% load static %}
 {% block content %}
 
-    <!-- Enhanced Hero Section with Medical Background -->
-    <section class="hero">
-        <!-- Floating Medical Elements -->
-        <div class="floating-elements">
-            <div class="floating-element">
-                <svg width="64" height="64" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19 8h-2v3h-3v2h3v3h2v-3h3v-2h-3zM4 8h2v8c0 1.1.9 2 2 2h8v2H8c-2.21 0-4-1.79-4-4V8z"/>
-                </svg>
-            </div>
-            <div class="floating-element stethoscope-swing">
-                <svg width="80" height="80" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19.48 12.35c-1.57-.01-2.85 1.27-2.85 2.85 0 1.58 1.28 2.85 2.85 2.85s2.85-1.27 2.85-2.85c0-1.58-1.27-2.86-2.85-2.85zM8 12c0-2.21-1.79-4-4-4S0 9.79 0 12s1.79 4 4 4 4-1.79 4-4zm0 0c0 2.21 1.79 4 4 4s4-1.79 4-4-1.79-4-4-4-4 1.79-4 4z"/>
-                </svg>
-            </div>
-            <div class="floating-element heartbeat">
-                <svg width="56" height="56" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
-            </div>
-            <div class="floating-element">
-                <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66C7.91 15.86 10.61 11.22 17 10z"/>
-                </svg>
-            </div>
-        </div>
-
-        <div class="container">
-            <div class="hero-content">
-                <!-- Enhanced Medical Cross with Heartbeat Animation -->
-                <div class="floating-cross heartbeat medical-cross">
-                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="50" cy="50" r="45" fill="currentColor" opacity="0.2"/>
-                        <path d="M50 20v60M20 50h60" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
-                        <circle cx="50" cy="50" r="15" fill="none" stroke="currentColor" stroke-width="3"/>
-                        <path d="M35 35l30 30M65 35l-30 30" stroke="currentColor" stroke-width="2" opacity="0.7"/>
-                    </svg>
-                </div>
-
-                <div class="fade-in-up">
-                    <h1 class="hero-title">
-                        Healthcare Made
-                        <span class="heartbeat" style="color: #fbbf24;">Effortless</span>
-                    </h1>
-                    <p class="hero-description">
-                        Experience the future of healthcare with Qurexa's intelligent platform. 
-                        Find medicines, book appointments, and manage your health journey seamlessly with cutting-edge medical technology.
-                    </p>
-                </div>
-                
-                <!-- Enhanced CTA Buttons with Medical Icons -->
-                <div class="hero-buttons slide-in-left">
-                    <a href="medicine_products_catalog.html" class="btn btn-primary">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 11.172V5l-1-1z"/>
-                        </svg>
-                        <span>Find Medicine</span>
-                    </a>
-                    <a href="care_services_hub.html" class="btn btn-secondary slide-in-right">
-                        <div class="stethoscope-swing">
-                            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                        </div>
-                        <span>Book Appointment</span>
-                    </a>
-                </div>
-
-                <!-- Heartrate Line Animation -->
-                <div class="heartrate-line"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Health Stats Section -->
-    <section class="stats">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stats-card heartbeat">
-                    <div class="stats-number" style="color: #3b82f6;">50K+</div>
-                    <div class="stats-text">Patients Served</div>
-                </div>
-                <div class="stats-card heartbeat">
-                    <div class="stats-number" style="color: #10b981;">24/7</div>
-                    <div class="stats-text">Medical Support</div>
-                </div>
-                <div class="stats-card heartbeat">
-                    <div class="stats-number" style="color: #8b5cf6;">1000+</div>
-                    <div class="stats-text">Verified Doctors</div>
-                </div>
-                <div class="stats-card heartbeat">
-                    <div class="stats-number" style="color: #f97316;">98%</div>
-                    <div class="stats-text">Satisfaction Rate</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Interactive Service Discovery Grid -->
-    <section class="services">
-        <!-- Medical Background Icons -->
-        <div class="medical-icons-bg">
-            <svg class="absolute" style="top: 80px; left: 40px; width: 80px; height: 80px; color: #93c5fd;" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19.48 12.35c-1.57-.01-2.85 1.27-2.85 2.85 0 1.58 1.28 2.85 2.85 2.85s2.85-1.27 2.85-2.85c0-1.58-1.27-2.86-2.85-2.85z"/>
-            </svg>
-            <svg class="absolute" style="top: 160px; right: 80px; width: 64px; height: 64px; color: #86efac;" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-            </svg>
-            <svg class="absolute stethoscope-swing" style="bottom: 80px; left: 80px; width: 96px; height: 96px; color: #d8b4fe;" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 8h-2v3h-3v2h3v3h2v-3h3v-2h-3zM4 8h2v8c0 1.1.9 2 2 2h8v2H8c-2.21 0-4-1.79-4-4V8z"/>
+<!-- Enhanced Hero Section with Medical Background -->
+<section class="hero">
+    <!-- Floating Medical Elements -->
+    <div class="floating-elements">
+        <div class="floating-element">
+            <svg width="64" height="64" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 8h-2v3h-3v2h3v3h2v-3h3v-2h-3zM4 8h2v8c0 1.1.9 2 2 2h8v2H8c-2.21 0-4-1.79-4-4V8z" />
             </svg>
         </div>
-
-        <div class="container">
-            <div class="services-header fade-in-up">
-                <h2 class="section-title">
-                    Your Health, Our <span class="heartbeat" style="color: #3b82f6;">Priority</span>
-                </h2>
-                <p class="section-subtitle">
-                    Discover comprehensive healthcare services designed around your needs with advanced medical technology
-                </p>
-                <!-- Heartrate Visual -->
-                <div class="mt-8 flex justify-center">
-                    <svg class="heartbeat" width="128" height="64" viewBox="0 0 100 40" fill="none" style="color: #ef4444;">
-                        <path d="M0,20 L20,20 L25,10 L30,30 L35,5 L40,35 L45,20 L100,20" stroke="currentColor" stroke-width="2" fill="none"/>
-                    </svg>
-                </div>
-            </div>
-
-            <div class="services-grid">
-                <!-- Enhanced Find Medicine Card -->
-                <div class="service-card">
-                    <div class="service-icon blue heartbeat">
-                        <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 11.172V5l-1-1z"/>
-                        </svg>
-                    </div>
-                    <h3 class="service-title">Find Medicine</h3>
-                    <p class="service-description">Search and order prescription medications with instant availability checks and home delivery</p>
-                    <a href="medicine_products_catalog.html" class="service-link">
-                        Explore Medicines
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-left: 8px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                </div>
-
-                <!-- Enhanced Book Appointment Card with Stethoscope -->
-                <div class="service-card">
-                    <div class="service-icon green stethoscope-swing">
-                        <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-                    <h3 class="service-title">Book Appointment</h3>
-                    <p class="service-description">Schedule consultations with verified healthcare professionals instantly</p>
-                    <a href="care_services_hub.html" class="service-link">
-                        Book Now
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-left: 8px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                </div>
-
-                <!-- Enhanced Health Check Card with Heartbeat -->
-                <div class="service-card">
-                    <div class="service-icon orange heartbeat">
-                        <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                        </svg>
-                    </div>
-                    <h3 class="service-title">Health Check</h3>
-                    <p class="service-description">Comprehensive health assessments and diagnostic services with AI analysis</p>
-                    <a href="personal_health_dashboard.html" class="service-link">
-                        Start Assessment
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-left: 8px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                </div>
-
-                <!-- Emergency Care Card -->
-                <div class="service-card">
-                    <div class="service-icon red pulse-glow">
-                        <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/>
-                        </svg>
-                    </div>
-                    <h3 class="service-title">Emergency Care</h3>
-                    <p class="service-description">24/7 urgent care services and emergency medical assistance</p>
-                    <a href="emergency_urgent_care.html" class="service-link">
-                        Get Help Now
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-left: 8px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                </div>
-
-                <!-- Wellness Plans Card -->
-                <div class="service-card">
-                    <div class="service-icon purple heartbeat">
-                        <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                        </svg>
-                    </div>
-                    <h3 class="service-title">Wellness Plans</h3>
-                    <p class="service-description">Personalized health and wellness programs for optimal living</p>
-                    <a href="personal_health_dashboard.html" class="service-link">
-                        View Plans
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-left: 8px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                </div>
-
-                <!-- Provider Network Card -->
-                <div class="service-card">
-                    <div class="service-icon indigo stethoscope-swing">
-                        <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
-                    </div>
-                    <h3 class="service-title">Provider Network</h3>
-                    <p class="service-description">Connect with certified doctors, specialists, and healthcare facilities</p>
-                    <a href="care_services_hub.html" class="service-link">
-                        Find Providers
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-left: 8px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                </div>
-            </div>
+        <div class="floating-element stethoscope-swing">
+            <svg width="80" height="80" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                    d="M19.48 12.35c-1.57-.01-2.85 1.27-2.85 2.85 0 1.58 1.28 2.85 2.85 2.85s2.85-1.27 2.85-2.85c0-1.58-1.27-2.86-2.85-2.85zM8 12c0-2.21-1.79-4-4-4S0 9.79 0 12s1.79 4 4 4 4-1.79 4-4zm0 0c0 2.21 1.79 4 4 4s4-1.79 4-4-1.79-4-4-4-4 1.79-4 4z" />
+            </svg>
         </div>
-    </section>
-
-    <!-- Categories Section -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-5">Shop by Category</h2>
-            <div class="row">
-                <div class="col-md-3 mb-4">
-                    <div class="card category-card h-100">
-                        <img src="https://via.placeholder.com/300x200?text=Medicines" class="card-img-top" alt="Medicines">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Medicines</h5>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Shop Now</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Repeat for other categories -->
-                <div class="col-md-3 mb-4">
-                    <div class="card category-card h-100">
-                        <img src="https://via.placeholder.com/300x200?text=Wellness" class="card-img-top" alt="Wellness">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Wellness</h5>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Shop Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card category-card h-100">
-                        <img src="https://via.placeholder.com/300x200?text=Personal+Care" class="card-img-top" alt="Personal Care">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Personal Care</h5>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Shop Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card category-card h-100">
-                        <img src="https://via.placeholder.com/300x200?text=Health+Devices" class="card-img-top" alt="Health Devices">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Health Devices</h5>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Shop Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="floating-element heartbeat">
+            <svg width="56" height="56" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
         </div>
-    </section>
-
-    <section class="container my-5">
-    <h3 class="mb-4 fw-bold">Browse by Health Conditions</h3>
-    <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3">
-        
-        <!-- Card Item -->
-        <div class="col">
-        <div class="border rounded p-3 text-center">
-            <img src="{% static 'images/icons/diabetes.png' %}" alt="Diabetes Care" class="mb-2" height="40">
-            <div>Diabetes Care</div>
+        <div class="floating-element">
+            <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66C7.91 15.86 10.61 11.22 17 10z" />
+            </svg>
         </div>
-        </div>
-
-        <div class="col">
-        <div class="border rounded p-3 text-center">
-            <img src="{% static 'images/icons/cardiac.png' %}" alt="Cardiac Care" class="mb-2" height="40">
-            <div>Cardiac Care</div>
-        </div>
-        </div>
-
-        <div class="col">
-        <div class="border rounded p-3 text-center">
-            <img src="{% static 'images/icons/stomach.png' %}" alt="Stomach Care" class="mb-2" height="40">
-            <div>Stomach Care</div>
-        </div>
-        </div>
-
-        <div class="col">
-        <div class="border rounded p-3 text-center">
-            <img src="{% static 'images/icons/pain.png' %}" alt="Pain Relief" class="mb-2" height="40">
-            <div>Pain Relief</div>
-        </div>
-        </div>
-
-        <div class="col">
-        <div class="border rounded p-3 text-center">
-            <img src="{% static 'images/icons/liver.png' %}" alt="Liver Care" class="mb-2" height="40">
-            <div>Liver Care</div>
-        </div>
-        </div>
-
-        <div class="col">
-        <div class="border rounded p-3 text-center">
-            <img src="{% static 'images/icons/oral.png' %}" alt="Oral Care" class="mb-2" height="40">
-            <div>Oral Care</div>
-        </div>
-        </div>
-
-        <div class="col">
-        <div class="border rounded p-3 text-center">
-            <img src="{% static 'images/icons/respiratory.png' %}" alt="Respiratory" class="mb-2" height="40">
-            <div>Respiratory</div>
-        </div>
-        </div>
-
-        <div class="col">
-        <div class="border rounded p-3 text-center">
-            <img src="{% static 'images/icons/sexual.png' %}" alt="Sexual Health" class="mb-2" height="40">
-            <div>Sexual Health</div>
-        </div>
-        </div>
-
-        <div class="col">
-        <div class="border rounded p-3 text-center">
-            <img src="{% static 'images/icons/elderly.png' %}" alt="Elderly Care" class="mb-2" height="40">
-            <div>Elderly Care</div>
-        </div>
-        </div>
-
-        <div class="col">
-        <div class="border rounded p-3 text-center">
-            <img src="{% static 'images/icons/cold.png' %}" alt="Cold & Immunity" class="mb-2" height="40">
-            <div>Cold & Immunity</div>
-        </div>
-        </div>
-
     </div>
-    </section>
 
-    <!-- Doctor Consultation Section -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-5">Consult Top Doctors Online</h2>
-            <div class="row">
-                <div class="col-md-3 mb-4">
-                    <div class="card doctor-card h-100">
-                        <img src="https://via.placeholder.com/300x200?text=Doctor+1" class="card-img-top" alt="Doctor">
-                        <div class="card-body">
-                            <h5 class="card-title">Dr. Ramesh Kumar</h5>
-                            <p class="text-muted">Cardiologist</p>
-                            <p class="card-text"><i class="fas fa-star text-warning"></i> 4.8 (120 reviews)</p>
-                            <a href="#" class="btn btn-primary w-100">Book Appointment</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Repeat for other doctors -->
-                <div class="col-md-3 mb-4">
-                    <div class="card doctor-card h-100">
-                        <img src="https://via.placeholder.com/300x200?text=Doctor+2" class="card-img-top" alt="Doctor">
-                        <div class="card-body">
-                            <h5 class="card-title">Dr. Priya Sharma</h5>
-                            <p class="text-muted">Dermatologist</p>
-                            <p class="card-text"><i class="fas fa-star text-warning"></i> 4.9 (95 reviews)</p>
-                            <a href="#" class="btn btn-primary w-100">Book Appointment</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card doctor-card h-100">
-                        <img src="https://via.placeholder.com/300x200?text=Doctor+3" class="card-img-top" alt="Doctor">
-                        <div class="card-body">
-                            <h5 class="card-title">Dr. Amit Patel</h5>
-                            <p class="text-muted">Pediatrician</p>
-                            <p class="card-text"><i class="fas fa-star text-warning"></i> 4.7 (150 reviews)</p>
-                            <a href="#" class="btn btn-primary w-100">Book Appointment</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card doctor-card h-100">
-                        <img src="https://via.placeholder.com/300x200?text=Doctor+4" class="card-img-top" alt="Doctor">
-                        <div class="card-body">
-                            <h5 class="card-title">Dr. Neha Gupta</h5>
-                            <p class="text-muted">Gynecologist</p>
-                            <p class="card-text"><i class="fas fa-star text-warning"></i> 4.8 (110 reviews)</p>
-                            <a href="#" class="btn btn-primary w-100">Book Appointment</a>
-                        </div>
-                    </div>
-                </div>
+    <div class="container">
+        <div class="hero-content">
+            <!-- Enhanced Medical Cross with Heartbeat Animation -->
+            <div class="floating-cross heartbeat medical-cross">
+                <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="currentColor" opacity="0.2" />
+                    <path d="M50 20v60M20 50h60" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
+                    <circle cx="50" cy="50" r="15" fill="none" stroke="currentColor" stroke-width="3" />
+                    <path d="M35 35l30 30M65 35l-30 30" stroke="currentColor" stroke-width="2" opacity="0.7" />
+                </svg>
             </div>
-            <div class="text-center mt-4">
-                <a href="#" class="btn btn-outline-primary">View All Doctors</a>
+
+            <div class="fade-in-up">
+                <h1 class="hero-title">
+                    Healthcare Made
+                    <span class="heartbeat" style="color: #fbbf24;">Effortless</span>
+                </h1>
+                <p class="hero-description">
+                    Experience the future of healthcare with Qurexa's intelligent platform.
+                    Find medicines, book appointments, and manage your health journey seamlessly with cutting-edge
+                    medical technology.
+                </p>
+            </div>
+
+            <!-- Enhanced CTA Buttons with Medical Icons -->
+            <div class="hero-buttons slide-in-left">
+                <a href="{% url 'medicines_list' %}" class="btn btn-primary">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 11.172V5l-1-1z" />
+                    </svg>
+                    <span>Find Medicine</span>
+                </a>
+                <a href="{% url 'appointment_book' %}" class="btn btn-secondary slide-in-right">
+                    <div class="stethoscope-swing">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <span>Book Appointment</span>
+                </a>
+            </div>
+
+            <!-- Heartrate Line Animation -->
+            <div class="heartrate-line"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Health Stats Section -->
+<section class="stats">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stats-card heartbeat">
+                <div class="stats-number" style="color: #3b82f6;">50K+</div>
+                <div class="stats-text">Patients Served</div>
+            </div>
+            <div class="stats-card heartbeat">
+                <div class="stats-number" style="color: #10b981;">24/7</div>
+                <div class="stats-text">Medical Support</div>
+            </div>
+            <div class="stats-card heartbeat">
+                <div class="stats-number" style="color: #8b5cf6;">1000+</div>
+                <div class="stats-text">Verified Doctors</div>
+            </div>
+            <div class="stats-card heartbeat">
+                <div class="stats-number" style="color: #f97316;">98%</div>
+                <div class="stats-text">Satisfaction Rate</div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Features Section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row text-center">
-                <div class="col-md-3 mb-4">
-                    <div class="p-4">
-                        <i class="fas fa-truck fa-3x text-primary mb-3"></i>
-                        <h4>Free Delivery</h4>
-                        <p class="text-muted">On orders above ₹500</p>
+<!-- Interactive Service Discovery Grid -->
+<section class="services">
+    <!-- Medical Background Icons -->
+    <div class="medical-icons-bg">
+        <svg class="absolute" style="top: 80px; left: 40px; width: 80px; height: 80px; color: #93c5fd;"
+            fill="currentColor" viewBox="0 0 24 24">
+            <path
+                d="M19.48 12.35c-1.57-.01-2.85 1.27-2.85 2.85 0 1.58 1.28 2.85 2.85 2.85s2.85-1.27 2.85-2.85c0-1.58-1.27-2.86-2.85-2.85z" />
+        </svg>
+        <svg class="absolute" style="top: 160px; right: 80px; width: 64px; height: 64px; color: #86efac;"
+            fill="currentColor" viewBox="0 0 24 24">
+            <path
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        </svg>
+        <svg class="absolute stethoscope-swing"
+            style="bottom: 80px; left: 80px; width: 96px; height: 96px; color: #d8b4fe;" fill="currentColor"
+            viewBox="0 0 24 24">
+            <path d="M19 8h-2v3h-3v2h3v3h2v-3h3v-2h-3zM4 8h2v8c0 1.1.9 2 2 2h8v2H8c-2.21 0-4-1.79-4-4V8z" />
+        </svg>
+    </div>
+
+    <div class="container">
+        <div class="services-header fade-in-up">
+            <h2 class="section-title">
+                Your Health, Our <span class="heartbeat" style="color: #3b82f6;">Priority</span>
+            </h2>
+            <p class="section-subtitle">
+                Discover comprehensive healthcare services designed around your needs with advanced medical technology
+            </p>
+            <!-- Heartrate Visual -->
+            <div class="mt-8 flex justify-center">
+                <svg class="heartbeat" width="128" height="64" viewBox="0 0 100 40" fill="none" style="color: #ef4444;">
+                    <path d="M0,20 L20,20 L25,10 L30,30 L35,5 L40,35 L45,20 L100,20" stroke="currentColor"
+                        stroke-width="2" fill="none" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="services-grid">
+            <!-- Enhanced Find Medicine Card -->
+            <div class="service-card">
+                <div class="service-icon blue heartbeat">
+                    <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 11.172V5l-1-1z" />
+                    </svg>
+                </div>
+                <h3 class="service-title">Find Medicine</h3>
+                <p class="service-description">Search and order prescription medications with instant availability
+                    checks and home delivery</p>
+                <a href="{% url 'medicines_list' %}" class="service-link">
+                    Explore Medicines
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        style="margin-left: 8px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Enhanced Book Appointment Card with Stethoscope -->
+            <div class="service-card">
+                <div class="service-icon green stethoscope-swing">
+                    <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <h3 class="service-title">Book Appointment</h3>
+                <p class="service-description">Schedule consultations with verified healthcare professionals instantly
+                </p>
+                <a href="{% url 'appointment_book' %}" class="service-link">
+                    Book Now
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        style="margin-left: 8px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Enhanced Health Check Card with Heartbeat -->
+            <div class="service-card">
+                <div class="service-icon orange heartbeat">
+                    <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                </div>
+                <h3 class="service-title">Health Check</h3>
+                <p class="service-description">Comprehensive health assessments and diagnostic services with AI analysis
+                </p>
+                <a href="{% url 'labtests_catalog' %}" class="service-link">
+                    Start Assessment
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        style="margin-left: 8px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Emergency Care Card -->
+            <div class="service-card">
+                <div class="service-icon red pulse-glow">
+                    <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                </div>
+                <h3 class="service-title">Emergency Care</h3>
+                <p class="service-description">24/7 urgent care services and emergency medical assistance</p>
+                <a href="{% url 'emergency_care' %}" class="service-link">
+                    Get Help Now
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        style="margin-left: 8px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Wellness Plans Card -->
+            <div class="service-card">
+                <div class="service-icon purple heartbeat">
+                    <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                </div>
+                <h3 class="service-title">Wellness Plans</h3>
+                <p class="service-description">Personalized health and wellness programs for optimal living</p>
+                <a href="{% url 'patient_profile' %}" class="service-link">
+                    View Plans
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        style="margin-left: 8px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Provider Network Card -->
+            <div class="service-card">
+                <div class="service-icon indigo stethoscope-swing">
+                    <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+                <h3 class="service-title">Provider Network</h3>
+                <p class="service-description">Connect with certified doctors, specialists, and healthcare facilities
+                </p>
+                <a href="{% url 'doctor_list' %}" class="service-link">
+                    Find Providers
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        style="margin-left: 8px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Shop by Category</h2>
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="card category-card h-100">
+                    <img src="https://res.cloudinary.com/dcfkxity4/image/upload/v1773341170/medicines_ggg6p0.png"
+                        class="card-img-top" alt="Medicines">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Medicines</h5>
+                        <a href="{% url 'medicines_list' %}" class="btn btn-sm btn-outline-primary">Shop Now</a>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4">
-                    <div class="p-4">
-                        <i class="fas fa-prescription fa-3x text-primary mb-3"></i>
-                        <h4>Upload Prescription</h4>
-                        <p class="text-muted">Easy prescription upload</p>
+            </div>
+            <!-- Repeat for other categories -->
+            <div class="col-md-3 mb-4">
+                <div class="card category-card h-100">
+                    <img src="https://res.cloudinary.com/dcfkxity4/image/upload/v1773341169/wellness_rktcrh.png"
+                        class="card-img-top" alt="Wellness">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Wellness</h5>
+                        <a href="{% url 'medicines_list' %}" class="btn btn-sm btn-outline-primary">Shop Now</a>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4">
-                    <div class="p-4">
-                        <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
-                        <h4>100% Safe</h4>
-                        <p class="text-muted">Authentic medicines</p>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card category-card h-100">
+                    <img src="https://res.cloudinary.com/dcfkxity4/image/upload/v1773341170/personal_care_pahfnz.png"
+                        class="card-img-top" alt="Personal Care">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Personal Care</h5>
+                        <a href="{% url 'medicines_list' %}" class="btn btn-sm btn-outline-primary">Shop Now</a>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4">
-                    <div class="p-4">
-                        <i class="fas fa-headset fa-3x text-primary mb-3"></i>
-                        <h4>24/7 Support</h4>
-                        <p class="text-muted">Dedicated customer care</p>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card category-card h-100">
+                    <img src="https://res.cloudinary.com/dcfkxity4/image/upload/v1773341170/health_devices_thflf7.png"
+                        class="card-img-top" alt="Health Devices">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Health Devices</h5>
+                        <a href="{% url 'medicines_list' %}" class="btn btn-sm btn-outline-primary">Shop Now</a>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-        <script>
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('hidden');
-        }
-
-    
-
-        // Intersection observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                    
-                    // Add staggered animation for service cards
-                    if (entry.target.classList.contains('service-card')) {
-                        entry.target.style.animationDelay = Math.random() * 0.5 + 's';
-                    }
-                }
-            });
-        }, observerOptions);
-
-        // Observe elements for animation
-        document.querySelectorAll('.service-card, .fade-in-up, .slide-in-left, .slide-in-right').forEach(element => {
-            element.style.opacity = '0';
-            element.style.transform = 'translateY(20px)';
-            element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-            observer.observe(element);
-        });
-
-        // Enhanced hover effects for service cards
-        document.querySelectorAll('.service-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-12px)';
-                this.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.2)';
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(-8px)';
-                this.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.15)';
-            });
-        });
-
-        // Dynamic background animation for hero section
-        let animationFrame;
-        const animateBackground = () => {
-            const gradientBg = document.querySelector('.hero');
-            if (gradientBg) {
-                const time = Date.now() * 0.002;
-                const x = Math.sin(time) * 50 + 50;
-                const y = Math.cos(time * 0.5) * 50 + 50;
-                gradientBg.style.backgroundPosition = `${x}% ${y}%`;
-            }
-            animationFrame = requestAnimationFrame(animateBackground);
-        };
-
-        // Start background animation
-        animateBackground();
-
-        // Cleanup animation on page unload
-        window.addEventListener('beforeunload', () => {
-            if (animationFrame) {
-                cancelAnimationFrame(animationFrame);
-            }
-        });
-    </script>
-
-
+    </div>
+</section>
+<!-- Conditions Section -->
+<section class="container my-5">
+    <h3 class="mb-4 fw-bold">Browse by Health Conditions</h3>
     <style>
-        /* ====== RESET & BASE STYLES ====== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* Uniform image container */
+        .health-icon {
+            width: 80px;
+            /* Fixed width */
+            height: 80px;
+            /* Fixed height */
+            margin: 0 auto 10px;
+            /* Center and spacing */
+            background-color: #f8f9fa;
+            /* Light background for transparent images */
+            border-radius: 12px;
+            /* Soft rounded corners */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            /* Prevents image from touching edges */
         }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background-color: #f8fafc;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        img {
+
+        .health-icon img {
             max-width: 100%;
+            max-height: 100%;
+            width: auto;
             height: auto;
-        }
-        
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .flex {
-            display: flex;
-        }
-        
-        .grid {
-            display: grid;
-        }
-        
-        .hidden {
-            display: none !important;
-        }
-        
-        .relative {
-            position: relative;
-        }
-        
-        .absolute {
-            position: absolute;
-        }
-        
-        .fixed {
-            position: fixed;
-        }
-        
-        .text-center {
-            text-align: center;
-        }
-        
-        .mx-auto {
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        /* ====== ANIMATIONS ====== */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotateY(0deg); }
-            50% { transform: translateY(-10px) rotateY(180deg); }
-        }
-        
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.3); }
-            50% { box-shadow: 0 0 30px rgba(74, 144, 226, 0.5); }
-        }
-        
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            14% { transform: scale(1.1); }
-            28% { transform: scale(1); }
-            42% { transform: scale(1.05); }
-            70% { transform: scale(1); }
-        }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        
-        @keyframes stethoscope-swing {
-            0%, 100% { transform: rotate(-5deg); }
-            50% { transform: rotate(5deg); }
-        }
-        
-        @keyframes wave {
-            0%, 100% { transform: translateX(0%); }
-            50% { transform: translateX(-25%); }
-        }
-        
-        @keyframes medical-pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        @keyframes backgroundShift {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 0%; }
-        }
-        
-        .floating-cross {
-            animation: float 4s ease-in-out infinite;
-        }
-        
-        .pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite;
-        }
-        
-        .heartbeat {
-            animation: heartbeat 2s ease-in-out infinite;
-        }
-        
-        .stethoscope-swing {
-            animation: stethoscope-swing 3s ease-in-out infinite;
-        }
-        
-        .fade-in-up {
-            animation: fadeInUp 0.8s ease-out;
-        }
-        
-        .slide-in-left {
-            animation: slideInLeft 0.8s ease-out;
-        }
-        
-        .slide-in-right {
-            animation: slideInRight 0.8s ease-out;
-        }
-        
-        /* ====== NAVIGATION ====== */
-        nav {
-            background-color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-        
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 64px;
-        }
-        
-        .logo-container {
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo {
-            width: 40px;
-            height: 40px;
-            background-color: #4A90E2;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-        
-        .logo-text {
-            margin-left: 12px;
-        }
-        
-        .logo-text h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1f2937;
-        }
-        
-        .logo-text p {
-            font-size: 0.75rem;
-            color: #6b7280;
-        }
-        
-        .nav-links {
-            display: none;
-        }
-        
-        @media (min-width: 768px) {
-            .nav-links {
-                display: flex;
-                align-items: center;
-                gap: 32px;
-            }
-        }
-        
-        .nav-link {
-            color: #6b7280;
-            font-size: 0.875rem;
-            padding: 8px 12px;
-            border-radius: 4px;
-            transition: color 0.3s ease;
-        }
-        
-        .nav-link:hover {
-            color: #4A90E2;
-        }
-        
-        .nav-link.active {
-            color: #4A90E2;
-            font-weight: 600;
-        }
-        
-        .mobile-menu-btn {
+            object-fit: contain;
+            /* Keeps original aspect ratio */
             display: block;
-            background: none;
-            border: none;
-            color: #6b7280;
-            cursor: pointer;
         }
-        
-        @media (min-width: 768px) {
-            .mobile-menu-btn {
-                display: none;
-            }
-        }
-        
-        .mobile-menu {
-            background-color: white;
-            border-top: 1px solid #e5e7eb;
-        }
-        
-        .mobile-menu-content {
-            padding: 12px 20px;
-        }
-        
-        .mobile-link {
-            display: block;
-            padding: 12px;
-            color: #6b7280;
-            border-radius: 4px;
-            margin-bottom: 4px;
-        }
-        
-        .mobile-link:hover, .mobile-link.active {
-            color: #4A90E2;
-            background-color: #f0f7ff;
-        }
-        
-        /* ====== HERO SECTION ====== */
-        .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 80px 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        @media (min-width: 768px) {
-            .hero {
-                padding: 120px 20px;
-            }
-        }
-        
-        .floating-elements {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-        }
-        
-        .floating-element {
-            position: absolute;
-            opacity: 0.3;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        .floating-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-        .floating-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
-        .floating-element:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
-        .floating-element:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 1s; }
-        
-        .hero-content {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-        }
-        
-        .medical-cross {
-            width: 112px;
-            height: 112px;
-            margin: 0 auto 32px;
-            color: white;
-        }
-        
-        .hero-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 24px;
-        }
-        
-        @media (min-width: 768px) {
-            .hero-title {
-                font-size: 4.5rem;
-            }
-        }
-        
-        .hero-title span {
-            color: #fbbf24;
-        }
-        
-        .hero-description {
-            font-size: 1.125rem;
-            color: white;
-            max-width: 800px;
-            margin: 0 auto 32px;
-            opacity: 0.9;
-        }
-        
-        @media (min-width: 768px) {
-            .hero-description {
-                font-size: 1.5rem;
-            }
-        }
-        
-        .hero-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        @media (min-width: 640px) {
-            .hero-buttons {
-                flex-direction: row;
-            }
-        }
-        
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 20px 40px;
-            font-size: 1.125rem;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-        }
-        
-        .btn:hover {
-            transform: scale(1.05);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-        }
-        
-        .heartrate-line {
-            height: 2px;
-            width: 100%;
-            max-width: 384px;
-            margin: 64px auto 0;
-            background: linear-gradient(90deg, transparent 0%, #ff6b6b 50%, transparent 100%);
-            animation: wave 2s linear infinite;
-            opacity: 0.6;
-        }
-        
-        /* ====== STATS SECTION ====== */
-        .stats {
-            background-color: white;
-            padding: 64px 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 32px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        @media (min-width: 768px) {
-            .stats-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        
-        .stats-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 24px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-        
-        .stats-card:hover {
-            transform: scale(1.05);
-        }
-        
-        .stats-number {
-            font-size: 2.25rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        
-        .stats-text {
-            color: #6b7280;
-        }
-        
-        /* ====== SERVICES SECTION ====== */
-        .services {
-            background-color: #f9fafb;
-            padding: 80px 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .medical-icons-bg {
-            position: absolute;
-            inset: 0;
-        }
-        
-        .services-header {
-            text-align: center;
-            margin-bottom: 64px;
-        }
-        
-        .section-title {
-            font-size: 2.25rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 16px;
-        }
-        
-        @media (min-width: 768px) {
-            .section-title {
-                font-size: 3rem;
-            }
-        }
-        
-        .section-subtitle {
-            font-size: 1.125rem;
-            color: #6b7280;
-            max-width: 768px;
-            margin: 0 auto;
-        }
-        
-        .services-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 32px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        @media (min-width: 768px) {
-            .services-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        @media (min-width: 1024px) {
-            .services-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        
-        .service-card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 32px;
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .service-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .service-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-        }
-        
-        .service-icon.blue {
-            background-color: #dbeafe;
-            color: #3b82f6;
-        }
-        
-        .service-icon.green {
-            background-color: #d1fae5;
-            color: #10b981;
-        }
-        
-        .service-icon.orange {
-            background-color: #fed7aa;
-            color: #f97316;
-        }
-        
-        .service-icon.red {
-            background-color: #fee2e2;
-            color: #ef4444;
-        }
-        
-        .service-icon.purple {
-            background-color: #e9d5ff;
-            color: #8b5cf6;
-        }
-        
-        .service-icon.indigo {
-            background-color: #e0e7ff;
-            color: #6366f1;
-        }
-        
-        .service-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 12px;
-        }
-        
-        .service-description {
-            color: #6b7280;
-            margin-bottom: 24px;
-        }
-        
-        .service-link {
-            display: inline-flex;
-            align-items: center;
-            color: #3b82f6;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-        
-        .service-link:hover {
-            color: #1d4ed8;
-            transform: scale(1.05);
-        }
-        
-        /* ====== AI FEATURES SECTION ====== */
-        .ai-features {
-            background: linear-gradient(to right, #3b82f6, #8b5cf6);
-            color: white;
-            padding: 80px 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .ai-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 32px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        @media (min-width: 768px) {
-            .ai-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        
-        .ai-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 24px;
-            text-align: center;
-        }
-        
-        .ai-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 16px;
-            color: #fbbf24;
-        }
-        
-        .ai-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-        
-        .ai-description {
-            opacity: 0.9;
-        }
-        
-        /* ====== TRUST SECTION ====== */
-        .trust {
-            background-color: #f9fafb;
-            padding: 64px 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .trust-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 32px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        @media (min-width: 768px) {
-            .trust-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        
-        .trust-card {
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-        
-        .trust-card:hover {
-            transform: scale(1.05);
-        }
-        
-        .trust-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-        }
-        
-        .trust-icon.blue {
-            background-color: #dbeafe;
-            color: #3b82f6;
-        }
-        
-        .trust-icon.green {
-            background-color: #d1fae5;
-            color: #10b981;
-        }
-        
-        .trust-icon.yellow {
-            background-color: #fef3c7;
-            color: #d97706;
-        }
-        
-        .trust-icon.purple {
-            background-color: #e9d5ff;
-            color: #8b5cf6;
-        }
-        
-        .trust-title {
-            font-weight: 600;
-            color: #1f2937;
-        }
-        
-        /* ====== FOOTER ====== */
-        footer {
-            background-color: #111827;
-            color: white;
-            padding: 48px 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 32px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        @media (min-width: 768px) {
-            .footer-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        
-        .footer-company {
-            flex: 2;
-        }
-        
-        .footer-description {
-            color: #d1d5db;
-            margin-bottom: 24px;
-            max-width: 400px;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 16px;
-        }
-        
-        .social-link {
-            color: #9ca3af;
-            transition: color 0.3s ease, transform 0.3s ease;
-        }
-        
-        .social-link:hover {
-            color: white;
-            transform: scale(1.1);
-        }
-        
-        .footer-heading {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-        
-        .footer-links {
-            list-style: none;
-        }
-        
-        .footer-link {
-            color: #d1d5db;
-            margin-bottom: 8px;
-            transition: color 0.3s ease, transform 0.3s ease;
-            display: inline-block;
-        }
-        
-        .footer-link:hover {
-            color: white;
-            transform: translateX(4px);
-        }
-        
-        .contact-info {
-            list-style: none;
-        }
-        
-        .contact-item {
-            color: #d1d5db;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .contact-icon {
-            margin-right: 8px;
-        }
-        
-        .footer-bottom {
-            border-top: 1px solid #374151;
-            margin-top: 48px;
-            padding-top: 32px;
-            text-align: center;
-            color: #9ca3af;
-        }
-        
-        /* ====== EMERGENCY BUTTON ====== */
-        .emergency-btn {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 56px;
-            height: 56px;
-            background-color: #ef4444;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-            transition: all 0.3s ease;
-            z-index: 100;
-        }
-        
-        .emergency-btn:hover {
-            transform: scale(1.1);
-            background-color: #dc2626;
-        }
-        
-        /* ====== UTILITY CLASSES ====== */
-        .mb-2 { margin-bottom: 8px; }
-        .mb-3 { margin-bottom: 12px; }
-        .mb-4 { margin-bottom: 16px; }
-        .mb-6 { margin-bottom: 24px; }
-        .mb-8 { margin-bottom: 32px; }
-        .mt-6 { margin-top: 24px; }
-        .mt-8 { margin-top: 32px; }
-        .mt-16 { margin-top: 64px; }
-        
-        .opacity-90 { opacity: 0.9; }
-        .opacity-10 { opacity: 0.1; }
-        
-        .transform { transform: translateZ(0); }
-        .hover\:scale-105:hover { transform: scale(1.05); }
-        
-        .transition-all { transition: all 0.3s ease; }
-        .transition-colors { transition: color 0.3s ease; }
-        
-        .duration-300 { transition-duration: 0.3s; }
-        
-        .z-10 { z-index: 10; }
-        .z-50 { z-index: 50; }
-        
-        /* ====== RESPONSIVE ADJUSTMENTS ====== */
-        @media (max-width: 640px) {
-            .hero-title {
-                font-size: 2rem;
-            }
-            
-            .section-title {
-                font-size: 1.875rem;
-            }
-            
-            .btn {
-                padding: 16px 32px;
-                width: 100%;
-                max-width: 300px;
-            }
+
+        /* Optional: card hover effect */
+        .border.rounded.p-3 {
+            transition: box-shadow 0.2s ease;
+        }
+
+        .border.rounded.p-3:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
     </style>
+
+    <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3">
+        <!-- Card Item -->
+        <div class="col">
+            <div class="border rounded p-3 text-center">
+                <div class="health-icon">
+                    <img src="https://res.cloudinary.com/dcfkxity4/image/upload/v1773339528/diabetes_lmlceo.png"
+                        alt="Diabetes Care">
+                </div>
+                <div>Diabetes Care</div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="border rounded p-3 text-center">
+                <div class="health-icon">
+                    <img src="https://res.cloudinary.com/dcfkxity4/image/upload/v1773339527/cardiac_upx3u2.avif"
+                        alt="Cardiac Care">
+                </div>
+                <div>Cardiac Care</div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="border rounded p-3 text-center">
+                <div class="health-icon">
+                    <img src="https://res.cloudinary.com/dcfkxity4/image/upload/v1773339526/stomach_ak3bp2.webp"
+                        alt="Stomach Care">
+                </div>
+                <div>Stomach Care</div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="border rounded p-3 text-center">
+                <div class="health-icon">
+                    <img src="https://res.cloudinary.com/dcfkxity4/image/upload/v1773339528/pain_culygf.png"
+                        alt="Pain Relief">
+                </div>
+                <div>Pain Relief</div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="border rounded p-3 text-center">
+                <div class="health-icon">
+                    <img src="https://res.cloudinary.com/dcfkxity4/image/upload/v1773339526/liver_wtmjnt.jpg"
+                        alt="Liver Care">
+                </div>
+                <div>Liver Care</div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="border rounded p-3 text-center">
+                <div class="health-icon">
+                    <img src="https://res.cloudinary.com/dcfkxity4/image/upload/v1773339526/oral_nckmnt.jpg"
+                        alt="Oral Care">
+                </div>
+                <div>Oral Care</div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="border rounded p-3 text-center">
+                <div class="health-icon">
+                    <img src="https://res.cloudinary.com/dcfkxity4/image/upload/v1773339526/respiratory_oqelkc.webp"
+                        alt="Respiratory">
+                </div>
+                <div>Respiratory</div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="border rounded p-3 text-center">
+                <div class="health-icon">
+                    <img src="https://res.cloudinary.com/dcfkxity4/image/upload/v1773339526/sexual_pgkdb5.webp"
+                        alt="Sexual Health">
+                </div>
+                <div>Sexual Health</div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="border rounded p-3 text-center">
+                <div class="health-icon">
+                    <img src="https://res.cloudinary.com/dcfkxity4/image/upload/v1773339529/elderly_fyhvyp.png"
+                        alt="Elderly Care">
+                </div>
+                <div>Elderly Care</div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="border rounded p-3 text-center">
+                <div class="health-icon">
+                    <img src="https://res.cloudinary.com/dcfkxity4/image/upload/v1773339527/cold_ebihvl.png"
+                        alt="Cold & Immunity">
+                </div>
+                <div>Cold & Immunity</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Doctor Consultation Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Consult Top Doctors Online</h2>
+        <div class="row">
+            {% for doctor in doctors %}
+            <div class="col-md-3 mb-4">
+                <div class="card doctor-card h-100">
+<img src="{% if doctor.profile_picture %}{{ doctor.profile_picture.0 }}{% else %}https://res.cloudinary.com/dcfkxity4/image/upload/v1773421653/default-doctor_jipok6.jpg{% endif %}" alt="Dr. {{ doctor.doctor_name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">Dr. {{ doctor.doctor_name }}</h5>
+                        <p class="text-muted">{{ doctor.specialization|default:"General" }}</p>
+                        <!-- Availability indicator -->
+                        <p class="card-text">
+                            {% if doctor.is_available_today %}
+                            <i class="fas fa-calendar-check text-success"></i> Available Today
+                            {% else %}
+                            <i class="fas fa-calendar-times text-danger"></i> Not Available Today
+                            {% endif %}
+                        </p>
+                        <a href="{% url 'appointment_book' %}?doctor_id={{ doctor.id }}" class="btn btn-primary w-100">Book Appointment</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center">No doctors available at the moment.</p>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'doctor_list' %}" class="btn btn-outline-primary">View All Doctors</a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 mb-4">
+                <div class="p-4">
+                    <i class="fas fa-truck fa-3x text-primary mb-3"></i>
+                    <h4>Free Delivery</h4>
+                    <p class="text-muted">On orders above ₹500</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="p-4">
+                    <i class="fas fa-prescription fa-3x text-primary mb-3"></i>
+                    <h4>Upload Prescription</h4>
+                    <p class="text-muted">Easy prescription upload</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="p-4">
+                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                    <h4>100% Safe</h4>
+                    <p class="text-muted">Authentic medicines</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="p-4">
+                    <i class="fas fa-headset fa-3x text-primary mb-3"></i>
+                    <h4>24/7 Support</h4>
+                    <p class="text-muted">Dedicated customer care</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenu.classList.toggle('hidden');
+    }
+
+
+
+    // Intersection observer for animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+
+                // Add staggered animation for service cards
+                if (entry.target.classList.contains('service-card')) {
+                    entry.target.style.animationDelay = Math.random() * 0.5 + 's';
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Observe elements for animation
+    document.querySelectorAll('.service-card, .fade-in-up, .slide-in-left, .slide-in-right').forEach(element => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        observer.observe(element);
+    });
+
+    // Enhanced hover effects for service cards
+    document.querySelectorAll('.service-card').forEach(card => {
+        card.addEventListener('mouseenter', function () {
+            this.style.transform = 'translateY(-12px)';
+            this.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.2)';
+        });
+
+        card.addEventListener('mouseleave', function () {
+            this.style.transform = 'translateY(-8px)';
+            this.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.15)';
+        });
+    });
+
+    // Dynamic background animation for hero section
+    let animationFrame;
+    const animateBackground = () => {
+        const gradientBg = document.querySelector('.hero');
+        if (gradientBg) {
+            const time = Date.now() * 0.002;
+            const x = Math.sin(time) * 50 + 50;
+            const y = Math.cos(time * 0.5) * 50 + 50;
+            gradientBg.style.backgroundPosition = `${x}% ${y}%`;
+        }
+        animationFrame = requestAnimationFrame(animateBackground);
+    };
+
+    // Start background animation
+    animateBackground();
+
+    // Cleanup animation on page unload
+    window.addEventListener('beforeunload', () => {
+        if (animationFrame) {
+            cancelAnimationFrame(animationFrame);
+        }
+    });
+</script>
+
+
+<style>
+    /* ====== RESET & BASE STYLES ====== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        background-color: #f8fafc;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    .grid {
+        display: grid;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .relative {
+        position: relative;
+    }
+
+    .absolute {
+        position: absolute;
+    }
+
+    .fixed {
+        position: fixed;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .mx-auto {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* ====== ANIMATIONS ====== */
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0px) rotateY(0deg);
+        }
+
+        50% {
+            transform: translateY(-10px) rotateY(180deg);
+        }
+    }
+
+    @keyframes pulse-glow {
+
+        0%,
+        100% {
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+        }
+
+        50% {
+            box-shadow: 0 0 30px rgba(74, 144, 226, 0.5);
+        }
+    }
+
+    @keyframes heartbeat {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        14% {
+            transform: scale(1.1);
+        }
+
+        28% {
+            transform: scale(1);
+        }
+
+        42% {
+            transform: scale(1.05);
+        }
+
+        70% {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes stethoscope-swing {
+
+        0%,
+        100% {
+            transform: rotate(-5deg);
+        }
+
+        50% {
+            transform: rotate(5deg);
+        }
+    }
+
+    @keyframes wave {
+
+        0%,
+        100% {
+            transform: translateX(0%);
+        }
+
+        50% {
+            transform: translateX(-25%);
+        }
+    }
+
+    @keyframes medical-pulse {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.7;
+        }
+    }
+
+    @keyframes backgroundShift {
+        0% {
+            background-position: 0% 0%;
+        }
+
+        50% {
+            background-position: 100% 100%;
+        }
+
+        100% {
+            background-position: 0% 0%;
+        }
+    }
+
+    .floating-cross {
+        animation: float 4s ease-in-out infinite;
+    }
+
+    .pulse-glow {
+        animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    .heartbeat {
+        animation: heartbeat 2s ease-in-out infinite;
+    }
+
+    .stethoscope-swing {
+        animation: stethoscope-swing 3s ease-in-out infinite;
+    }
+
+    .fade-in-up {
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .slide-in-left {
+        animation: slideInLeft 0.8s ease-out;
+    }
+
+    .slide-in-right {
+        animation: slideInRight 0.8s ease-out;
+    }
+
+    /* ====== NAVIGATION ====== */
+    nav {
+        background-color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+    }
+
+    .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .nav-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 64px;
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo {
+        width: 40px;
+        height: 40px;
+        background-color: #4A90E2;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    .logo-text {
+        margin-left: 12px;
+    }
+
+    .logo-text h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+    }
+
+    .logo-text p {
+        font-size: 0.75rem;
+        color: #6b7280;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    @media (min-width: 768px) {
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+    }
+
+    .nav-link {
+        color: #6b7280;
+        font-size: 0.875rem;
+        padding: 8px 12px;
+        border-radius: 4px;
+        transition: color 0.3s ease;
+    }
+
+    .nav-link:hover {
+        color: #4A90E2;
+    }
+
+    .nav-link.active {
+        color: #4A90E2;
+        font-weight: 600;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+        background: none;
+        border: none;
+        color: #6b7280;
+        cursor: pointer;
+    }
+
+    @media (min-width: 768px) {
+        .mobile-menu-btn {
+            display: none;
+        }
+    }
+
+    .mobile-menu {
+        background-color: white;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .mobile-menu-content {
+        padding: 12px 20px;
+    }
+
+    .mobile-link {
+        display: block;
+        padding: 12px;
+        color: #6b7280;
+        border-radius: 4px;
+        margin-bottom: 4px;
+    }
+
+    .mobile-link:hover,
+    .mobile-link.active {
+        color: #4A90E2;
+        background-color: #f0f7ff;
+    }
+
+    /* ====== HERO SECTION ====== */
+    .hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 80px 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+        .hero {
+            padding: 120px 20px;
+        }
+    }
+
+    .floating-elements {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+    }
+
+    .floating-element {
+        position: absolute;
+        opacity: 0.3;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .floating-element:nth-child(1) {
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .floating-element:nth-child(2) {
+        top: 20%;
+        right: 15%;
+        animation-delay: 2s;
+    }
+
+    .floating-element:nth-child(3) {
+        bottom: 30%;
+        left: 20%;
+        animation-delay: 4s;
+    }
+
+    .floating-element:nth-child(4) {
+        bottom: 10%;
+        right: 10%;
+        animation-delay: 1s;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+    }
+
+    .medical-cross {
+        width: 112px;
+        height: 112px;
+        margin: 0 auto 32px;
+        color: white;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 24px;
+    }
+
+    @media (min-width: 768px) {
+        .hero-title {
+            font-size: 4.5rem;
+        }
+    }
+
+    .hero-title span {
+        color: #fbbf24;
+    }
+
+    .hero-description {
+        font-size: 1.125rem;
+        color: white;
+        max-width: 800px;
+        margin: 0 auto 32px;
+        opacity: 0.9;
+    }
+
+    @media (min-width: 768px) {
+        .hero-description {
+            font-size: 1.5rem;
+        }
+    }
+
+    .hero-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    @media (min-width: 640px) {
+        .hero-buttons {
+            flex-direction: row;
+        }
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 20px 40px;
+        font-size: 1.125rem;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: none;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+
+    .heartrate-line {
+        height: 2px;
+        width: 100%;
+        max-width: 384px;
+        margin: 64px auto 0;
+        background: linear-gradient(90deg, transparent 0%, #ff6b6b 50%, transparent 100%);
+        animation: wave 2s linear infinite;
+        opacity: 0.6;
+    }
+
+    /* ====== STATS SECTION ====== */
+    .stats {
+        background-color: white;
+        padding: 64px 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+        .stats-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    .stats-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .stats-card:hover {
+        transform: scale(1.05);
+    }
+
+    .stats-number {
+        font-size: 2.25rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .stats-text {
+        color: #6b7280;
+    }
+
+    /* ====== SERVICES SECTION ====== */
+    .services {
+        background-color: #f9fafb;
+        padding: 80px 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .medical-icons-bg {
+        position: absolute;
+        inset: 0;
+    }
+
+    .services-header {
+        text-align: center;
+        margin-bottom: 64px;
+    }
+
+    .section-title {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 16px;
+    }
+
+    @media (min-width: 768px) {
+        .section-title {
+            font-size: 3rem;
+        }
+    }
+
+    .section-subtitle {
+        font-size: 1.125rem;
+        color: #6b7280;
+        max-width: 768px;
+        margin: 0 auto;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+        .services-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .services-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    .service-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 32px;
+        text-align: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .service-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .service-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+    }
+
+    .service-icon.blue {
+        background-color: #dbeafe;
+        color: #3b82f6;
+    }
+
+    .service-icon.green {
+        background-color: #d1fae5;
+        color: #10b981;
+    }
+
+    .service-icon.orange {
+        background-color: #fed7aa;
+        color: #f97316;
+    }
+
+    .service-icon.red {
+        background-color: #fee2e2;
+        color: #ef4444;
+    }
+
+    .service-icon.purple {
+        background-color: #e9d5ff;
+        color: #8b5cf6;
+    }
+
+    .service-icon.indigo {
+        background-color: #e0e7ff;
+        color: #6366f1;
+    }
+
+    .service-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 12px;
+    }
+
+    .service-description {
+        color: #6b7280;
+        margin-bottom: 24px;
+    }
+
+    .service-link {
+        display: inline-flex;
+        align-items: center;
+        color: #3b82f6;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .service-link:hover {
+        color: #1d4ed8;
+        transform: scale(1.05);
+    }
+
+    /* ====== AI FEATURES SECTION ====== */
+    .ai-features {
+        background: linear-gradient(to right, #3b82f6, #8b5cf6);
+        color: white;
+        padding: 80px 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ai-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+        .ai-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    .ai-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+    }
+
+    .ai-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 16px;
+        color: #fbbf24;
+    }
+
+    .ai-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+
+    .ai-description {
+        opacity: 0.9;
+    }
+
+    /* ====== TRUST SECTION ====== */
+    .trust {
+        background-color: #f9fafb;
+        padding: 64px 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .trust-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+        .trust-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    .trust-card {
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .trust-card:hover {
+        transform: scale(1.05);
+    }
+
+    .trust-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+    }
+
+    .trust-icon.blue {
+        background-color: #dbeafe;
+        color: #3b82f6;
+    }
+
+    .trust-icon.green {
+        background-color: #d1fae5;
+        color: #10b981;
+    }
+
+    .trust-icon.yellow {
+        background-color: #fef3c7;
+        color: #d97706;
+    }
+
+    .trust-icon.purple {
+        background-color: #e9d5ff;
+        color: #8b5cf6;
+    }
+
+    .trust-title {
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    /* ====== FOOTER ====== */
+    footer {
+        background-color: #111827;
+        color: white;
+        padding: 48px 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+        .footer-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    .footer-logo {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .footer-company {
+        flex: 2;
+    }
+
+    .footer-description {
+        color: #d1d5db;
+        margin-bottom: 24px;
+        max-width: 400px;
+    }
+
+    .social-links {
+        display: flex;
+        gap: 16px;
+    }
+
+    .social-link {
+        color: #9ca3af;
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .social-link:hover {
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .footer-heading {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+
+    .footer-links {
+        list-style: none;
+    }
+
+    .footer-link {
+        color: #d1d5db;
+        margin-bottom: 8px;
+        transition: color 0.3s ease, transform 0.3s ease;
+        display: inline-block;
+    }
+
+    .footer-link:hover {
+        color: white;
+        transform: translateX(4px);
+    }
+
+    .contact-info {
+        list-style: none;
+    }
+
+    .contact-item {
+        color: #d1d5db;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+    }
+
+    .contact-icon {
+        margin-right: 8px;
+    }
+
+    .footer-bottom {
+        border-top: 1px solid #374151;
+        margin-top: 48px;
+        padding-top: 32px;
+        text-align: center;
+        color: #9ca3af;
+    }
+
+    /* ====== EMERGENCY BUTTON ====== */
+    .emergency-btn {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: 56px;
+        height: 56px;
+        background-color: #ef4444;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        transition: all 0.3s ease;
+        z-index: 100;
+    }
+
+    .emergency-btn:hover {
+        transform: scale(1.1);
+        background-color: #dc2626;
+    }
+
+    /* ====== UTILITY CLASSES ====== */
+    .mb-2 {
+        margin-bottom: 8px;
+    }
+
+    .mb-3 {
+        margin-bottom: 12px;
+    }
+
+    .mb-4 {
+        margin-bottom: 16px;
+    }
+
+    .mb-6 {
+        margin-bottom: 24px;
+    }
+
+    .mb-8 {
+        margin-bottom: 32px;
+    }
+
+    .mt-6 {
+        margin-top: 24px;
+    }
+
+    .mt-8 {
+        margin-top: 32px;
+    }
+
+    .mt-16 {
+        margin-top: 64px;
+    }
+
+    .opacity-90 {
+        opacity: 0.9;
+    }
+
+    .opacity-10 {
+        opacity: 0.1;
+    }
+
+    .transform {
+        transform: translateZ(0);
+    }
+
+    .hover\:scale-105:hover {
+        transform: scale(1.05);
+    }
+
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+
+    .transition-colors {
+        transition: color 0.3s ease;
+    }
+
+    .duration-300 {
+        transition-duration: 0.3s;
+    }
+
+    .z-10 {
+        z-index: 10;
+    }
+
+    .z-50 {
+        z-index: 50;
+    }
+
+    /* ====== RESPONSIVE ADJUSTMENTS ====== */
+    @media (max-width: 640px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.875rem;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            width: 100%;
+            max-width: 300px;
+        }
+    }
+</style>
 
 {% endblock content %}

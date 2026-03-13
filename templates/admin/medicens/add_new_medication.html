@@ -485,6 +485,219 @@
   </div>
 </div>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Activate Medicines menu item in sidebar
+    const medicineMenu = document.querySelector('a[href="{% url 'medicine_list' %}"]');
+    if (medicineMenu) {
+      medicineMenu.closest('.sidebar-dropdown')?.classList.add('open');
+      medicineMenu.classList.add('active');
+    }
+
+    // Floating labels initialization
+    function initFloatingLabels() {
+      document.querySelectorAll('.floating-input, .floating-textarea').forEach(input => {
+        input.setAttribute('placeholder', ' ');
+        const label = input.nextElementSibling;
+        if (label?.classList.contains('floating-label-text')) {
+          if (input.value.trim()) label.classList.add('active');
+          input.addEventListener('input', function() {
+            if (this.value.trim()) label.classList.add('active');
+            else label.classList.remove('active');
+          });
+        }
+      });
+    }
+    initFloatingLabels();
+
+    // ===== IMAGE UPLOAD (Simplified, reliable) =====
+    const uploadArea = document.getElementById('imageUploadArea');
+    const fileInput = document.getElementById('medicine_images');
+    const preview = document.getElementById('imagePreview');
+    let currentFiles = []; // store File objects for preview and removal
+
+    // Open file picker
+    uploadArea.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'BUTTON') fileInput.click();
+    });
+    uploadArea.querySelector('button')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fileInput.click();
+    });
+
+    // Handle file selection
+    fileInput.addEventListener('change', function() {
+      const newFiles = Array.from(this.files);
+      currentFiles = [...currentFiles, ...newFiles];
+      updateFileInputAndPreview();
+    });
+
+    // Drag & drop
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('drag-over');
+    });
+    uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('drag-over');
+      if (e.dataTransfer.files.length) {
+        const dropped = Array.from(e.dataTransfer.files);
+        currentFiles = [...currentFiles, ...dropped];
+        updateFileInputAndPreview();
+      }
+    });
+
+    // Update file input and preview
+    function updateFileInputAndPreview() {
+      // Update file input (DataTransfer)
+      const dt = new DataTransfer();
+      currentFiles.forEach(f => dt.items.add(f));
+      fileInput.files = dt.files;
+
+      // Render preview
+      preview.innerHTML = '';
+      currentFiles.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const item = document.createElement('div');
+          item.className = 'image-preview-item';
+          item.innerHTML = `
+            <img src="${e.target.result}" alt="Preview">
+            <button type="button" class="remove-btn" data-index="${index}"><i class="fas fa-times"></i></button>
+          `;
+          preview.appendChild(item);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Remove image from preview
+    preview.addEventListener('click', (e) => {
+      const btn = e.target.closest('.remove-btn');
+      if (btn) {
+        const index = parseInt(btn.dataset.index);
+        currentFiles.splice(index, 1);
+        updateFileInputAndPreview();
+      }
+    });
+
+    // ===== DYNAMIC FIELDS (Benefits, Notes, Dose, Steps) =====
+    function addField(containerId, html) {
+      const container = document.getElementById(containerId);
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      container.appendChild(div.firstElementChild);
+    }
+
+    // Remove field (delegation)
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.remove-field')) {
+        e.target.closest('.input-group, .row.g-2')?.remove();
+      }
+    });
+
+    document.getElementById('addKeyBenefit')?.addEventListener('click', () => {
+      addField('keyBenefitsContainer', `
+        <div class="input-group mb-2">
+          <input type="text" name="key_benefits[]" class="form-control" placeholder="e.g., Reduces fever">
+          <button type="button" class="btn btn-outline-danger remove-field"><i class="fas fa-times"></i></button>
+        </div>
+      `);
+    });
+
+    document.getElementById('addImportantNote')?.addEventListener('click', () => {
+      addField('importantNotesContainer', `
+        <div class="input-group mb-2">
+          <input type="text" name="important_notes[]" class="form-control" placeholder="e.g., Do not exceed recommended dose">
+          <button type="button" class="btn btn-outline-danger remove-field"><i class="fas fa-times"></i></button>
+        </div>
+      `);
+    });
+
+    document.getElementById('addDose')?.addEventListener('click', () => {
+      addField('recommendedDoseContainer', `
+        <div class="row g-2 mb-2">
+          <div class="col-5">
+            <input type="text" name="dose_label[]" class="form-control" placeholder="Label (e.g., Adults)">
+          </div>
+          <div class="col-6">
+            <input type="text" name="dose_value[]" class="form-control" placeholder="Value (e.g., 1 tablet twice daily)">
+          </div>
+          <div class="col-1">
+            <button type="button" class="btn btn-outline-danger remove-field w-100"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+      `);
+    });
+
+    document.getElementById('addHowToTake')?.addEventListener('click', () => {
+      addField('howToTakeContainer', `
+        <div class="input-group mb-2">
+          <input type="text" name="how_to_take[]" class="form-control" placeholder="e.g., Take with food">
+          <button type="button" class="btn btn-outline-danger remove-field"><i class="fas fa-times"></i></button>
+        </div>
+      `);
+    });
+
+    // ===== FORM VALIDATION =====
+    const form = document.getElementById('addProductForm');
+    form.addEventListener('submit', function(e) {
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        e.stopPropagation();
+        form.classList.add('was-validated');
+        const firstInvalid = form.querySelector('.is-invalid, :invalid');
+        if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+
+    // Live validation feedback
+    form.querySelectorAll('input, select, textarea').forEach(field => {
+      field.addEventListener('blur', () => {
+        if (field.hasAttribute('required') && !field.value.trim()) {
+          field.classList.add('is-invalid');
+        } else {
+          field.classList.remove('is-invalid');
+        }
+      });
+    });
+
+    // ===== RESET FORM =====
+    document.getElementById('resetForm')?.addEventListener('click', function() {
+      if (confirm('Are you sure you want to reset the form? All entered data will be lost.')) {
+        form.reset();
+        form.classList.remove('was-validated');
+        currentFiles = [];
+        preview.innerHTML = '';
+        fileInput.value = '';
+        initFloatingLabels();
+        showNotification('Form has been reset', 'info');
+      }
+    });
+
+    // Simple notification
+    function showNotification(message, type = 'info') {
+      const notif = document.createElement('div');
+      notif.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
+      notif.style.zIndex = 9999;
+      notif.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 4000);
+    }
+
+    // Small animation on focus
+    form.querySelectorAll('.floating-input, .floating-textarea').forEach(ctrl => {
+      ctrl.addEventListener('focus', () => ctrl.parentElement.style.transform = 'translateY(-2px)');
+      ctrl.addEventListener('blur', () => ctrl.parentElement.style.transform = 'translateY(0)');
+    });
+  });
+</script>
+
+
 <style>
   /* ===== GLOBAL STYLES ===== */
   .medical-card {
@@ -765,215 +978,5 @@
   }
 </style>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Activate Medicines menu item in sidebar
-    const medicineMenu = document.querySelector('a[href="{% url 'medicine_list' %}"]');
-    if (medicineMenu) {
-      medicineMenu.closest('.sidebar-dropdown')?.classList.add('open');
-      medicineMenu.classList.add('active');
-    }
 
-    // Floating labels initialization
-    function initFloatingLabels() {
-      document.querySelectorAll('.floating-input, .floating-textarea').forEach(input => {
-        input.setAttribute('placeholder', ' ');
-        const label = input.nextElementSibling;
-        if (label?.classList.contains('floating-label-text')) {
-          if (input.value.trim()) label.classList.add('active');
-          input.addEventListener('input', function() {
-            if (this.value.trim()) label.classList.add('active');
-            else label.classList.remove('active');
-          });
-        }
-      });
-    }
-    initFloatingLabels();
-
-    // ===== IMAGE UPLOAD (Simplified, reliable) =====
-    const uploadArea = document.getElementById('imageUploadArea');
-    const fileInput = document.getElementById('medicine_images');
-    const preview = document.getElementById('imagePreview');
-    let currentFiles = []; // store File objects for preview and removal
-
-    // Open file picker
-    uploadArea.addEventListener('click', (e) => {
-      if (e.target.tagName !== 'BUTTON') fileInput.click();
-    });
-    uploadArea.querySelector('button')?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      fileInput.click();
-    });
-
-    // Handle file selection
-    fileInput.addEventListener('change', function() {
-      const newFiles = Array.from(this.files);
-      currentFiles = [...currentFiles, ...newFiles];
-      updateFileInputAndPreview();
-    });
-
-    // Drag & drop
-    uploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadArea.classList.add('drag-over');
-    });
-    uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
-    uploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadArea.classList.remove('drag-over');
-      if (e.dataTransfer.files.length) {
-        const dropped = Array.from(e.dataTransfer.files);
-        currentFiles = [...currentFiles, ...dropped];
-        updateFileInputAndPreview();
-      }
-    });
-
-    // Update file input and preview
-    function updateFileInputAndPreview() {
-      // Update file input (DataTransfer)
-      const dt = new DataTransfer();
-      currentFiles.forEach(f => dt.items.add(f));
-      fileInput.files = dt.files;
-
-      // Render preview
-      preview.innerHTML = '';
-      currentFiles.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const item = document.createElement('div');
-          item.className = 'image-preview-item';
-          item.innerHTML = `
-            <img src="${e.target.result}" alt="Preview">
-            <button type="button" class="remove-btn" data-index="${index}"><i class="fas fa-times"></i></button>
-          `;
-          preview.appendChild(item);
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // Remove image from preview
-    preview.addEventListener('click', (e) => {
-      const btn = e.target.closest('.remove-btn');
-      if (btn) {
-        const index = parseInt(btn.dataset.index);
-        currentFiles.splice(index, 1);
-        updateFileInputAndPreview();
-      }
-    });
-
-    // ===== DYNAMIC FIELDS (Benefits, Notes, Dose, Steps) =====
-    function addField(containerId, html) {
-      const container = document.getElementById(containerId);
-      const div = document.createElement('div');
-      div.innerHTML = html;
-      container.appendChild(div.firstElementChild);
-    }
-
-    // Remove field (delegation)
-    document.addEventListener('click', function(e) {
-      if (e.target.closest('.remove-field')) {
-        e.target.closest('.input-group, .row.g-2')?.remove();
-      }
-    });
-
-    document.getElementById('addKeyBenefit')?.addEventListener('click', () => {
-      addField('keyBenefitsContainer', `
-        <div class="input-group mb-2">
-          <input type="text" name="key_benefits[]" class="form-control" placeholder="e.g., Reduces fever">
-          <button type="button" class="btn btn-outline-danger remove-field"><i class="fas fa-times"></i></button>
-        </div>
-      `);
-    });
-
-    document.getElementById('addImportantNote')?.addEventListener('click', () => {
-      addField('importantNotesContainer', `
-        <div class="input-group mb-2">
-          <input type="text" name="important_notes[]" class="form-control" placeholder="e.g., Do not exceed recommended dose">
-          <button type="button" class="btn btn-outline-danger remove-field"><i class="fas fa-times"></i></button>
-        </div>
-      `);
-    });
-
-    document.getElementById('addDose')?.addEventListener('click', () => {
-      addField('recommendedDoseContainer', `
-        <div class="row g-2 mb-2">
-          <div class="col-5">
-            <input type="text" name="dose_label[]" class="form-control" placeholder="Label (e.g., Adults)">
-          </div>
-          <div class="col-6">
-            <input type="text" name="dose_value[]" class="form-control" placeholder="Value (e.g., 1 tablet twice daily)">
-          </div>
-          <div class="col-1">
-            <button type="button" class="btn btn-outline-danger remove-field w-100"><i class="fas fa-times"></i></button>
-          </div>
-        </div>
-      `);
-    });
-
-    document.getElementById('addHowToTake')?.addEventListener('click', () => {
-      addField('howToTakeContainer', `
-        <div class="input-group mb-2">
-          <input type="text" name="how_to_take[]" class="form-control" placeholder="e.g., Take with food">
-          <button type="button" class="btn btn-outline-danger remove-field"><i class="fas fa-times"></i></button>
-        </div>
-      `);
-    });
-
-    // ===== FORM VALIDATION =====
-    const form = document.getElementById('addProductForm');
-    form.addEventListener('submit', function(e) {
-      if (!form.checkValidity()) {
-        e.preventDefault();
-        e.stopPropagation();
-        form.classList.add('was-validated');
-        const firstInvalid = form.querySelector('.is-invalid, :invalid');
-        if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    });
-
-    // Live validation feedback
-    form.querySelectorAll('input, select, textarea').forEach(field => {
-      field.addEventListener('blur', () => {
-        if (field.hasAttribute('required') && !field.value.trim()) {
-          field.classList.add('is-invalid');
-        } else {
-          field.classList.remove('is-invalid');
-        }
-      });
-    });
-
-    // ===== RESET FORM =====
-    document.getElementById('resetForm')?.addEventListener('click', function() {
-      if (confirm('Are you sure you want to reset the form? All entered data will be lost.')) {
-        form.reset();
-        form.classList.remove('was-validated');
-        currentFiles = [];
-        preview.innerHTML = '';
-        fileInput.value = '';
-        initFloatingLabels();
-        showNotification('Form has been reset', 'info');
-      }
-    });
-
-    // Simple notification
-    function showNotification(message, type = 'info') {
-      const notif = document.createElement('div');
-      notif.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
-      notif.style.zIndex = 9999;
-      notif.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      `;
-      document.body.appendChild(notif);
-      setTimeout(() => notif.remove(), 4000);
-    }
-
-    // Small animation on focus
-    form.querySelectorAll('.floating-input, .floating-textarea').forEach(ctrl => {
-      ctrl.addEventListener('focus', () => ctrl.parentElement.style.transform = 'translateY(-2px)');
-      ctrl.addEventListener('blur', () => ctrl.parentElement.style.transform = 'translateY(0)');
-    });
-  });
-</script>
 {% endblock %}

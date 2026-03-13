@@ -386,3 +386,26 @@ def appointment_checkout(appointment):
 
     payment_payload = create_razorpay_order(invoice)
     return payment_payload
+
+def is_doctor_available_today(doctor_id, date):
+    """
+    Returns True if the doctor is available on the given date, False otherwise.
+    A doctor is considered unavailable if:
+    - They are on leave (is_leave=True)
+    - Or they have no available slots (is_available=True)
+    """
+    # 1️⃣ Check if doctor is on leave
+    if Availability.objects.filter(
+        doctor_id=doctor_id,
+        date=date,
+        is_leave=True
+    ).exists():
+        return False
+
+    # 2️⃣ Check if there are available slots
+    return Availability.objects.filter(
+        doctor_id=doctor_id,
+        date=date,
+        is_available=True,
+        is_leave=False
+    ).exists()

@@ -23,6 +23,12 @@ def cloudinary_upload_files(files, folder_name="medicines"):
     Returns:
         list: List of secure URLs for uploaded images
     """
+    if not files:
+        return []
+     # Ensure `files` is always a list
+    if not isinstance(files, (list, tuple)):
+        files = [files]
+        
     urls = []
 
     for file in files:

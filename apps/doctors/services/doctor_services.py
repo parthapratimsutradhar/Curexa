@@ -1,22 +1,18 @@
 from apps.doctors.models.doctorprofile_model import DoctorProfile
 from apps.doctors.models.qualification_model import Qualification
 from apps.docbook.services import appointment_services
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, Prefetch
 from apps.docbook.models.availability_model import Availability
 from django.utils.timezone import localdate
 from django.shortcuts import get_object_or_404
 from apps.core.services import util_services
-from django.db.models import Prefetch
 from django.utils.dateparse import parse_date
+from apps.core.utilities.cloudinary_utils import cloudinary_upload_files
 
 
 def get_doctor_by_id(pk):
     return get_object_or_404(DoctorProfile, id=pk)
 
-
-from django.db.models import Prefetch, Exists, OuterRef
-from django.utils.dateparse import parse_date
-from django.utils.timezone import localdate
 
 def doctor_queryset(date=None, doctor_id=None):
     selected_date = parse_date(date) if date else localdate()
@@ -108,7 +104,7 @@ def doctor_list_data(qs):
             ),
             "education": qualification_data,
             "contact_number": obj.contact_number,
-            "profile_picture": obj.profile_picture.url if obj.profile_picture else "",
+            "profile_picture": obj.profile_picture if obj.profile_picture else "",
             "experience_years": obj.experience_years,
             "clinic_address": obj.clinic_address,
             "consultation_fee": obj.consultation_fee,
@@ -125,6 +121,9 @@ def doctor_list_data(qs):
 
 def doctor_add(dr_user, license_number, license_expiry_date, profile_picture,
                consultation_fee, experience_years, bio, dob, clinic_address, specialization=None, city=None, pin_code=None, contact_number=None):
+    images_path = cloudinary_upload_files(profile_picture, folder_name="doctors")
+    if not isinstance(images_path, list):
+        images_path = [images_path]
     return DoctorProfile.objects.create(
         doctor=dr_user,
         license_number=license_number,
@@ -138,7 +137,7 @@ def doctor_add(dr_user, license_number, license_expiry_date, profile_picture,
         city=city,
         pin_code=pin_code,
         contact_number=contact_number,
-        profile_picture=profile_picture
+        profile_picture=images_path
     )
 
     
@@ -218,7 +217,7 @@ def get_doctor_details(doctor):
     }
 
 
-def doctor_list():
+def doctor_list(limit=None):
     # Prefetch related data to reduce N+1 queries
     doctors = (
         DoctorProfile.objects
@@ -229,6 +228,9 @@ def doctor_list():
         )
         .all()
     )
+
+    if limit is not None:
+        doctors = doctors[:limit]
 
     doctor_data_list = []
 
@@ -248,7 +250,7 @@ def doctor_list():
             "clinic_address": d.clinic_address,
             "consultation_fee": d.consultation_fee,
             "age": util_services.age_from_dob(d.dob),
-            "is_available_today": not appointment_services.is_doctor_on_leave(d, localdate())
+            "is_available_today":appointment_services.is_doctor_available_today(d, localdate())
         }
         doctor_data_list.append(data)
 
