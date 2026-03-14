@@ -313,6 +313,12 @@ function renderRows(doctors) {
     const completed = d.active_appointment_today || 0;   // completed appointments
     const remaining = Math.max(total - completed, 0);   // remaining appointments
 
+    function getProfilePic(doctor) {
+      // get first image if array exists and not empty
+      const pic = (doctor.profile_picture && doctor.profile_picture[0]) || "";
+      return pic.trim() || "/static/images/doctor_profiles/default-doctor.jpg";
+    }
+
     let progressHtml = "";
     let text = "";
 
@@ -344,7 +350,7 @@ function renderRows(doctors) {
         <td>DR${d.id}</td>
         <td>
           <div class="d-flex align-items-center">
-            <img src="${d.profile_picture || '/static/images/doctor_profiles/default-doctor.jpg'}" class="rounded-circle me-2" width="40" height="40">
+            <img src="${getProfilePic(d)}" class="rounded-circle me-2" width="40" height="40">
             <div>${d.name}</div>
           </div>
         </td>

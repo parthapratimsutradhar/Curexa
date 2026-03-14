@@ -3,6 +3,8 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from apps.core.constants.default_values import Role
+from apps.core.utilities.authentication import CookieJWTAuthentication
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 
 
 def auth_required(login_url="/login/"):
@@ -95,3 +97,20 @@ def admin_required(view_or_func=None, *, login_url="admin/login/"):
     if view_or_func:
         return auth_required(login_url=login_url)(decorator(view_or_func))
     return lambda view: auth_required(login_url=login_url)(decorator(view))
+
+
+
+def get_user_from_jwt(request):
+    """
+    Tries to authenticate using JWT from cookie or header.
+    Returns user object if valid, else None.
+    """
+    auth = CookieJWTAuthentication()
+    try:
+        result = auth.authenticate(request)
+        if result is None:
+            return None  # no token found
+        user, token = result
+        return user
+    except (InvalidToken, TokenError):
+        return None

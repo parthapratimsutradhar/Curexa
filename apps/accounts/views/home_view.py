@@ -5,5 +5,8 @@ from apps.doctors.services.doctor_services import doctor_list
 class HomeView(View):
     def get(self, request):
         doctors = doctor_list()
-        return render(request, 'enduser/home.html', {"doctors":doctors})
+        context={
+            "doctors":doctors            
+        }
+        return render(request, 'enduser/home.html', context)
 

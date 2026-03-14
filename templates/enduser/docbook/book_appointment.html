@@ -1583,11 +1583,11 @@ const csrftoken = getCookie('csrftoken');
         return '';
     }
 
-    function getProfilePic(doctor) {
-        return doctor.profile_picture && doctor.profile_picture.trim() !== '' 
-            ? doctor.profile_picture 
-            : 'https://via.placeholder.com/80x80?text=Doctor';
-    }
+function getProfilePic(doctor) {
+  // get first image if array exists and not empty
+  const pic = (doctor.profile_picture && doctor.profile_picture[0]) || "";
+  return pic.trim() || "/static/images/doctor_profiles/default-doctor.jpg";
+}
 
     // ---------- FETCH DOCTORS ----------
     function fetchDoctors(resetPage = true) {

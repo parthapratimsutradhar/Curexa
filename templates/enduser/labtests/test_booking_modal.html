@@ -114,7 +114,7 @@
 <!-- Page Header -->
 <div class="mb-4">
     <div class="d-flex align-items-center gap-2 mb-2">
-        <a href="lab_tests_catalog.html" class="text-secondary text-decoration-none d-flex align-items-center gap-1">
+        <a href="{% url 'labtests_catalog' %}" class="text-secondary text-decoration-none d-flex align-items-center gap-1">
             <i class="bi bi-arrow-left"></i>
             Back to Tests
         </a>
@@ -229,7 +229,7 @@
                     <div class="invalid-feedback" id="phoneError">Please enter a valid phone number</div>
                 </div>
 
-                <!-- Appointment Date & Time -->
+                <!-- Appointment Date -->
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label for="appointmentDate" class="form-label fw-medium">Preferred Date *</label>
@@ -238,59 +238,6 @@
                             <input type="date" class="form-control" id="appointmentDate" required min="2026-02-24">
                         </div>
                         <div class="invalid-feedback" id="dateError">Please select an appointment date</div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="timeSlot" class="form-label fw-medium">Preferred Time *</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-transparent"><i class="bi bi-clock"></i></span>
-                            <select class="form-select" id="timeSlot" required>
-                                <option value="">Select time slot</option>
-                                <optgroup label="Morning Slots">
-                                    <option value="08:00-09:00">08:00 AM - 09:00 AM</option>
-                                    <option value="09:00-10:00">09:00 AM - 10:00 AM</option>
-                                    <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
-                                    <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
-                                </optgroup>
-                                <optgroup label="Afternoon Slots">
-                                    <option value="14:00-15:00">02:00 PM - 03:00 PM</option>
-                                    <option value="15:00-16:00">03:00 PM - 04:00 PM</option>
-                                    <option value="16:00-17:00">04:00 PM - 05:00 PM</option>
-                                    <option value="17:00-18:00">05:00 PM - 06:00 PM</option>
-                                </optgroup>
-                            </select>
-                        </div>
-                        <div class="invalid-feedback" id="timeError">Please select a time slot</div>
-                    </div>
-                </div>
-
-                <!-- Special Instructions -->
-                <div class="mb-4">
-                    <label for="specialNotes" class="form-label fw-medium">
-                        Special Instructions or Medical Considerations
-                        <span class="text-secondary small fw-normal">(Optional)</span>
-                    </label>
-                    <textarea class="form-control" id="specialNotes" rows="4"
-                        placeholder="Please mention any allergies, current medications, fasting requirements, or special needs we should be aware of..."></textarea>
-                    <div class="form-text text-secondary small d-flex align-items-start gap-1 mt-1">
-                        <i class="bi bi-info-circle flex-shrink-0 mt-1"></i>
-                        <span>This information helps our medical staff prepare for your visit and ensure accurate test
-                            results.</span>
-                    </div>
-                </div>
-
-                <!-- Additional Tests Section -->
-                <div class="pt-3 border-top">
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-plus-circle text-primary"></i>
-                            <h4 class="h6 fw-semibold text-primary mb-0">Add More Tests</h4>
-                        </div>
-                        <button type="button" id="addTestBtn" class="btn btn-outline-primary btn-sm">
-                            Browse Tests
-                        </button>
-                    </div>
-                    <div id="additionalTestsList" class="text-center py-4 text-secondary small">
-                        No additional tests added
                     </div>
                 </div>
 
@@ -599,18 +546,18 @@
     // Cancel Booking
     cancelBookingBtn.addEventListener('click', () => {
         if (confirm('Are you sure you want to cancel this booking? All entered information will be lost.')) {
-            window.location.href = 'lab_tests_catalog.html';
+            window.location.href = '/lab-tests/';
         }
     });
 
     // Change Test
     changeTestBtn.addEventListener('click', () => {
-        window.location.href = 'lab_tests_catalog.html';
+        window.location.href = '/lab-tests/';
     });
 
     // Add Test
     addTestBtn.addEventListener('click', () => {
-        window.location.href = 'lab_tests_catalog.html';
+        window.location.href = '/lab-tests/';
     });
 
     // Success Modal Actions
@@ -618,11 +565,11 @@
         successModal.classList.add('hidden');
         document.body.style.overflow = 'auto';
         bookingForm.reset();
-        window.location.href = 'lab_tests_catalog.html';
+        window.location.href = '/lab-tests/';
     });
 
     viewBookingBtn.addEventListener('click', () => {
-        window.location.href = 'booking_confirmation.html';
+        window.location.href = '/lab-tests/';
     });
 
     // Close modal on backdrop click
@@ -630,7 +577,7 @@
         if (e.target === successModal) {
             successModal.classList.add('hidden');
             document.body.style.overflow = 'auto';
-            window.location.href = 'booking_confirmation.html';
+            window.location.href = '/lab-tests/';
         }
     });
 
