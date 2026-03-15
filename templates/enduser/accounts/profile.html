@@ -830,52 +830,6 @@
                     <span>42 years • Male • Patient ID: MED-2023-001</span>
                 </div>
 
-                <div class="patient-badge">
-                    <i class="fas fa-tint"></i> Blood Group: O+
-                </div>
-
-                <!-- Health Stats -->
-                <div class="health-stats">
-                    <div class="stat-item">
-                        <div class="stat-value">72</div>
-                        <div class="stat-label">Heart Rate</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">120/80</div>
-                        <div class="stat-label">Blood Pressure</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">98.6°F</div>
-                        <div class="stat-label">Temperature</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">24.8</div>
-                        <div class="stat-label">BMI</div>
-                    </div>
-                </div>
-
-                <!-- Health Progress -->
-                <div class="health-progress">
-                    <div class="progress-item">
-                        <div class="progress-label">
-                            <span>Medication Adherence</span>
-                            <span>92%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 92%"></div>
-                        </div>
-                    </div>
-                    <div class="progress-item">
-                        <div class="progress-label">
-                            <span>Appointment Attendance</span>
-                            <span>87%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 87%"></div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Contact Info -->
                 <div class="contact-info">
                     <div class="contact-item">
@@ -901,7 +855,7 @@
                     </div>
                 </div>
 
-                <button class="action-btn primary" id="editProfileBtn" style="width: 100%; margin-top: 16px;">
+                <button class="action-btn primary" id="editProfileBtn" style="width: 100%; margin-top: 16px; "onclick="window.location.href='{% url 'profile_edit' %}'">
                     <i class="fas fa-edit"></i> Edit Profile
                 </button>
             </div>
@@ -921,9 +875,6 @@
                     </button>
                     <button class="tab-btn" data-tab="medications">
                         <i class="fas fa-pills"></i> Medications
-                    </button>
-                    <button class="tab-btn" data-tab="settings">
-                        <i class="fas fa-cog"></i> Settings
                     </button>
                 </div>
 
@@ -952,13 +903,6 @@
                             <div class="detail-value">2 Prescriptions</div>
                             <div style="font-size: 13px; color: var(--warning); margin-top: 8px; display: flex; align-items: center; gap: 4px;">
                                 <i class="fas fa-clock"></i> Daily Dosage
-                            </div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Insurance Provider</div>
-                            <div class="detail-value">Medicare Advantage</div>
-                            <div style="font-size: 13px; color: var(--success); margin-top: 8px; display: flex; align-items: center; gap: 4px;">
-                                <i class="fas fa-shield-alt"></i> Active
                             </div>
                         </div>
                     </div>
@@ -1021,11 +965,6 @@
                                     <span class="tag warning">Shellfish</span>
                                 </div>
                             </div>
-                            <div>
-                                <div class="detail-label">Emergency Contact</div>
-                                <div class="detail-value" style="color: var(--danger);">Jane Smith</div>
-                                <div class="detail-value" style="font-size: 13px;">+1 (555) 987-6543</div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1039,13 +978,7 @@
                             <div class="detail-label">Blood Group</div>
                             <div class="detail-value">O+ (Positive)</div>
                         </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Height & Weight</div>
-                            <div class="detail-value">180 cm • 82 kg</div>
-                            <div style="font-size: 13px; color: var(--success); margin-top: 8px;">
-                                Healthy BMI: 24.8
-                            </div>
-                        </div>
+
                         <div class="detail-item">
                             <div class="detail-label">Known Allergies</div>
                             <div class="tags-container">
@@ -1063,47 +996,6 @@
                             <div class="detail-label">Current Medications</div>
                             <div class="detail-value">Lisinopril 10mg</div>
                             <div class="detail-value" style="font-size: 14px; margin-top: 4px;">Albuterol inhaler</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Past Medical History</div>
-                            <div class="detail-value">Appendectomy (2010)</div>
-                            <div class="detail-value" style="font-size: 14px; margin-top: 4px;">Fractured wrist (2018)</div>
-                        </div>
-                    </div>
-
-                    <!-- Vaccination Records -->
-                    <div style="margin-top: 40px;">
-                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 20px; color: var(--neutral-dark);">
-                            Vaccination Records
-                        </h3>
-                        
-                        <div class="data-card">
-                            <div class="card-header">
-                                <div class="doctor-info">
-                                    <div class="doctor-avatar" style="background: linear-gradient(135deg, var(--success), #2D9D78);">
-                                        <i class="fas fa-syringe"></i>
-                                    </div>
-                                    <div class="doctor-details">
-                                        <h4>COVID-19 Vaccination</h4>
-                                        <p>Moderna • Completed Series</p>
-                                    </div>
-                                </div>
-                                <span class="status-badge status-completed">Up to Date</span>
-                            </div>
-                            <div class="card-details">
-                                <div>
-                                    <div class="detail-label">First Dose</div>
-                                    <div class="detail-value">March 15, 2023</div>
-                                </div>
-                                <div>
-                                    <div class="detail-label">Second Dose</div>
-                                    <div class="detail-value">April 12, 2023</div>
-                                </div>
-                                <div>
-                                    <div class="detail-label">Booster</div>
-                                    <div class="detail-value">October 28, 2023</div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1277,91 +1169,10 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Settings Tab -->
-                <div class="tab-content" id="settings">
-                    <h2 class="tab-title">Account Settings</h2>
-                    
-                    <div class="settings-item">
-                        <div class="settings-info">
-                            <h4>Change Password</h4>
-                            <p>Update your password regularly for security</p>
-                        </div>
-                        <button class="action-btn" style="font-size: 13px;">
-                            <i class="fas fa-key"></i> Change
-                        </button>
-                    </div>
-                    
-                    <div class="settings-item">
-                        <div class="settings-info">
-                            <h4>Email Notifications</h4>
-                            <p>Receive appointment reminders and updates</p>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="settings-item">
-                        <div class="settings-info">
-                            <h4>SMS Alerts</h4>
-                            <p>Get text alerts for important updates</p>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="settings-item">
-                        <div class="settings-info">
-                            <h4>Data Sharing</h4>
-                            <p>Allow doctors to access your records</p>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--neutral-border);">
-                        <button class="action-btn" style="background: #FFF5F5; color: var(--danger); border-color: #FEB2B2; width: 100%;">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- Edit Profile Modal -->
-    <div class="modal-overlay" id="editProfileModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">Edit Profile</h3>
-                <button class="modal-close" id="closeModalBtn">&times;</button>
-            </div>
-            <form id="editProfileForm">
-                <div class="form-group">
-                    <label class="form-label" for="fullName">Full Name</label>
-                    <input type="text" class="form-input" id="fullName" value="John Smith">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="phone">Phone Number</label>
-                    <input type="tel" class="form-input" id="phone" value="+1 (555) 123-4567">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="email">Email Address</label>
-                    <input type="email" class="form-input" id="email" value="john.smith@example.com">
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="action-btn" id="cancelEditBtn">Cancel</button>
-                    <button type="submit" class="action-btn primary">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1380,80 +1191,6 @@
                     document.getElementById(tabId).classList.add('active');
                 });
             });
-
-            // Modal Functionality
-            const editProfileBtn = document.getElementById('editProfileBtn');
-            const editProfileModal = document.getElementById('editProfileModal');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const cancelEditBtn = document.getElementById('cancelEditBtn');
-            const editProfileForm = document.getElementById('editProfileForm');
-
-            editProfileBtn.addEventListener('click', () => {
-                editProfileModal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
-
-            const closeModal = () => {
-                editProfileModal.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            };
-
-            closeModalBtn.addEventListener('click', closeModal);
-            cancelEditBtn.addEventListener('click', closeModal);
-
-            editProfileModal.addEventListener('click', (e) => {
-                if (e.target === editProfileModal) closeModal();
-            });
-
-            editProfileForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                const fullName = document.getElementById('fullName').value;
-                const phone = document.getElementById('phone').value;
-                const email = document.getElementById('email').value;
-                
-                document.querySelector('.patient-name').textContent = fullName;
-                document.querySelectorAll('.contact-value')[0].textContent = phone;
-                document.querySelectorAll('.contact-value')[1].textContent = email;
-                
-                showNotification('Profile updated successfully', 'success');
-                closeModal();
-            });
-
-            // Notification System
-            function showNotification(message, type) {
-                const notification = document.createElement('div');
-                notification.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    padding: 12px 20px;
-                    background: ${type === 'success' ? 'var(--success)' : 'var(--danger)'};
-                    color: white;
-                    border-radius: var(--radius-sm);
-                    font-weight: 500;
-                    font-size: 14px;
-                    box-shadow: var(--card-shadow-hover);
-                    z-index: 1001;
-                    transform: translateX(100px);
-                    opacity: 0;
-                    transition: var(--transition);
-                `;
-                
-                notification.textContent = message;
-                document.body.appendChild(notification);
-                
-                setTimeout(() => {
-                    notification.style.transform = 'translateX(0)';
-                    notification.style.opacity = '1';
-                }, 10);
-                
-                setTimeout(() => {
-                    notification.style.transform = 'translateX(100px)';
-                    notification.style.opacity = '0';
-                    setTimeout(() => document.body.removeChild(notification), 300);
-                }, 3000);
-            }
 
             // Interactive Elements
             document.getElementById('printProfileBtn').addEventListener('click', () => {
@@ -1475,14 +1212,6 @@
                 card.addEventListener('mouseleave', () => {
                     card.style.transform = 'translateY(0)';
                 });
-            });
-
-            // Keyboard shortcuts
-            document.addEventListener('keydown', (e) => {
-                if (e.ctrlKey && e.key === 'e') {
-                    e.preventDefault();
-                    editProfileBtn.click();
-                }
             });
         });
     </script>
