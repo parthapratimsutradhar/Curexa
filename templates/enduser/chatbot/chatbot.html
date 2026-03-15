@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curexa · health assistant</title>
+    <!-- Font Awesome 6 (modern icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        /* animated gradient background – modern & dynamic */
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background: linear-gradient(145deg, #b0d0ea, #c0d9e8, #a3c6df, #b8d4ec);
+            background-size: 400% 400%;
+            animation: gradientFlow 18s ease infinite;
+            position: relative;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* floating glass card */
+        .chat-card {
+            width: 100%;
+            max-width: 520px;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 3rem 3rem 2.5rem 2.5rem;
+            box-shadow: 0 40px 70px -15px rgba(18, 52, 77, 0.4),
+                        0 15px 30px -10px rgba(0, 30, 50, 0.3),
+                        inset 0 1px 2px rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            transition: transform 0.3s ease, box-shadow 0.4s ease;
+            animation: float 6s infinite alternate ease-in-out;
+        }
+
+        .chat-card:hover {
+            box-shadow: 0 50px 90px -10px #1f4b66b3;
+            transform: translateY(-6px);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-8px); }
+        }
+
+        /* header with playful icon + dashed line reinterpreted as glow */
+        .chat-header {
+            background: linear-gradient(120deg, #15455a, #0e3b4f, #1d546b);
+            color: white;
+            padding: 1.3rem 2rem;
+            border-radius: 3rem 3rem 0 0;
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 3px dashed rgba(255, 255, 255, 0.3);
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: inset 0 -2px 5px rgba(255,255,255,0.2);
+        }
+
+        .chat-header i {
+            font-size: 2.2rem;
+            filter: drop-shadow(0 6px 8px #00000030);
+            animation: subtleWobble 3s infinite;
+        }
+
+        @keyframes subtleWobble {
+            0%,100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        /* message container */
+        .chat-messages {
+            padding: 1.8rem 1.2rem 1rem 1.2rem;
+            height: 420px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            background: rgba(248, 251, 255, 0.5);
+            scroll-behavior: smooth;
+        }
+
+        /* common bubble – modern with icon support */
+        .message {
+            max-width: 82%;
+            padding: 1rem 1.5rem 1rem 1.3rem;
+            border-radius: 2.2rem 2.2rem 0.8rem 2.2rem;
+            line-height: 1.6;
+            font-size: 1rem;
+            word-break: break-word;
+            box-shadow: 0 10px 18px -8px rgba(0, 40, 60, 0.25);
+            backdrop-filter: blur(5px);
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            animation: slidePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slidePop {
+            0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* user bubble – right with gradient */
+        .message-user {
+            align-self: flex-end;
+            background: linear-gradient(145deg, #2e6a8b, #1e5777);
+            color: white;
+            border-bottom-right-radius: 0.3rem;
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 12px 22px -10px #0f3f58;
+        }
+
+        .message-user strong {
+            color: #fffaed;
+            font-weight: 700;
+            letter-spacing: -0.1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 2px;
+        }
+
+        .message-user strong i {
+            font-size: 1.2rem;
+            filter: drop-shadow(0 2px 3px black(0.2));
+        }
+
+        /* bot bubble – left with light gradient */
+        .message-bot {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            color: #153e51;
+            border-bottom-left-radius: 0.3rem;
+            border: 1px solid rgba(105, 162, 202, 0.4);
+            box-shadow: 0 12px 22px -10px #2d5e7e33;
+        }
+
+        .message-bot strong {
+            color: #185472;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 1.05rem;
+        }
+
+        .message-bot strong i {
+            font-size: 1.4rem;
+            color: #287697;
+        }
+
+        /* structured bot text – extra spacing */
+        .bot-detail {
+            display: block;
+            margin-top: 6px;
+            padding-left: 6px;
+            border-left: 3px solid #64b5d6;
+        }
+
+        /* typing indicator bubble */
+        .typing-indicator {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            padding: 1.2rem 1.8rem;
+            border-radius: 2.5rem 2.5rem 0.5rem 2.5rem;
+            box-shadow: 0 10px 20px -8px #264c63;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: slidePop 0.3s ease-out;
+        }
+
+        .typing-indicator span {
+            width: 10px;
+            height: 10px;
+            background: #286f92;
+            border-radius: 50%;
+            display: inline-block;
+            opacity: 0.6;
+            animation: bounceTyping 1.4s infinite ease-in-out both;
+        }
+
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounceTyping {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1); opacity: 1; background: #3498bf; }
+        }
+
+        /* quick reply chips */
+        .quick-replies {
+            display: flex;
+            gap: 0.6rem;
+            padding: 0.8rem 1.2rem 0.5rem 1.2rem;
+            flex-wrap: wrap;
+            background: rgba(255,255,255,0.4);
+            backdrop-filter: blur(10px);
+            border-top: 1px dashed rgba(100, 150, 190, 0.5);
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #b5d0e4;
+            color: #14536e;
+            padding: 0.6rem 1.3rem;
+            border-radius: 3rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 30, 40, 0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(4px);
+        }
+
+        .chip i {
+            font-size: 1rem;
+            color: #277796;
+        }
+
+        .chip:hover {
+            background: #eaf3fc;
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 12px 18px -8px #30728f;
+            border-color: #69b0d4;
+        }
+
+        /* input area */
+        .chat-input-area {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(18px);
+            padding: 0.8rem 1.2rem 1.2rem 1.2rem;
+            border-top: 3px dashed rgba(255,255,255,0.8);
+            border-radius: 0 0 2.5rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 0.7rem;
+            align-items: center;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            background: #ffffffd9;
+            border: 2px solid transparent;
+            padding: 1rem 1.5rem;
+            border-radius: 3rem;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+            box-shadow: 0 6px 18px rgba(63, 118, 148, 0.2), inset 0 2px 5px #bdd9ec;
+            font-weight: 500;
+        }
+
+        .chat-input-area input:focus {
+            background: white;
+            border-color: #3f9fd9;
+            box-shadow: 0 8px 25px #3190c0, inset 0 1px 3px #bbdef5;
+            transform: scale(1.01);
+        }
+
+        .chat-input-area input::placeholder {
+            color: #4c718a;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .chat-input-area button {
+            background: linear-gradient(135deg, #1e617b, #134d65);
+            border: none;
+            color: white;
+            width: 3.6rem;
+            height: 3.6rem;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 15px 25px -6px #0f4258, 0 0 0 2px rgba(255,255,240,0.3) inset;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .chat-input-area button:hover:not(:disabled) {
+            background: #2d81a3;
+            transform: rotate(5deg) scale(1.07);
+            box-shadow: 0 18px 30px -4px #1a6d8f;
+        }
+
+        .chat-input-area button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #7b9eb3;
+            box-shadow: none;
+        }
+
+        /* custom scroll */
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #d2e3f0;
+            border-radius: 20px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #6f9ec7;
+            border-radius: 20px;
+            border: 2px solid #e2f0ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-card">
+        <div class="chat-header">
+            <i class="fas fa-stethoscope"></i> Curexa Health Assistant 🤖
+        </div>
+
+        <div class="chat-messages" id="chatMessages"></div>
+
+        <!-- quick reply chips (interactive) -->
+        <div class="quick-replies" id="quickReplies">
+            <div class="chip" data-symptom="fever"><i class="fas fa-temperature-high"></i> Fever</div>
+            <div class="chip" data-symptom="headache"><i class="fas fa-head-side-brain"></i> Headache</div>
+            <div class="chip" data-symptom="cough"><i class="fas fa-lungs"></i> Cough</div>
+            <div class="chip" data-symptom="stomach"><i class="fas fa-stomach"></i> Stomach ache</div>
+        </div>
+
+        <div class="chat-input-area">
+            <div class="input-row">
+                <input type="text" id="userInput" placeholder="Type your symptom... (e.g. fever)" autofocus>
+                <button id="sendBtn" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ----- data & state -----
+            const messages = [];            // { sender: 'user' or 'bot', content: html string }
+            let isBotResponding = false;
+            let typingIndicatorDiv = null;   // to remove later
+
+            // DOM elements
+            const messagesContainer = document.getElementById('chatMessages');
+            const userInput = document.getElementById('userInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const quickReplies = document.getElementById('quickReplies');
+
+            // ----- helper: escape user input (prevent XSS) -----
+            function escapeHtml(unsafe) {
+                return unsafe.replace(/[&<>"]/g, function(m) {
+                    if (m === '&') return '&amp;';
+                    if (m === '<') return '&lt;';
+                    if (m === '>') return '&gt;';
+                    if (m === '"') return '&quot;';
+                    return m;
+                });
+            }
+
+            // ----- render all messages from array -----
+            function renderMessages() {
+                messagesContainer.innerHTML = '';
+                messages.forEach(msg => {
+                    const bubble = document.createElement('div');
+                    bubble.className = `message ${msg.sender === 'user' ? 'message-user' : 'message-bot'}`;
+                    bubble.innerHTML = msg.content;
+                    messagesContainer.appendChild(bubble);
+                });
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            // ----- show typing indicator (remove any existing) -----
+            function showTypingIndicator() {
+                hideTypingIndicator(); // remove old one if any
+                typingIndicatorDiv = document.createElement('div');
+                typingIndicatorDiv.className = 'typing-indicator';
+                typingIndicatorDiv.innerHTML = '<span></span><span></span><span></span>';
+                messagesContainer.appendChild(typingIndicatorDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            function hideTypingIndicator() {
+                if (typingIndicatorDiv && typingIndicatorDiv.parentNode) {
+                    typingIndicatorDiv.remove();
+                    typingIndicatorDiv = null;
+                }
+            }
+
+            // ----- API helpers -----
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+                return '';
+            }
+
+            async function fetchBotReply(userText) {
+                const csrftoken = getCookie('csrftoken');
+                const res = await fetch("{% url 'chat_api' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        ...(csrftoken ? { "X-CSRFToken": csrftoken } : {})
+                    },
+                    body: JSON.stringify({ message: userText })
+                });
+
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    const err = data && (data.error || data.detail) ? (data.error || data.detail) : "Request failed";
+                    throw new Error(err);
+                }
+
+                return data.reply;
+            }
+
+            function iconForSeverity(severity) {
+                const s = (severity || '').toLowerCase();
+                if (s === 'emergency') return 'fa-triangle-exclamation';
+                if (s === 'urgent') return 'fa-person-running';
+                if (s === 'routine') return 'fa-notes-medical';
+                if (s === 'self_care') return 'fa-mug-hot';
+                return 'fa-circle-info';
+            }
+
+            function prettySeverity(severity) {
+                const s = (severity || '').toLowerCase();
+                if (s === 'self_care') return 'Self care';
+                if (s === 'routine') return 'Routine';
+                if (s === 'urgent') return 'Urgent';
+                if (s === 'emergency') return 'Emergency';
+                return 'Unknown';
+            }
+
+            function formatBotReply(reply) {
+                const safe = (v) => escapeHtml(String(v ?? ''));
+                if (!reply || typeof reply !== 'object') {
+                    return `<strong><i class="fas fa-robot"></i> Bot</strong>
+                            <span class="bot-detail"><i class="fas fa-circle-info"></i> <strong>Advice:</strong> ${safe('I could not process that. Please try again.')}</span>`;
+                }
+
+                const sev = safe(prettySeverity(reply.severity));
+                const sevIcon = iconForSeverity(reply.severity);
+                const condition = safe(reply.condition || 'Unknown');
+                const advice = safe(reply.advice || 'Consult a doctor for proper diagnosis.');
+                const doctor = safe(reply.doctor || 'General Physician');
+                const followups = Array.isArray(reply.followup_questions) ? reply.followup_questions : [];
+                const followupHtml = followups.length
+                    ? `<span class="bot-detail"><i class="fas fa-question-circle"></i> <strong>Follow-up:</strong><br>${followups.slice(0, 3).map(q => `• ${safe(q)}`).join('<br>')}</span>`
+                    : '';
+
+                return `<strong><i class="fas fa-robot"></i> Bot</strong>
+                        <span class="bot-detail"><i class="fas ${sevIcon}"></i> <strong>Severity:</strong> ${sev}</span>
+                        <span class="bot-detail"><i class="fas fa-diagnoses"></i> <strong>Possible Condition:</strong> ${condition}</span>
+                        <span class="bot-detail"><i class="fas fa-notes-medical"></i> <strong>Advice:</strong> ${advice}</span>
+                        <span class="bot-detail"><i class="fas fa-user-md"></i> <strong>Doctor:</strong> ${doctor}</span>
+                        ${followupHtml}
+                        <span class="bot-detail"><i class="fas fa-shield-heart"></i> <strong>Note:</strong> This is not a medical diagnosis.</span>`;
+            }
+
+            // ----- add message and trigger bot response with typing indicator -----
+            function handleUserMessage(userText) {
+                const text = (userText || userInput.value).trim();
+                if (text === '' || isBotResponding) return;
+
+                // disable UI
+                isBotResponding = true;
+                userInput.disabled = true;
+                sendBtn.disabled = true;
+
+                // push & render user message
+                const userMsg = `<strong><i class="fas fa-user"></i> User</strong> ${escapeHtml(text)}`;
+                messages.push({ sender: 'user', content: userMsg });
+                renderMessages();
+
+                // clear input
+                userInput.value = '';
+
+                // show typing indicator
+                showTypingIndicator();
+
+                fetchBotReply(text)
+                    .then((reply) => {
+                        hideTypingIndicator();
+                        messages.push({ sender: 'bot', content: formatBotReply(reply) });
+                        renderMessages();
+                    })
+                    .catch((err) => {
+                        hideTypingIndicator();
+                        const msg = escapeHtml(err && err.message ? err.message : 'Something went wrong');
+                        messages.push({
+                            sender: 'bot',
+                            content: `<strong><i class="fas fa-robot"></i> Bot</strong>
+                                      <span class="bot-detail"><i class="fas fa-triangle-exclamation"></i> <strong>Error:</strong> ${msg}</span>`
+                        });
+                        renderMessages();
+                    })
+                    .finally(() => {
+                        isBotResponding = false;
+                        userInput.disabled = false;
+                        sendBtn.disabled = false;
+                        userInput.focus();
+                    });
+            }
+
+            // ----- initial messages (exactly the requested layout but with icons) -----
+            function initChat() {
+                messages.push({
+                    sender: 'bot',
+                    content: `<strong><i class="fas fa-robot"></i> Bot</strong>
+                              <span class="bot-detail"><i class="fas fa-circle-info"></i> Tell me your main symptoms (e.g., &quot;fever and cough for 2 days&quot;).</span>
+                              <span class="bot-detail"><i class="fas fa-triangle-exclamation"></i> If this feels like an emergency (chest pain, trouble breathing, fainting, severe weakness on one side), seek emergency care.</span>`
+                });
+                renderMessages();
+            }
+
+            // ----- event listeners -----
+            sendBtn.addEventListener('click', () => handleUserMessage());
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleUserMessage();
+                }
+            });
+
+            // quick reply chips
+            quickReplies.addEventListener('click', (e) => {
+                const chip = e.target.closest('.chip');
+                if (!chip) return;
+                const symptom = chip.dataset.symptom;
+                if (!symptom) return;
+                // fill input? or send directly? We'll send directly for better UX.
+                // but we need to respect isBotResponding
+                if (isBotResponding) return;
+                // map symptom to a phrase
+                let messageText = '';
+                if (symptom === 'fever') messageText = 'I have fever';
+                else if (symptom === 'headache') messageText = 'I have headache';
+                else if (symptom === 'cough') messageText = 'I have cough';
+                else if (symptom === 'stomach') messageText = 'My stomach hurts';
+                else messageText = symptom;
+                handleUserMessage(messageText); // use the same handler
+            });
+
+            // start with initial conversation
+            initChat();
+            userInput.focus();
+
+        })();
+    </script>
+    <!-- extra micro-animation for chips -->
+    <style>
+        .chip i, .message i {
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+        }
+        .bot-detail i {
+            width: 1.4rem;
+            display: inline-block;
+            color: #206685;
+        }
+        .message-user i {
+            color: #ffeac2;
+        }
+    </style>
+</body>
+</html>

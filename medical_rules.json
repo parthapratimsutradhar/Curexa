@@ -1,0 +1,676 @@
+{
+  "schema_version": 1,
+  "intent": "Triage-and-routing (not diagnosis)",
+  "disclaimer": "This ruleset is for general guidance only and is not a medical diagnosis. If symptoms are severe or worsening, seek in-person care. For life-threatening symptoms, call local emergency services immediately.",
+  "rules": [
+    {
+      "id": "emergency_stroke_possible",
+      "match": {
+        "any": [
+          "face drooping",
+          "facial droop",
+          "arm weakness",
+          "leg weakness",
+          "slurred speech",
+          "difficulty speaking",
+          "sudden confusion"
+        ]
+      },
+      "severity": "emergency",
+      "condition": "Possible stroke or serious neurologic emergency",
+      "advice": "Seek emergency care now. Do not drive yourself if symptoms are significant; call emergency services.",
+      "doctor": "Emergency Medicine",
+      "followup_questions": [
+        "When did these symptoms start (exact time)?",
+        "Is one side of the body weaker than the other?",
+        "Any severe headache, vision loss, or trouble walking?"
+      ],
+      "priority": 100
+    },
+    {
+      "id": "emergency_chest_pain_breathing",
+      "match": {
+        "all": [
+          "chest pain"
+        ],
+        "any": [
+          "shortness of breath",
+          "difficulty breathing",
+          "breathing trouble",
+          "sweating",
+          "nausea",
+          "fainting"
+        ]
+      },
+      "severity": "emergency",
+      "condition": "Possible heart or lung emergency",
+      "advice": "Seek emergency care now. If symptoms are severe (pressure/tightness, trouble breathing, fainting), call emergency services immediately.",
+      "doctor": "Emergency Medicine",
+      "followup_questions": [
+        "Is the chest pain pressure/tightness, and does it spread to arm/jaw/back?",
+        "Do you have shortness of breath at rest, sweating, or fainting?",
+        "How long has this been happening?"
+      ],
+      "priority": 100
+    },
+    {
+      "id": "emergency_severe_breathing",
+      "match": {
+        "any": [
+          "can't breathe",
+          "cannot breathe",
+          "gasping",
+          "blue lips",
+          "turning blue",
+          "unable to speak",
+          "severe shortness of breath"
+        ]
+      },
+      "severity": "emergency",
+      "condition": "Severe breathing difficulty",
+      "advice": "Seek emergency care now. Call emergency services if you are struggling to breathe, turning blue, or unable to speak in full sentences.",
+      "doctor": "Emergency Medicine",
+      "followup_questions": [
+        "Are you able to speak full sentences?",
+        "Any swelling of lips/tongue or recent allergen exposure?",
+        "Any known asthma/COPD or inhaler use?"
+      ],
+      "priority": 100
+    },
+    {
+      "id": "emergency_severe_allergic_reaction",
+      "match": {
+        "any": [
+          "swelling of lips",
+          "swelling of tongue",
+          "throat swelling",
+          "hives with breathing",
+          "wheezing with hives",
+          "anaphylaxis"
+        ]
+      },
+      "severity": "emergency",
+      "condition": "Severe allergic reaction (possible anaphylaxis)",
+      "advice": "Seek emergency care now. Call emergency services if there is throat/tongue swelling, wheezing, or trouble breathing.",
+      "doctor": "Emergency Medicine",
+      "followup_questions": [
+        "Did symptoms start after food/medicine/insect sting?",
+        "Is there swelling of lips/tongue or difficulty swallowing?",
+        "Any dizziness or fainting?"
+      ],
+      "priority": 100
+    },
+    {
+      "id": "emergency_severe_headache_neuro",
+      "match": {
+        "all": [
+          "headache"
+        ],
+        "any": [
+          "worst headache",
+          "sudden severe headache",
+          "neck stiffness",
+          "confusion",
+          "seizure",
+          "fainting",
+          "vision loss"
+        ]
+      },
+      "severity": "emergency",
+      "condition": "Severe headache with red flags",
+      "advice": "Seek urgent emergency evaluation now, especially if headache is sudden and severe, with confusion, seizure, neck stiffness, or vision changes.",
+      "doctor": "Emergency Medicine",
+      "followup_questions": [
+        "Did the headache start suddenly (seconds to minutes)?",
+        "Any fever, neck stiffness, confusion, weakness, or vision changes?",
+        "Any recent head injury?"
+      ],
+      "priority": 100
+    },
+    {
+      "id": "urgent_high_fever_dehydration",
+      "match": {
+        "all": [
+          "fever"
+        ],
+        "any": [
+          "not drinking",
+          "dehydration",
+          "very weak",
+          "confusion",
+          "fainting"
+        ]
+      },
+      "severity": "urgent",
+      "condition": "Fever with possible dehydration or systemic illness",
+      "advice": "Seek same-day medical care. If there is confusion, fainting, severe weakness, or worsening symptoms, go to urgent care or emergency care now.",
+      "doctor": "General Physician",
+      "followup_questions": [
+        "What is the highest temperature you measured (and how)?",
+        "How long has the fever lasted?",
+        "Are you able to keep fluids down and urinate normally?"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "routine_flu_like",
+      "match": {
+        "any": [
+          "fever",
+          "chills",
+          "body aches",
+          "sore throat",
+          "cough",
+          "runny nose"
+        ]
+      },
+      "severity": "routine",
+      "condition": "Viral upper respiratory infection (possible cold/flu-like illness)",
+      "advice": "Rest, drink fluids, and monitor symptoms. Seek medical care sooner if breathing worsens, fever is very high or persistent, you feel faint/confused, or symptoms worsen instead of improving.",
+      "doctor": "General Physician",
+      "followup_questions": [
+        "How many days have symptoms been present?",
+        "Any shortness of breath at rest or chest pain?",
+        "Any high-risk conditions (pregnancy, immune problems, chronic lung/heart disease)?"
+      ],
+      "priority": 0
+    },
+    {
+      "id": "urgent_pneumonia_like",
+      "match": {
+        "all": [
+          "cough"
+        ],
+        "any": [
+          "shortness of breath",
+          "difficulty breathing",
+          "chest pain",
+          "high fever",
+          "rusty sputum"
+        ]
+      },
+      "severity": "urgent",
+      "condition": "Possible lower respiratory infection (needs clinical assessment)",
+      "advice": "Seek same-day medical evaluation, especially if breathing is difficult, chest pain occurs, or fever is high/persistent.",
+      "doctor": "Pulmonologist",
+      "followup_questions": [
+        "Do you have shortness of breath at rest or chest pain when breathing?",
+        "How high is the fever and for how many days?",
+        "Any known lung disease or low oxygen readings?"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "routine_allergic_rhinitis",
+      "match": {
+        "all": [
+          "sneezing"
+        ],
+        "any": [
+          "runny nose",
+          "itchy eyes",
+          "nasal congestion",
+          "watery eyes"
+        ]
+      },
+      "severity": "self_care",
+      "condition": "Possible allergies (allergic rhinitis)",
+      "advice": "Avoid known triggers when possible and monitor symptoms. Seek medical care if symptoms are severe, recurrent, or associated with wheezing, facial swelling, or trouble breathing.",
+      "doctor": "ENT Specialist",
+      "followup_questions": [
+        "Do symptoms worsen in certain environments (dust/pollen/pets)?",
+        "Any wheezing or shortness of breath?",
+        "Any fever or thick, foul-smelling nasal discharge?"
+      ],
+      "priority": 0
+    },
+    {
+      "id": "urgent_asthma_wheeze",
+      "match": {
+        "any": [
+          "wheezing",
+          "asthma attack",
+          "tight chest",
+          "tightness in chest"
+        ]
+      },
+      "severity": "urgent",
+      "condition": "Possible asthma or bronchospasm",
+      "advice": "If you have severe breathing trouble, blue lips, or cannot speak in full sentences, seek emergency care now. Otherwise, arrange same-day medical evaluation if wheezing persists or is worsening.",
+      "doctor": "Pulmonologist",
+      "followup_questions": [
+        "Do you have a history of asthma or inhaler use?",
+        "Are you short of breath at rest or waking at night due to symptoms?",
+        "Any known trigger (exercise, infection, smoke, allergens)?"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "urgent_abdominal_pain_red_flags",
+      "match": {
+        "all": [
+          "abdominal pain"
+        ],
+        "any": [
+          "severe",
+          "rigid",
+          "can't stand",
+          "fainting",
+          "blood in vomit",
+          "vomiting blood",
+          "black stool"
+        ]
+      },
+      "severity": "urgent",
+      "condition": "Abdominal pain with possible red flags",
+      "advice": "Seek urgent medical evaluation today. Go to emergency care if pain is severe, you faint, there is vomiting blood/black stools, or symptoms worsen rapidly.",
+      "doctor": "General Physician",
+      "followup_questions": [
+        "Where is the pain located (right/left, upper/lower)?",
+        "Any vomiting, black stools, or blood in vomit/stool?",
+        "Any pregnancy possibility, or recent surgery?"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "routine_gastroenteritis_like",
+      "match": {
+        "any": [
+          "diarrhea",
+          "vomiting",
+          "nausea",
+          "stomach upset"
+        ]
+      },
+      "severity": "self_care",
+      "condition": "Possible stomach infection/irritation (needs monitoring)",
+      "advice": "Focus on hydration and monitor. Seek medical care if you cannot keep fluids down, have signs of dehydration, severe abdominal pain, blood in stool/vomit, high or persistent fever, or symptoms last more than a few days.",
+      "doctor": "General Physician",
+      "followup_questions": [
+        "How many times in the last 24 hours have you vomited/had diarrhea?",
+        "Any blood in stool or black stool?",
+        "Are you able to keep fluids down and urinate normally?"
+      ],
+      "priority": 0
+    },
+    {
+      "id": "urgent_appendicitis_pattern",
+      "match": {
+        "all": [
+          "abdominal pain"
+        ],
+        "any": [
+          "right lower",
+          "right lower abdomen",
+          "pain moved",
+          "worse with walking",
+          "loss of appetite",
+          "rebound"
+        ]
+      },
+      "severity": "urgent",
+      "condition": "Possible appendicitis pattern (needs urgent exam)",
+      "advice": "Seek urgent in-person evaluation today. Go to emergency care if pain is severe, worsening, or associated with fainting or inability to keep fluids down.",
+      "doctor": "General Physician",
+      "followup_questions": [
+        "Is the pain mainly in the right lower abdomen, and is it worsening?",
+        "Any fever, vomiting, or loss of appetite?",
+        "Does movement/coughing make the pain worse?"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "routine_migraine_like",
+      "match": {
+        "all": [
+          "headache"
+        ],
+        "any": [
+          "sensitivity to light",
+          "photophobia",
+          "nausea",
+          "one-sided",
+          "throbbing"
+        ]
+      },
+      "severity": "routine",
+      "condition": "Headache pattern consistent with migraine (needs confirmation)",
+      "advice": "If this is a new or different headache, or you have red-flag symptoms (sudden severe onset, weakness, confusion, fever/neck stiffness, vision loss), seek urgent care. Otherwise, consider a routine clinician visit if headaches recur or disrupt daily life.",
+      "doctor": "Neurologist",
+      "followup_questions": [
+        "Is this headache similar to previous headaches you've had?",
+        "Any weakness, confusion, fainting, fever/neck stiffness, or vision changes?",
+        "How often do headaches occur and how long do they last?"
+      ],
+      "priority": 10
+    },
+    {
+      "id": "routine_tension_headache_like",
+      "match": {
+        "all": [
+          "headache"
+        ],
+        "any": [
+          "stress",
+          "tight band",
+          "neck pain",
+          "shoulder tension"
+        ]
+      },
+      "severity": "self_care",
+      "condition": "Possible tension-type headache (needs monitoring)",
+      "advice": "Monitor symptoms and consider routine evaluation if headaches are frequent, worsening, or new. Seek urgent care for red flags (sudden severe headache, neurologic symptoms, fever/neck stiffness, fainting).",
+      "doctor": "General Physician",
+      "followup_questions": [
+        "Any recent sleep deprivation, stress, or screen strain?",
+        "Any nausea, light sensitivity, or neurologic symptoms?",
+        "How many days per month do headaches occur?"
+      ],
+      "priority": 0
+    },
+    {
+      "id": "urgent_uti_like",
+      "match": {
+        "any": [
+          "burning urination",
+          "burning when urinating",
+          "painful urination",
+          "frequent urination",
+          "urgency to urinate"
+        ]
+      },
+      "severity": "urgent",
+      "condition": "Possible urinary tract infection (needs testing)",
+      "advice": "Arrange same-day or next-day medical evaluation for testing and treatment. Seek urgent care sooner if you have fever, back/flank pain, vomiting, or you are pregnant.",
+      "doctor": "General Physician",
+      "followup_questions": [
+        "Any fever, chills, nausea/vomiting, or back/flank pain?",
+        "Any blood in urine?",
+        "Are you pregnant or immunocompromised?"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "urgent_kidney_infection_like",
+      "match": {
+        "any": [
+          "flank pain",
+          "kidney pain"
+        ],
+        "all": [
+          "fever"
+        ]
+      },
+      "severity": "urgent",
+      "condition": "Possible kidney infection (needs urgent assessment)",
+      "advice": "Seek urgent medical evaluation today, especially if fever with flank/back pain, nausea/vomiting, or worsening symptoms.",
+      "doctor": "General Physician",
+      "followup_questions": [
+        "Any burning urination or frequent urination?",
+        "Any nausea/vomiting?",
+        "How high is the fever?"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "routine_conjunctivitis_like",
+      "match": {
+        "any": [
+          "eye redness",
+          "red eye",
+          "eye discharge",
+          "itchy eyes"
+        ]
+      },
+      "severity": "routine",
+      "condition": "Eye irritation or conjunctivitis pattern (needs confirmation)",
+      "advice": "Avoid touching/rubbing eyes and monitor symptoms. Seek urgent eye care if you have severe eye pain, light sensitivity, sudden vision changes, or if you wear contact lenses with redness/pain.",
+      "doctor": "Ophthalmologist",
+      "followup_questions": [
+        "Any severe pain, light sensitivity, or vision changes?",
+        "Do you wear contact lenses?",
+        "Is there thick discharge or both eyes affected?"
+      ],
+      "priority": 10
+    },
+    {
+      "id": "routine_back_strain_like",
+      "match": {
+        "any": [
+          "back pain",
+          "lower back pain"
+        ],
+        "none": [
+          "loss of bladder control",
+          "loss of bowel control",
+          "numbness in groin"
+        ]
+      },
+      "severity": "routine",
+      "condition": "Back pain pattern consistent with strain (needs monitoring)",
+      "advice": "Seek urgent care if you have weakness, numbness in the groin/saddle area, or loss of bladder/bowel control. Otherwise, arrange routine evaluation if pain is severe, persistent, or associated with fever, trauma, or unexplained weight loss.",
+      "doctor": "Orthopedic",
+      "followup_questions": [
+        "Any leg weakness, numbness, or changes in bladder/bowel control?",
+        "Any recent injury/trauma?",
+        "How long has the pain lasted and is it improving?"
+      ],
+      "priority": 10
+    },
+    {
+      "id": "urgent_back_red_flags",
+      "match": {
+        "any": [
+          "loss of bladder control",
+          "loss of bowel control",
+          "numbness in groin",
+          "saddle numbness",
+          "leg weakness"
+        ]
+      },
+      "severity": "urgent",
+      "condition": "Back pain with neurologic red flags",
+      "advice": "Seek urgent emergency evaluation now, especially with bladder/bowel control problems, groin numbness, or leg weakness.",
+      "doctor": "Emergency Medicine",
+      "followup_questions": [
+        "Any new bladder/bowel control problems?",
+        "Any worsening leg weakness or numbness?",
+        "Any recent injury?"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "routine_joint_pain_inflammation",
+      "match": {
+        "any": [
+          "joint pain",
+          "joint swelling",
+          "stiffness"
+        ]
+      },
+      "severity": "routine",
+      "condition": "Joint pain/inflammation (needs assessment if persistent)",
+      "advice": "Arrange a routine evaluation if pain/swelling persists, is recurrent, or limits function. Seek urgent care if there is fever with a hot swollen joint, inability to bear weight, or recent injury with deformity.",
+      "doctor": "Orthopedic",
+      "followup_questions": [
+        "Is the joint hot, very swollen, or associated with fever?",
+        "Was there an injury or inability to bear weight?",
+        "How long has the pain been present?"
+      ],
+      "priority": 10
+    },
+    {
+      "id": "urgent_hot_swollen_joint_fever",
+      "match": {
+        "any": [
+          "hot swollen joint",
+          "swollen joint with fever",
+          "joint pain with fever"
+        ]
+      },
+      "severity": "urgent",
+      "condition": "Hot/swollen joint with fever (needs urgent evaluation)",
+      "advice": "Seek urgent medical evaluation today. A hot, swollen joint with fever can be serious and needs in-person assessment.",
+      "doctor": "Emergency Medicine",
+      "followup_questions": [
+        "Which joint is affected and is it hot to touch?",
+        "Do you have fever or feel unwell?",
+        "Any recent injury or infection?"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "routine_rash_mild",
+      "match": {
+        "any": [
+          "rash",
+          "itching",
+          "hives"
+        ],
+        "none": [
+          "trouble breathing",
+          "throat swelling",
+          "swelling of tongue",
+          "swelling of lips"
+        ]
+      },
+      "severity": "routine",
+      "condition": "Rash/skin irritation (needs monitoring)",
+      "advice": "Monitor the rash. Seek urgent care if rash is rapidly spreading, associated with fever, severe pain, blistering, facial swelling, or any breathing trouble.",
+      "doctor": "Dermatologist",
+      "followup_questions": [
+        "Any fever, blistering, or severe pain?",
+        "Any new medication, food, or insect bite exposure?",
+        "Is there facial swelling or any breathing trouble?"
+      ],
+      "priority": 10
+    },
+    {
+      "id": "urgent_persistent_vomiting",
+      "match": {
+        "all": [
+          "vomiting"
+        ],
+        "any": [
+          "can't keep fluids",
+          "cannot keep fluids",
+          "dehydration",
+          "dizzy when standing",
+          "very weak"
+        ]
+      },
+      "severity": "urgent",
+      "condition": "Vomiting with dehydration risk",
+      "advice": "Seek same-day medical care if you cannot keep fluids down or show signs of dehydration (very little urination, dizziness when standing, severe weakness).",
+      "doctor": "General Physician",
+      "followup_questions": [
+        "How long has vomiting been happening and how frequent?",
+        "Any blood in vomit or severe abdominal pain?",
+        "Are you able to urinate normally?"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "urgent_dizziness_fainting",
+      "match": {
+        "any": [
+          "fainting",
+          "passed out",
+          "syncope",
+          "near fainting"
+        ],
+        "none": []
+      },
+      "severity": "urgent",
+      "condition": "Fainting/near-fainting (needs evaluation)",
+      "advice": "Seek urgent medical evaluation, especially if fainting occurred with chest pain, shortness of breath, severe bleeding, or neurologic symptoms.",
+      "doctor": "Emergency Medicine",
+      "followup_questions": [
+        "Did you fully lose consciousness, and for how long?",
+        "Any chest pain, shortness of breath, or palpitations?",
+        "Any injury from the fall?"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "routine_sore_throat_strep_screen",
+      "match": {
+        "any": [
+          "sore throat",
+          "throat pain",
+          "throat hurts",
+          "painful throat"
+        ],
+        "none": []
+      },
+      "severity": "routine",
+      "condition": "Sore throat (may need testing depending on symptoms)",
+      "advice": "Arrange a clinician visit if sore throat is severe, lasts more than a few days, or occurs with high fever, difficulty swallowing, or dehydration. Seek urgent care for trouble breathing, drooling, or inability to swallow fluids.",
+      "doctor": "ENT Specialist",
+      "followup_questions": [
+        "Any trouble breathing, drooling, or inability to swallow fluids?",
+        "Do you have cough or runny nose (viral signs) versus isolated sore throat?",
+        "How many days have symptoms lasted?"
+      ],
+      "priority": 20
+    },
+    {
+      "id": "routine_ear_pain",
+      "match": {
+        "any": [
+          "ear pain",
+          "earache",
+          "ear pressure"
+        ]
+      },
+      "severity": "routine",
+      "condition": "Ear pain (needs assessment if persistent/severe)",
+      "advice": "Arrange a routine clinician visit if pain is significant or persistent, or if there is fever, discharge, or hearing loss. Seek urgent care for severe pain, swelling behind the ear, or neurologic symptoms.",
+      "doctor": "ENT Specialist",
+      "followup_questions": [
+        "Any fever, ear discharge, or hearing loss?",
+        "Is there pain when pulling the outer ear?",
+        "How long has the ear pain been present?"
+      ],
+      "priority": 10
+    },
+    {
+      "id": "routine_skin_wound_infection",
+      "match": {
+        "any": [
+          "wound redness",
+          "pus",
+          "skin infection",
+          "boil",
+          "abscess"
+        ]
+      },
+      "severity": "routine",
+      "condition": "Possible skin infection (needs assessment if worsening)",
+      "advice": "Arrange a clinician visit if redness is spreading, there is fever, severe pain, or pus/abscess. Seek urgent care if you feel very unwell or the area is rapidly worsening.",
+      "doctor": "General Physician",
+      "followup_questions": [
+        "Is the redness spreading or very painful?",
+        "Any fever or chills?",
+        "Any diabetes or immune system problems?"
+      ],
+      "priority": 10
+    },
+    {
+      "id": "fallback_unknown",
+      "match": {
+        "any": []
+      },
+      "severity": "unknown",
+      "condition": "Symptoms need more details",
+      "advice": "I can help with general guidance, but I need more details. If symptoms are severe, worsening, or you are worried, seek in-person medical care.",
+      "doctor": "General Physician",
+      "followup_questions": [
+        "What are your main symptoms (top 2–3) and how long have they been present?",
+        "How severe is it (mild/moderate/severe) and is it getting worse?",
+        "Any red flags like chest pain, trouble breathing, fainting, confusion, severe dehydration, or weakness on one side?"
+      ],
+      "priority": -1000
+    }
+  ]
+}
