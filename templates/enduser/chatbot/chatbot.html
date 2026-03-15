@@ -76,7 +76,37 @@
             box-shadow: inset 0 -2px 5px rgba(255,255,255,0.2);
         }
 
-        .chat-header i {
+        .back-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.14);
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.20);
+            border-color: rgba(255, 255, 255, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .back-btn:active {
+            transform: translateY(0px);
+        }
+
+        .back-btn i {
+            font-size: 1.2rem;
+            filter: none;
+            animation: none;
+        }
+
+        .chat-header .title-icon {
             font-size: 2.2rem;
             filter: drop-shadow(0 6px 8px #00000030);
             animation: subtleWobble 3s infinite;
@@ -347,7 +377,10 @@
 <body>
     <div class="chat-card">
         <div class="chat-header">
-            <i class="fas fa-stethoscope"></i> Curexa Health Assistant 🤖
+            <button class="back-btn" id="backBtn" type="button" aria-label="Back">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <i class="fas fa-stethoscope title-icon"></i> Curexa Health Assistant 🤖
         </div>
 
         <div class="chat-messages" id="chatMessages"></div>
@@ -380,6 +413,43 @@
             const userInput = document.getElementById('userInput');
             const sendBtn = document.getElementById('sendBtn');
             const quickReplies = document.getElementById('quickReplies');
+            const backBtn = document.getElementById('backBtn');
+
+            const RETURN_TO_KEY = 'curexa.chatbot.return_to';
+
+            function sameOrigin(url) {
+                try {
+                    const u = new URL(url, window.location.href);
+                    return u.origin === window.location.origin;
+                } catch {
+                    return false;
+                }
+            }
+
+            // Store where the user came from so we can return via localStorage.
+            try {
+                const ref = document.referrer || '';
+                if (ref && sameOrigin(ref) && ref !== window.location.href) {
+                    localStorage.setItem(RETURN_TO_KEY, ref);
+                }
+            } catch {}
+
+            backBtn.addEventListener('click', () => {
+                let target = '';
+                try { target = localStorage.getItem(RETURN_TO_KEY) || ''; } catch {}
+
+                if (target && sameOrigin(target) && target !== window.location.href) {
+                    window.location.assign(target);
+                    return;
+                }
+
+                if (window.history.length > 1) {
+                    window.history.back();
+                    return;
+                }
+
+                window.location.assign('/');
+            });
 
             // ----- helper: escape user input (prevent XSS) -----
             function escapeHtml(unsafe) {
