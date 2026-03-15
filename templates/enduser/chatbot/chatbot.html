@@ -484,11 +484,52 @@
                     ? `<span class="bot-detail"><i class="fas fa-question-circle"></i> <strong>Follow-up:</strong><br>${followups.slice(0, 3).map(q => `• ${safe(q)}`).join('<br>')}</span>`
                     : '';
 
+                const doctors = Array.isArray(reply.doctor_directory) ? reply.doctor_directory : [];
+                const initialDoctorLimit = 4;
+
+                const renderDoctorCard = (d, isHidden) => {
+                    const name = safe(d && d.name ? d.name : 'Doctor');
+                    const spec = safe(d && d.specialization ? d.specialization : '');
+                    const dept = safe(d && d.department ? d.department : '');
+                    const fee = (d && d.consultation_fee != null && d.consultation_fee !== '') ? safe(d.consultation_fee) : '';
+                    const available = !!(d && d.is_available_today);
+                    const badge = available
+                        ? `<span class="dr-badge dr-badge--ok">Available today</span>`
+                        : `<span class="dr-badge">Not available</span>`;
+                    const pic = Array.isArray(d && d.profile_picture) && d.profile_picture[0] ? String(d.profile_picture[0]) : '';
+                    const img = pic
+                        ? `<img class="dr-avatar" src="${escapeHtml(pic)}" alt="${name}" loading="lazy" />`
+                        : `<div class="dr-avatar dr-avatar--placeholder"><i class="fas fa-user-doctor"></i></div>`;
+
+                    return `<div class="doctor-card${isHidden ? ' doctor-card--hidden' : ''}">
+                                ${img}
+                                <div class="dr-meta">
+                                    <div class="dr-top">
+                                        <div class="dr-name">${name}</div>
+                                        ${badge}
+                                    </div>
+                                    <div class="dr-sub">${spec}${(spec && dept) ? ' • ' : ''}${dept}</div>
+                                    ${fee ? `<div class="dr-fee">Fee: ${fee}</div>` : ''}
+                                </div>
+                            </div>`;
+                };
+
+                const doctorCardsHtml = doctors.length ? (() => {
+                    const hiddenCount = Math.max(0, doctors.length - initialDoctorLimit);
+                    const cards = doctors.map((d, idx) => renderDoctorCard(d, idx >= initialDoctorLimit)).join('');
+                    const btn = hiddenCount
+                        ? `<button type="button" class="dr-show-more" data-more="${hiddenCount}">Show more (${hiddenCount})</button>`
+                        : '';
+                    const collapsibleClass = hiddenCount ? ' doctor-cards--collapsible' : '';
+                    return `<div class="doctor-cards${collapsibleClass}">${cards}${btn}</div>`;
+                })() : '';
+
                 return `<strong><i class="fas fa-robot"></i> Bot</strong>
                         <span class="bot-detail"><i class="fas ${sevIcon}"></i> <strong>Severity:</strong> ${sev}</span>
                         <span class="bot-detail"><i class="fas fa-diagnoses"></i> <strong>Possible Condition:</strong> ${condition}</span>
                         <span class="bot-detail"><i class="fas fa-notes-medical"></i> <strong>Advice:</strong> ${advice}</span>
                         <span class="bot-detail"><i class="fas fa-user-md"></i> <strong>Doctor:</strong> ${doctor}</span>
+                        ${doctorCardsHtml}
                         ${followupHtml}
                         <span class="bot-detail"><i class="fas fa-shield-heart"></i> <strong>Note:</strong> This is not a medical diagnosis.</span>`;
             }
@@ -558,6 +599,19 @@
                 }
             });
 
+            // doctor cards: show more/less (event delegation)
+            messagesContainer.addEventListener('click', (e) => {
+                const btn = e.target.closest('.dr-show-more');
+                if (!btn) return;
+                const container = btn.closest('.doctor-cards');
+                if (!container) return;
+
+                const expanded = container.classList.toggle('doctor-cards--expanded');
+                const more = btn.getAttribute('data-more') || '';
+                btn.textContent = expanded ? 'Show less' : `Show more (${more})`;
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            });
+
             // quick reply chips
             quickReplies.addEventListener('click', (e) => {
                 const chip = e.target.closest('.chip');
@@ -595,6 +649,122 @@
         }
         .message-user i {
             color: #ffeac2;
+        }
+
+        .doctor-cards {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .doctor-card {
+            display: flex;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 18px;
+            border: 1px solid rgba(105, 162, 202, 0.35);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 18px -10px rgba(0, 40, 60, 0.18);
+        }
+
+        .doctor-card--hidden {
+            display: none;
+        }
+
+        .doctor-cards--expanded .doctor-card--hidden {
+            display: flex;
+        }
+
+        .dr-show-more {
+            width: 100%;
+            margin-top: 2px;
+            padding: 10px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(21, 69, 90, 0.18);
+            background: rgba(21, 69, 90, 0.06);
+            color: #15455a;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+
+        .dr-show-more:hover {
+            background: rgba(21, 69, 90, 0.10);
+            transform: translateY(-1px);
+        }
+
+        .dr-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            object-fit: cover;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            flex: 0 0 44px;
+        }
+
+        .dr-avatar--placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #e9f4ff, #f7fbff);
+            color: #1f6f92;
+        }
+
+        .dr-meta {
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+
+        .dr-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .dr-name {
+            font-weight: 800;
+            color: #15455a;
+            font-size: 0.98rem;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dr-sub {
+            margin-top: 2px;
+            color: #2c5f77;
+            font-size: 0.88rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dr-fee {
+            margin-top: 4px;
+            color: #1e5777;
+            font-size: 0.86rem;
+            font-weight: 700;
+        }
+
+        .dr-badge {
+            flex: 0 0 auto;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(21, 69, 90, 0.08);
+            color: #15455a;
+            border: 1px solid rgba(21, 69, 90, 0.14);
+            white-space: nowrap;
+        }
+
+        .dr-badge--ok {
+            background: rgba(46, 170, 105, 0.12);
+            border-color: rgba(46, 170, 105, 0.18);
+            color: #117a44;
         }
     </style>
 </body>

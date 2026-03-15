@@ -28,15 +28,36 @@ def send_email_template(
     context.setdefault("current_year", timezone.now().year)
     context.setdefault(
         "logo_url",
-        "https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1663574980688_114990/archisketch-logo"
+        "https://res.cloudinary.com/dcfkxity4/image/upload/v1773589515/WhatsApp_Image_2026-03-15_at_8.57.47_PM_pjdlye.jpg"
     )
-    context.setdefault("company_name", "Archisketch Company")
-    context.setdefault("company_address", "Address 540, City, State")
+    context.setdefault("company_name", "Curexa Healthtech")
+    context.setdefault("company_address", "Cooch Behar, West Bengal")
     context.setdefault("social_icons", [
-        {"url": "#", "img": "https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661502815169_682499/email-template-icon-facebook", "alt": "Facebook"},
-        {"url": "#", "img": "https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661504218208_684135/email-template-icon-instagram", "alt": "Instagram"},
-        {"url": "#", "img": "https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661503043040_372004/email-template-icon-twitter", "alt": "Twitter"},
-        {"url": "#", "img": "https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661503195931_210869/email-template-icon-youtube", "alt": "Youtube"},
+        {
+            "url": "www.linkedin.com/in/parthapratimsutradhar",
+            "img": "https://res.cloudinary.com/dcfkxity4/image/upload/v1773589937/linkedin_p4zry0.png",
+            "alt": "LinkedIn"
+        },
+        {
+            "url": "https://x.com/Partha_Pratim_S",
+            "img": "https://res.cloudinary.com/dcfkxity4/image/upload/v1773590138/x_hrezs4.png",
+            "alt": "X"
+        },
+        {
+            "url": "https://www.instagram.com/iamparthasutradhar/",
+            "img": "https://res.cloudinary.com/dcfkxity4/image/upload/v1773589060/instagram_usvlf7.png",
+            "alt": "Instagram"
+        },
+        {
+            "url": "https://www.facebook.com/iamparthasutradhar/",
+            "img": "https://res.cloudinary.com/dcfkxity4/image/upload/v1773588729/facebook_iyi6cn.png",
+            "alt": "Facebook"
+        },
+        {
+            "url": "https://github.com/parthapratimsutradhar",
+            "img": "https://res.cloudinary.com/dcfkxity4/image/upload/v1773588792/github_dcqb3m.png",
+            "alt": "Github"
+        }
     ])
 
     # Render HTML email

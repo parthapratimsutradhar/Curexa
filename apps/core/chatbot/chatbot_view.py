@@ -24,6 +24,8 @@ def chat_api(request):
             return JsonResponse({"error": "Missing message"}, status=400)
 
         response = diagnose_structured(message)
+        
+        print(response)
 
         return JsonResponse({"reply": response})
 
