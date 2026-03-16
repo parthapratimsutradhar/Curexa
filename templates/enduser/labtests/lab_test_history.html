@@ -1,0 +1,1339 @@
+{% extends "enduser/base.html" %}
+{% block title %}My Lab Test History | Curexa{% endblock %}
+{% load static %}
+{% block content %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+    }
+
+    :root {
+        --primary-blue: #0A7AFF;
+        --primary-teal: #00B8A9;
+        --light-blue: #E8F4FF;
+        --light-teal: #E6F7F6;
+        --dark-gray: #1A1D2B;
+        --light-gray: #F8FAFC;
+        --medium-gray: #E2E8F0;
+        --text-gray: #64748B;
+        --success-green: #10B981;
+        --warning-orange: #F59E0B;
+        --danger-red: #EF4444;
+        --white: #FFFFFF;
+        --shadow-soft: rgba(0, 0, 0, 0.04);
+        --shadow-medium: rgba(0, 0, 0, 0.08);
+        --gradient-primary: linear-gradient(135deg, #0A7AFF 0%, #00B8A9 100%);
+        --gradient-light: linear-gradient(135deg, #E8F4FF 0%, #E6F7F6 100%);
+        --glass-bg: rgba(255, 255, 255, 0.85);
+        --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+        background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+        color: var(--dark-gray);
+        line-height: 1.6;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 20px 40px;
+    }
+
+    /* Header - only if not provided by base */
+    .page-header {
+        margin-bottom: 40px;
+    }
+
+    .page-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+        background: linear-gradient(135deg, var(--dark-gray) 0%, #334155 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.5px;
+    }
+
+    .page-subtitle {
+        color: var(--text-gray);
+        font-size: 1.1rem;
+        max-width: 600px;
+    }
+
+    .order-count {
+        background: var(--light-blue);
+        color: var(--primary-blue);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Tabs */
+    .order-tabs {
+        display: flex;
+        gap: 8px;
+        background: var(--white);
+        padding: 8px;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px var(--shadow-soft);
+        margin-bottom: 30px;
+        max-width: max-content;
+        border: 1px solid var(--medium-gray);
+    }
+
+    .tab {
+        padding: 12px 24px;
+        border-radius: 12px;
+        background: transparent;
+        border: none;
+        font-weight: 600;
+        color: var(--text-gray);
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+    }
+
+    .tab:hover {
+        background: rgba(0, 0, 0, 0.02);
+    }
+
+    .tab.active {
+        background: var(--gradient-primary);
+        color: white;
+        box-shadow: 0 4px 12px rgba(10, 122, 255, 0.2);
+    }
+
+    .tab-count {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+
+    /* Search & Filter */
+    .search-filter-row {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .search-container {
+        flex: 1;
+        min-width: 300px;
+        position: relative;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 16px 20px 16px 48px;
+        border-radius: 16px;
+        border: 1px solid var(--medium-gray);
+        background: var(--white);
+        font-size: 1rem;
+        color: var(--dark-gray);
+        transition: var(--transition-smooth);
+        box-shadow: 0 2px 8px var(--shadow-soft);
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 4px 16px rgba(10, 122, 255, 0.1);
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-gray);
+        font-size: 1.1rem;
+    }
+
+    .filter-btn {
+        padding: 16px 24px;
+        border-radius: 16px;
+        border: 1px solid var(--medium-gray);
+        background: var(--white);
+        font-weight: 600;
+        color: var(--dark-gray);
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 2px 8px var(--shadow-soft);
+    }
+
+    .filter-btn:hover {
+        border-color: var(--primary-blue);
+        color: var(--primary-blue);
+    }
+
+    /* Lab Test Cards */
+    .orders-container {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        margin-bottom: 60px;
+    }
+
+    .order-card {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: 0 4px 20px var(--shadow-soft);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        transition: var(--transition-smooth);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .order-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px var(--shadow-medium);
+    }
+
+    .order-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 24px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--medium-gray);
+    }
+
+    .order-id {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--dark-gray);
+        margin-bottom: 8px;
+    }
+
+    .order-date {
+        color: var(--text-gray);
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .order-status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .status-completed {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-green);
+    }
+
+    .status-upcoming {
+        background: rgba(10, 122, 255, 0.1);
+        color: var(--primary-blue);
+    }
+
+    .status-cancelled {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger-red);
+    }
+
+    .status-pending {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning-orange);
+    }
+
+    .order-content {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 30px;
+    }
+
+    .test-preview {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .test-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        background: var(--gradient-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid white;
+        box-shadow: 0 2px 8px var(--shadow-soft);
+        font-size: 1.8rem;
+        color: var(--primary-blue);
+    }
+
+    .test-count {
+        font-weight: 600;
+        color: var(--dark-gray);
+    }
+
+    .order-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        min-width: 200px;
+    }
+
+    .order-amount {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--dark-gray);
+    }
+
+    .payment-mode {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-gray);
+        font-weight: 500;
+    }
+
+    .lab-address {
+        color: var(--text-gray);
+        font-size: 0.95rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        line-height: 1.5;
+    }
+
+    .order-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid var(--medium-gray);
+    }
+
+    .btn-view-details {
+        padding: 12px 24px;
+        border-radius: 12px;
+        border: 1px solid var(--primary-blue);
+        background: transparent;
+        color: var(--primary-blue);
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-view-details:hover {
+        background: rgba(10, 122, 255, 0.05);
+    }
+
+    .btn-rebook {
+        padding: 12px 24px;
+        border-radius: 12px;
+        border: none;
+        background: var(--gradient-primary);
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 12px rgba(10, 122, 255, 0.2);
+    }
+
+    .btn-rebook:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(10, 122, 255, 0.3);
+    }
+
+    .btn-rebook:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: var(--medium-gray);
+        box-shadow: none;
+    }
+
+    /* Expanded Details */
+    .order-details {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+        margin-top: 0;
+    }
+
+    .order-details.expanded {
+        max-height: 1000px;
+        margin-top: 28px;
+        padding-top: 28px;
+        border-top: 1px solid var(--medium-gray);
+    }
+
+    .details-header {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        color: var(--dark-gray);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .tests-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+
+    .test-item {
+        display: flex;
+        align-items: center;
+        padding: 16px;
+        border-radius: 12px;
+        background: var(--light-gray);
+        gap: 16px;
+    }
+
+    .test-item-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        background: var(--gradient-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 1.5rem;
+        color: var(--primary-blue);
+    }
+
+    .test-info {
+        flex: 1;
+    }
+
+    .test-name {
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: var(--dark-gray);
+    }
+
+    .test-parameters {
+        color: var(--text-gray);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .report-status {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .report-available {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-green);
+    }
+
+    .report-pending {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning-orange);
+    }
+
+    .appointment-timeline {
+        background: var(--light-gray);
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 32px;
+    }
+
+    .timeline-header {
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: var(--dark-gray);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .timeline-steps {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin: 30px 0;
+    }
+
+    .timeline-steps::before {
+        content: '';
+        position: absolute;
+        top: 15px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--medium-gray);
+        z-index: 1;
+    }
+
+    .timeline-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .step-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--white);
+        border: 3px solid var(--medium-gray);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        color: var(--text-gray);
+    }
+
+    .step-icon.active {
+        background: var(--primary-blue);
+        border-color: var(--primary-blue);
+        color: white;
+    }
+
+    .step-icon.completed {
+        background: var(--success-green);
+        border-color: var(--success-green);
+        color: white;
+    }
+
+    .step-label {
+        font-size: 0.85rem;
+        color: var(--text-gray);
+        text-align: center;
+        max-width: 100px;
+    }
+
+    .step-label.active {
+        color: var(--primary-blue);
+        font-weight: 600;
+    }
+
+    .details-actions {
+        display: flex;
+        gap: 16px;
+    }
+
+    .btn-report {
+        padding: 12px 24px;
+        border-radius: 12px;
+        border: 1px solid var(--medium-gray);
+        background: var(--white);
+        color: var(--dark-gray);
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-report:hover {
+        background: var(--light-gray);
+    }
+
+    /* Empty State */
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 80px 20px;
+        text-align: center;
+        background: var(--white);
+        border-radius: 24px;
+        box-shadow: 0 4px 20px var(--shadow-soft);
+        margin: 40px 0;
+    }
+
+    .empty-state-icon {
+        font-size: 6rem;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 30px;
+        opacity: 0.7;
+    }
+
+    .empty-state h3 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 16px;
+        color: var(--dark-gray);
+    }
+
+    .empty-state p {
+        color: var(--text-gray);
+        max-width: 500px;
+        margin-bottom: 40px;
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+
+    .btn-book-test {
+        padding: 18px 36px;
+        border-radius: 16px;
+        border: none;
+        background: var(--gradient-primary);
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 6px 20px rgba(10, 122, 255, 0.25);
+    }
+
+    .btn-book-test:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(10, 122, 255, 0.3);
+    }
+
+    /* Smart Suggestions (Recommended Tests) */
+    .smart-suggestions {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: 0 4px 20px var(--shadow-soft);
+        margin-bottom: 40px;
+    }
+
+    .suggestions-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .suggestions-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--dark-gray);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .suggestions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .suggestion-card {
+        background: var(--light-gray);
+        border-radius: 16px;
+        padding: 20px;
+        transition: var(--transition-smooth);
+        border: 1px solid transparent;
+    }
+
+    .suggestion-card:hover {
+        border-color: var(--primary-blue);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(10, 122, 255, 0.1);
+    }
+
+    .suggestion-test-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        background: var(--gradient-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--primary-blue);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .order-card {
+        animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .container {
+            padding: 20px 30px;
+        }
+        
+        .order-content {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+        
+        .page-title-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        
+        .search-filter-row {
+            flex-direction: column;
+        }
+        
+        .search-container {
+            min-width: 100%;
+        }
+        
+        .order-tabs {
+            overflow-x: auto;
+            max-width: 100%;
+            padding: 6px;
+        }
+        
+        .tab {
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .order-card-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        
+        .timeline-steps {
+            flex-direction: column;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        
+        .timeline-steps::before {
+            display: none;
+        }
+        
+        .timeline-step {
+            flex-direction: row;
+            gap: 16px;
+            width: 100%;
+        }
+        
+        .step-label {
+            text-align: left;
+        }
+        
+        .details-actions {
+            flex-direction: column;
+        }
+        
+        .suggestions-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-title-row">
+            <div>
+                <h1 class="page-title">My Lab Test History</h1>
+                <p class="page-subtitle">Track, view, and manage your lab test bookings and reports</p>
+            </div>
+            <div class="order-count">
+                <i class="fas fa-flask"></i>
+                <span id="orderCount">8 Bookings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="order-tabs">
+        <button class="tab active" data-tab="all">
+            <i class="fas fa-layer-group"></i>
+            All
+            <span class="tab-count">8</span>
+        </button>
+        <button class="tab" data-tab="upcoming">
+            <i class="fas fa-calendar-alt"></i>
+            Upcoming
+            <span class="tab-count">3</span>
+        </button>
+        <button class="tab" data-tab="completed">
+            <i class="fas fa-check-circle"></i>
+            Completed
+            <span class="tab-count">4</span>
+        </button>
+        <button class="tab" data-tab="cancelled">
+            <i class="fas fa-times-circle"></i>
+            Cancelled
+            <span class="tab-count">1</span>
+        </button>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="search-filter-row">
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search by test name, booking ID, or lab...">
+        </div>
+        <button class="filter-btn">
+            <i class="fas fa-filter"></i>
+            Filter
+        </button>
+    </div>
+
+    <!-- Smart Suggestions (Recommended Tests) -->
+    <div class="smart-suggestions">
+        <div class="suggestions-header">
+            <h3 class="suggestions-title">
+                <i class="fas fa-flask"></i>
+                Recommended for You
+            </h3>
+            <button class="btn-rebook" onclick="window.location.href='{% url 'labtests_catalog' %}'">
+                <i class="fas fa-plus-circle"></i>
+                Browse All Tests
+            </button>
+        </div>
+        <div class="suggestions-grid">
+            <div class="suggestion-card">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <div class="suggestion-test-icon">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">Complete Blood Count</div>
+                        <div style="font-size: 0.9rem; color: var(--text-gray);">Most booked test</div>
+                    </div>
+                </div>
+                <button class="btn-rebook" style="width: 100%; padding: 10px; font-size: 0.9rem;" onclick="window.location.href='{% url 'labtests_catalog' %}'">
+                    <i class="fas fa-plus"></i>
+                    Book Now
+                </button>
+            </div>
+            <div class="suggestion-card">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <div class="suggestion-test-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">Lipid Profile</div>
+                        <div style="font-size: 0.9rem; color: var(--text-gray);">Annual checkup</div>
+                    </div>
+                </div>
+                <button class="btn-rebook" style="width: 100%; padding: 10px; font-size: 0.9rem;" onclick="window.location.href='{% url 'labtests_catalog' %}'">
+                    <i class="fas fa-plus"></i>
+                    Book Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders Container (Lab Test History Cards) -->
+    <div class="orders-container" id="ordersContainer">
+        <!-- Test Card 1 (Completed) -->
+        <div class="order-card" data-status="completed">
+            <div class="order-card-header">
+                <div>
+                    <div class="order-id">Booking #LB1001</div>
+                    <div class="order-date">
+                        <i class="far fa-calendar"></i>
+                        Completed on 15 Feb 2025 • 10:30 AM
+                    </div>
+                </div>
+                <div class="order-status-badge status-completed">
+                    <i class="fas fa-check-circle"></i>
+                    Completed
+                </div>
+            </div>
+            
+            <div class="order-content">
+                <div class="test-preview">
+                    <div class="test-icon">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 1.1rem;">Complete Blood Count (CBC)</div>
+                        <div class="test-count">1 test</div>
+                    </div>
+                </div>
+                
+                <div class="order-summary">
+                    <div class="order-amount">$45.00</div>
+                    <div class="payment-mode">
+                        <i class="fas fa-credit-card"></i>
+                        Paid via Card
+                    </div>
+                    <div class="lab-address">
+                        <i class="fas fa-flask"></i>
+                        Curexa Diagnostics
+                    </div>
+                </div>
+            </div>
+            
+            <div class="order-actions">
+                <button class="btn-view-details" onclick="toggleDetails('test1')">
+                    <i class="fas fa-chevron-down"></i>
+                    View Details
+                </button>
+                <button class="btn-rebook" onclick="rebookTest('Complete Blood Count', '45.00')">
+                    <i class="fas fa-redo"></i>
+                    Book Again
+                </button>
+            </div>
+            
+            <!-- Expanded Details -->
+            <div class="order-details" id="test1">
+                <div class="details-header">
+                    <i class="fas fa-info-circle"></i>
+                    Test Details
+                </div>
+                
+                <div class="tests-list">
+                    <div class="test-item">
+                        <div class="test-item-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="test-info">
+                            <div class="test-name">Complete Blood Count (CBC)</div>
+                            <div class="test-parameters">
+                                <span>RBC, WBC, Platelets, Hemoglobin</span>
+                                <span class="report-status report-available">
+                                    <i class="fas fa-file-pdf"></i>
+                                    Report Available
+                                </span>
+                            </div>
+                        </div>
+                        <div class="medicine-quantity">$45.00</div>
+                    </div>
+                </div>
+                
+                <div class="appointment-timeline">
+                    <div class="timeline-header">
+                        <span>Appointment Timeline</span>
+                        <span style="color: var(--success-green); font-size: 0.9rem;">
+                            <i class="fas fa-check-circle"></i>
+                            Completed
+                        </span>
+                    </div>
+                    
+                    <div class="timeline-steps">
+                        <div class="timeline-step">
+                            <div class="step-icon completed">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="step-label">Booked</div>
+                        </div>
+                        <div class="timeline-step">
+                            <div class="step-icon completed">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="step-label">Sample Collected</div>
+                        </div>
+                        <div class="timeline-step">
+                            <div class="step-icon completed">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="step-label">Processing</div>
+                        </div>
+                        <div class="timeline-step">
+                            <div class="step-icon completed">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="step-label">Report Ready</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="details-actions">
+                    <button class="btn-report" onclick="viewReport('LB1001')">
+                        <i class="fas fa-download"></i>
+                        Download Report
+                    </button>
+                    <button class="btn-rebook" onclick="rebookTest('Complete Blood Count', '45.00')">
+                        <i class="fas fa-redo"></i>
+                        Book Again
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Card 2 (Upcoming) -->
+        <div class="order-card" data-status="upcoming">
+            <div class="order-card-header">
+                <div>
+                    <div class="order-id">Booking #LB1002</div>
+                    <div class="order-date">
+                        <i class="far fa-calendar"></i>
+                        Scheduled on 10 Mar 2025 • 08:00 AM
+                    </div>
+                </div>
+                <div class="order-status-badge status-upcoming">
+                    <i class="fas fa-calendar-check"></i>
+                    Upcoming
+                </div>
+            </div>
+            
+            <div class="order-content">
+                <div class="test-preview">
+                    <div class="test-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 1.1rem;">Lipid Profile</div>
+                        <div class="test-count">1 test</div>
+                    </div>
+                </div>
+                
+                <div class="order-summary">
+                    <div class="order-amount">$65.00</div>
+                    <div class="payment-mode">
+                        <i class="fas fa-money-bill-wave"></i>
+                        Cash on Collection
+                    </div>
+                    <div class="lab-address">
+                        <i class="fas fa-flask"></i>
+                        Curexa Diagnostics
+                    </div>
+                </div>
+            </div>
+            
+            <div class="order-actions">
+                <button class="btn-view-details" onclick="toggleDetails('test2')">
+                    <i class="fas fa-chevron-down"></i>
+                    View Details
+                </button>
+                <button class="btn-rebook" disabled>
+                    <i class="fas fa-clock"></i>
+                    Upcoming
+                </button>
+            </div>
+            
+            <!-- Expanded Details -->
+            <div class="order-details" id="test2">
+                <div class="details-header">
+                    <i class="fas fa-info-circle"></i>
+                    Test Details
+                </div>
+                
+                <div class="tests-list">
+                    <div class="test-item">
+                        <div class="test-item-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="test-info">
+                            <div class="test-name">Lipid Profile</div>
+                            <div class="test-parameters">
+                                <span>Cholesterol, HDL, LDL, Triglycerides</span>
+                            </div>
+                        </div>
+                        <div class="medicine-quantity">$65.00</div>
+                    </div>
+                </div>
+                
+                <div class="appointment-timeline">
+                    <div class="timeline-header">
+                        <span>Appointment Timeline</span>
+                        <span style="color: var(--primary-blue); font-size: 0.9rem;">
+                            <i class="fas fa-clock"></i>
+                            Sample collection pending
+                        </span>
+                    </div>
+                    
+                    <div class="timeline-steps">
+                        <div class="timeline-step">
+                            <div class="step-icon completed">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="step-label">Booked</div>
+                        </div>
+                        <div class="timeline-step">
+                            <div class="step-icon active">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
+                            <div class="step-label active">Awaiting Sample</div>
+                        </div>
+                        <div class="timeline-step">
+                            <div class="step-icon">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <div class="step-label">Processing</div>
+                        </div>
+                        <div class="timeline-step">
+                            <div class="step-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="step-label">Report</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="details-actions">
+                    <button class="btn-report" onclick="alert('Contact lab to reschedule')">
+                        <i class="fas fa-phone-alt"></i>
+                        Contact Lab
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Card 3 (Cancelled) -->
+        <div class="order-card" data-status="cancelled">
+            <div class="order-card-header">
+                <div>
+                    <div class="order-id">Booking #LB1003</div>
+                    <div class="order-date">
+                        <i class="far fa-calendar"></i>
+                        Cancelled on 05 Jan 2025
+                    </div>
+                </div>
+                <div class="order-status-badge status-cancelled">
+                    <i class="fas fa-times-circle"></i>
+                    Cancelled
+                </div>
+            </div>
+            
+            <div class="order-content">
+                <div class="test-preview">
+                    <div class="test-icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 1.1rem;">Vitamin D Test</div>
+                        <div class="test-count">1 test</div>
+                    </div>
+                </div>
+                
+                <div class="order-summary">
+                    <div class="order-amount">$95.00</div>
+                    <div class="payment-mode">
+                        <i class="fas fa-credit-card"></i>
+                        Refunded
+                    </div>
+                    <div class="lab-address">
+                        <i class="fas fa-flask"></i>
+                        Curexa Diagnostics
+                    </div>
+                </div>
+            </div>
+            
+            <div class="order-actions">
+                <button class="btn-view-details" onclick="toggleDetails('test3')">
+                    <i class="fas fa-chevron-down"></i>
+                    View Details
+                </button>
+                <button class="btn-rebook" onclick="rebookTest('Vitamin D Test', '95.00')">
+                    <i class="fas fa-redo"></i>
+                    Book Again
+                </button>
+            </div>
+            
+            <!-- Expanded Details -->
+            <div class="order-details" id="test3">
+                <div class="details-header">
+                    <i class="fas fa-info-circle"></i>
+                    Cancellation Reason
+                </div>
+                <p class="text-gray" style="margin-bottom: 20px;">Cancelled by user - rescheduled to a later date.</p>
+                
+                <div class="details-actions">
+                    <button class="btn-rebook" onclick="rebookTest('Vitamin D Test', '95.00')">
+                        <i class="fas fa-redo"></i>
+                        Book Again
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State (Hidden by default) -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="empty-state-icon">
+            <i class="fas fa-flask"></i>
+        </div>
+        <h3>No Lab Tests Yet</h3>
+        <p>You haven't booked any lab tests. Explore our comprehensive range of diagnostic tests and book with certified labs.</p>
+        <button class="btn-book-test" onclick="window.location.href='{% url 'labtests_catalog' %}'">
+            <i class="fas fa-flask"></i>
+            Book Your First Test
+        </button>
+    </div>
+
+</div>
+
+<!-- Font Awesome (if not already in base) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<script>
+    // Lab test data (for dynamic counts)
+    const orders = [
+        { id: 'test1', status: 'completed' },
+        { id: 'test2', status: 'upcoming' },
+        { id: 'test3', status: 'cancelled' }
+    ];
+
+    // Toggle order details
+    function toggleDetails(orderId) {
+        const detailsElement = document.getElementById(orderId);
+        const button = document.querySelector(`[onclick="toggleDetails('${orderId}')"]`);
+        const icon = button.querySelector('i');
+        
+        if (detailsElement.classList.contains('expanded')) {
+            detailsElement.classList.remove('expanded');
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+            button.innerHTML = `<i class="fas fa-chevron-down"></i> View Details`;
+        } else {
+            detailsElement.classList.add('expanded');
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+            button.innerHTML = `<i class="fas fa-chevron-up"></i> Hide Details`;
+        }
+    }
+
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            const tabType = this.getAttribute('data-tab');
+            filterOrders(tabType);
+        });
+    });
+
+    // Filter orders by status
+    function filterOrders(status) {
+        const ordersContainer = document.getElementById('ordersContainer');
+        const emptyState = document.getElementById('emptyState');
+        const orderCards = document.querySelectorAll('.order-card');
+        
+        let visibleCount = 0;
+        
+        orderCards.forEach(card => {
+            if (status === 'all' || card.getAttribute('data-status') === status) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Show empty state if no orders match
+        if (visibleCount === 0) {
+            ordersContainer.style.display = 'none';
+            emptyState.style.display = 'flex';
+        } else {
+            ordersContainer.style.display = 'block';
+            emptyState.style.display = 'none';
+        }
+        
+        // Update order count
+        document.getElementById('orderCount').textContent = `${visibleCount} Booking${visibleCount !== 1 ? 's' : ''}`;
+    }
+
+    // Search functionality
+    const searchInput = document.querySelector('.search-input');
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const orderCards = document.querySelectorAll('.order-card');
+        
+        orderCards.forEach(card => {
+            const bookingId = card.querySelector('.order-id').textContent.toLowerCase();
+            const testName = card.querySelector('.test-preview div div')?.textContent.toLowerCase() || '';
+            
+            if (bookingId.includes(searchTerm) || testName.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+
+    // Rebook functionality
+    function rebookTest(testName, price) {
+        alert(`Redirecting to book ${testName} - $${price}`);
+        // In real implementation: window.location.href = `/labtests/?test=${encodeURIComponent(testName)}`;
+    }
+
+    // View report
+    function viewReport(bookingId) {
+        alert(`Downloading report for ${bookingId}`);
+        // window.location.href = `/labtests/report/${bookingId}`;
+    }
+
+    // Filter button
+    document.querySelector('.filter-btn').addEventListener('click', function() {
+        alert('Filter options would open here (date range, lab, price, etc.)');
+    });
+
+    // Initialize counts
+    document.addEventListener('DOMContentLoaded', function() {
+        const statusCounts = {
+            all: document.querySelectorAll('.order-card').length,
+            upcoming: document.querySelectorAll('.order-card[data-status="upcoming"]').length,
+            completed: document.querySelectorAll('.order-card[data-status="completed"]').length,
+            cancelled: document.querySelectorAll('.order-card[data-status="cancelled"]').length
+        };
+        
+        document.querySelectorAll('.tab').forEach(tab => {
+            const tabType = tab.getAttribute('data-tab');
+            const countElement = tab.querySelector('.tab-count');
+            if (countElement) {
+                countElement.textContent = statusCounts[tabType];
+            }
+        });
+    });
+</script>
+{% endblock content %}

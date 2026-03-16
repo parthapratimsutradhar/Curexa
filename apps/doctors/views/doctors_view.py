@@ -11,6 +11,30 @@ class DoctorProfileView(View):
         return render(request, "enduser/doctors/doctor_profile.html")
 
 
+class DoctorLoginView(View):
+    def get(self, request):
+        return render(request, "enduser(doctors)/doctor_login.html")
+
+
+class DoctorPortalProfileView(View):
+    def get(self, request):
+        return render(request, "enduser(doctors)/doctor_profile.html")
+
+
+class DoctorAppointmentManagementView(View):
+    def get(self, request):
+        return render(request, "enduser(doctors)/appointment_management.html")
+
+
+class DoctorAvailabilityManagementView(View):
+    def get(self, request):
+        return render(request, "enduser(doctors)/availability_management.html")
+
+
+class DoctorEarningView(View):
+    def get(self, request):
+        return render(request, "enduser(doctors)/doctor_earning.html")
+
 
 
    

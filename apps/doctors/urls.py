@@ -4,6 +4,10 @@ from django.urls import path
 urlpatterns = [
     
     path('doctors/', views.DoctorListView.as_view(), name='doctor_list'),
+    path('doctor/login/', views.DoctorLoginView.as_view(), name='doctor_login'),
+    path('doctor/profile/', views.DoctorPortalProfileView.as_view(), name='doctor_profile'),
+    path('doctor/appointments/', views.DoctorAppointmentManagementView.as_view(), name='doctor_appointment_management'),
+    path('doctor/availability/', views.DoctorAvailabilityManagementView.as_view(), name='doctor_availability_management'),
+    path('doctor/earnings/', views.DoctorEarningView.as_view(), name='doctor_earning'),
     path('doctor/<int:pk>/profile', views.DoctorProfileView.as_view(), name='doctor_profilr')
 ]
-

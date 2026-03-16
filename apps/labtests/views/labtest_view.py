@@ -10,3 +10,8 @@ class LabTestsCatalogView(View):
 class TestBookingModalView(View):
     def get(self, request):
         return render(request, "enduser/labtests/test_booking_modal.html")
+
+
+class LabTestHistoryView(View):
+    def get(self, request):
+        return render(request, "enduser/labtests/lab_test_history.html")

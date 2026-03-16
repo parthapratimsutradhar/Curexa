@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Portal Login | Medical Staff</title>
+  <!-- Font Awesome 6 (free icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #d9eef7 0%, #f0f9ff 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    /* main card */
+    .login-card {
+      display: flex;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(4px);
+      max-width: 1050px;
+      width: 100%;
+      border-radius: 2.5rem;
+      box-shadow: 0 30px 50px -20px rgba(18, 52, 77, 0.25), 0 10px 20px -5px rgba(0,80,100,0.15);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    /* form panel (left) */
+    .form-panel {
+      flex: 1.2;
+      padding: 2.8rem 2.5rem;
+      background: white;
+    }
+
+    /* illustration panel (right) */
+    .illustration-panel {
+      flex: 1;
+      background: linear-gradient(165deg, #ecfdf5 0%, #d5f0fc 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      position: relative;
+      border-left: 3px solid rgba(69, 162, 158, 0.15);
+    }
+
+    .illustration-content {
+      text-align: center;
+      animation: float 6s infinite ease-in-out;
+    }
+
+    .illustration-content i {
+      color: #1e7b7c;
+      margin: 0.5rem;
+      filter: drop-shadow(0 8px 12px rgba(30, 123, 124, 0.2));
+      transition: transform 0.2s;
+    }
+
+    .illustration-content i:hover {
+      transform: scale(1.02);
+    }
+
+    .illustration-content p {
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: #1a4b5e;
+      background: rgba(255,255,255,0.5);
+      padding: 0.6rem 1.5rem;
+      border-radius: 40px;
+      backdrop-filter: blur(2px);
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* typography */
+    h2 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: #0c4a5c;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .sub-head {
+      color: #4a7c8b;
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+      border-left: 4px solid #39a0a1;
+      padding-left: 1rem;
+      background: #f0fbfe;
+      border-radius: 0 8px 8px 0;
+      line-height: 1.4;
+    }
+
+    /* form elements */
+    .input-group {
+      margin-bottom: 1.4rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #175a6b;
+      margin-bottom: 0.3rem;
+      letter-spacing: 0.3px;
+    }
+
+    /* icon wrapper */
+    .input-icon-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon-wrapper i.input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #3c99a4;
+      font-size: 1.1rem;
+      pointer-events: none;
+      z-index: 2;
+      transition: color 0.2s;
+    }
+
+    /* base input style */
+    .input-icon-wrapper input {
+      width: 100%;
+      padding: 0.9rem 1rem 0.9rem 3rem;
+      border: 1.5px solid #d7e9f0;
+      border-radius: 18px;
+      font-size: 1rem;
+      background: white;
+      transition: all 0.2s;
+      outline: none;
+      color: #164a59;
+    }
+
+    .input-icon-wrapper input:focus {
+      border-color: #2f9e9f;
+      box-shadow: 0 4px 12px rgba(47, 158, 159, 0.15);
+    }
+
+    .input-icon-wrapper input::placeholder {
+      color: #9fc3cc;
+      font-weight: 300;
+    }
+
+    /* password wrapper extra right padding for toggle */
+    .input-icon-wrapper.password-wrapper input {
+      padding-right: 3.5rem;
+    }
+
+    /* toggle button (show/hide) */
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #548e9c;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      border-radius: 50%;
+      transition: background 0.2s, color 0.2s;
+      z-index: 5;
+    }
+
+    .password-toggle:hover {
+      background: #e3f3f7;
+      color: #1d7178;
+    }
+
+    /* error messages */
+    .error-message {
+      color: #c3414a;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-top: 6px;
+      margin-left: 12px;
+      display: block;
+      min-height: 18px;
+      transition: 0.2s;
+    }
+
+    /* options row (remember + forgot) */
+    .options-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.8rem 0 2rem;
+      font-size: 0.9rem;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #1a5465;
+      cursor: pointer;
+    }
+
+    .checkbox input[type="checkbox"] {
+      accent-color: #2f9e9f;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      color: #1f7e84;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px dashed #a3d0d3;
+      transition: 0.2s;
+    }
+
+    .forgot-link:hover {
+      color: #0a4e57;
+      border-bottom-color: #0a4e57;
+    }
+
+    /* login button */
+    .login-btn {
+      width: 100%;
+      background: linear-gradient(115deg, #217c7e, #309ca5);
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      padding: 1rem 1.8rem;
+      border-radius: 40px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px -5px rgba(33, 124, 126, 0.4);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      letter-spacing: 0.5px;
+    }
+
+    .login-btn i {
+      font-size: 1.2rem;
+      transition: transform 0.2s;
+    }
+
+    .login-btn:hover:not(:disabled) {
+      background: linear-gradient(115deg, #1b686a, #26828b);
+      box-shadow: 0 12px 28px -5px #1b686a80;
+      transform: scale(1.02);
+    }
+
+    .login-btn:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.8;
+      cursor: not-allowed;
+      background: linear-gradient(115deg, #87b3b5, #89b9c1);
+      box-shadow: none;
+    }
+
+    /* loading spinner */
+    .fa-spinner {
+      margin-right: 6px;
+    }
+
+    /* responsive */
+    @media (max-width: 800px) {
+      .login-card {
+        flex-direction: column;
+        border-radius: 2rem;
+      }
+      .illustration-panel {
+        border-left: none;
+        border-top: 3px solid rgba(69, 162, 158, 0.2);
+        padding: 2.5rem 1.5rem;
+      }
+      .form-panel {
+        padding: 2.2rem 1.8rem;
+      }
+      h2 {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 0.8rem; }
+      .form-panel { padding: 2rem 1.2rem; }
+      .options-row { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      .illustration-content i.fa-5x { font-size: 3.5em; }
+    }
+
+    /* small extra touch */
+    .medical-badge {
+      display: inline-block;
+      background: #ddf4f0;
+      border-radius: 60px;
+      padding: 0.3rem 1rem;
+      margin-bottom: 1.2rem;
+      color: #16636b;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <!-- LEFT: Login form -->
+    <div class="form-panel">
+      <div class="medical-badge">
+        <i class="fas fa-stethoscope" style="margin-right: 6px;"></i> secure staff access
+      </div>
+      <h2>Doctor Portal Login</h2>
+      <div class="sub-head">
+        <i class="fas fa-shield-alt" style="margin-right: 8px;"></i>Enter your credentials to access the dashboard
+      </div>
+
+      <form id="doctorLoginForm">
+        <!-- Email / Doctor ID field -->
+        <div class="input-group">
+          <label for="emailId"><i class="far fa-id-card" style="margin-right: 5px;"></i> Email / Doctor ID</label>
+          <div class="input-icon-wrapper">
+            <i class="fas fa-user-md input-icon"></i> <!-- doctor icon -->
+            <input type="text" id="emailId" name="emailId" placeholder="e.g., doctor@hospital.com or ID123" autocomplete="username">
+          </div>
+          <span class="error-message" id="emailError"></span>
+        </div>
+
+        <!-- Password field with show/hide toggle -->
+        <div class="input-group">
+          <label for="password"><i class="fas fa-lock" style="margin-right: 5px;"></i> Password</label>
+          <div class="input-icon-wrapper password-wrapper">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="password" name="password" placeholder="•••••••• (min 6 chars)" autocomplete="current-password">
+            <button type="button" class="password-toggle" id="togglePassword" aria-label="Show/hide password">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <span class="error-message" id="passwordError"></span>
+        </div>
+
+        <!-- Remember me & Forgot password -->
+        <div class="options-row">
+          <label class="checkbox">
+            <input type="checkbox" checked> <span>Remember me</span>
+          </label>
+          <a href="#" class="forgot-link"><i class="fas fa-question-circle"></i> Forgot password?</a>
+        </div>
+
+        <!-- Login button (animated) -->
+        <button type="submit" class="login-btn" id="loginBtn">
+          <i class="fas fa-arrow-right-to-bracket"></i> Login
+        </button>
+      </form>
+
+      <!-- subtle footer (optional) -->
+      <div style="margin-top: 2rem; text-align: center; font-size: 0.75rem; color: #7faab3;">
+        <i class="fas fa-shield"></i> HIPAA compliant portal
+      </div>
+    </div>
+
+    <!-- RIGHT: medical illustration -->
+    <div class="illustration-panel">
+      <div class="illustration-content">
+        <i class="fas fa-user-doctor fa-5x" style="background: white; padding: 20px; border-radius: 60px; box-shadow: 0 10px 25px #00000015;"></i>
+        <div style="margin: 1.8rem 0 0.5rem; display: flex; gap: 1.2rem; justify-content: center;">
+          <i class="fas fa-heart-pulse fa-3x" style="color: #b34164;"></i>
+          <i class="fas fa-stethoscope fa-3x" style="color: #1f7a7c;"></i>
+          <i class="fas fa-hospital fa-3x" style="color: #1a6092;"></i>
+        </div>
+        <p>
+          <i class="fas fa-shield-plus" style="margin-right: 6px;"></i> Your health, our priority
+        </p>
+        <div style="margin-top: 1.2rem; font-size: 0.9rem; color: #256775;">
+          <i class="fas fa-circle-check"></i> secure · fast · trusted
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // DOM elements
+      const form = document.getElementById('doctorLoginForm');
+      const emailInput = document.getElementById('emailId');
+      const passwordInput = document.getElementById('password');
+      const emailError = document.getElementById('emailError');
+      const passwordError = document.getElementById('passwordError');
+      const loginBtn = document.getElementById('loginBtn');
+      const togglePassword = document.getElementById('togglePassword');
+
+      // Store original button text
+      const originalBtnContent = loginBtn.innerHTML; // "<i class="fas fa-arrow-right-to-bracket"></i> Login"
+
+      // --- Show/Hide password toggle (bonus) ---
+      togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        // Toggle eye icon
+        const icon = togglePassword.querySelector('i');
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+      });
+
+      // --- Helper to clear previous errors ---
+      function clearErrors() {
+        emailError.textContent = '';
+        passwordError.textContent = '';
+      }
+
+      // --- Validation logic ---
+      function validateForm() {
+        let isValid = true;
+        const emailVal = emailInput.value.trim();
+        const passVal = passwordInput.value;
+
+        // Email / Doctor ID cannot be empty
+        if (emailVal === '') {
+          emailError.textContent = 'Email / Doctor ID is required.';
+          isValid = false;
+        } else {
+          emailError.textContent = '';
+        }
+
+        // Password minimum 6 characters
+        if (passVal.length < 6) {
+          passwordError.textContent = 'Password must be at least 6 characters.';
+          isValid = false;
+        } else {
+          passwordError.textContent = '';
+        }
+
+        return isValid;
+      }
+
+      // --- Loading animation control ---
+      function setLoading(isLoading) {
+        if (isLoading) {
+          loginBtn.disabled = true;
+          // Replace button content with spinner + text
+          loginBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Logging in...`;
+        } else {
+          loginBtn.disabled = false;
+          loginBtn.innerHTML = originalBtnContent; // restore original
+        }
+      }
+
+      // --- Submit handler ---
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();  // no page reload
+
+        // If button is already in loading state, ignore new clicks
+        if (loginBtn.disabled) return;
+
+        // Clear previous errors before validating
+        clearErrors();
+
+        // Perform validation
+        if (!validateForm()) {
+          // Scroll to first error smoothly (UX)
+          const firstError = document.querySelector('.error-message:not(:empty)');
+          if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          return; // stop if validation fails
+        }
+
+        // If valid, trigger loading animation
+        setLoading(true);
+
+        // Simulate login request (e.g., API call) – after 2 seconds reset loading
+        // In real scenario you'd replace with fetch and handle response.
+        setTimeout(() => {
+          setLoading(false);
+          // Optional tiny success feedback (but not required)
+          // Just to demonstrate loading reset; you could show a temporary success message.
+          // For realism, we keep it simple.
+          emailError.textContent = ''; // clear any ghost errors
+          passwordError.textContent = '';
+          // You could also show a success toast, but spec doesn't require.
+          // We'll simply re-enable and reset button.
+        }, 2000); // 2 seconds loading animation
+      });
+
+      // Optional: clear errors when user starts typing (nice UX)
+      emailInput.addEventListener('input', function() {
+        if (emailError.textContent) emailError.textContent = '';
+      });
+      passwordInput.addEventListener('input', function() {
+        if (passwordError.textContent) passwordError.textContent = '';
+      });
+
+      // For demo: prevent forgotten password link from reloading (just keep it dummy)
+      document.querySelector('.forgot-link').addEventListener('click', function(ev) {
+        ev.preventDefault();
+        alert('Password reset link would be sent (demo)');
+      });
+    })();
+  </script>
+</body>
+</html>

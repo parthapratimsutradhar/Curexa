@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor · Availability Dashboard</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f4f7fc;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ---------- SIDEBAR ---------- */
+    .sidebar {
+      width: 260px;
+      background: white;
+      box-shadow: 4px 0 20px rgba(0, 0, 0, 0.02);
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      transition: all 0.2s;
+    }
+
+    .logo-area {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0b4f6c;
+      padding-left: 0.75rem;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-area i {
+      color: #2a9d8f;
+      margin-right: 8px;
+      font-size: 1.8rem;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.9rem 1rem;
+      border-radius: 16px;
+      font-weight: 500;
+      color: #4b587c;
+      transition: 0.2s;
+      cursor: default;
+    }
+
+    .nav-item i {
+      width: 24px;
+      font-size: 1.2rem;
+      color: #7e8aa8;
+    }
+
+    .nav-item.active {
+      background: #e0f2f1;
+      color: #116466;
+      font-weight: 600;
+    }
+
+    .nav-item.active i {
+      color: #116466;
+    }
+
+    .nav-item:not(.active):hover {
+      background: #f0f4fa;
+    }
+
+    /* ---------- MAIN PANEL ---------- */
+    .main {
+      flex: 1;
+      padding: 2rem 2.2rem;
+      overflow-y: auto;
+    }
+
+    /* ----- HEADER ----- */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-title h1 {
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: #173e5c;
+      letter-spacing: -0.02em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .notification-bell {
+      position: relative;
+      font-size: 1.4rem;
+      color: #3a5f7a;
+      cursor: default;
+    }
+
+    .doctor-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: white;
+      padding: 0.4rem 1rem 0.4rem 0.8rem;
+      border-radius: 40px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+    }
+
+    .doctor-profile i {
+      font-size: 2rem;
+      color: #116466;
+    }
+
+    .doctor-profile span {
+      font-weight: 600;
+      color: #173e5c;
+    }
+
+    /* ----- CARDS & COMMON ----- */
+    .card {
+      background: white;
+      border-radius: 28px;
+      padding: 1.6rem 2rem;
+      box-shadow: 0 12px 30px rgba(0, 30, 30, 0.05);
+      margin-bottom: 2rem;
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 18px 36px rgba(37, 99, 105, 0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #115b6e;
+    }
+
+    .card-header i {
+      color: #2a9d8f;
+      font-size: 1.6rem;
+    }
+
+    /* ----- FORM (ADD AVAILABILITY) ----- */
+    .availability-form {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 1.5rem 2rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 140px;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #507192;
+      margin-bottom: 0.3rem;
+    }
+
+    .form-group input, .form-group select {
+      background: #f9fcff;
+      border: 1px solid #dde7f0;
+      border-radius: 20px;
+      padding: 0.7rem 1.2rem;
+      font-size: 0.95rem;
+      color: #173e5c;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: #2a9d8f;
+      box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.15);
+    }
+
+    .checkbox-group, .toggle-group {
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .checkbox-group label, .toggle-group label {
+      margin-bottom: 0;
+      text-transform: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #1a4a5f;
+    }
+
+    /* toggle switch (active/inactive) */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 26px;
+      background: #d0ddea;
+      border-radius: 40px;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .switch::after {
+      content: '';
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: white;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: 0.2s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    input[type="checkbox"]:checked + .switch {
+      background: #2a9d8f;
+    }
+
+    input[type="checkbox"]:checked + .switch::after {
+      left: 28px;
+    }
+
+    #activeToggle {
+      display: none;
+    }
+
+    .btn-primary {
+      background: #116466;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 0.8rem 2rem;
+      border-radius: 40px;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 10px 15px -5px #9bbebb;
+      transition: 0.15s;
+      border: 1px solid #0e4f51;
+    }
+
+    .btn-primary:hover {
+      background: #0b4f51;
+      transform: scale(1.02);
+    }
+
+    /* ----- CALENDAR GRID (mini month) ----- */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .weekday {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #5e7a99;
+      padding: 0.5rem;
+    }
+
+    .cal-day {
+      background: #f1f9ff;
+      border-radius: 30px;
+      padding: 0.8rem 0.2rem;
+      font-weight: 500;
+      color: #1c4c6c;
+      font-size: 0.9rem;
+      transition: 0.1s;
+      border: 1px solid transparent;
+    }
+
+    .cal-day.available {
+      background: #c8f0e7;
+      color: #0b5e5a;
+      border-color: #2a9d8f;
+    }
+
+    .cal-day.leave {
+      background: #ffe2d6;
+      color: #b13e3e;
+      border-color: #f4a3a3;
+    }
+
+    .cal-day.other-month {
+      opacity: 0.3;
+    }
+
+    .month-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .month-nav button {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: #116466;
+      cursor: pointer;
+      padding: 5px 15px;
+      border-radius: 30px;
+    }
+
+    .month-nav button:hover {
+      background: #e0f2f1;
+    }
+
+    /* ----- SLOTS TABLE ----- */
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 1rem 0.5rem 0.8rem 0.5rem;
+      color: #507192;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-bottom: 2px solid #d9e8f0;
+    }
+
+    td {
+      padding: 1rem 0.5rem;
+      border-bottom: 1px solid #eaf0f6;
+      color: #173e5c;
+      font-weight: 500;
+    }
+
+    .status-badge {
+      background: #deefe8;
+      padding: 0.25rem 1rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-block;
+      color: #116466;
+    }
+
+    .status-badge.leave {
+      background: #fbe9e7;
+      color: #b13e3e;
+    }
+
+    .status-badge.booked {
+      background: #e3e9fc;
+      color: #264e8a;
+    }
+
+    .status-badge.disabled {
+      background: #eceff3;
+      color: #6b7f98;
+    }
+
+    .action-icons i {
+      font-size: 1.1rem;
+      margin: 0 6px;
+      color: #6b8ba4;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+
+    .action-icons i:hover {
+      color: #116466;
+      transform: scale(1.1);
+    }
+
+    .action-icons i.fa-trash:hover { color: #d14; }
+    .action-icons i.fa-ban:hover { color: #b16f0e; }
+
+    /* ----- MODAL (edit) ----- */
+    .modal {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(10, 30, 40, 0.3);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.2s;
+    }
+
+    .modal.show {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 40px;
+      width: 90%;
+      max-width: 500px;
+      padding: 2rem;
+      box-shadow: 0 30px 60px rgba(0, 40, 40, 0.3);
+    }
+
+    .modal-content h3 {
+      color: #115b6e;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #acc4d4;
+      border-radius: 40px;
+      padding: 0.6rem 1.8rem;
+      font-weight: 600;
+      color: #3b5f7a;
+    }
+
+    /* ----- NOTIFICATION TOAST ----- */
+    .toast {
+      position: fixed;
+      bottom: 30px; right: 30px;
+      background: #1f7a7c;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 60px;
+      font-weight: 500;
+      box-shadow: 0 10px 25px rgba(0,80,70,0.3);
+      opacity: 0;
+      transition: 0.2s;
+      z-index: 1100;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    /* ----- responsive ----- */
+    @media (max-width: 900px) {
+      .sidebar { width: 90px; padding: 1rem 0.5rem; }
+      .sidebar .nav-item span, .logo-area span { display: none; }
+      .logo-area i { margin-right: 0; }
+      .nav-item { justify-content: center; }
+      .main { padding: 1.5rem; }
+    }
+
+    @media (max-width: 700px) {
+      .availability-form { flex-direction: column; align-items: stretch; }
+      .header { flex-direction: column; align-items: start; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="logo-area"><i class="fas fa-hospital-user"></i> <span>MediDash</span></div>
+    <div class="nav">
+      <div class="nav-item"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></div>
+      <div class="nav-item"><i class="fas fa-calendar-check"></i> <span>Appointments</span></div>
+      <div class="nav-item active"><i class="fas fa-clock"></i> <span>Availability</span></div>
+      <div class="nav-item"><i class="fas fa-user-injured"></i> <span>Patients</span></div>
+      <div class="nav-item"><i class="fas fa-cog"></i> <span>Settings</span></div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="page-title"><h1>Manage Availability</h1></div>
+      <div class="header-right">
+        <div class="notification-bell"><i class="far fa-bell"></i></div>
+        <div class="doctor-profile">
+          <i class="fas fa-user-circle"></i>
+          <span>Dr. Sarah Chen</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD AVAILABILITY CARD -->
+    <div class="card">
+      <div class="card-header"><i class="fas fa-plus-circle"></i> Add new slot</div>
+      <div class="availability-form" id="addSlotForm">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="slotDate" value="2026-03-20">
+        </div>
+        <div class="form-group">
+          <label>Start</label>
+          <input type="time" id="startTime" value="09:00">
+        </div>
+        <div class="form-group">
+          <label>End</label>
+          <input type="time" id="endTime" value="17:00">
+        </div>
+        <div class="form-group">
+          <label>Duration</label>
+          <select id="slotDuration">
+            <option>15</option><option>30</option><option>45</option><option selected>60</option>
+          </select>
+        </div>
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="markLeave" style="width:18px; height:18px;">
+          <label for="markLeave">Mark as Leave</label>
+        </div>
+        <div class="form-group toggle-group">
+          <label>Active</label>
+          <input type="checkbox" id="activeToggle" checked>
+          <label for="activeToggle" class="switch"></label>
+        </div>
+        <button class="btn-primary" type="button" id="addSlotBtn"><i class="fas fa-save"></i> Add Availability</button>
+      </div>
+    </div>
+
+    <!-- CALENDAR VIEW CARD (mini month) -->
+    <div class="card">
+      <div class="card-header"><i class="fas fa-calendar-alt"></i> March 2026 · availability preview</div>
+      <div class="month-nav">
+        <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
+        <span id="displayMonthYear">March 2026</span>
+        <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+      </div>
+      <div class="calendar-grid" id="calendarGrid">
+        <!-- filled by js -->
+      </div>
+    </div>
+
+    <!-- AVAILABILITY SLOTS TABLE CARD -->
+    <div class="card">
+      <div class="card-header"><i class="fas fa-table"></i> Current slots</div>
+      <div class="table-responsive">
+        <table id="slotsTable">
+          <thead>
+            <tr><th>Date</th><th>Start</th><th>End</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT MODAL -->
+  <div class="modal" id="editModal">
+    <div class="modal-content">
+      <h3><i class="fas fa-pen" style="margin-right:10px;"></i>Edit slot</h3>
+      <div class="availability-form" style="flex-direction: column; gap:1rem;">
+        <div class="form-group"><label>Date</label><input type="date" id="editDate"></div>
+        <div class="form-group"><label>Start</label><input type="time" id="editStart"></div>
+        <div class="form-group"><label>End</label><input type="time" id="editEnd"></div>
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="editLeave"><label for="editLeave">Mark as Leave</label>
+        </div>
+        <div class="form-group toggle-group">
+          <label>Active</label><input type="checkbox" id="editActive" checked><label for="editActive" class="switch"></label>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-outline" id="closeModalBtn">Cancel</button>
+        <button class="btn-primary" id="saveEditBtn">Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toastMsg">✓ Slot updated</div>
+
+  <script>
+    (function() {
+      // ---------- DATA (slots array) ----------
+      let slots = [
+        { id: 's1', date: '2026-03-15', start: '09:00', end: '12:00', status: 'Available' },
+        { id: 's2', date: '2026-03-15', start: '14:00', end: '17:00', status: 'Booked' },
+        { id: 's3', date: '2026-03-18', start: '08:00', end: '16:00', status: 'Leave' },
+        { id: 's4', date: '2026-03-20', start: '10:00', end: '14:00', status: 'Available' },
+        { id: 's5', date: '2026-03-22', start: '11:00', end: '15:00', status: 'Disabled' },
+      ];
+
+      // current month/year for calendar
+      let currentCalDate = new Date(2026, 2, 1); // March 2026 (month index 2)
+
+      // DOM elements
+      const tbody = document.getElementById('tableBody');
+      const calendarGrid = document.getElementById('calendarGrid');
+      const displayMonthYear = document.getElementById('displayMonthYear');
+      const addBtn = document.getElementById('addSlotBtn');
+      const toast = document.getElementById('toastMsg');
+
+      // modal elements
+      const modal = document.getElementById('editModal');
+      const closeModal = document.getElementById('closeModalBtn');
+      const saveEdit = document.getElementById('saveEditBtn');
+      const editDate = document.getElementById('editDate');
+      const editStart = document.getElementById('editStart');
+      const editEnd = document.getElementById('editEnd');
+      const editLeave = document.getElementById('editLeave');
+      const editActive = document.getElementById('editActive');
+
+      let currentEditId = null;
+
+      // helper: show toast
+      function showToast(text, isError = false) {
+        toast.textContent = text;
+        toast.style.background = isError ? '#b13e3e' : '#1f7a7c';
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      }
+
+      // generate random short id
+      function genId() { return Date.now() + '-' + Math.random().toString(36).substring(2); }
+
+      // render table from slots array
+      function renderTable() {
+        tbody.innerHTML = '';
+        slots.forEach(slot => {
+          const tr = document.createElement('tr');
+          tr.dataset.id = slot.id;
+          const statusClass = slot.status === 'Leave' ? 'leave' : (slot.status === 'Booked' ? 'booked' : (slot.status === 'Disabled' ? 'disabled' : ''));
+          tr.innerHTML = `
+            <td>${slot.date}</td>
+            <td>${slot.start}</td>
+            <td>${slot.end}</td>
+            <td><span class="status-badge ${statusClass}">${slot.status}</span></td>
+            <td class="action-icons">
+              <i class="fas fa-edit" title="Edit" onclick="editSlot('${slot.id}')"></i>
+              <i class="fas fa-trash" title="Delete" onclick="deleteSlot('${slot.id}')"></i>
+              <i class="fas fa-ban" title="Disable" onclick="disableSlot('${slot.id}')"></i>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // render calendar based on currentCalDate and slots data
+      function renderCalendar() {
+        const year = currentCalDate.getFullYear();
+        const month = currentCalDate.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const startDayOfWeek = firstDay.getDay(); // 0 = sun
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        displayMonthYear.innerText = monthNames[month] + ' ' + year;
+
+        let gridHtml = '';
+        const weekdays = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+        weekdays.forEach(d => gridHtml += `<div class="weekday">${d}</div>`);
+
+        // leading empty cells
+        for (let i = 0; i < startDayOfWeek; i++) {
+          gridHtml += `<div class="cal-day other-month"></div>`;
+        }
+
+        // days of month
+        for (let d = 1; d <= daysInMonth; d++) {
+          const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+          // find slots for this day
+          const daySlots = slots.filter(s => s.date === dateStr);
+          let dayClass = 'cal-day';
+          if (daySlots.some(s => s.status === 'Leave')) dayClass += ' leave';
+          else if (daySlots.some(s => s.status === 'Available' || s.status === 'Booked')) dayClass += ' available';
+          gridHtml += `<div class="${dayClass}">${d}</div>`;
+        }
+
+        // fill remaining cells (optional)
+        const totalCells = startDayOfWeek + daysInMonth;
+        const remaining = 42 - totalCells;
+        for (let i = 0; i < remaining; i++) {
+          gridHtml += `<div class="cal-day other-month"></div>`;
+        }
+
+        calendarGrid.innerHTML = gridHtml;
+      }
+
+      // add new slot
+      function addSlot() {
+        const date = document.getElementById('slotDate').value;
+        const start = document.getElementById('startTime').value;
+        const end = document.getElementById('endTime').value;
+        const isLeave = document.getElementById('markLeave').checked;
+        const isActive = document.getElementById('activeToggle').checked;
+
+        if (!date || !start || !end) {
+          showToast('Please fill date/time', true);
+          return;
+        }
+
+        let status = 'Available';
+        if (isLeave) status = 'Leave';
+        else if (!isActive) status = 'Disabled';
+
+        const newSlot = {
+          id: genId(),
+          date, start, end,
+          status: status
+        };
+        slots.push(newSlot);
+        renderTable();
+        renderCalendar();
+        showToast('Slot added successfully');
+      }
+
+      // delete slot with confirmation
+      window.deleteSlot = (id) => {
+        if (confirm('Delete this availability slot?')) {
+          slots = slots.filter(s => s.id !== id);
+          renderTable();
+          renderCalendar();
+          showToast('Slot deleted');
+        }
+      };
+
+      // disable toggle: Available <-> Disabled, no change if Leave/Booked
+      window.disableSlot = (id) => {
+        const slot = slots.find(s => s.id === id);
+        if (!slot) return;
+        if (slot.status === 'Available') slot.status = 'Disabled';
+        else if (slot.status === 'Disabled') slot.status = 'Available';
+        else {
+          showToast('Only Available slots can be disabled', true);
+          return;
+        }
+        renderTable();
+        renderCalendar();
+        showToast(`Slot ${slot.status === 'Disabled' ? 'disabled' : 'enabled'}`);
+      };
+
+      // edit functions
+      window.editSlot = (id) => {
+        const slot = slots.find(s => s.id === id);
+        if (!slot) return;
+        currentEditId = id;
+        editDate.value = slot.date;
+        editStart.value = slot.start;
+        editEnd.value = slot.end;
+        editLeave.checked = (slot.status === 'Leave');
+        // active = true if status Available, else false (Disabled/Booked/Leave) but for edit we treat active as not leave && status!=='Disabled'
+        editActive.checked = (slot.status === 'Available');
+        modal.classList.add('show');
+      };
+
+      // save edit
+      saveEdit.addEventListener('click', () => {
+        if (!currentEditId) return;
+        const slot = slots.find(s => s.id === currentEditId);
+        if (!slot) return;
+
+        const newDate = editDate.value;
+        const newStart = editStart.value;
+        const newEnd = editEnd.value;
+        const isLeave = editLeave.checked;
+        const isActive = editActive.checked;
+
+        if (!newDate || !newStart || !newEnd) {
+          showToast('Fill all fields', true);
+          return;
+        }
+
+        slot.date = newDate;
+        slot.start = newStart;
+        slot.end = newEnd;
+        if (isLeave) slot.status = 'Leave';
+        else if (!isActive) slot.status = 'Disabled';
+        else slot.status = 'Available';
+
+        renderTable();
+        renderCalendar();
+        modal.classList.remove('show');
+        showToast('Slot updated');
+        currentEditId = null;
+      });
+
+      closeModal.addEventListener('click', () => {
+        modal.classList.remove('show');
+        currentEditId = null;
+      });
+
+      // calendar navigation
+      document.getElementById('prevMonth').addEventListener('click', () => {
+        currentCalDate.setMonth(currentCalDate.getMonth() - 1);
+        renderCalendar();
+      });
+      document.getElementById('nextMonth').addEventListener('click', () => {
+        currentCalDate.setMonth(currentCalDate.getMonth() + 1);
+        renderCalendar();
+      });
+
+      // add button listener
+      addBtn.addEventListener('click', addSlot);
+
+      // initial render
+      renderTable();
+      renderCalendar();
+
+      // expose edit/delete to global (for onclick)
+      window.editSlot = editSlot;
+      window.deleteSlot = deleteSlot;
+      window.disableSlot = disableSlot;
+
+      // close modal if click outside?
+      window.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('show');
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Earnings Dashboard | MedFinance</title>
+  <!-- Font Awesome 6 (icons) & Google Font Inter -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f4f9fc;
+      height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+      background: #f4f9fc;
+      box-shadow: 0 0 30px rgba(0, 100, 110, 0.08);
+    }
+
+    /* ---------- SIDEBAR ---------- */
+    .sidebar {
+      background: white;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      padding: 2rem 1.2rem;
+      border-right: 2px solid #e1f0f0;
+      box-shadow: 6px 0 20px -10px #b3d7da50;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #117b82;
+      padding-left: 0.5rem;
+    }
+
+    .logo-area i {
+      font-size: 2.2rem;
+      color: #279b9b;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 1.2rem;
+      border-radius: 18px;
+      color: #196e76;
+      font-weight: 500;
+      transition: 0.2s;
+      cursor: default;
+    }
+
+    .nav-item i {
+      width: 24px;
+      font-size: 1.3rem;
+      color: #319ba0;
+    }
+
+    .nav-item.active {
+      background: #daf4f2;
+      color: #0c5f63;
+      font-weight: 600;
+      box-shadow: 0 6px 12px -8px #167e7e;
+    }
+
+    .nav-item:not(.active):hover {
+      background: #ecfbf9;
+      transform: translateX(4px);
+    }
+
+    /* ---------- MAIN CONTENT ---------- */
+    .main-content {
+      padding: 1.8rem 2rem 2.5rem;
+      overflow-y: auto;
+      height: 100vh;
+    }
+
+    /* header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.2rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: #115e67;
+      letter-spacing: -0.5px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+    }
+
+    .notification {
+      position: relative;
+      font-size: 1.6rem;
+      color: #257c83;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(145deg, #87cfca, #5cb8b2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.8rem;
+      border: 2px solid white;
+      box-shadow: 0 4px 10px #a1d7d2;
+    }
+
+    /* summary cards */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .summary-card {
+      background: white;
+      border-radius: 28px;
+      padding: 1.6rem 1.4rem;
+      box-shadow: 0 16px 28px -12px #218f8f30;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      transition: 0.2s;
+      border: 1px solid #e7f7f2;
+    }
+
+    .summary-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 24px 36px -16px #117a7a60;
+    }
+
+    .card-icon {
+      width: 54px;
+      height: 54px;
+      background: #def5f0;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: #27827e;
+    }
+
+    .card-info h4 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #094c52;
+    }
+
+    .card-info p {
+      color: #558e96;
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    /* chart card */
+    .chart-card {
+      background: white;
+      border-radius: 32px;
+      padding: 1.8rem 2rem;
+      margin-bottom: 2.2rem;
+      box-shadow: 0 18px 28px -14px #24837e30;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .chart-header h2 {
+      font-size: 1.6rem;
+      color: #0b565e;
+    }
+
+    .filters-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 0.5rem;
+      background: #edfaf7;
+      padding: 0.3rem 0.8rem;
+      border-radius: 30px;
+      align-items: center;
+    }
+
+    .filter-group i {
+      color: #25807d;
+    }
+
+    .filter-group input, .filter-group select {
+      border: none;
+      background: transparent;
+      padding: 0.4rem 0.2rem;
+      font-size: 0.9rem;
+      outline: none;
+      color: #135e66;
+    }
+
+    .filter-group input::placeholder {
+      color: #77b6b6;
+    }
+
+    .search-wrapper {
+      background: white;
+      border: 1px solid #c1e4e0;
+      border-radius: 40px;
+      padding: 0.2rem 0.2rem 0.2rem 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-wrapper input {
+      border: none;
+      background: transparent;
+      padding: 0.5rem 0.3rem;
+      min-width: 180px;
+    }
+
+    .search-wrapper button {
+      background: #30a09b;
+      border: none;
+      border-radius: 40px;
+      padding: 0.5rem 1.2rem;
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* bar chart */
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      height: 220px;
+      margin-top: 2rem;
+      gap: 0.3rem;
+    }
+
+    .bar-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 8%;
+      min-width: 35px;
+    }
+
+    .bar {
+      width: 100%;
+      background: linear-gradient(0deg, #329c9c, #5bc0be);
+      border-radius: 20px 20px 6px 6px;
+      transition: height 0.3s ease;
+      box-shadow: 0 -2px 10px #28949460;
+    }
+
+    .month-label {
+      margin-top: 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #317a80;
+    }
+
+    /* table */
+    .recent-card {
+      background: white;
+      border-radius: 32px;
+      padding: 1.8rem 1.5rem;
+      margin: 2rem 0 2rem;
+      box-shadow: 0 18px 28px -14px #1f827c30;
+    }
+
+    .recent-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .recent-header h3 {
+      font-size: 1.5rem;
+      color: #0b5c63;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    th {
+      text-align: left;
+      padding: 1rem 0.5rem;
+      color: #35838b;
+      font-weight: 600;
+      border-bottom: 2px solid #c2ece5;
+    }
+
+    td {
+      padding: 1rem 0.5rem;
+      border-bottom: 1px solid #def0ec;
+      color: #145f68;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .status-paid {
+      background: #d6f5e9;
+      color: #067358;
+    }
+
+    .status-pending {
+      background: #fff1cf;
+      color: #a36914;
+    }
+
+    /* withdraw card */
+    .withdraw-card {
+      background: white;
+      border-radius: 28px;
+      padding: 1.6rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin: 1.2rem 0 2rem;
+      box-shadow: 0 16px 28px -12px #289b9b30;
+    }
+
+    .balance h3 {
+      font-size: 1.8rem;
+      color: #0b535a;
+    }
+
+    .balance p {
+      color: #49858b;
+    }
+
+    .withdraw-btn {
+      background: #226f73;
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      padding: 1rem 2.5rem;
+      border-radius: 60px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 12px 22px -12px #1e6d6d;
+      transition: 0.2s;
+    }
+
+    .withdraw-btn:hover {
+      background: #155f62;
+      transform: scale(1.02);
+    }
+
+    /* modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #0a424780;
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 40px;
+      padding: 2rem 2.5rem;
+      width: 380px;
+      max-width: 90%;
+      box-shadow: 0 30px 50px #0b494950;
+    }
+
+    .modal h3 {
+      font-size: 1.8rem;
+      color: #0a5757;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #c8ece5;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      margin-bottom: 1.8rem;
+      outline: none;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .modal-actions button {
+      flex: 1;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .cancel-btn {
+      background: #e8f3f1;
+      color: #1f6f73;
+    }
+
+    .confirm-btn {
+      background: #279b95;
+      color: white;
+    }
+
+    /* notification toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #1b7a74;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 60px;
+      box-shadow: 0 12px 28px #0b534e;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-weight: 500;
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+      z-index: 1100;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    /* responsiveness */
+    @media (max-width: 1000px) {
+      .dashboard {
+        grid-template-columns: 80px 1fr;
+      }
+      .sidebar {
+        padding: 1rem 0.5rem;
+        align-items: center;
+      }
+      .logo-area span, .nav-item span {
+        display: none;
+      }
+      .nav-item i {
+        font-size: 1.8rem;
+      }
+    }
+
+    @media (max-width: 750px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        display: none;
+      }
+      .cards-grid {
+        grid-template-columns: repeat(2,1fr);
+      }
+    }
+
+    @media (max-width: 500px) {
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="dashboard">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-area">
+      <i class="fas fa-stethoscope"></i>
+      <span>MedFlow</span>
+    </div>
+    <nav class="nav-menu">
+      <div class="nav-item"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></div>
+      <div class="nav-item"><i class="fas fa-calendar-check"></i> <span>Appointments</span></div>
+      <div class="nav-item"><i class="fas fa-user-injured"></i> <span>Patients</span></div>
+      <div class="nav-item"><i class="fas fa-clock"></i> <span>Availability</span></div>
+      <div class="nav-item active"><i class="fas fa-indian-rupee-sign"></i> <span>Earnings</span></div>
+      <div class="nav-item"><i class="fas fa-sliders-h"></i> <span>Settings</span></div>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <!-- header -->
+    <div class="header">
+      <h1>Earnings</h1>
+      <div class="header-right">
+        <i class="fas fa-bell notification"></i>
+        <div class="avatar"><i class="fas fa-user-md"></i></div>
+      </div>
+    </div>
+
+    <!-- 4 summary cards -->
+    <div class="cards-grid" id="summaryCards">
+      <!-- filled via JS -->
+    </div>
+
+    <!-- earnings chart + filters -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h2>Monthly earnings</h2>
+        <div class="filters-row" id="filterControls">
+          <div class="filter-group">
+            <i class="fas fa-calendar-alt"></i>
+            <input type="date" id="startDate" placeholder="From">
+          </div>
+          <div class="filter-group">
+            <i class="fas fa-calendar-check"></i>
+            <input type="date" id="endDate" placeholder="To">
+          </div>
+          <div class="filter-group">
+            <i class="fas fa-filter"></i>
+            <select id="statusFilter">
+              <option value="all">All status</option>
+              <option value="Paid">Paid</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </div>
+          <div class="search-wrapper">
+            <i class="fas fa-search" style="color: #4b9b99;"></i>
+            <input type="text" id="searchPatient" placeholder="Patient name">
+            <button id="applyFilters">Apply</button>
+          </div>
+        </div>
+      </div>
+      <!-- simple bar chart container -->
+      <div class="chart-bars" id="chartContainer"></div>
+    </div>
+
+    <!-- recent transactions table -->
+    <div class="recent-card">
+      <div class="recent-header">
+        <h3>Recent transactions</h3>
+      </div>
+      <div class="table-wrapper">
+        <table id="transactionsTable">
+          <thead>
+            <tr><th>Patient</th><th>Appt ID</th><th>Date</th><th>Method</th><th>Amount</th><th>Status</th></tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- withdraw section -->
+    <div class="withdraw-card">
+      <div class="balance">
+        <h3 id="availableBalance">₹ 48,250</h3>
+        <p><i class="fas fa-wallet"></i> Available balance</p>
+      </div>
+      <button class="withdraw-btn" id="withdrawBtn"><i class="fas fa-hand-holding-usd"></i> Withdraw Earnings</button>
+    </div>
+  </main>
+</div>
+
+<!-- modal overlay -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3>Withdraw amount</h3>
+    <input type="number" id="withdrawAmount" placeholder="₹ 0" min="1" step="100">
+    <div class="modal-actions">
+      <button class="cancel-btn" id="cancelModal">Cancel</button>
+      <button class="confirm-btn" id="confirmWithdraw">Withdraw</button>
+    </div>
+  </div>
+</div>
+
+<!-- toast notification -->
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i> Withdrawal successful!</div>
+
+<script>
+  (function() {
+    // ---------- SAMPLE TRANSACTIONS ----------
+    const transactions = [
+      { patient: 'Ravi Shukla', aptId: 'APT-4301', date: '2025-03-28', method: 'Card', amount: 1800, status: 'Paid' },
+      { patient: 'Anita Desai', aptId: 'APT-4302', date: '2025-03-27', method: 'Cash', amount: 2200, status: 'Paid' },
+      { patient: 'John Mathew', aptId: 'APT-4303', date: '2025-03-26', method: 'UPI', amount: 950, status: 'Pending' },
+      { patient: 'Kavya Nair', aptId: 'APT-4304', date: '2025-03-01', method: 'Card', amount: 3200, status: 'Paid' },
+      { patient: 'Imran Khan', aptId: 'APT-4305', date: '2025-02-20', method: 'Cash', amount: 1500, status: 'Paid' },
+      { patient: 'Sunita Reddy', aptId: 'APT-4306', date: '2025-02-15', method: 'UPI', amount: 2800, status: 'Paid' },
+      { patient: 'David Dsouza', aptId: 'APT-4307', date: '2025-02-10', method: 'Card', amount: 900, status: 'Pending' },
+      { patient: 'Meera Joshi', aptId: 'APT-4308', date: '2025-03-25', method: 'Card', amount: 4100, status: 'Paid' },
+      { patient: 'Arjun Singh', aptId: 'APT-4309', date: '2025-03-05', method: 'UPI', amount: 1350, status: 'Paid' },
+      { patient: 'Sophie Mathew', aptId: 'APT-4310', date: '2025-01-12', method: 'Card', amount: 6700, status: 'Paid' },
+      { patient: 'Lakshmi Raj', aptId: 'APT-4311', date: '2025-03-29', method: 'Cash', amount: 5250, status: 'Pending' }
+    ];
+
+    // ---------- HELPER FUNCTIONS ----------
+    function filterData(start, end, status, search) {
+      return transactions.filter(t => {
+        const tDate = new Date(t.date);
+        const s = start ? new Date(start) : null;
+        const e = end ? new Date(end) : null;
+        if (s && tDate < s) return false;
+        if (e && tDate > e) return false;
+        if (status !== 'all' && t.status !== status) return false;
+        if (search && !t.patient.toLowerCase().includes(search.toLowerCase())) return false;
+        return true;
+      });
+    }
+
+    // compute monthly sums from filtered data
+    function getMonthlyEarnings(filtered) {
+      const months = Array(12).fill(0);
+      filtered.forEach(t => {
+        if (t.status === 'Paid') { // only paid count toward earnings
+          const d = new Date(t.date);
+          const month = d.getMonth(); // 0-11
+          months[month] += t.amount;
+        }
+      });
+      return months;
+    }
+
+    // update summary cards (static from full dataset? we'll show totals from ALL data)
+    function updateSummaryCards() {
+      const totalEarnings = transactions.filter(t=>t.status==='Paid').reduce((a,b)=>a+b.amount,0);
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+      const thisMonthEarnings = transactions.filter(t=> {
+        const d = new Date(t.date);
+        return d.getMonth()===currentMonth && d.getFullYear()===currentYear && t.status==='Paid';
+      }).reduce((a,b)=>a+b.amount,0);
+      const todayStr = now.toISOString().split('T')[0];
+      const todayEarnings = transactions.filter(t=> t.date===todayStr && t.status==='Paid').reduce((a,b)=>a+b.amount,0);
+      const pendingTotal = transactions.filter(t=> t.status==='Pending').reduce((a,b)=>a+b.amount,0);
+
+      document.getElementById('summaryCards').innerHTML = `
+        <div class="summary-card"><div class="card-icon"><i class="fas fa-coins"></i></div><div class="card-info"><h4>₹${totalEarnings.toLocaleString()}</h4><p>Total earnings</p></div></div>
+        <div class="summary-card"><div class="card-icon"><i class="fas fa-calendar-alt"></i></div><div class="card-info"><h4>₹${thisMonthEarnings.toLocaleString()}</h4><p>This month</p></div></div>
+        <div class="summary-card"><div class="card-icon"><i class="fas fa-sun"></i></div><div class="card-info"><h4>₹${todayEarnings.toLocaleString()}</h4><p>Today's earnings</p></div></div>
+        <div class="summary-card"><div class="card-icon"><i class="fas fa-hourglass-half"></i></div><div class="card-info"><h4>₹${pendingTotal.toLocaleString()}</h4><p>Pending payments</p></div></div>
+      `;
+    }
+
+    function renderTable(data) {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = data.map(t => `<tr>
+        <td>${t.patient}</td><td>${t.aptId}</td><td>${t.date}</td><td>${t.method}</td><td>₹${t.amount}</td>
+        <td><span class="status-badge ${t.status === 'Paid' ? 'status-paid' : 'status-pending'}">${t.status}</span></td>
+      </tr>`).join('');
+    }
+
+    function renderChart(monthsArray) {
+      const max = Math.max(...monthsArray, 1);
+      const container = document.getElementById('chartContainer');
+      const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      container.innerHTML = monthsArray.map((val, idx) => {
+        const height = max ? (val / max) * 180 : 0; // max bar height 180px
+        return `<div class="bar-container"><div class="bar" style="height: ${height}px;"></div><span class="month-label">${monthNames[idx]}</span></div>`;
+      }).join('');
+    }
+
+    // refresh everything based on filters
+    function refreshDashboard() {
+      const start = document.getElementById('startDate').value;
+      const end = document.getElementById('endDate').value;
+      const status = document.getElementById('statusFilter').value;
+      const search = document.getElementById('searchPatient').value;
+      const filtered = filterData(start, end, status, search);
+      renderTable(filtered);
+      const monthly = getMonthlyEarnings(filtered);
+      renderChart(monthly);
+    }
+
+    // withdraw modal
+    const modal = document.getElementById('modalOverlay');
+    const withdrawBtn = document.getElementById('withdrawBtn');
+    const cancelModal = document.getElementById('cancelModal');
+    const confirmWithdraw = document.getElementById('confirmWithdraw');
+    const amountInput = document.getElementById('withdrawAmount');
+    const toast = document.getElementById('toast');
+
+    withdrawBtn.addEventListener('click', ()=>{
+      modal.style.display = 'flex';
+    });
+    cancelModal.addEventListener('click', ()=>{
+      modal.style.display = 'none';
+    });
+    confirmWithdraw.addEventListener('click', ()=>{
+      const amt = parseFloat(amountInput.value);
+      if (amt && amt > 0) {
+        modal.style.display = 'none';
+        toast.classList.add('show');
+        setTimeout(()=> toast.classList.remove('show'), 3000);
+        amountInput.value = '';
+        // Optionally reduce balance? For demo we just show notification
+      } else {
+        alert('Enter valid amount');
+      }
+    });
+    // close modal when clicking overlay
+    modal.addEventListener('click', (e) => {
+      if(e.target === modal) modal.style.display = 'none';
+    });
+
+    // apply filters button
+    document.getElementById('applyFilters').addEventListener('click', refreshDashboard);
+    // initial load
+    updateSummaryCards();
+    refreshDashboard();
+
+    // also update summary cards on filter? no, they stay global (spec not explicit)
+  })();
+</script>
+</body>
+</html>
