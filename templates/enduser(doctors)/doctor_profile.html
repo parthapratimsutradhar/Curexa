@@ -36,6 +36,38 @@
       gap: 1.8rem;
     }
 
+    /* back button (top left) */
+    .back-nav {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: -0.2rem; /* fine-tune spacing */
+    }
+    .back-link {
+      background: white;
+      border-radius: 40px;
+      padding: 0.6rem 1.4rem 0.6rem 1.2rem;
+      box-shadow: 0 8px 16px -10px #1f7a7e50, 0 2px 6px #b3e2dd;
+      font-weight: 500;
+      color: #1a616b;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1rem;
+      border: 1px solid #d0f0eb;
+      transition: all 0.2s ease;
+    }
+    .back-link i {
+      font-size: 1.1rem;
+      color: #359f9b;
+    }
+    .back-link:hover {
+      background: #effbf9;
+      border-color: #73c7c0;
+      transform: translateX(-3px);
+      box-shadow: 0 12px 20px -14px #126b67;
+    }
+
     /* card style */
     .card {
       background: #ffffffdd;
@@ -380,11 +412,17 @@
       .profile-title h1 { font-size: 2rem; }
       .appointment-section { flex-direction: column; text-align: center; gap: 1.5rem; }
       .card { padding: 1.5rem; }
+      /* back button stays left, no extra change needed */
     }
   </style>
 </head>
 <body>
   <div class="profile-container">
+    <!-- BACK BUTTON (top left) added as first element inside container -->
+    <div class="back-nav">
+      <a href="#" class="back-link" onclick="history.back(); return false;"><i class="fas fa-arrow-left"></i> Go Back</a>
+    </div>
+
     <!-- Header Card -->
     <div class="card profile-header">
       <div class="profile-photo">
@@ -537,25 +575,22 @@
         e.preventDefault();  // avoid any page jump
         // add animation class
         bookBtn.classList.add('btn-click-animate');
-        // Optionally show a quick message (bonus user feedback)
         // Remove class after 200ms
         setTimeout(() => {
           bookBtn.classList.remove('btn-click-animate');
         }, 200);
-        // You could also trigger a modal or console.log
         console.log('Appointment booking initiated (demo)');
-        // Bonus: simple alert for demonstration (but may be intrusive, so just console)
-        // To be gentle, we show a small tooltip-like feel? we skip alert.
-        // However requirement is "Appointment button click animation", we did.
       });
 
-      // Optional: Add hover + extra effect for stars? not needed.
-
-      // Also ensure any address/email clicks don't reload
-      const contactLinks = document.querySelectorAll('.contact-card p i');
-      // nothing needed
+      // simple back button fallback (if history not available, just a dummy action)
+      const backLink = document.querySelector('.back-link');
+      if (backLink) {
+        backLink.addEventListener('click', function(e) {
+          // if there is no history, prevent default and just navigate to "#"
+          // but we use history.back() which is fine.
+        });
+      }
     })();
   </script>
-  <!-- small note: all requirements met, including icons, rating, reviews, toggle, animation, responsive -->
 </body>
 </html>
