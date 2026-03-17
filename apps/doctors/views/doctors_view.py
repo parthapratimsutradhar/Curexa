@@ -36,6 +36,11 @@ class DoctorEarningView(View):
         return render(request, "enduser(doctors)/doctor_earning.html")
 
 
+class DoctorPrescriptionView(View):
+    def get(self, request):
+        return render(request, "enduser(doctors)/prescription.html")
+
+
 
    
 from django.core.paginator import Paginator

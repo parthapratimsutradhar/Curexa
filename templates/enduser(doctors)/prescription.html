@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedFlow · modern prescription</title>
+    <!-- Tailwind + Font Awesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* custom smooth refinements */
+        @keyframes gentleFade {
+            0% { opacity: 0; transform: translateY(-8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes highlightRow {
+            0% { background-color: #e0f2fe; }
+            70% { background-color: #e0f2fe; }
+            100% { background-color: transparent; }
+        }
+        .highlight-row {
+            animation: highlightRow 1.2s ease-out forwards;
+        }
+        .toast-show {
+            animation: gentleFade 0.25s ease;
+        }
+        .prescription-card {
+            transition: all 0.2s ease;
+            backdrop-filter: blur(2px);
+        }
+        .prescription-card:hover {
+            box-shadow: 0 20px 30px -10px rgba(0, 100, 200, 0.12), 0 4px 8px -2px rgba(0, 20, 40, 0.05);
+        }
+        .search-pulse:focus {
+            animation: gentlePulse 1.2s infinite;
+        }
+        @keyframes gentlePulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.25); }
+            70% { box-shadow: 0 0 0 6px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+        /* modern dropdown items */
+        .dropdown-item {
+            transition: background 0.15s, padding-left 0.15s;
+        }
+        .dropdown-item:hover {
+            background-color: #f0f7ff;
+            padding-left: 1.5rem;
+        }
+        /* quick medicine buttons — modern pill style */
+        .quick-med-btn {
+            transition: all 0.18s ease;
+            border: 1px solid #e2e8f0;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            border-radius: 9999px;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1e293b;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .quick-med-btn i {
+            color: #3b82f6;
+            font-size: 0.8rem;
+        }
+        .quick-med-btn:hover {
+            background: #f5f9ff;
+            border-color: #a5c9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 18px -8px rgba(0,100,220,0.25);
+        }
+        /* dosage/duration selects & inputs */
+        .dosage-select, .duration-select {
+            font-size: 0.7rem;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 9999px;
+            padding: 0.3rem 1.2rem 0.3rem 0.8rem;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.3rem center;
+            background-repeat: no-repeat;
+            background-size: 1.2em 1.2em;
+            appearance: none;
+            padding-right: 1.8rem;
+        }
+        .dosage-select:hover, .duration-select:hover {
+            background-color: #eef2ff;
+            border-color: #94a3b8;
+        }
+        .dosage-input, .duration-input, .notes-input {
+            border-radius: 9999px;
+            background-color: #f9fafb;
+            border: 1px solid #e2e8f0;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            transition: all 0.15s;
+        }
+        .dosage-input:focus, .duration-input:focus, .notes-input:focus {
+            background-color: white;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+            outline: none;
+        }
+        .remove-btn {
+            transition: transform 0.2s, color 0.2s;
+        }
+        .remove-btn:hover {
+            transform: scale(1.2);
+            color: #dc2626;
+        }
+        /* badge counter animation */
+        .badge-pop {
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s;
+        }
+        .badge-pop:active {
+            transform: scale(1.2);
+        }
+        /* table styling — modern minimal */
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #1e293b;
+            border-bottom: 1px solid #d1d9e6;
+        }
+        td {
+            background: white;
+            border-bottom: 1px solid #edf2f7;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        /* glassmorphism touch */
+        .glass-panel {
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+        body {
+            background: radial-gradient(circle at 10% 30%, #d9e9ff, #f0f7ff 80%);
+        }
+        /* input icon enhancements */
+        .input-icon {
+            transition: color 0.2s;
+        }
+        .input-group:focus-within .input-icon {
+            color: #2563eb;
+        }
+        /* subtle animation for toast icon */
+        .toast-show .toast-icon {
+            animation: gentleSpin 0.3s ease;
+        }
+        @keyframes gentleSpin {
+            0% { transform: rotate(0deg) scale(0.8); opacity: 0.6; }
+            100% { transform: rotate(0deg) scale(1); opacity: 1; }
+        }
+        /* better focus outlines */
+        *:focus-visible {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col">
+
+<!-- main container -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-5 relative flex-1 w-full">
+
+    <!-- ========== MODERN BACK + TITLE BAR ========== -->
+    <div class="flex items-center justify-between">
+        <button onclick="history.back()" class="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-700 transition bg-white/70 backdrop-blur-md px-5 py-2.5 rounded-full shadow-sm border border-white/40 hover:border-blue-200">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <div class="flex items-center gap-2 text-blue-600 bg-white/40 backdrop-blur-sm px-5 py-2 rounded-full shadow-sm">
+            <i class="fas fa-prescription-bottle text-lg"></i>
+            <span class="font-medium text-gray-700">MedFlow · <span class="text-blue-600">speedy script</span></span>
+        </div>
+    </div>
+
+    <!-- ========== PATIENT CARD (elevated) ========== -->
+    <div class="glass-panel rounded-3xl shadow-xl p-6 prescription-card">
+        <h2 class="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <span class="bg-blue-100 text-blue-700 p-1.5 rounded-full"><i class="fas fa-user-circle"></i></span>
+            <span>Patient details</span>
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="input-group relative">
+                <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1"><i class="far fa-user mr-1 text-blue-400"></i>Patient</label>
+                <input type="text" value="Emily Johnson" class="w-full p-3 bg-white/80 border border-gray-200 rounded-2xl text-gray-800 focus:bg-white transition pl-9 shadow-sm">
+                <i class="fas fa-user absolute left-3 top-10 text-sm text-blue-300 input-icon"></i>
+            </div>
+            <div class="input-group relative">
+                <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1"><i class="far fa-calendar-alt mr-1 text-blue-400"></i>Age/Gender</label>
+                <input type="text" value="32 / Female" class="w-full p-3 bg-white/80 border border-gray-200 rounded-2xl text-gray-800 focus:bg-white transition pl-9 shadow-sm">
+                <i class="fas fa-venus-mars absolute left-3 top-10 text-sm text-blue-300 input-icon"></i>
+            </div>
+            <div class="input-group relative">
+                <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1"><i class="fas fa-head-side-cough mr-1 text-blue-400"></i>Symptoms</label>
+                <input type="text" value="Headache, mild nausea" class="w-full p-3 bg-white/80 border border-gray-200 rounded-2xl text-gray-800 focus:bg-white transition pl-9 shadow-sm">
+                <i class="fas fa-temperature-high absolute left-3 top-10 text-sm text-blue-300 input-icon"></i>
+            </div>
+            <div class="input-group relative">
+                <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1"><i class="far fa-clock mr-1 text-blue-400"></i>Appointment</label>
+                <input type="text" value="2025-03-18  10:30 AM" class="w-full p-3 bg-white/80 border border-gray-200 rounded-2xl text-gray-800 focus:bg-white transition pl-9 shadow-sm">
+                <i class="fas fa-calendar-check absolute left-3 top-10 text-sm text-blue-300 input-icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== DIAGNOSIS + QUICK MEDS in two columns? Keep stacked but nicer ========= -->
+    <div class="glass-panel rounded-3xl shadow-xl p-6 prescription-card">
+        <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+            <span class="bg-blue-100 p-1 rounded-full"><i class="fas fa-stethoscope text-blue-600 text-sm"></i></span> Diagnosis
+        </label>
+        <textarea rows="2" placeholder="e.g., Acute sinusitis, hypertension ..." class="w-full p-4 bg-white/70 border border-gray-200 rounded-2xl resize-none focus:bg-white transition shadow-sm">Upper respiratory infection, possible allergic rhinitis</textarea>
+    </div>
+
+    <!-- ========== QUICK MEDICINE BUTTONS (modern pill row) ========== -->
+    <div class="glass-panel rounded-3xl shadow-xl p-6 prescription-card">
+        <div class="flex items-center gap-2 text-sm text-gray-600 mb-4">
+            <span class="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1"><i class="fas fa-bolt"></i> quick add</span>
+            <span class="text-gray-500">one‑click with smart defaults</span>
+        </div>
+        <div class="flex flex-wrap gap-2" id="quickMedicineButtons">
+            <!-- will be populated by js -->
+        </div>
+    </div>
+
+    <!-- ========== SEARCH (elevated) ========== -->
+    <div class="glass-panel rounded-3xl shadow-xl p-6 prescription-card">
+        <label for="medicineSearch" class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+            <span class="bg-blue-100 p-1 rounded-full"><i class="fas fa-search text-blue-600 text-sm"></i></span> Search medicine (or use quick buttons)
+        </label>
+        <div class="relative" id="searchContainer">
+            <input type="text" id="medicineSearch" placeholder="e.g., Amoxicillin, Ibuprofen ..." autofocus
+                   class="w-full p-4 bg-white/80 border border-gray-200 rounded-2xl pl-12 pr-16 focus:bg-white transition shadow-md search-pulse"
+                   autocomplete="off">
+            <i class="fas fa-search absolute left-4 top-4 text-gray-400 text-lg"></i>
+            <span class="absolute right-3 top-3 text-gray-400 text-xs flex items-center gap-1 bg-gray-100 px-3 py-1.5 rounded-full"><i class="fas fa-arrow-left"></i> ↵</span>
+            <div id="dropdown" class="absolute z-20 w-full mt-2 bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl shadow-2xl max-h-64 overflow-y-auto hidden divide-y divide-gray-100"></div>
+        </div>
+        <p class="text-xs text-gray-400 mt-3 flex items-center gap-2"><i class="fas fa-lightbulb text-yellow-500"></i> type & select or press ↵ — defaults automatically set</p>
+    </div>
+
+    <!-- ========== SELECTED MEDICINES TABLE (clean modern) ========== -->
+    <div class="glass-panel rounded-3xl shadow-xl p-6 prescription-card">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-medium text-gray-800 flex items-center gap-2"><span class="bg-blue-100 p-1.5 rounded-full"><i class="fas fa-pills text-blue-600"></i></span> Prescribed medicines</h3>
+            <span class="text-xs bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full flex items-center gap-1 badge-pop font-semibold shadow-sm" id="medicineCount"><i class="fas fa-capsules"></i> <span>0 items</span></span>
+        </div>
+        <div class="overflow-x-auto rounded-2xl border border-gray-200/80 bg-white shadow-inner">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider">
+                    <tr>
+                        <th class="px-4 py-4 text-left rounded-tl-2xl"><i class="fas fa-capsules mr-1 text-blue-400"></i>Medicine</th>
+                        <th class="px-4 py-4 text-left"><i class="fas fa-clock mr-1 text-blue-400"></i>Dosage</th>
+                        <th class="px-4 py-4 text-left"><i class="fas fa-calendar-week mr-1 text-blue-400"></i>Duration</th>
+                        <th class="px-4 py-4 text-left"><i class="fas fa-pen mr-1 text-blue-400"></i>Notes</th>
+                        <th class="px-4 py-4 text-center rounded-tr-2xl"><i class="fas fa-trash-alt mr-1 text-blue-400"></i>Remove</th>
+                    </tr>
+                </thead>
+                <tbody id="medicineTableBody" class="divide-y divide-gray-100 bg-white">
+                    <!-- dynamic rows injected here -->
+                </tbody>
+            </table>
+        </div>
+        <div id="emptyTableMessage" class="text-center py-10 text-gray-400 bg-blue-50/40 rounded-2xl mt-4 hidden flex-col items-center gap-2 border border-dashed border-blue-200">
+            <i class="fas fa-prescription-bottle text-5xl text-blue-200"></i>
+            <span class="text-sm">🧪 No medicines yet — tap a quick button or search above</span>
+        </div>
+    </div>
+
+    <!-- ========== DOCTOR NOTES (with nicer spacing) ========== -->
+    <div class="glass-panel rounded-3xl shadow-xl p-6 prescription-card">
+        <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+            <span class="bg-blue-100 p-1.5 rounded-full"><i class="fas fa-file-medical-alt text-blue-600 text-sm"></i></span> Doctor's advice / notes
+        </label>
+        <textarea rows="3" placeholder="e.g., drink water, avoid alcohol, follow up ..." class="w-full p-4 bg-white/70 border border-gray-200 rounded-2xl resize-none focus:bg-white transition shadow-sm">Rest, paracetamol if fever, follow up Friday</textarea>
+    </div>
+
+    <!-- ========== ACTION BUTTONS (modern gradient) ========== -->
+    <div class="flex flex-col sm:flex-row gap-3 justify-end mt-2">
+        <button id="markCompletedBtn" class="group px-7 py-3.5 bg-white border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-100 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+            <i class="fas fa-check-circle text-green-500 group-hover:scale-110 transition"></i> Mark completed
+        </button>
+        <button id="savePrescriptionBtn" class="group px-8 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full font-medium hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
+            <i class="fas fa-ban group-hover:scale-110 transition"></i> Cancel prescription
+        </button>
+    </div>
+</div>
+
+<!-- ========== TOAST (elegant) ========== -->
+<div id="toast" class="fixed top-6 right-6 bg-green-600 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 transform transition-all duration-300 translate-y-0 opacity-0 pointer-events-none z-50 backdrop-blur-sm bg-opacity-90">
+    <i class="fas fa-check-circle text-white text-xl toast-icon"></i>
+    <span id="toastMessage" class="font-medium">Prescription saved</span>
+</div>
+
+<!-- ========== JAVASCRIPT (same functionality, refined) ========== -->
+<script>
+    (function() {
+        // ---------- MEDICINE DATABASE (for search) ----------
+        const medicineDB = [
+            { name: "Amoxicillin", strength: "500mg", manufacturer: "GSK" },
+            { name: "Amoxicillin", strength: "250mg/5ml", manufacturer: "Sandoz" },
+            { name: "Ibuprofen", strength: "400mg", manufacturer: "Pfizer" },
+            { name: "Ibuprofen", strength: "600mg", manufacturer: "Mylan" },
+            { name: "Paracetamol", strength: "500mg", manufacturer: "Cipla" },
+            { name: "Paracetamol", strength: "250mg/5ml", manufacturer: "Sanofi" },
+            { name: "Azithromycin", strength: "250mg", manufacturer: "Teva" },
+            { name: "Azithromycin", strength: "500mg", manufacturer: "Lupin" },
+            { name: "Metformin", strength: "850mg", manufacturer: "Merck" },
+            { name: "Lisinopril", strength: "10mg", manufacturer: "AstraZeneca" },
+            { name: "Atorvastatin", strength: "20mg", manufacturer: "Pfizer" },
+            { name: "Omeprazole", strength: "20mg", manufacturer: "Bayer" },
+            { name: "Salbutamol", strength: "100mcg", manufacturer: "GSK" },
+            { name: "Cetirizine", strength: "10mg", manufacturer: "Dr. Reddy's" }
+        ];
+
+        // ---------- SMART DEFAULTS ----------
+        function getDefaultsForMedicine(fullName) {
+            let dosage = "1-0-1";
+            let duration = "5 days";
+            let notes = "";
+            const lower = fullName.toLowerCase();
+            if (lower.includes("paracetamol") || lower.includes("acetaminophen")) {
+                dosage = "1-0-1"; duration = "3 days"; notes = "if fever";
+            } else if (lower.includes("ibuprofen")) {
+                dosage = "1-0-1"; duration = "3 days"; notes = "after food";
+            } else if (lower.includes("amoxicillin")) {
+                dosage = "1-0-1"; duration = "7 days"; notes = "complete course";
+            } else if (lower.includes("cetirizine") || lower.includes("zyrtec")) {
+                dosage = "0-0-1"; duration = "5 days"; notes = "at night";
+            } else if (lower.includes("azithromycin")) {
+                dosage = "1-0-0"; duration = "3 days"; notes = "take on empty stomach";
+            } else if (lower.includes("metformin")) {
+                dosage = "1-0-1"; duration = "30 days"; notes = "with meals";
+            } else if (lower.includes("lactulose") || lower.includes("constipation")) {
+                dosage = "1-0-1"; duration = "7 days"; notes = "at bedtime if needed";
+            } else if (lower.includes("omeprazole")) {
+                dosage = "1-0-0"; duration = "14 days"; notes = "before breakfast";
+            }
+            return { dosage, duration, notes };
+        }
+
+        // ---------- QUICK MEDICINE BUTTONS (predefined) ----------
+        const quickMeds = [
+            { name: "Paracetamol 500mg", dosage: "1-0-1", duration: "3 days", notes: "if fever" },
+            { name: "Ibuprofen 400mg", dosage: "1-0-1", duration: "3 days", notes: "after food" },
+            { name: "Amoxicillin 500mg", dosage: "1-0-1", duration: "7 days", notes: "complete course" },
+            { name: "Cetirizine 10mg", dosage: "0-0-1", duration: "5 days", notes: "at night" },
+            { name: "Azithromycin 500mg", dosage: "1-0-0", duration: "3 days", notes: "empty stomach" },
+            { name: "Omeprazole 20mg", dosage: "1-0-0", duration: "14 days", notes: "before breakfast" }
+        ];
+
+        // ---------- STATE ----------
+        let medicines = [];
+
+        // DOM elements
+        const searchInput = document.getElementById('medicineSearch');
+        const dropdown = document.getElementById('dropdown');
+        const tableBody = document.getElementById('medicineTableBody');
+        const emptyMsg = document.getElementById('emptyTableMessage');
+        const medicineCountSpan = document.getElementById('medicineCount');
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMessage');
+        const saveBtn = document.getElementById('savePrescriptionBtn');
+        const markBtn = document.getElementById('markCompletedBtn');
+        const quickContainer = document.getElementById('quickMedicineButtons');
+
+        // Render quick buttons (modern style already defined in CSS)
+        quickMeds.forEach(med => {
+            const btn = document.createElement('button');
+            btn.className = 'quick-med-btn';
+            btn.innerHTML = `<i class="fas fa-plus-circle text-blue-400"></i>${med.name}`;
+            btn.addEventListener('click', () => {
+                addMedicine(med.name, med.dosage, med.duration, med.notes);
+            });
+            quickContainer.appendChild(btn);
+        });
+
+        // Helper: show toast
+        function showToast(text, isSuccess = true) {
+            toastMsg.innerText = text;
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateY(0)';
+            toast.classList.remove('pointer-events-none');
+            toast.classList.add('toast-show');
+            const icon = toast.querySelector('.toast-icon');
+            if (isSuccess) {
+                toast.classList.remove('bg-orange-500');
+                toast.classList.add('bg-green-600');
+                icon.className = 'fas fa-check-circle text-white text-xl toast-icon';
+            } else {
+                toast.classList.remove('bg-green-600');
+                toast.classList.add('bg-orange-500');
+                icon.className = 'fas fa-exclamation-triangle text-white text-xl toast-icon';
+            }
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-10px)';
+                toast.classList.add('pointer-events-none');
+                toast.classList.remove('toast-show');
+            }, 2400);
+        }
+
+        // render table + empty state
+        function renderTable() {
+            if (medicines.length === 0) {
+                tableBody.innerHTML = '';
+                emptyMsg.classList.remove('hidden');
+                medicineCountSpan.innerHTML = '<i class="fas fa-capsules"></i> <span>0 items</span>';
+                return;
+            }
+            emptyMsg.classList.add('hidden');
+            let html = '';
+            medicines.forEach((med) => {
+                html += `<tr data-id="${med.id}" class="hover:bg-blue-50/40 transition-colors duration-150">`;
+                html += `<td class="px-4 py-3 font-medium text-gray-800"><i class="fas fa-capsules text-blue-300 mr-2"></i>${med.nameDisplay}</td>`;
+
+                // Dosage cell
+                html += `<td class="px-4 py-3">
+                    <div class="flex items-center gap-1 flex-wrap">
+                        <input type="text" value="${med.dosage.replace(/"/g, '&quot;')}" 
+                               class="dosage-input w-16" placeholder="1-0-1">
+                        <select class="dosage-select text-xs">
+                            <option value="">quick</option>
+                            <option value="1-0-1">1‑0‑1</option>
+                            <option value="1-1-1">1‑1‑1</option>
+                            <option value="1-0-0">1‑0‑0</option>
+                            <option value="0-0-1">0‑0‑1</option>
+                            <option value="1-0-0-1">1‑0‑0‑1</option>
+                            <option value="1-1-0">1‑1‑0</option>
+                            <option value="0-1-1">0‑1‑1</option>
+                            <option value="1-0-1-1">1‑0‑1‑1</option>
+                        </select>
+                    </div>
+                </td>`;
+
+                // Duration cell
+                html += `<td class="px-4 py-3">
+                    <div class="flex items-center gap-1 flex-wrap">
+                        <input type="text" value="${med.duration.replace(/"/g, '&quot;')}" 
+                               class="duration-input w-20" placeholder="5 days">
+                        <select class="duration-select text-xs">
+                            <option value="">quick</option>
+                            <option value="3 days">3 days</option>
+                            <option value="5 days">5 days</option>
+                            <option value="7 days">7 days</option>
+                            <option value="1 week">1 week</option>
+                            <option value="2 weeks">2 weeks</option>
+                            <option value="1 month">1 month</option>
+                            <option value="3 months">3 months</option>
+                        </select>
+                    </div>
+                </td>`;
+
+                html += `<td class="px-4 py-3"><input type="text" value="${med.notes ? med.notes.replace(/"/g, '&quot;') : ''}" class="notes-input w-32" placeholder="optional"></td>`;
+                html += `<td class="px-4 py-3 text-center"><button class="remove-btn text-gray-400 hover:text-red-600 transition text-base" title="remove"><i class="fas fa-trash-alt"></i></button></td>`;
+                html += `</tr>`;
+            });
+            tableBody.innerHTML = html;
+            const count = medicines.length;
+            medicineCountSpan.innerHTML = `<i class="fas fa-capsules"></i> <span>${count} ${count === 1 ? 'item' : 'items'}</span>`;
+        }
+
+        // update state on input change
+        tableBody.addEventListener('input', function(e) {
+            const target = e.target;
+            if (!target.classList.contains('dosage-input') && !target.classList.contains('duration-input') && !target.classList.contains('notes-input')) return;
+            const row = target.closest('tr');
+            if (!row) return;
+            const id = row.getAttribute('data-id');
+            const medicine = medicines.find(m => m.id == id);
+            if (!medicine) return;
+            if (target.classList.contains('dosage-input')) medicine.dosage = target.value;
+            else if (target.classList.contains('duration-input')) medicine.duration = target.value;
+            else if (target.classList.contains('notes-input')) medicine.notes = target.value;
+        });
+
+        // handle remove and dropdown changes
+        tableBody.addEventListener('click', function(e) {
+            const removeBtn = e.target.closest('.remove-btn');
+            if (removeBtn) {
+                const row = removeBtn.closest('tr');
+                if (!row) return;
+                const id = row.getAttribute('data-id');
+                medicines = medicines.filter(m => m.id != id);
+                renderTable();
+                showToast('Medicine removed', true);
+                return;
+            }
+        });
+
+        tableBody.addEventListener('change', function(e) {
+            const target = e.target;
+            const row = target.closest('tr');
+            if (!row) return;
+            const id = row.getAttribute('data-id');
+            const medicine = medicines.find(m => m.id == id);
+            if (!medicine) return;
+
+            if (target.classList.contains('dosage-select')) {
+                const selectedValue = target.value;
+                if (selectedValue) {
+                    const dosageInput = row.querySelector('.dosage-input');
+                    if (dosageInput) {
+                        dosageInput.value = selectedValue;
+                        medicine.dosage = selectedValue;
+                        dosageInput.classList.add('bg-blue-100');
+                        setTimeout(() => dosageInput.classList.remove('bg-blue-100'), 200);
+                    }
+                    target.value = '';
+                }
+            }
+            else if (target.classList.contains('duration-select')) {
+                const selectedValue = target.value;
+                if (selectedValue) {
+                    const durationInput = row.querySelector('.duration-input');
+                    if (durationInput) {
+                        durationInput.value = selectedValue;
+                        medicine.duration = selectedValue;
+                        durationInput.classList.add('bg-blue-100');
+                        setTimeout(() => durationInput.classList.remove('bg-blue-100'), 200);
+                    }
+                    target.value = '';
+                }
+            }
+        });
+
+        // add new medicine with highlight
+        function addMedicine(displayName, defaultDosage = null, defaultDuration = null, defaultNotes = '') {
+            let dosage = defaultDosage;
+            let duration = defaultDuration;
+            let notes = defaultNotes;
+            if (dosage === null || duration === null) {
+                const smart = getDefaultsForMedicine(displayName);
+                if (dosage === null) dosage = smart.dosage;
+                if (duration === null) duration = smart.duration;
+                if (notes === '') notes = smart.notes;
+            }
+            const newMed = {
+                id: Date.now() + Math.random() * 1000,
+                nameDisplay: displayName,
+                dosage: dosage,
+                duration: duration,
+                notes: notes
+            };
+            medicines.push(newMed);
+            renderTable();
+            setTimeout(() => {
+                const lastRow = tableBody.querySelector('tr:last-child');
+                if (lastRow) {
+                    lastRow.classList.add('highlight-row');
+                    setTimeout(() => lastRow.classList.remove('highlight-row'), 1200);
+                }
+            }, 10);
+            searchInput.focus();
+            medicineCountSpan.classList.add('scale-110', 'bg-blue-200');
+            setTimeout(() => medicineCountSpan.classList.remove('scale-110', 'bg-blue-200'), 150);
+            showToast(`✓ ${displayName} added`, true);
+        }
+
+        // dropdown logic for medicine search
+        function filterMedicines(query) {
+            if (!query.trim()) return [];
+            const lower = query.toLowerCase();
+            return medicineDB.filter(item => 
+                item.name.toLowerCase().includes(lower) || 
+                item.manufacturer.toLowerCase().includes(lower)
+            );
+        }
+
+        function renderDropdown(items) {
+            if (items.length === 0) {
+                dropdown.classList.add('hidden');
+                return;
+            }
+            dropdown.innerHTML = '';
+            items.forEach((item) => {
+                const div = document.createElement('div');
+                div.className = 'dropdown-item px-4 py-3 cursor-pointer flex flex-col transition-all';
+                div.setAttribute('data-name', item.name);
+                div.setAttribute('data-strength', item.strength);
+                div.setAttribute('data-manufacturer', item.manufacturer);
+                div.innerHTML = `
+                    <span class="font-medium text-gray-800 flex items-center gap-2"><i class="fas fa-pills text-blue-400 text-xs"></i>${item.name} ${item.strength}</span>
+                    <span class="text-xs text-gray-400 flex items-center gap-1"><i class="fas fa-flask"></i> ${item.manufacturer}</span>
+                `;
+                div.addEventListener('click', function() {
+                    const name = this.getAttribute('data-name');
+                    const strength = this.getAttribute('data-strength');
+                    const fullName = `${name} ${strength}`;
+                    addMedicine(fullName, null, null, '');
+                    searchInput.value = '';
+                    dropdown.classList.add('hidden');
+                });
+                dropdown.appendChild(div);
+            });
+            dropdown.classList.remove('hidden');
+        }
+
+        searchInput.addEventListener('input', function() {
+            renderDropdown(filterMedicines(this.value));
+        });
+
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (!dropdown.classList.contains('hidden') && dropdown.children.length > 0) {
+                    const first = dropdown.children[0];
+                    const name = first.getAttribute('data-name');
+                    const strength = first.getAttribute('data-strength');
+                    const fullName = `${name} ${strength}`;
+                    addMedicine(fullName, null, null, '');
+                    searchInput.value = '';
+                    dropdown.classList.add('hidden');
+                }
+            } else if (e.key === 'Escape') {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // start with two example medicines
+        addMedicine('Paracetamol 500mg', '1-0-1', '3 days', 'if fever');
+        addMedicine('Cetirizine 10mg', '0-0-1', '5 days', 'at night');
+
+        // button handlers
+        saveBtn.addEventListener('click', () => showToast('Prescription saved (demo)', true));
+        markBtn.addEventListener('click', () => showToast('Marked as completed', true));
+
+        searchInput.focus();
+    })();
+</script>
+</body>
+</html>
