@@ -1,12 +1,11 @@
 from apps.accounts.models import User
 from apps.core.constants.default_values import Role
 import secrets
-from django.core.mail import send_mail
-from django.conf import settings
 from django.db import transaction
 from apps.accounts.models.patientprofile_model import PatientProfile
 from apps.doctors.models.doctorprofile_model import DoctorProfile
 from django.shortcuts import get_object_or_404
+from apps.core.utilities.email import send_email_template
 
 
 def create_doctor_user(first_name, middle_name, last_name, email):
@@ -23,14 +22,21 @@ def create_doctor_user(first_name, middle_name, last_name, email):
     temp_password = secrets.token_urlsafe(12)
     user.set_password(temp_password)
     # ensure_user_profile(user)
-    send_mail(
+    send_email_template(
         subject="Your Password for Doctor Account",
-        message=f"Your temporary password is {temp_password}. Please log in and change your password.",
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[email],
-        fail_silently=False,
+        recipient_email=email,
+        template_name="emails/base_template.html",  # create this template
+        context={
+            "user_name": "Doctor",  # or doctor's actual name
+            "message_title": "Your Temporary Password",
+            "message_content": "Please use the password below to login and change it immediately.",
+            "otp": temp_password,  # reuse otp field for password display
+            "button_text": "Login Now",
+            "button_url": "http://127.0.0.1:8000/doctor/login/"  # change to production URL later
+        }
     )
     user.save()
+    
     return user
 
 

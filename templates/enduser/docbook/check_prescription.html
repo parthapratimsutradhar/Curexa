@@ -1,0 +1,714 @@
+{% extends "enduser/base.html" %}
+{% block title %}Check Prescription | Curexa{% endblock %}
+{% load static %}
+{% block content %}
+
+    <style>
+        /* ----- RESET & VARIABLES ----- */
+        .check-prescription-page * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .check-prescription-page {
+            background: linear-gradient(145deg, #f0f5fa 0%, #e9f0f5 100%);
+            display: flex;
+            justify-content: center;
+            padding: 1.5rem;
+            border-radius: 24px;
+        }
+
+        .app-wrapper {
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        /* ----- GLASS HEADER ----- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 20px rgba(0, 40, 30, 0.08);
+            border-radius: 32px;
+            padding: 0.9rem 1.8rem;
+            margin-bottom: 2.2rem;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .logo-icon {
+            background: #1b8c7c;
+            color: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 6px 12px rgba(27,140,124,0.25);
+        }
+
+        .app-name {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+            color: #1a2e35;
+        }
+
+        .patient-profile {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .patient-name {
+            font-weight: 600;
+            color: #1a3b3f;
+            background: rgba(255,255,255,0.5);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            border: 1px solid rgba(120,180,160,0.3);
+        }
+
+        .profile-icon {
+            background: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2a9d8f;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border: 2px solid rgba(42,157,143,0.2);
+            transition: all 0.2s;
+            cursor: default;
+        }
+
+        /* ----- FILTER BAR & TABS ----- */
+        .search-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .search-wrapper {
+            background: white;
+            border-radius: 48px;
+            padding: 0.3rem 0.3rem 0.3rem 1.5rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 6px 14px rgba(0,30,20,0.05);
+            border: 1px solid rgba(0,0,0,0.02);
+            flex: 1 1 280px;
+        }
+
+        .search-wrapper i {
+            color: #7f9a9e;
+            font-size: 1rem;
+        }
+
+        .search-wrapper input {
+            border: none;
+            padding: 0.8rem 0.5rem;
+            font-size: 0.95rem;
+            background: transparent;
+            width: 100%;
+            outline: none;
+            font-weight: 400;
+        }
+
+        .search-wrapper input::placeholder {
+            color: #b0c6cc;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 0.6rem;
+            background: rgba(255,255,255,0.5);
+            padding: 0.4rem;
+            border-radius: 48px;
+            backdrop-filter: blur(4px);
+        }
+
+        .tab-btn {
+            border: none;
+            background: transparent;
+            padding: 0.6rem 1.6rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #2a4d4f;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: white;
+            box-shadow: 0 4px 12px rgba(42,157,143,0.15);
+            color: #1b8c7c;
+        }
+
+        /* ----- PRESCRIPTION GRID ----- */
+        .cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* ----- CARD (glassmorphism / soft shadow) ----- */
+        .prescription-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 32px;
+            box-shadow: 0 15px 30px -10px rgba(30, 70, 60, 0.15), 0 0 0 1px rgba(255,255,255,0.7) inset;
+            transition: all 0.25s ease;
+            border: 1px solid rgba(255,255,255,0.6);
+            overflow: hidden;
+        }
+
+        .prescription-card:hover {
+            transform: scale(1.01) translateY(-3px);
+            box-shadow: 0 25px 35px -12px rgba(27,140,124,0.25), 0 0 0 1px rgba(255,255,255,0.8) inset;
+        }
+
+        /* expanded highlight */
+        .prescription-card.expanded {
+            box-shadow: 0 20px 35px -8px #2a9d8f66, 0 0 0 2px #2a9d8f inset;
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .card-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.3rem 1.8rem;
+            gap: 1rem;
+            cursor: default;
+        }
+
+        .doctor-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            min-width: 200px;
+        }
+
+        .doctor-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #0b3b3a;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .doctor-name i {
+            color: #2a9d8f;
+            font-size: 1rem;
+            background: rgba(42,157,143,0.1);
+            padding: 6px;
+            border-radius: 50%;
+        }
+
+        .specialty {
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: rgba(42,157,143,0.1);
+            color: #1f7368;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            display: inline-block;
+            margin-left: 2rem;
+        }
+
+        .date-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            color: #43696b;
+            background: rgba(245, 245, 245, 0.7);
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+        }
+
+        .diagnosis-pill {
+            background: #e2f0ed;
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 500;
+            color: #146b5e;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .expand-btn {
+            background: white;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            color: #2a9d8f;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            transition: all 0.2s;
+            border: 1px solid rgba(42,157,143,0.2);
+            flex-shrink: 0;
+        }
+
+        .expand-btn:hover {
+            background: #2a9d8f;
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        /* card body (collapsible) */
+        .card-body {
+            padding: 0rem 1.8rem 1.5rem 1.8rem;
+            border-top: 1px dashed rgba(42,157,143,0.3);
+            transition: all 0.2s;
+        }
+
+        .card-body.hidden {
+            display: none;
+        }
+
+        .medicines-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1.2rem 0 1rem 0;
+        }
+
+        .medicine-item {
+            background: rgba(250,255,252,0.7);
+            border-radius: 24px;
+            padding: 0.9rem 1.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem 1.5rem;
+            border: 1px solid rgba(160, 210, 190, 0.3);
+        }
+
+        .medicine-name {
+            font-weight: 700;
+            color: #1b4e47;
+            min-width: 140px;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .medicine-name i {
+            color: #2a9d8f;
+            width: 20px;
+        }
+
+        .dosage {
+            background: #dbf1ec;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #0f5a50;
+            font-size: 0.85rem;
+        }
+
+        .duration {
+            color: #376b63;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .instruction {
+            background: white;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            color: #1a665b;
+            border: 1px solid #b7e3d9;
+        }
+
+        .notes-area {
+            background: rgba(255, 244, 214, 0.5);
+            padding: 0.9rem 1.2rem;
+            border-radius: 20px;
+            margin: 1rem 0 1.2rem 0;
+            font-size: 0.9rem;
+            border-left: 4px solid #f4c9a4;
+            color: #3f514b;
+            display: flex;
+            gap: 0.7rem;
+            align-items: flex-start;
+        }
+
+        .download-btn {
+            background: transparent;
+            border: 1.5px solid #2a9d8f;
+            color: #2a9d8f;
+            font-weight: 600;
+            padding: 0.65rem 1.8rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .download-btn:hover {
+            background: #2a9d8f;
+            color: white;
+        }
+
+        /* empty + skeleton */
+        .empty-state {
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(6px);
+            border-radius: 48px;
+            padding: 3rem 2rem;
+            text-align: center;
+            color: #497a73;
+            font-size: 1.2rem;
+            border: 2px dashed rgba(42,157,143,0.3);
+        }
+
+        .skeleton-card {
+            background: rgba(230, 240, 240, 0.6);
+            border-radius: 32px;
+            padding: 1.5rem;
+            box-shadow: none;
+            backdrop-filter: blur(4px);
+            height: 140px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skeleton-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 70%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            100% { left: 120%; }
+        }
+
+        /* responsiveness */
+        @media (max-width: 650px) {
+            .header { padding: 0.7rem 1.2rem; }
+            .patient-name { display: none; }
+            .card-header { flex-direction: column; align-items: flex-start; }
+            .expand-btn { align-self: flex-end; }
+            .medicine-item { flex-direction: column; align-items: flex-start; }
+            .tab-btn { padding: 0.5rem 1rem; }
+        }
+
+        /* helper */
+        .fa-chevron-up { transform: rotate(180deg); }
+        i.fa-chevron-up, i.fa-chevron-down { transition: 0.2s; }
+    </style>
+
+
+    <!-- search & tabs -->
+    <div class="search-section">
+        <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search by doctor or date (e.g. Feb 10)">
+        </div>
+        <div class="tab-buttons" id="tabContainer">
+            <button class="tab-btn active" data-status="active">Active</button>
+            <button class="tab-btn" data-status="past">Past</button>
+        </div>
+    </div>
+
+    <!-- cards container (dynamic) -->
+    <div id="cardsContainer" class="cards-container">
+        <!-- skeleton will appear here before JS loads -->
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+    </div>
+
+
+
+<script>
+    (function() {
+        // ---------- DUMMY PRESCRIPTION DATA ----------
+        const prescriptionsData = [
+            {
+                id: 'rx1001',
+                doctorName: 'Dr. Sarah Johnson',
+                specialization: 'Cardiologist',
+                date: '2025-02-10',
+                diagnosis: 'Hypertension',
+                medicines: [
+                    { name: 'Lisinopril', dosage: '1-0-1', duration: '30 days', instructions: 'After meal' },
+                    { name: 'Amlodipine', dosage: '0-0-1', duration: '30 days', instructions: 'Before bed' }
+                ],
+                notes: 'Avoid grapefruit. Monitor BP weekly.',
+                status: 'active'
+            },
+            {
+                id: 'rx1002',
+                doctorName: 'Dr. Michael Chen',
+                specialization: 'Dermatologist',
+                date: '2025-01-15',
+                diagnosis: 'Eczema',
+                medicines: [
+                    { name: 'Hydrocortisone cream', dosage: 'Apply twice', duration: '10 days', instructions: 'Thin layer' }
+                ],
+                notes: 'Avoid scratching; use moisturizer.',
+                status: 'past'
+            },
+            {
+                id: 'rx1003',
+                doctorName: 'Dr. Emily Rodriguez',
+                specialization: 'General Physician',
+                date: '2025-02-18',
+                diagnosis: 'Common Cold',
+                medicines: [
+                    { name: 'Paracetamol', dosage: '1-1-1', duration: '3 days', instructions: 'After meal' },
+                    { name: 'Cetirizine', dosage: '0-0-1', duration: '3 days', instructions: 'Before bed' }
+                ],
+                notes: 'Rest, warm fluids. Paracetamol only if fever.',
+                status: 'active'
+            },
+            {
+                id: 'rx1004',
+                doctorName: 'Dr. Alan Grant',
+                specialization: 'Neurologist',
+                date: '2024-12-02',
+                diagnosis: 'Migraine',
+                medicines: [
+                    { name: 'Sumatriptan', dosage: 'as needed', duration: '5 doses', instructions: 'at onset' },
+                    { name: 'Propranolol', dosage: '1-0-0', duration: '60 days', instructions: 'Morning' }
+                ],
+                notes: 'Keep headache diary.',
+                status: 'past'
+            },
+            {
+                id: 'rx1005',
+                doctorName: 'Dr. Lisa Park',
+                specialization: 'Pulmonologist',
+                date: '2025-02-22',
+                diagnosis: 'Asthma',
+                medicines: [
+                    { name: 'Albuterol inhaler', dosage: '2 puffs', duration: '30 days', instructions: 'Every 4h if needed' },
+                    { name: 'Fluticasone', dosage: '1 puff', duration: '30 days', instructions: 'Morning & night' }
+                ],
+                notes: 'Rinse mouth after steroid inhaler.',
+                status: 'active'
+            }
+        ];
+
+        // ---------- DOM elements ----------
+        const container = document.getElementById('cardsContainer');
+        const searchInput = document.getElementById('searchInput');
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        let currentStatus = 'active';   // default active tab
+        let searchTerm = '';
+
+        // ---------- helper: format date ----------
+        function formatDate(dateStr) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateStr).toLocaleDateString('en-US', options);
+        }
+
+        // ---------- filter logic ----------
+        function filterPrescriptions() {
+            let filtered = prescriptionsData.filter(p => p.status === currentStatus);
+
+            if (searchTerm.trim() !== '') {
+                const term = searchTerm.trim().toLowerCase();
+                filtered = filtered.filter(p => 
+                    p.doctorName.toLowerCase().includes(term) || 
+                    formatDate(p.date).toLowerCase().includes(term) ||
+                    p.date.includes(term)   // raw date search
+                );
+            }
+            return filtered;
+        }
+
+        // ---------- render cards (from filtered data) ----------
+        function renderPrescriptions() {
+            const filtered = filterPrescriptions();
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-notes-medical" style="font-size: 3rem; opacity: 0.5; margin-bottom: 1rem; display: block;"></i>
+                        <p>No ${currentStatus} prescriptions found</p>
+                        <small style="opacity:0.6;">try adjusting the search or tab</small>
+                    </div>
+                `;
+                return;
+            }
+
+            let htmlString = '';
+            filtered.forEach(rx => {
+                // generate medicines block
+                const medicinesHtml = rx.medicines.map(med => `
+                    <div class="medicine-item">
+                        <span class="medicine-name"><i class="fas fa-capsules"></i>${med.name}</span>
+                        <span class="dosage">${med.dosage}</span>
+                        <span class="duration"><i class="far fa-clock"></i> ${med.duration}</span>
+                        <span class="instruction">${med.instructions}</span>
+                    </div>
+                `).join('');
+
+                // optional notes
+                const notesHtml = rx.notes ? `
+                    <div class="notes-area">
+                        <i class="fas fa-pen" style="color:#c98f5e;"></i>
+                        <span><strong>Note:</strong> ${rx.notes}</span>
+                    </div>
+                ` : '';
+
+                // formatted date
+                const displayDate = formatDate(rx.date);
+
+                htmlString += `
+                    <div class="prescription-card" data-id="${rx.id}">
+                        <div class="card-header">
+                            <div class="doctor-summary">
+                                <div class="doctor-name">
+                                    <i class="fas fa-user-md"></i>${rx.doctorName}
+                                    <span class="specialty">${rx.specialization}</span>
+                                </div>
+                                <div class="date-badge">
+                                    <i class="far fa-calendar-alt"></i> ${displayDate}
+                                </div>
+                            </div>
+                            <div class="diagnosis-pill">
+                                <i class="fas fa-stethoscope"></i> ${rx.diagnosis}
+                            </div>
+                            <button class="expand-btn" title="Toggle details">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="card-body hidden">
+                            <div class="medicines-list">
+                                ${medicinesHtml}
+                            </div>
+                            ${notesHtml}
+                            <button class="download-btn" data-download-id="${rx.id}">
+                                <i class="fas fa-file-pdf"></i> Download Prescription
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = htmlString;
+        }
+
+        // ---------- loading skeleton (simulate async) ----------
+        function showSkeletonAndLoad() {
+            container.innerHTML = `
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+            `;
+            // simulate network delay
+            setTimeout(() => {
+                renderPrescriptions();
+            }, 600);
+        }
+
+        // ---------- event: expand/collapse + download (delegation) ----------
+        container.addEventListener('click', (e) => {
+            // handle expand button
+            const expandBtn = e.target.closest('.expand-btn');
+            if (expandBtn) {
+                e.preventDefault();
+                const card = expandBtn.closest('.prescription-card');
+                if (!card) return;
+
+                const body = card.querySelector('.card-body');
+                const icon = expandBtn.querySelector('i');
+
+                // toggle hidden class
+                body.classList.toggle('hidden');
+                // toggle expanded class on card (highlight)
+                card.classList.toggle('expanded');
+
+                // rotate chevron
+                if (icon) {
+                    if (icon.classList.contains('fa-chevron-down')) {
+                        icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+                    } else {
+                        icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+                    }
+                }
+                return;
+            }
+
+            // handle download button
+            const downloadBtn = e.target.closest('.download-btn');
+            if (downloadBtn) {
+                e.preventDefault();
+                const card = downloadBtn.closest('.prescription-card');
+                const rxId = card ? card.dataset.id : 'unknown';
+                alert(`📄 Download simulation: prescription ID ${rxId} (PDF generated)`);
+            }
+        });
+
+        // ---------- search input handler ----------
+        searchInput.addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            renderPrescriptions(); // real-time filter (already filtered by status)
+        });
+
+        // ---------- tab switching ----------
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // update active UI
+                tabButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentStatus = btn.dataset.status;   // 'active' or 'past'
+                renderPrescriptions();
+            });
+        });
+
+        // ---------- initial load with skeleton ----------
+        showSkeletonAndLoad();
+
+        // (optional) if you want to re-trigger filter after data load, but it's already called in timeout
+    })();
+</script>
+</div>
+{% endblock %}

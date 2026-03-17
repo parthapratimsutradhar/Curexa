@@ -89,7 +89,7 @@ class DoctorAddView(View):
         )
         
 
-        return redirect("doctor_list")
+        return redirect("doctor-list")
 
 @admin_required(login_url="/admin/login/")
 class DoctorDetailView(View):

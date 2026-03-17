@@ -203,7 +203,7 @@
                 ${currentView === 'history' ? `<span class="detail-item"><i class="fas fa-rupee-sign"></i> ${apt.paymentAmount || 'N/A'}</span>` : ''}
               </div>
               <div class="card-actions">
-                <button class="btn-icon prescribe-btn" data-index="${index}"><i class="fas fa-prescription"></i> Write Prescription</button>
+                <a href="{% url 'doctor_prescription' %}" class="btn-icon prescribe-btn" data-index="${index}"><i class="fas fa-prescription"></i> Write Prescription</a>
                 <button class="btn-icon view-details" data-index="${index}"><i class="fas fa-info-circle"></i> Details</button>
               </div>
             </div>
@@ -232,6 +232,9 @@
         document.querySelectorAll('.prescribe-btn').forEach(btn => {
           btn.addEventListener('click', (e) => {
             e.stopPropagation();
+            e.preventDefault();
+            window.location.href = btn.getAttribute('href') || "{% url 'doctor_prescription' %}";
+            return;
             const index = btn.dataset.index;
             const apt = currentAppointments[index];
             alert(`Prescription for ${apt.patientName} (${apt.aptId}) – coming soon.`);

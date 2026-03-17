@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}MedSchedule{% endblock %}</title>
+  <link rel="icon" href="https://res.cloudinary.com/dcfkxity4/image/upload/v1773339555/favicon_o9mggb.ico" type="image/x-icon">
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Google Font: Inter -->
@@ -140,6 +141,8 @@
       padding: 0.4rem 1rem 0.4rem 0.8rem;
       border-radius: 40px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+      text-decoration: none;
+      cursor: pointer;
     }
 
     .doctor-profile i {
@@ -294,6 +297,7 @@
       display: flex;
       align-items: center;
       gap: 0.4rem;
+      text-decoration: none;
     }
     .btn-icon i {
       font-size: 0.9rem;
@@ -443,10 +447,10 @@
       <h1>{% block page_title %}Appointments{% endblock %}</h1>
       <div class="header-right">
         <i class="fas fa-bell notification"></i>
-        <div class="doctor-profile">
+        <a href="{% url 'doctor_profile' %}" class="doctor-profile">
           <i class="fas fa-user-circle"></i>
           <span>Dr. Sarah Chen</span>
-        </div>
+        </a>
       </div>
     </div>
 

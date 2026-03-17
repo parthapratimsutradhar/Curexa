@@ -15,6 +15,12 @@ class DoctorLoginView(View):
     def get(self, request):
         return render(request, "enduser(doctors)/doctor_login.html")
 
+class DoctorLogoutView(View):
+    def get(self, request):
+        response = redirect("doctor_login")
+        response.delete_cookie("access_token")
+        response.delete_cookie("refresh_token")
+        return response
 
 class DoctorPortalProfileView(View):
     def get(self, request):
