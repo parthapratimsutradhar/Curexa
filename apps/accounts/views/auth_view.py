@@ -6,11 +6,6 @@ from django.contrib.auth import logout
 from django.conf import settings
 
 
-class RegisterView(View):
-    def get(self, request):
-        return render(request, "auth/register.html")
-
-
 class LoginView(View):
     def get(self, request):
         return render(request, "auth/login.html",  {"GOOGLE_CLIENT_ID": settings.GOOGLE_CLIENT_ID})

@@ -7,7 +7,6 @@ urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
     
     # Authentication URLs
-    path('register/', views.RegisterView.as_view(), name='register'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
     path('send-otp/', views.send_otp_view, name='send_otp'),
