@@ -1,10 +1,7 @@
 from django.views import View
 from django.shortcuts import redirect, render
 from apps.doctors.services import doctor_services
-class DoctorListView(View):
-    def get(self, request):
-        doctors = doctor_services.doctor_list()
-        return render(request, "enduser/doctors/doctor_list.html", {"doctors":doctors})
+
 
 class DoctorProfileView(View):
     def get(self, request, pk):
@@ -76,7 +73,7 @@ def doctor_list_api(request):
     if specialization:
         qs = qs.filter(specialization__name=specialization)
 
-    paginator = Paginator(qs, 5)
+    paginator = Paginator(qs, 8)
     page_obj = paginator.get_page(request.GET.get("page", 1))
 
     return JsonResponse({

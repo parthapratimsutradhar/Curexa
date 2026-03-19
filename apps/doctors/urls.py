@@ -2,8 +2,6 @@ from apps.doctors import views
 from django.urls import path
 
 urlpatterns = [
-    
-    path('doctors/', views.DoctorListView.as_view(), name='doctor_list'),
     path('doctor/login/', views.DoctorLoginView.as_view(), name='doctor_login'),
     path('doctor/logout/', views.DoctorLogoutView.as_view(), name='doctor_logout'),
     path('doctor/profile/', views.DoctorPortalProfileView.as_view(), name='doctor_profile'),
