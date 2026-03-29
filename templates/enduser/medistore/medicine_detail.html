@@ -1285,7 +1285,7 @@
             </div>
             <div class="checkout-item">
                 <!-- Use medicine image if available, otherwise placeholder -->
-                <img src="{% if medicine.image %}{{ medicine.image.url }}{% else %}https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80{% endif %}" alt="{{ medicine.name }}">
+                <img src="{% if medicine.medicine_images %}{{ medicine.medicine_images.0 }}{% else %}https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80{% endif %}" alt="{{ medicine.name }}">
                 <div class="checkout-details">
                     <h4>{{ medicine.name }}</h4>
                     <p>{% if medicine.pack_size %}Pack Size: {{ medicine.pack_size }}{% endif %}</p>
@@ -1308,14 +1308,14 @@
         <section class="medicine-hero">
             <div class="medicine-gallery">
                 <div class="main-image-container" id="mainImageContainer" onclick="openPreview(currentImageSrc)">
-                    <img id="mainImage" src="{% if medicine.image %}{{ medicine.image.url }}{% else %}https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80{% endif %}" alt="{{ medicine.name }}">
+                    <img id="mainImage" src="{% if medicine.medicine_images %}{{ medicine.medicine_images.0 }}{% else %}https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80{% endif %}" alt="{{ medicine.name }}">
                 </div>
                 <div class="thumbnail-container" id="thumbnailContainer">
-                    <!-- Create thumbnails from medicine.images list if available, else use placeholders -->
-                    {% if medicine.images %}
-                        {% for img in medicine.images %}
+                    <!-- Create thumbnails from medicine.medicine_images list if available, else use placeholders -->
+                    {% if medicine.medicine_images %}
+                        {% for img in medicine.medicine_images %}
                             <div class="thumbnail {% if forloop.first %}active{% endif %}" onclick="changeImage({{ forloop.counter0 }})">
-                                <img src="{{ img.url }}" alt="Thumbnail {{ forloop.counter }}">
+                                <img src="{{ img }}" alt="Thumbnail {{ forloop.counter }}">
                             </div>
                         {% endfor %}
                     {% else %}
@@ -1625,10 +1625,10 @@
         };
 
         // Image carousel data
-        {% if medicine.images %}
+        {% if medicine.medicine_images %}
             const images = [
-                {% for img in medicine.images %}
-                    "{{ img.url|escapejs }}",
+                {% for img in medicine.medicine_images %}
+                    "{{ img|escapejs }}",
                 {% endfor %}
             ];
         {% else %}

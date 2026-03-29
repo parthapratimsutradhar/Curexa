@@ -1311,13 +1311,13 @@
                 <div class="consultation-icon"><i class="fas fa-video"></i></div>
                 <h3>Virtual Consultation</h3>
                 <p>Video call with your doctor from anywhere</p>
-                <div class="price">$75</div>
+                <div class="price">₹75</div>
             </div>
             <div class="consultation-type" data-type="in-clinic">
                 <div class="consultation-icon"><i class="fas fa-clinic-medical"></i></div>
                 <h3>In-clinic Visit</h3>
                 <p>Meet the doctor in person at our clinic</p>
-                <div class="price">$100</div>
+                <div class="price">₹100</div>
             </div>
         </div>
         <div class="action-buttons">
@@ -1408,15 +1408,15 @@
                 <h3><i class="fas fa-credit-card"></i> Payment Details</h3>
                 <div class="price-breakdown-item">
                     <span>Consultation fee</span>
-                    <span id="price-consultation">$0</span>
+                    <span id="price-consultation">₹0</span>
                 </div>
                 <div class="price-breakdown-item">
                     <span>Platform fee</span>
-                    <span>$8.00</span>
+                    <span>₹8.00</span>
                 </div>
                 <div class="price-total-row">
                     <span>Total</span>
-                    <span id="price-total">$0</span>
+                    <span id="price-total">₹0</span>
                 </div>
                 <div class="secure-badge">
                     <i class="fas fa-lock"></i> 100% secure payment
@@ -2097,8 +2097,8 @@ function getProfilePic(doctor) {
         const type = state.selectedConsultationType;
         document.getElementById('summary-consultation').textContent = type === 'online' ? 'Virtual Consultation' : (type === 'in-clinic' ? 'In-clinic Visit' : '-');
         const fee = type === 'online' ? 75 : (type === 'in-clinic' ? 100 : 0);
-        document.getElementById('price-consultation').textContent = `$${fee}.00`;
-        document.getElementById('price-total').textContent = `$${fee + 8}.00`;
+        document.getElementById('price-consultation').textContent = `₹${fee}.00`;
+        document.getElementById('price-total').textContent = `₹${fee + 8}.00`;
     }
 
     function showNotification(title, msg) {

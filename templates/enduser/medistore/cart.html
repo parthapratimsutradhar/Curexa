@@ -27,7 +27,9 @@
                 <div class="cart-item" id="item{{ item.cart_item_id }}">
                     <div class="item-image-container">
                         {% if item.images %}
-                        <img src="{{ item.images.0.url }}" alt="{{ item.name }}" class="item-image">
+                        {% with first_image=item.images.0 %}
+                        <img src="{% if first_image.url %}{{ first_image.url }}{% elif first_image.secure_url %}{{ first_image.secure_url }}{% else %}{{ first_image }}{% endif %}" alt="{{ item.name }}" class="item-image">
+                        {% endwith %}
                         {% else %}
                         <img src="https://cdn-icons-png.flaticon.com/512/3149/3149871.png" alt="{{ item.name }}" class="item-image">
                         {% endif %}

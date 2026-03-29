@@ -464,6 +464,19 @@
     }
 
     // Map common backend fields to the frontend 'medicine' shape used in renderMedicineCards()
+    function getFirstImageUrl(b) {
+        const imgs =
+            (b && (b.medicine_images ?? b.images ?? b.image ?? b.image_url ?? b.thumbnail)) ?? '';
+
+        if (Array.isArray(imgs)) {
+            const first = imgs.find(u => typeof u === 'string' && u.trim());
+            return first || '';
+        }
+        if (typeof imgs === 'string') return imgs;
+        if (imgs && typeof imgs === 'object' && typeof imgs.url === 'string') return imgs.url;
+        return '';
+    }
+
     function mapBackendToClient(b) {
         return {
             id: b.id,
@@ -477,6 +490,7 @@
             stock: determineStock(b),
             stockCount: parseInt(firstAvailable(b, ['inventory_quantity', 'stock_quantity', 'quantity', 'inventory?.quantity'])) || 0,
             prescription: !!b.is_prescription_required || !!b.prescription_required || !!b.requires_prescription || false,
+            imageUrl: getFirstImageUrl(b),
             tags: b.tags || b.labels || [],
             raw: b
         };
@@ -596,10 +610,18 @@
             const originalPriceHtml = (medicine.originalPrice && medicine.originalPrice > medicine.price) ?
                 `<span class="original-price">₹${medicine.originalPrice.toFixed(2)}</span>` : '';
 
+            const imageUrl = medicine.imageUrl ? escapeHtml(medicine.imageUrl) : '';
+            const imageAlt = escapeHtml(medicine.name || 'Medicine');
+            const imageContainerClass = medicine.imageUrl ? 'medicine-image has-image' : 'medicine-image';
+            const imageHtml = medicine.imageUrl
+                ? `<img class="medicine-img" src="${imageUrl}" alt="${imageAlt}" loading="lazy" onerror="this.remove(); this.parentElement.classList.remove('has-image');" />`
+                : '';
+
             card.innerHTML = `
                     <div class="medicine-card" onclick='goToMedicineDetails(${JSON.stringify(medicine.id)})'>
-                        <div class="medicine-image">
-                            <i class="fas fa-pills fa-4x"></i>
+                        <div class="${imageContainerClass}">
+                            ${imageHtml}
+                            <i class="fas fa-pills fa-4x fallback-icon"></i>
                         </div>
                         <div class="medicine-details">
                             <h3 class="medicine-name">${escapeHtml(medicine.name)}</h3>
