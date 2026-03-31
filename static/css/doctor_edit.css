@@ -26,6 +26,15 @@ body {
     margin-bottom: 30px;
 }
 
+.page-title-section::before {
+    pointer-events: none;
+}
+
+.page-title-content {
+    position: relative;
+    z-index: 2;
+}
+
 .page-title-section h2 {
     font-weight: 600;
     margin-bottom: 5px;

@@ -8,11 +8,11 @@ from django.shortcuts import get_object_or_404
 from apps.core.services import util_services
 from django.utils.dateparse import parse_date
 from apps.core.utilities.cloudinary_utils import cloudinary_upload_files
+from apps.core.constants.default_values import Role
 
 
 def get_doctor_by_id(pk):
     return get_object_or_404(DoctorProfile, id=pk)
-
 
 def doctor_queryset(date=None, doctor_id=None):
     selected_date = parse_date(date) if date else localdate()
@@ -21,6 +21,9 @@ def doctor_queryset(date=None, doctor_id=None):
         "doctor",
         "specialization",
         "specialization__department",
+    ).filter(
+        doctor__role=Role.DOCTOR.value,
+        doctor__is_active=True
     )
 
     if doctor_id:
@@ -139,8 +142,7 @@ def doctor_add(dr_user, license_number, license_expiry_date, profile_picture,
         contact_number=contact_number,
         profile_picture=images_path
     )
-
-    
+   
 def total_doctors_count():
     return DoctorProfile.objects.count()
 
@@ -156,7 +158,6 @@ def get_all_doctors():
         'profile_picture',
         'specialization__name'
     )
-
 
 def get_doctor_details(doctor):
     data = (
@@ -185,6 +186,10 @@ def get_doctor_details(doctor):
             "license_expiry",
             "consultation_fee",
             "dob",
+            "pin_code",
+            "state",
+            "city",
+            "country",
         )
         .first()
     )
@@ -195,6 +200,9 @@ def get_doctor_details(doctor):
     return {
         "id": data["id"],
         "public_id": data["doctor__public_id"],
+        "doctor_first_name": data["doctor__first_name"],
+        "doctor_middle_name": data["doctor__middle_name"],
+        "doctor_last_name": data["doctor__last_name"],
         "doctor_name": util_services.full_name(
             data["doctor__first_name"],
             data["doctor__middle_name"],
@@ -213,9 +221,12 @@ def get_doctor_details(doctor):
         "consultation_fee": data["consultation_fee"],
         "dob": data["dob"],
         "age":util_services.age_from_dob(data["dob"]),
-        "is_available_today": not appointment_services.is_doctor_on_leave(doctor, localdate())
+        "is_available_today": not appointment_services.is_doctor_on_leave(doctor, localdate()),
+        "pin_code": data["pin_code"],
+        "state": data["state"],
+        "city": data["city"],
+        "country": data["country"]
     }
-
 
 def doctor_list(limit=None):
     # Prefetch related data to reduce N+1 queries
@@ -255,3 +266,25 @@ def doctor_list(limit=None):
         doctor_data_list.append(data)
 
     return doctor_data_list
+
+def doctor_update(doctor_profile_id, **kwargs):
+    doctor = get_object_or_404(DoctorProfile, id=doctor_profile_id)
+
+    remove_photo = kwargs.pop("remove_photo", False)
+    profile_picture = kwargs.pop("profile_picture", None)
+
+    if remove_photo:
+        # Clear stored picture; template will fall back to the default static image
+        doctor.profile_picture = []
+    elif profile_picture:
+        images_path = cloudinary_upload_files(profile_picture, folder_name="doctors")
+        if not isinstance(images_path, list):
+            images_path = [images_path]
+        doctor.profile_picture = images_path
+
+    for field, value in kwargs.items():
+        if value is not None and hasattr(doctor, field):
+            setattr(doctor, field, value)
+
+    doctor.save()
+    return doctor

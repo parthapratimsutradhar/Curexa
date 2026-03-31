@@ -1,4 +1,9 @@
+from pyexpat.errors import messages
+from urllib import request
+from aiohttp import request
+
 from django.views import View
+from litellm import email
 from django.shortcuts import render, redirect
 from apps.doctors.services import doctor_services, department_services, specialization_services, qualification_services
 from apps.docbook.services import appointment_services, availability_services
@@ -10,15 +15,11 @@ from django.http import JsonResponse
 class DoctorListView(View):
     def get(self, request):
         specializations= specialization_services.get_all_specializations()
-        doctors = doctor_services.doctor_list_data(
-            doctor_services.doctor_queryset()[:5]
-        )
         total_doctors=doctor_services.total_doctors_count()
         active_doctors=availability_services.today_active_doctors_count()
         specialized_doctors=doctor_services.specialized_doctors_count()
 
         context = {
-            "doctors": doctors,
             "specializations": specializations,
             "total_doctors": total_doctors,
             "specialized_doctors": specialized_doctors,
@@ -151,8 +152,83 @@ class DoctorDetailView(View):
 @admin_required(login_url="/admin/login/")    
 class DoctorEditView(View):
     def get(self, request, pk):
-        return render(request, "admin/doctors/doctor_edit.html")
-    
+        doctor_profile =  doctor_services.get_doctor_by_id(pk)
+        user = doctor_profile.doctor  # Assuming one-to-one with User
+        qualifications = qualification_services.get_doctor_qualifications(pk)
+        specializations = specialization_services.get_all_specializations()
+
+        context = {
+            "doctor_profile": doctor_profile,
+            "user": user,
+            "qualifications": qualifications,
+            "specializations": specializations,
+        }
+        return render(request, "admin/doctors/doctor_edit.html", context)
+
+    def post(self, request, pk):
+        doctor_profile =  doctor_services.get_doctor_by_id(pk)
+        user = doctor_profile.doctor
+
+        # Extract data from POST
+        first_name = request.POST.get("first_name")
+        middle_name = request.POST.get("middle_name")
+        last_name = request.POST.get("last_name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        clinic_address = request.POST.get("clinic_address")
+        city = request.POST.get("city")
+        pin_code = request.POST.get("pin_code")
+        license_number = request.POST.get("license_number")
+        license_expiry = request.POST.get("license_expiry")
+        specialization_id = request.POST.get("specialization")
+        experience = request.POST.get("experience")
+        consultation_fee = request.POST.get("consultation_fee")
+        bio = request.POST.get("bio")
+        dob = request.POST.get("dob")
+        profile_picture = request.FILES.get("profile_photo")  # from file input
+        remove_photo = request.POST.get("remove_profile_photo") == "1"
+
+        # Basic validation
+        if not first_name or not last_name or not email:
+            return redirect("doctor-edit", pk=pk)
+
+        # Update User
+        user.first_name = first_name
+        user.last_name = last_name
+        if hasattr(user, 'middle_name'):  # if your User model has a middle_name field
+            user.middle_name = middle_name
+        user.email = email
+        user.save()
+
+        # Prepare data for doctor profile update
+        update_data = {
+            "contact_number": phone,
+            "clinic_address": clinic_address,
+            "city": city,
+            "pin_code": pin_code,
+            "license_number": license_number,
+            "license_expiry": license_expiry,
+            "experience_years": experience,
+            "consultation_fee": consultation_fee,
+            "bio": bio,
+            "dob": dob,
+        }
+
+        # Handle specialization (foreign key)
+        if specialization_id:
+            specialization = specialization_services.get_specialization_by_id(specialization_id)
+            update_data["specialization"] = specialization
+
+        # Call the existing update function (which also handles profile picture)
+        doctor_services.doctor_update(
+            doctor_profile.id,
+            **update_data,
+            profile_picture=profile_picture,
+            remove_photo=remove_photo,
+        )
+
+        return redirect("doctor-list")
+
 @admin_required(login_url="/admin/login/")
 class DoctorDeleteView(View):
     def post(self, request, pk):

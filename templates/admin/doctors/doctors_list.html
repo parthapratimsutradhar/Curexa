@@ -1,8 +1,6 @@
 {% extends 'admin/base.html' %} {% load static %} 
 {% block title %}Doctors - Curexa Admin{% endblock %} 
-
 {% block page_header %}
-<!-- Breadcrumb above title -->
 <div class="breadcrumb-above-title">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb mb-0">
@@ -14,7 +12,6 @@
   </nav>
 </div>
 {% endblock %}
-
 {% block content %}
 <div class="row">
   <div class="col-12">
@@ -24,7 +21,7 @@
   </div>
 </div>
 
-<!-- Quick Stats Row - MOVED TO TOP -->
+<!-- Quick Stats Row -->
 <div class="row mt-4">
   <div class="col-xl-3 col-md-6 mb-4">
     <div class="card medical-border h-100">
@@ -88,6 +85,7 @@
   </div>
 </div>
 
+<!-- Search & Filter Row -->
 <div class="row mb-4">
   <div class="col-md-6">
     <div class="d-flex">
@@ -106,41 +104,39 @@
     <a href="{% url 'doctor_add' %}" class="btn btn-success">
       <i class="fas fa-user-plus me-1"></i> Add New Doctor
     </a>
-<div class="btn-group ms-2">
-  <button
-    type="button"
-    class="btn dropdown-toggle"
-    data-bs-toggle="dropdown"
-    aria-expanded="false"
-    id="filterDropdownButton"
-  >
-    <i class="fas fa-filter me-1"></i> Filter
-  </button>
-  <div class="dropdown-menu dropdown-menu-end p-2" style="min-width: 200px; max-height: 250px; overflow-y: auto;">
-    <!-- Search inside dropdown -->
-    <input type="text" class="form-control mb-2" id="specializationSearch" placeholder="Search specialization">
-    <a class="dropdown-item" data-filter="all">All</a>
-    <a class="dropdown-item" data-filter="active">Active</a>
-    <a class="dropdown-item" data-filter="on_leave">On Leave</a>
-    <hr class="dropdown-divider">
-
-    {% for specialization in specializations %}
-      <a class="dropdown-item" data-filter="{{ specialization.name }}">
-        {{ specialization.name }}
-      </a>
-    {% endfor %}
+    <div class="btn-group ms-2">
+      <button
+        type="button"
+        class="btn dropdown-toggle"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        id="filterDropdownButton"
+      >
+        <i class="fas fa-filter me-1"></i> Filter
+      </button>
+      <div class="dropdown-menu dropdown-menu-end p-2" style="min-width: 200px; max-height: 250px; overflow-y: auto;">
+        <input type="text" class="form-control mb-2" id="specializationSearch" placeholder="Search specialization">
+        <a class="dropdown-item" href="#" data-filter="all">All</a>
+        <a class="dropdown-item" href="#" data-filter="active">Active</a>
+        <a class="dropdown-item" href="#" data-filter="on_leave">On Leave</a>
+        <hr class="dropdown-divider">
+        {% for specialization in specializations %}
+          <a class="dropdown-item" href="#" data-filter="{{ specialization.name }}">
+            {{ specialization.name }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
   </div>
 </div>
 
-  </div>
-</div>
-
+<!-- Table -->
 <div class="row">
   <div class="col-12">
     <div class="card medical-border">
       <div class="card-body">
         <div class="table-responsive">
-          <table class="table table-hover table" id="doctorsTable">
+          <table class="table table-hover" id="doctorsTable">
             <thead>
               <tr>
                 <th>ID</th>
@@ -153,120 +149,39 @@
               </tr>
             </thead>
             <tbody id="doctorsTableBody">
-              {% for doctor in doctors %}
               <tr>
-                <td>DR{{ doctor.id }}</td>
-
-                <td>
-                  <div class="d-flex align-items-center">
-                    <img
-                      src="{{ doctor.profile_picture }}"
-                      alt="Doctor"
-                      class="rounded-circle me-2"
-                      width="40"
-                      height="40"
-                    />
-                    <div>
-                      <div>{{ doctor.name }}</div>
-                      <small class="text-muted">
-                        {{ doctor.qualifications|join:", " }}
-                      </small>
-                    </div>
-                  </div>
-                </td>
-
-                <td>{{ doctor.specialization }}</td>
-
-                <td>
-                  {{ doctor.email }}<br />
-                  <small>{{ doctor.contact_number }}</small>
-                </td>
-
-                <td>
-                  {% if doctor.available %}
-                  <span class="badge bg-success">Active</span>
-                  {% else %}
-                  <span class="badge bg-danger">On Leave</span>
-                  {% endif %}
-                </td>
-
-                <td>
-                  <div class="progress" style="height: 8px">
-                    <div
-                      class="progress-bar bg-success"
-                      role="progressbar"
-                      style="width: {{ doctor.appointment_today|default:0 }}%"
-                      aria-valuenow="{{ doctor.appointment_today }}"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
-                  </div>
-                  <small> {{ doctor.active_appointment_today }} today </small>
-                </td>
-
-                <td>
-                  <div class="btn-group">
-                    <a href="{% url 'doctor_detail' doctor.id %}" class="btn btn-sm btn-outline-info" title="View Profile" > <i class="bi bi-eye"></i> </a>
-                    <a href="{% url 'doctor_edit' doctor.id %}" class="btn btn-sm btn-outline-warning" title="Edit"><i class="bi bi-pencil"></i></a>
-                    <a href="{% url 'doctor_schedules' doctor.id %}" class="btn btn-sm btn-outline-light" title="Schedule"><i class="bi bi-calendar"></i></a>
-                    <a href="#"
-   class="btn btn-sm btn-outline-danger delete-btn"
-   data-id="{{ doctor.id }}">
-  <i class="bi bi-trash"></i>
-</a>
-
-                  </div>
-                </td>
+                <td colspan="7" class="text-center text-muted">Loading...</td>
               </tr>
-              {% empty %}
-              <tr>
-                <td colspan="7" class="text-center text-muted">
-                  No doctors found
-                </td>
-              </tr>
-              {% endfor %}
             </tbody>
           </table>
         </div>
 
         <!-- Pagination -->
-<nav>
-  <ul class="pagination justify-content-center" id="pagination"></ul>
-</nav>
+        <nav>
+          <ul class="pagination justify-content-center" id="pagination"></ul>
+        </nav>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteDoctorModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-danger text-white">
-        <h5 class="modal-title">
-          <i class="bi bi-exclamation-triangle me-2"></i>
-          Confirm Delete
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-        <p class="mb-0">
-          Are you sure you want to delete this doctor?
-        </p>
-        <small class="text-muted">
-          This action cannot be undone.
-        </small>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">
-          Cancel
-        </button>
-        <button class="btn btn-danger" id="confirmDeleteBtn">
-          Yes, Delete
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="deleteDoctorModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                  <i class="bi bi-exclamation-triangle me-2"></i>Confirm Delete
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <p class="mb-0">Are you sure you want to delete this doctor?</p>
+                <small class="text-muted">This action cannot be undone.</small>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -279,26 +194,23 @@
     border-bottom: 1px solid var(--med-primary);
     font-weight: 600;
   }
-
   .table-hover tbody tr:hover {
     background-color: rgba(42, 107, 156, 0.2);
     cursor: pointer;
   }
-
   .badge {
     font-size: 0.8em;
     padding: 0.4em 0.6em;
   }
-
   .progress {
     width: 100px;
   }
 </style>
 
 <script>
-const searchInput = document.getElementById("searchInput");
-const tableBody = document.getElementById("doctorsTableBody");
-const pagination = document.getElementById("pagination");
+const searchInput  = document.getElementById("searchInput");
+const tableBody    = document.getElementById("doctorsTableBody");
+const pagination   = document.getElementById("pagination");
 
 let state = {
   search: "",
@@ -307,87 +219,87 @@ let state = {
   page: 1
 };
 
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
+function getProfilePic(doctor) {
+  const pic = Array.isArray(doctor.profile_picture) && doctor.profile_picture[0]
+    ? doctor.profile_picture[0]
+    : "";
+  return pic.trim() || "/static/images/doctor_profiles/default-doctor.jpg";
+}
+
+// ─── Render table rows ───────────────────────────────────────────────────────
+
 function renderRows(doctors) {
+  if (!doctors || !doctors.length) {
+    return `<tr><td colspan="7" class="text-center text-muted">No doctors found</td></tr>`;
+  }
+
   return doctors.map(d => {
-    const total = d.appointment_today || 0;              // total appointments today
-    const completed = d.active_appointment_today || 0;   // completed appointments
-    const remaining = Math.max(total - completed, 0);   // remaining appointments
+    const total     = d.appointment_count        || 0;
+    const completed = d.active_appointment_count || 0;
+    const remaining = Math.max(total - completed, 0);
 
-    function getProfilePic(doctor) {
-      // get first image if array exists and not empty
-      const pic = (doctor.profile_picture && doctor.profile_picture[0]) || "";
-      return pic.trim() || "/static/images/doctor_profiles/default-doctor.jpg";
-    }
-
-    let progressHtml = "";
-    let text = "";
+    let progressHtml, text;
 
     if (total === 0) {
-      // No appointments today
-      progressHtml = `<div class="progress" style="height: 12px;">
-                        <div class="progress-bar bg-secondary" style="width: 100%;"></div>
-                      </div>`;
+      progressHtml = `
+        <div class="progress" style="height: 12px;">
+          <div class="progress-bar bg-secondary" style="width: 100%;"></div>
+        </div>`;
       text = "No appointments today";
     } else {
-      const percentCompleted = (completed / total) * 100;
-      const percentRemaining = (remaining / total) * 100;
-
+      const pctCompleted = (completed / total) * 100;
+      const pctRemaining = (remaining / total) * 100;
       progressHtml = `
         <div class="progress" style="height: 12px; position: relative;">
-          <!-- Gray total bar -->
           <div class="progress-bar bg-secondary" style="width: 100%; position: absolute;"></div>
-          <!-- Green remaining appointments -->
-          <div class="progress-bar bg-success" role="progressbar" style="width: ${percentRemaining}%;"></div>
-          <!-- Optional red completed bar on top -->
-          <div class="progress-bar bg-danger" role="progressbar" style="width: ${percentCompleted}%;"></div>
-        </div>
-      `;
+          <div class="progress-bar bg-success" role="progressbar" style="width: ${pctRemaining}%;"></div>
+          <div class="progress-bar bg-danger"  role="progressbar" style="width: ${pctCompleted}%;"></div>
+        </div>`;
       text = `${remaining} / ${total} remaining`;
     }
+
+    const badgeClass = d.is_available ? "bg-success" : "bg-danger";
+    const badgeLabel = d.is_available ? "Active"     : "On Leave";
 
     return `
       <tr>
         <td>DR${d.id}</td>
         <td>
           <div class="d-flex align-items-center">
-            <img src="${getProfilePic(d)}" class="rounded-circle me-2" width="40" height="40">
-            <div>${d.name}</div>
+            <img src="${getProfilePic(d)}" class="rounded-circle me-2" width="40" height="40" alt="Doctor">
+            <div>
+              <div>${d.name || ""}</div>
+              <small class="text-muted">${d.department || ""}</small>
+            </div>
           </div>
         </td>
         <td>${d.specialization || ""}</td>
         <td>${d.email || ""}<br><small>${d.contact_number || ""}</small></td>
-        <td>
-          <span class="badge ${d.is_available_today ? "bg-success" : "bg-danger"}">
-            ${d.is_available_today ? "Active" : "On Leave"}
-          </span>
-        </td>
+        <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
         <td>
           ${progressHtml}
           <small>${text}</small>
         </td>
         <td>
           <div class="btn-group">
-            <a href="/admin/doctors/${d.id}/detail/" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
-            <a href="/admin/doctors/${d.id}/edit/" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
-            <a href="/admin/doctors/${d.id}/schedules/" class="btn btn-sm btn-outline-dark"><i class="bi bi-calendar"></i></a>
-            <a href="#"
-   class="btn btn-sm btn-outline-danger delete-btn"
-   data-id="${d.id}">
-   <i class="bi bi-trash"></i>
-</a>
-
+            <a href="/admin/doctors/${d.id}/detail/"    class="btn btn-sm btn-outline-info"    title="View Profile"><i class="bi bi-eye"></i></a>
+            <a href="/admin/doctors/${d.id}/edit/"      class="btn btn-sm btn-outline-warning" title="Edit"><i class="bi bi-pencil"></i></a>
+            <a href="/admin/doctors/${d.id}/schedules/" class="btn btn-sm btn-outline-dark"    title="Schedule"><i class="bi bi-calendar"></i></a>
+            <a href="#" class="btn btn-sm btn-outline-danger delete-btn" data-id="${d.id}" title="Delete"><i class="bi bi-trash"></i></a>
           </div>
         </td>
-      </tr>
-    `;
+      </tr>`;
   }).join("");
 }
 
+// ─── Render pagination ───────────────────────────────────────────────────────
 
-function renderPagination(page, pages) {
+function renderPagination(page, pages, hasNext, hasPrev) {
   let html = "";
 
-  if (page > 1) {
+  if (hasPrev) {
     html += `<li class="page-item">
       <a class="page-link" href="#" data-page="${page - 1}">Previous</a>
     </li>`;
@@ -399,7 +311,7 @@ function renderPagination(page, pages) {
     </li>`;
   }
 
-  if (page < pages) {
+  if (hasNext) {
     html += `<li class="page-item">
       <a class="page-link" href="#" data-page="${page + 1}">Next</a>
     </li>`;
@@ -408,34 +320,45 @@ function renderPagination(page, pages) {
   pagination.innerHTML = html;
 }
 
+// ─── Fetch doctors from API ──────────────────────────────────────────────────
+
 function fetchDoctors() {
   const params = new URLSearchParams(state);
-
   fetch(`/api/doctors/?${params}`)
     .then(res => res.json())
     .then(data => {
       tableBody.innerHTML = renderRows(data.results);
-      renderPagination(data.page, data.pages);
+      renderPagination(data.page, data.pages, data.has_next, data.has_prev);
+    })
+    .catch(err => {
+      console.error("Failed to fetch doctors:", err);
+      tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Failed to load doctors. Please try again.</td></tr>`;
     });
 }
 
-// 🔍 REALTIME SEARCH
+// ─── Realtime search ─────────────────────────────────────────────────────────
+
 searchInput.addEventListener("input", e => {
   state.search = e.target.value;
-  state.page = 1;
+  state.page   = 1;
   fetchDoctors();
 });
 
-// 🎯 FILTERS
+document.getElementById("searchButton").addEventListener("click", () => {
+  state.search = searchInput.value;
+  state.page   = 1;
+  fetchDoctors();
+});
+
+// ─── Filter dropdown ─────────────────────────────────────────────────────────
+
 document.querySelectorAll("[data-filter]").forEach(item => {
   item.addEventListener("click", e => {
     e.preventDefault();
-
-    const filter = item.dataset.filter;
-
-    state.status = "";
+    const filter         = item.dataset.filter;
+    state.status         = "";
     state.specialization = "";
-    state.page = 1;
+    state.page           = 1;
 
     if (filter === "active" || filter === "on_leave") {
       state.status = filter;
@@ -447,80 +370,61 @@ document.querySelectorAll("[data-filter]").forEach(item => {
   });
 });
 
-// 📄 PAGINATION CLICK
-pagination.addEventListener("click", e => {
-  if (e.target.dataset.page) {
-    e.preventDefault();
-    state.page = parseInt(e.target.dataset.page);
-    fetchDoctors();
-  }
+// ─── Specialization search inside dropdown ───────────────────────────────────
+
+document.getElementById("specializationSearch").addEventListener("input", e => {
+  const query = e.target.value.toLowerCase();
+  document.querySelectorAll(".dropdown-menu .dropdown-item").forEach(item => {
+    if (["all", "active", "on_leave"].includes(item.dataset.filter)) return;
+    item.style.display = item.textContent.toLowerCase().includes(query) ? "" : "none";
+  });
 });
-document.addEventListener("DOMContentLoaded", () => {
+
+// ─── Pagination click ────────────────────────────────────────────────────────
+
+pagination.addEventListener("click", e => {
+  const link = e.target.closest("[data-page]");
+  if (!link) return;
+  e.preventDefault();
+  state.page = parseInt(link.dataset.page);
   fetchDoctors();
 });
 
+// ─── Delete modal ────────────────────────────────────────────────────────────
 
-</script>
-
-<script>
-const specializationSearch = document.getElementById("specializationSearch");
-
-specializationSearch.addEventListener("input", (e) => {
-  const filter = e.target.value.toLowerCase();
-  const items = document.querySelectorAll("#filterDropdownButton + .dropdown-menu .dropdown-item");
-
-  items.forEach(item => {
-    // Ignore All/Active/On Leave items (optional)
-    if (["all", "active", "on_leave"].includes(item.dataset.filter)) return;
-
-    const text = item.textContent.toLowerCase();
-    if (text.includes(filter)) {
-      item.style.display = "";
-    } else {
-      item.style.display = "none";
-    }
-  });
-});
-</script>
-
-<script>
 let doctorToDelete = null;
-const deleteModal = new bootstrap.Modal(
-  document.getElementById("deleteDoctorModal")
-);
+const deleteModal  = new bootstrap.Modal(document.getElementById("deleteDoctorModal"));
 
-// Open modal
 document.addEventListener("click", function (e) {
   const btn = e.target.closest(".delete-btn");
   if (!btn) return;
-
   e.preventDefault();
   doctorToDelete = btn.dataset.id;
   deleteModal.show();
 });
 
-// Confirm delete
 document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
   if (!doctorToDelete) return;
 
   fetch(`/admin/doctors/${doctorToDelete}/delete/`, {
     method: "POST",
-    headers: {
-      "X-CSRFToken": "{{ csrf_token }}",
-    }
+    headers: { "X-CSRFToken": "{{ csrf_token }}" }
   })
   .then(res => res.json())
   .then(data => {
     if (data.success) {
       deleteModal.hide();
-      fetchDoctors(); // refresh table
+      doctorToDelete = null;
+      fetchDoctors();
     } else {
-      alert("Failed to delete doctor");
+      alert("Failed to delete doctor.");
     }
   })
-  .catch(() => alert("Something went wrong"));
+  .catch(() => alert("Something went wrong."));
 });
+
+// ─── Initial load ────────────────────────────────────────────────────────────
+
+document.addEventListener("DOMContentLoaded", fetchDoctors);
 </script>
-
-
 {% endblock %}

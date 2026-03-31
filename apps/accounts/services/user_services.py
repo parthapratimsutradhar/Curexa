@@ -6,7 +6,7 @@ from apps.accounts.models.patientprofile_model import PatientProfile
 from apps.doctors.models.doctorprofile_model import DoctorProfile
 from django.shortcuts import get_object_or_404
 from apps.core.utilities.email import send_email_template
-
+from django.http import Http404
 
 def create_doctor_user(first_name, middle_name, last_name, email):
     """
@@ -61,14 +61,27 @@ def ensure_user_profile(user):
     raise ValueError(f"Unsupported user role: {user.role}")
 
 
-def delete_doctor(user_id: int):
-    user = get_object_or_404(User, id=user_id, role=Role.DOCTOR.value)
+def delete_doctor(doctor_profile_id: int):
+    updated = User.objects.filter(
+        fk_doctor_doctor_profile_user_id__id=doctor_profile_id,
+        role=Role.DOCTOR.value
+    ).update(is_active=False)
 
-    user.is_active = False
-    user.save(update_fields=["is_active"])
-
-    DoctorProfile.objects.filter(doctor=user).delete()
+    if not updated:
+        raise Http404("Doctor not found")
 
     
 def get_user_details(user):
     return get_object_or_404(User, id=user, is_active=True)
+
+
+def toggle_doctor_status(doctor_profile_id, status: bool):
+    doctor_profile = DoctorProfile.objects.select_related("doctor").get(
+        id=doctor_profile_id,
+        doctor__role=Role.DOCTOR.value
+    )
+
+    doctor_profile.doctor.is_active = status
+    doctor_profile.doctor.save(update_fields=["is_active"])
+
+    return doctor_profile
