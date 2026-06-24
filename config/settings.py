@@ -38,6 +38,30 @@ INSTALLED_APPS = [
     'apps.labtests'
 ]
 
+# Auto-create centralized migration packages
+migration_base = BASE_DIR / "apps" / "core" / "migrations"
+
+migration_base.mkdir(parents=True, exist_ok=True)
+(migration_base / "__init__.py").touch(exist_ok=True)
+
+for app in INSTALLED_APPS:
+    if app.startswith("apps."):
+        app_name = app.split(".")[-1]
+
+        if app_name not in {
+            "accounts",
+            "doctors",
+            "docbook",
+            "medistore",
+            "orders",
+            "labtests",
+        }:
+            continue
+
+        folder = migration_base / app_name
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / "__init__.py").touch(exist_ok=True)
+
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
