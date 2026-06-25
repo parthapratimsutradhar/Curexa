@@ -1,0 +1,772 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Documentation — Curexa</title>
+
+    <link rel="icon" href="https://res.cloudinary.com/dcfkxity4/image/upload/v1773339555/favicon_o9mggb.ico" type="image/x-icon">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Existing Route Docs Styles (keep if needed, but we will override) -->
+    <link rel="stylesheet" href="{% static 'css/route_docs.css' %}">
+
+    <!-- ============ ENHANCED UI & LAYOUT STYLES ============ -->
+    <style>
+        /* ----- Global Reset & Variables ----- */
+        :root {
+            --curexa-primary: #0d6efd;
+            --curexa-secondary: #6c757d;
+            --curexa-dark: #1e293b;
+            --curexa-light: #f8fafc;
+            --border-radius: 12px;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            --transition: all 0.2s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7fc;
+            color: #334155;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .route-docs {
+            max-width: 100%;
+            margin: 0 auto;
+            background: #ffffff;
+        }
+
+        /* ----- Hero Section ----- */
+        .docs-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+            color: #fff;
+            padding: 3rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .docs-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .docs-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 0.5rem 1.2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .docs-title {
+            font-weight: 800;
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .docs-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.6;
+        }
+
+        /* Stats Cards */
+        .docs-stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            min-width: 120px;
+            flex: 1 1 120px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: var(--transition);
+        }
+        .stat-card:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-4px);
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-top: 0.4rem;
+            display: block;
+        }
+
+        .docs-quick-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .quick-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(5px);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .quick-link-btn.secondary {
+            background: rgba(255,255,255,0.1);
+        }
+        .quick-link-btn:hover {
+            background: rgba(255,255,255,0.25);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* ----- Sticky Toolbar ----- */
+        .docs-toolbar {
+            background: #ffffff;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            z-index: 1030;
+            position: sticky;
+            top: 0;
+        }
+
+        .toolbar-inner {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #64748b;
+            padding: 0.25rem;
+        }
+
+        .search-box {
+            flex: 1 1 250px;
+            position: relative;
+            min-width: 200px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 0.7rem 2.8rem 0.7rem 2.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            background: #f8fafc;
+            transition: var(--transition);
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--curexa-primary);
+            box-shadow: 0 0 0 3px rgba(13,110,253,0.15);
+            background: #fff;
+        }
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        .search-clear {
+            position: absolute;
+            right: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0.3rem;
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+        .search-clear:hover {
+            opacity: 1;
+            color: #ef4444;
+        }
+
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .filter-chip {
+            background: #f1f5f9;
+            border: none;
+            padding: 0.45rem 1.1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            color: #475569;
+        }
+        .filter-chip.active,
+        .filter-chip:hover {
+            background: var(--curexa-primary);
+            color: #fff;
+        }
+
+        .results-count {
+            margin: 0.5rem 0 0;
+            font-size: 0.85rem;
+            color: #64748b;
+            text-align: center;
+        }
+
+        /* ----- Layout (Sidebar + Main) ----- */
+        .docs-layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            gap: 2rem;
+            min-height: 80vh;
+        }
+
+        /* Desktop Sidebar */
+        .docs-sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 90px;  /* height of toolbar + some padding */
+            align-self: flex-start;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            background: #ffffff;
+            border-radius: var(--border-radius);
+            padding: 1.2rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #f1f5f9;
+        }
+
+        .sidebar-heading {
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.7rem 0.9rem;
+            margin-bottom: 0.2rem;
+            border-radius: 8px;
+            color: #475569;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: #f1f5f9;
+            color: var(--curexa-primary);
+        }
+        .sidebar-icon {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--cat-color, #e2e8f0);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+        .sidebar-text {
+            flex: 1;
+        }
+        .sidebar-count {
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 0.1rem 0.6rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        /* Main Content */
+        .docs-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Category Section */
+        .route-category {
+            margin-bottom: 2.5rem;
+            scroll-margin-top: 120px;  /* prevent toolbar overlap */
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 0.8rem;
+        }
+        .category-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+        .category-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--curexa-dark);
+        }
+        .category-meta {
+            margin: 0.2rem 0 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* Route Cards Grid */
+        .route-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .route-card {
+            background: #fff;
+            border-radius: var(--border-radius);
+            padding: 1.4rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #f1f5f9;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+        .route-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border-color: #e2e8f0;
+        }
+
+        .route-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .method-badges {
+            display: flex;
+            gap: 0.4rem;
+        }
+        .method-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            background: var(--method-color, #e2e8f0);
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .auth-badge {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.7rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .auth-badge.public { background: #d1fae5; color: #065f46; }
+        .auth-badge.authenticated { background: #fff7ed; color: #9a3412; }
+        .auth-badge.admin { background: #fce7f3; color: #9d174d; }
+        .auth-badge.doctor { background: #e0f2fe; color: #075985; }
+
+        .route-path {
+            display: inline-block;
+            background: #f8fafc;
+            padding: 0.35rem 0.8rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #334155;
+            margin-bottom: 0.8rem;
+            word-break: break-all;
+            border: 1px solid #e2e8f0;
+        }
+
+        .route-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0.4rem 0 0.6rem;
+            color: var(--curexa-dark);
+        }
+
+        .route-description {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .route-meta {
+            margin: 0.8rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .route-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+        .route-action {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .route-action.primary {
+            background: var(--curexa-primary);
+            color: #fff;
+        }
+        .route-action.primary:hover {
+            background: #0b5ed7;
+            color: #fff;
+        }
+        .route-action:not(.primary) {
+            background: #f1f5f9;
+            color: #334155;
+        }
+        .route-action:not(.primary):hover {
+            background: #e2e8f0;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 4rem 1rem;
+        }
+        .no-results-icon {
+            font-size: 3rem;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+        }
+
+        /* Offcanvas mobile sidebar */
+        .docs-offcanvas {
+            width: 280px !important;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .docs-layout {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            .docs-sidebar {
+                display: none; /* hidden on mobile, offcanvas used instead */
+            }
+            .docs-toolbar {
+                padding: 0.8rem 1rem;
+            }
+            .toolbar-inner {
+                gap: 0.6rem;
+            }
+            .search-box {
+                flex: 1 1 180px;
+            }
+            .route-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .docs-hero {
+                padding: 2rem 1rem;
+            }
+            .stat-card {
+                min-width: 90px;
+                padding: 0.8rem;
+            }
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            .quick-link-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Fix sticky toolbar from being overlapped (duplicate safe guard) */
+        .docs-toolbar.sticky-top {
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            background: #fff !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+    </style>
+</head>
+<body>
+    <div class="route-docs">
+        <!-- Hero Section -->
+        <header class="docs-hero">
+            <div class="docs-hero-bg"></div>
+            <div class="docs-hero-content">
+                <div class="docs-badge">
+                    <i class="fas fa-sitemap"></i> Developer Reference
+                </div>
+                <h1 class="docs-title">Curexa Route Documentation</h1>
+                <p class="docs-subtitle">
+                    Explore every web page and API endpoint in the platform.
+                    Search, filter, and navigate with ease.
+                </p>
+                <div class="docs-stats">
+                    <div class="stat-card">
+                        <span class="stat-value">{{ stats.total }}</span>
+                        <span class="stat-label">Total Routes</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">{{ stats.web }}</span>
+                        <span class="stat-label">Web Pages</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">{{ stats.api }}</span>
+                        <span class="stat-label">API Endpoints</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">{{ stats.categories }}</span>
+                        <span class="stat-label">Categories</span>
+                    </div>
+                </div>
+                <div class="docs-quick-links">
+                    <a href="{% url 'swagger' %}" class="quick-link-btn" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-bolt"></i> Swagger API
+                    </a>
+                    <a href="{% url 'schema' %}" class="quick-link-btn secondary" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-file-code"></i> OpenAPI Schema
+                    </a>
+                    <a href="{% url 'home' %}" class="quick-link-btn secondary">
+                        <i class="fas fa-home"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Toolbar with Search and Filters -->
+        <div class="docs-toolbar sticky-top">
+            <div class="toolbar-inner">
+                <button class="sidebar-toggle d-lg-none" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#docsSidebar" aria-label="Open navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="search" id="routeSearch" class="search-input"
+                        placeholder="Search routes by path, name, or description…" autocomplete="off">
+                    <button type="button" class="search-clear" id="searchClear" aria-label="Clear search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="filter-chips" role="group" aria-label="Filter routes">
+                    <button class="filter-chip active" data-filter="all">All</button>
+                    <button class="filter-chip" data-filter="web">Web</button>
+                    <button class="filter-chip" data-filter="api">API</button>
+                    <button class="filter-chip" data-filter="admin">Admin</button>
+                    <button class="filter-chip" data-filter="doctor">Doctor</button>
+                </div>
+            </div>
+            <p class="results-count" id="resultsCount" aria-live="polite"></p>
+        </div>
+
+        <div class="docs-layout">
+            <!-- Desktop Sidebar (visible on lg and up) -->
+            <aside class="docs-sidebar d-none d-lg-block" id="desktopSidebar">
+                <nav class="sidebar-nav" aria-label="Route categories">
+                    <p class="sidebar-heading">Jump to section</p>
+                    {% for category in categories %}
+                    <a href="#cat-{{ category.id }}" class="sidebar-link" data-category="{{ category.id }}">
+                        <span class="sidebar-icon" style="--cat-color: {{ category.color }}">
+                            <i class="fas {{ category.icon }}"></i>
+                        </span>
+                        <span class="sidebar-text">{{ category.label }}</span>
+                        <span class="sidebar-count">{{ category.count }}</span>
+                    </a>
+                    {% endfor %}
+                </nav>
+            </aside>
+
+            <!-- Mobile Offcanvas Sidebar -->
+            <div class="offcanvas offcanvas-start docs-offcanvas" tabindex="-1" id="docsSidebar"
+                aria-labelledby="docsSidebarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="docsSidebarLabel">Sections</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <nav class="sidebar-nav">
+                        {% for category in categories %}
+                        <a href="#cat-{{ category.id }}" class="sidebar-link mobile-nav-link"
+                            data-category="{{ category.id }}" data-bs-dismiss="offcanvas">
+                            <span class="sidebar-icon" style="--cat-color: {{ category.color }}">
+                                <i class="fas {{ category.icon }}"></i>
+                            </span>
+                            <span class="sidebar-text">{{ category.label }}</span>
+                            <span class="sidebar-count">{{ category.count }}</span>
+                        </a>
+                        {% endfor %}
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <main class="docs-main" id="docsMain">
+                {% for category in categories %}
+                <section class="route-category" id="cat-{{ category.id }}" data-category="{{ category.id }}">
+                    <div class="category-header">
+                        <div class="category-icon" style="background: {{ category.color }}20; color: {{ category.color }}">
+                            <i class="fas {{ category.icon }}"></i>
+                        </div>
+                        <div>
+                            <h2 class="category-title">{{ category.label }}</h2>
+                            <p class="category-meta">{{ category.count }} route{{ category.count|pluralize }}</p>
+                        </div>
+                    </div>
+
+                    <div class="route-grid">
+                        {% for route in category.routes %}
+                        <article class="route-card"
+                            data-path="{{ route.path|lower }}"
+                            data-name="{{ route.name|lower }}"
+                            data-desc="{{ route.description|lower }}"
+                            data-type="{% if route.is_api %}api{% elif route.category == 'admin' %}admin{% elif route.category == 'doctor-portal' %}doctor{% else %}web{% endif %}">
+                            <div class="route-card-header">
+                                <div class="method-badges">
+                                    {% for badge in route.method_badges %}
+                                    <span class="method-badge" style="--method-color: {{ badge.color }}">
+                                        {{ badge.name }}
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                                <span class="auth-badge {{ route.auth_label.class }}">
+                                    {{ route.auth_label.label }}
+                                </span>
+                            </div>
+
+                            <code class="route-path" title="{{ route.path }}">{{ route.path }}</code>
+
+                            <h3 class="route-name">
+                                {% if route.name != "—" %}
+                                <i class="fas fa-tag"></i> {{ route.name }}
+                                {% else %}
+                                <span class="text-muted">Unnamed route</span>
+                                {% endif %}
+                            </h3>
+
+                            <p class="route-description">{{ route.description }}</p>
+
+                            <div class="route-meta">
+                                <span class="route-view">
+                                    <i class="fas fa-code"></i> {{ route.view }}
+                                </span>
+                            </div>
+
+                            <div class="route-actions">
+                                <!-- ✅ ALWAYS show Open button – use resolved URL if available, else route path -->
+                                <a href="{% if route.resolved_url %}{{ route.resolved_url }}{% else %}{{ route.path }}{% endif %}" 
+                                   class="route-action primary" 
+                                   target="_blank" 
+                                   rel="noopener noreferrer">
+                                    <i class="fas fa-external-link-alt"></i> Open
+                                </a>
+                                <button type="button" class="route-action copy-path" data-path="{{ route.path }}">
+                                    <i class="fas fa-copy"></i> Copy Path
+                                </button>
+                            </div>
+                        </article>
+                        {% endfor %}
+                    </div>
+                </section>
+                {% endfor %}
+
+                <div class="no-results d-none" id="noResults">
+                    <div class="no-results-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>No routes found</h3>
+                    <p>Try a different search term or clear your filters.</p>
+                    <button type="button" class="btn btn-outline-primary" id="resetFilters">Reset filters</button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Route Docs JavaScript -->
+    <script src="{% static 'js/route_docs.js' %}"></script>
+</body>
+</html>

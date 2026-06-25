@@ -1,6 +1,15 @@
 from django.views import View
 from django.shortcuts import redirect, render
 
+from apps.core.utilities.route_collector import build_route_docs_context
+
+
+class RouteDocumentationView(View):
+    def get(self, request):
+        context = build_route_docs_context()
+        return render(request, "docs/route_documentation.html", context)
+
+
 class EmergencyView(View):
     def get(self, request):
         return render (request, "enduser/emergency_urgent_care.html")
