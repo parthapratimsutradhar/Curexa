@@ -75,39 +75,4 @@ def create_razorpay_order(invoice):
         "target_type": target_type,
         "target_id": target_id,
     }
-
-# apps/payments/views.py
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
-from django.conf import settings
-import razorpay
-from apps.orders.models import Payment
-from apps.core.constants.default_values import PaymentStatus
-
-
-@csrf_exempt
-def verify_payment(request):
-    data = request.POST
-    client = razorpay.Client(
-        auth=(settings.RAZORPAY_TEST_KEY_ID, settings.RAZORPAY_TEST_KEY_SECRET)
-    )
-
-    try:
-        client.utility.verify_payment_signature({
-            "razorpay_order_id": data["razorpay_order_id"],
-            "razorpay_payment_id": data["razorpay_payment_id"],
-            "razorpay_signature": data["razorpay_signature"],
-        })
-
-        payment = Payment.objects.get(transaction_id=data["razorpay_order_id"])
-        payment.status = PaymentStatus.SUCCESS.value
-        payment.save()
-
-        invoice = payment.invoice
-        invoice.is_paid = True
-        invoice.save()
-
-        return JsonResponse({"status": "success"})
-
-    except razorpay.errors.SignatureVerificationError:
-        return JsonResponse({"status": "failed"}, status=400)    
+

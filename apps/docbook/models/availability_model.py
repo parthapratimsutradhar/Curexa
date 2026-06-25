@@ -11,8 +11,8 @@ class Availability(BaseModel):
     )
 
     date = models.DateField(db_index=True)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
     is_available = models.BooleanField(default=True)
     is_leave = models.BooleanField(default=False)
 

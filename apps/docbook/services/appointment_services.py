@@ -375,13 +375,24 @@ def doctor_total_completed_appointments_count(doctor_id):
     ).count()
 
 def appointment_checkout(appointment):
-    # patient = patient_services.get_patient()
+    from decimal import Decimal
+
+    base_fee = appointment.base_fee or Decimal("0.00")
+    tax_amount = appointment.tax_amount or Decimal("0.00")
+
+    # tax_rate is a percentage (e.g. 18.0 for 18%)
+    # appointment.tax_amount is a monetary value, so we derive the rate
+    if base_fee > 0:
+        tax_rate = (tax_amount / base_fee * Decimal("100")).quantize(Decimal("0.01"))
+    else:
+        tax_rate = Decimal("0.00")
 
     invoice = invoice_services.create_invoice(
         patient=appointment.patient,
         appointment=appointment,
-        subtotal=appointment.base_fee,
-        tax_rate=appointment.tax_amount
+        subtotal=base_fee,
+        tax_rate=tax_rate,
+        discount_amount=appointment.discount_amount or Decimal("0.00"),
     )
 
     payment_payload = create_razorpay_order(invoice)

@@ -8,7 +8,7 @@ class Appointment(BaseModel):
         default=AppointmentType.CONSULTATION.value
     )
 
-    availability = models.OneToOneField(
+    availability = models.ForeignKey(
         "docbook.Availability",
         on_delete=models.CASCADE,
         related_name='fk_availability_appointment_availability_id'

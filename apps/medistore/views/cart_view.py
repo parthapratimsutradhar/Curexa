@@ -1,6 +1,6 @@
 from django.views import View
 from django.shortcuts import render
-from apps.core.utilities.jwt_authenticatoin import JWTRequiredMixin
+from apps.core.utilities.jwt_authentication import JWTRequiredMixin
 from apps.medistore.services import cart_services, medicine_services
 from apps.accounts.services import patient_services
 from django.http import JsonResponse

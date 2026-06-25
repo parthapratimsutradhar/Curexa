@@ -1,9 +1,4 @@
-from pyexpat.errors import messages
-from urllib import request
-from aiohttp import request
-
 from django.views import View
-from litellm import email
 from django.shortcuts import render, redirect
 from apps.doctors.services import doctor_services, department_services, specialization_services, qualification_services
 from apps.docbook.services import appointment_services, availability_services

@@ -50,12 +50,12 @@ class AppointmentsByDoctorAPIView(APIView):
 
 
 class AppointmentsListView(View):
-    def get(swlf, request):
+    def get(self, request):
         return render(request, "enduser/docbook/my_appointments.html")
     
 
 class AppointmentBookView(View):
-    def get(swlf, request):
+    def get(self, request):
         return render(request, "enduser/docbook/book_appointment.html")
 
 

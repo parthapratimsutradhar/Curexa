@@ -112,7 +112,8 @@ def clear_cart(patient):
     
 def cart_total(patient):
     cart = get_or_create_cart(patient)
-    return sum(item.medicine.price * item.quantity for item in cart.items.all())
+    items = CartItem.objects.filter(cart=cart, is_active=True).select_related('medicine')
+    return sum(item.medicine.retail_price * item.quantity for item in items)
 
 def get_cart_item(patient):
     cart = get_or_create_cart(patient)
