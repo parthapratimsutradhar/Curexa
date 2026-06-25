@@ -40,8 +40,11 @@ class GoogleLoginAPIView(APIView):
                 credential,
                 google_requests.Request(),
                 settings.GOOGLE_CLIENT_ID,
+                clock_skew_in_seconds=10,
             )
         except Exception:
+            import traceback
+            traceback.print_exc()
             return Response(
                 {"detail": "Invalid Google token"},
                 status=status.HTTP_400_BAD_REQUEST

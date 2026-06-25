@@ -6,6 +6,11 @@
     <title>Curexa | Secure Healthcare Login</title>
     <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!--
+        GSI script is async+defer so it loads after DOM is parsed.
+        Our handleGoogleLogin is attached to window BEFORE this fires,
+        so there is no race condition between library load and callback.
+    -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         * {
@@ -126,20 +131,20 @@
             font-size: 32px;
             font-weight: 700;
             color: var(--primary-dark);
-            margin-bottom: 12px; /* Reduced from 16px for better balance */
+            margin-bottom: 12px;
             line-height: 1.3;
         }
 
         .branding-content p {
             color: var(--text-light);
             font-size: 17px;
-            margin-bottom: 24px; /* Reduced from 30px */
+            margin-bottom: 24px;
         }
 
         .medical-illustration {
             display: flex;
             justify-content: center;
-            margin: 20px 0; /* Reduced from 30px */
+            margin: 20px 0;
         }
 
         .medical-icons {
@@ -337,7 +342,7 @@
             color: var(--text-light);
             font-size: 14px;
             margin: 0;
-            line-height: 1.2; 
+            line-height: 1.2;
         }
 
         .separator::before,
@@ -355,30 +360,35 @@
             margin-left: 16px;
         }
 
-        /* Google button wrapper */
-        #g_id_onload {
-           display: none;
-        }
+        /*
+         * Google button wrapper.
+         * This sits as a SIBLING of <form>, NOT a child.
+         * That is the critical structural fix — the Google button
+         * must never be inside a <form> element or FedCM will abort.
+         */
         .google-btn-wrapper {
             display: flex;
             justify-content: center;
             margin: 0;
         }
 
-        .google-btn-wrapper .g_id_signin {
-            width: 100%;
-            max-width: 300px; /* Keeps button at a reasonable size */
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .google-btn-wrapper .g_id_signin:hover {
-            transform: translateY(-2px);
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-        }
-
-        /* Make Google button iframe responsive */
         .google-btn-wrapper iframe {
-            border-radius: 40px !important; /* Pill shape consistency */
+            border-radius: 40px !important;
+        }
+
+        /*
+         * #g_id_onload must NOT use display:none — GSI needs this element
+         * in the layout tree to anchor the One Tap prompt.
+         * We hide it visually using position:fixed off-screen instead.
+         */
+        #g_id_onload {
+            position: fixed;
+            top: -9999px;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            pointer-events: none;
         }
 
         .form-footer {
@@ -562,7 +572,6 @@
         <!-- Header -->
         <div class="header">
             <div class="logo">
-                <!-- Replaced heart icon with a plus inside a circle for a more professional medical logo -->
                 <div class="logo-icon">
                     <img src="/static/images/curexa_icon.png" alt="Curexa Logo" class="logo-icon" />
                 </div>
@@ -578,7 +587,7 @@
                 <div class="branding-content">
                     <h1>Welcome Back to Curexa</h1>
                     <p>Your trusted partner for comprehensive healthcare management. Access your medical records, schedule appointments, and connect with healthcare providers securely.</p>
-                    
+
                     <div class="medical-illustration">
                         <div class="medical-icons">
                             <div class="medical-icon">
@@ -617,16 +626,32 @@
                     <p>Enter your email to receive a one-time password</p>
                 </div>
 
-                <!-- Email Step -->
-                <form class="login-form" id="emailForm">
+                <!--
+                    ============================================================
+                    CRITICAL DOM STRUCTURE NOTE
+                    ============================================================
+                    The <form> ONLY contains the email input + Continue button.
+                    The Google Sign-In button (#googleBtnContainer) is a SIBLING
+                    of the form — placed AFTER the closing </form> tag.
+
+                    Why this matters:
+                    - Any click inside a <form> can trigger submit-event listeners
+                    - Chrome/Edge send an AbortSignal to FedCM when a form
+                      navigation is detected, killing the Google popup
+                    - The "Continue with Google" button + form = FedCM AbortError
+
+                    The OR separator and Google button are outside the form.
+                    ============================================================
+                -->
+                <form class="login-form" id="emailForm" novalidate>
                     <div class="input-group">
                         <label for="email">Email Address</label>
                         <div class="input-wrapper">
                             <i class="fas fa-envelope"></i>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                class="input-field" 
+                            <input
+                                type="email"
+                                id="email"
+                                class="input-field"
                                 placeholder="Enter your email address"
                                 autocomplete="email"
                                 required
@@ -641,31 +666,17 @@
                         <span>Continue with Email</span>
                         <i class="fas fa-arrow-right"></i>
                     </button>
-
-                    <!-- Enhanced OR separator -->
-                    <div class="separator">OR</div>
-
-                    <!-- Google One Tap / Account Picker -->
-                    <div id="g_id_onload"
-                        data-client_id="{{ GOOGLE_CLIENT_ID }}"
-                        data-callback="handleGoogleLogin"
-                        data-auto_prompt="true">
-                    </div>
-
-                    <!-- Google Button with custom wrapper for better styling -->
-                    <div class="google-btn-wrapper">
-                        <div class="g_id_signin"
-                            data-client_id="{{ GOOGLE_CLIENT_ID }}"
-                            data-callback="handleGoogleLogin"
-                            data-type="standard"
-                            data-size="large"
-                            data-theme="outline"
-                            data-text="continue_with"
-                            data-shape="pill"
-                            data-width="300">
-                        </div>
-                    </div>
                 </form>
+
+                <!--
+                    Google Sign-In button lives HERE — outside <form>.
+                    GSI's renderButton() injects into #googleBtnContainer.
+                    This is NOT inside any form element.
+                -->
+                <div class="separator" style="margin-top: 24px;">OR</div>
+                <div class="google-btn-wrapper" style="margin-top: 24px;">
+                    <div id="googleBtnContainer"></div>
+                </div>
 
                 <!-- OTP Step (Hidden Initially) -->
                 <div class="otp-step" id="otpStep">
@@ -705,17 +716,19 @@
 
                     <div class="security-note">
                         <i class="fas fa-lock"></i>
-                        <span>Your data is encrypted & secure</span>
+                        <span>Your data is encrypted &amp; secure</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- GSI is initialized and prompted programmatically in scripts below -->
 
-   <script>
-
-    // ===== CSRF Helper =====
+    <script>
+    // ================================================================
+    // CSRF HELPER
+    // ================================================================
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -731,23 +744,132 @@
         return cookieValue;
     }
 
+    // ================================================================
+    // GOOGLE SIGN-IN CALLBACK
+    // Defined on window so GSI can find it the instant the async
+    // script fires — regardless of script evaluation order.
+    // ================================================================
+    window.handleGoogleLogin = async function(response) {
+        // Guard: FedCM / One Tap can call back with no credential
+        // (e.g. user dismissed). Do nothing silently.
+        if (!response || !response.credential) {
+            console.warn('[Curexa] Google Sign-In dismissed or no credential.');
+            return;
+        }
+
+        console.log('[Curexa] Google credential received — posting to /api/auth/google/');
+
+        // Disable button area to prevent double-submit
+        const container = document.getElementById('googleBtnContainer');
+        if (container) container.style.pointerEvents = 'none';
+
+        try {
+            const res = await fetch('/api/auth/google/', {
+                method: 'POST',
+                credentials: 'include',               // send session cookies
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')  // required by Django
+                },
+                body: JSON.stringify({ credential: response.credential })
+            });
+
+            if (!res.ok) {
+                const errText = await res.text();
+                throw new Error('Server responded with ' + res.status + ': ' + errText);
+            }
+
+            // Backend set JWT cookies — navigate to dashboard
+            window.location.href = '/';
+
+        } catch (err) {
+            console.error('[Curexa] Google login error:', err);
+            alert('Google Sign-In failed. Please try again.\n\n' + err.message);
+        } finally {
+            if (container) container.style.pointerEvents = '';
+        }
+    };
+
+    // ================================================================
+    // GSI INITIALISATION
+    // We use google.accounts.id.initialize() + renderButton() via JS
+    // because we need the button inside #googleBtnContainer which is
+    // OUTSIDE the form. The declarative .g_id_signin approach would
+    // require the div to be in the HTML at parse time in any position,
+    // but we use the imperative API for full control.
+    // ================================================================
+    function initGoogleSignIn() {
+        google.accounts.id.initialize({
+            client_id: '{{ GOOGLE_CLIENT_ID }}',
+            callback: window.handleGoogleLogin,
+            // auto_select: false — don't silently sign in returning users
+            // without showing any UI. Prevents phantom sign-ins.
+            auto_select: false,
+            cancel_on_tap_outside: true,
+            // use_fedcm_for_prompt: false — fall back to classic iframe popup.
+            // More reliable in Chrome when FedCM flag is unstable.
+            use_fedcm_for_prompt: false
+        });
+
+        // Render the "Continue with Google" button
+        const container = document.getElementById('googleBtnContainer');
+        if (container) {
+            google.accounts.id.renderButton(container, {
+                type: 'standard',
+                size: 'large',
+                theme: 'outline',
+                text: 'continue_with',
+                shape: 'pill',
+                width: 300
+            });
+        }
+
+        // Show One Tap mini popup (the floating bottom-right prompt).
+        // This is separate from the button — it shows automatically for
+        // returning users. Calling prompt() after initialize() is correct.
+        google.accounts.id.prompt(function(notification) {
+            if (notification.isNotDisplayed()) {
+                console.log('[Curexa] One Tap not displayed:', notification.getNotDisplayedReason());
+            } else if (notification.isSkippedMoment()) {
+                console.log('[Curexa] One Tap skipped:', notification.getSkippedReason());
+            } else if (notification.isDismissedMoment()) {
+                console.log('[Curexa] One Tap dismissed:', notification.getDismissedReason());
+            }
+        });
+    }
+
+    // Wait for the GSI library to finish loading before calling initialize().
+    // This is safer than onload/defer alone, which can fire before
+    // google.accounts.id is fully populated in some browser versions.
+    (function waitForGSI() {
+        if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+            initGoogleSignIn();
+        } else {
+            setTimeout(waitForGSI, 50);
+        }
+    })();
+
+    // ================================================================
+    // OTP / EMAIL LOGIN LOGIC
+    // ================================================================
     const csrftoken = getCookie('csrftoken');
 
-    // ===== DOM Elements =====
-    const emailForm = document.getElementById('emailForm');
-    const emailInput = document.getElementById('email');
-    const continueBtn = document.getElementById('continueBtn');
-    const otpStep = document.getElementById('otpStep');
-    const userEmailSpan = document.getElementById('userEmail');
-    const verifyOtpBtn = document.getElementById('verifyOtpBtn');
-    const resendOtpLink = document.getElementById('resendOtp');
-    const countdownSpan = document.getElementById('countdown');
-    const otpInputs = document.querySelectorAll('.otp-input');
+    const emailForm      = document.getElementById('emailForm');
+    const emailInput     = document.getElementById('email');
+    const continueBtn    = document.getElementById('continueBtn');
+    const otpStep        = document.getElementById('otpStep');
+    const userEmailSpan  = document.getElementById('userEmail');
+    const verifyOtpBtn   = document.getElementById('verifyOtpBtn');
+    const resendOtpLink  = document.getElementById('resendOtp');
+    const countdownSpan  = document.getElementById('countdown');
+    const separatorEl    = document.querySelector('.separator');
+    const googleWrapper  = document.querySelector('.google-btn-wrapper');
+    const otpInputs      = document.querySelectorAll('.otp-input');
 
     let countdownInterval;
 
-    // ===== Send OTP =====
-    emailForm.addEventListener('submit', function (e) {
+    // ----- Send OTP -----
+    emailForm.addEventListener('submit', function(e) {
         e.preventDefault();
 
         const email = emailInput.value.trim();
@@ -762,14 +884,14 @@
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'X-CSRFToken': csrftoken
             },
-            body: new URLSearchParams({
-                contact: email
-            })
+            body: new URLSearchParams({ contact: email })
         })
         .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {
                 emailForm.style.display = 'none';
+                if (separatorEl) separatorEl.style.display = 'none';
+                if (googleWrapper) googleWrapper.style.display = 'none';
                 otpStep.style.display = 'flex';
                 userEmailSpan.textContent = email;
                 startOtpCountdown();
@@ -785,7 +907,7 @@
         });
     });
 
-    // ===== OTP Input Auto Move =====
+    // ----- OTP Input Auto Move -----
     otpInputs.forEach((input, index) => {
         input.addEventListener('input', () => {
             if (input.value && index < otpInputs.length - 1) {
@@ -801,9 +923,9 @@
         });
     });
 
-    // ===== Verify OTP =====
-    verifyOtpBtn.addEventListener('click', function () {
-        const otp = [...otpInputs].map(i => i.value).join('');
+    // ----- Verify OTP -----
+    verifyOtpBtn.addEventListener('click', function() {
+        const otp   = [...otpInputs].map(i => i.value).join('');
         const email = userEmailSpan.textContent;
 
         this.classList.add('loading');
@@ -815,32 +937,28 @@
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'X-CSRFToken': csrftoken
             },
-            body: new URLSearchParams({
-                contact: email,
-                otp: otp
-            })
+            body: new URLSearchParams({ contact: email, otp: otp })
         })
         .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {
-
-                return fetch("/api/auth/patient/resolve/", {
-                    method: "POST",
-                    credentials: "include",
+                return fetch('/api/auth/patient/resolve/', {
+                    method: 'POST',
+                    credentials: 'include',
                     headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": csrftoken
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
                     },
                     body: JSON.stringify({ email })
                 });
             } else {
-                throw new Error("Invalid OTP");
+                throw new Error('Invalid OTP');
             }
         })
         .then(res => res.json())
         .then(data => {
-            if (data.status === "success") {
-                window.location.href = "/";
+            if (data.status === 'success') {
+                window.location.href = '/';
             }
         })
         .catch(err => alert(err.message))
@@ -850,8 +968,8 @@
         });
     });
 
-    // ===== Resend OTP =====
-    resendOtpLink.addEventListener('click', function (e) {
+    // ----- Resend OTP -----
+    resendOtpLink.addEventListener('click', function(e) {
         e.preventDefault();
 
         otpInputs.forEach(i => i.value = '');
@@ -863,9 +981,7 @@
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'X-CSRFToken': csrftoken
             },
-            body: new URLSearchParams({
-                contact: userEmailSpan.textContent
-            })
+            body: new URLSearchParams({ contact: userEmailSpan.textContent })
         })
         .then(res => res.json())
         .then(data => {
@@ -878,7 +994,7 @@
         });
     });
 
-    // ===== OTP Countdown =====
+    // ----- OTP Countdown -----
     function startOtpCountdown() {
         let seconds = 30;
         countdownSpan.textContent = seconds;
@@ -897,43 +1013,14 @@
         }, 1000);
     }
 
-    // ===== Enable Continue Button on Valid Email =====
-    emailInput.addEventListener('input', function () {
+    // ----- Enable Continue Button on Valid Email -----
+    emailInput.addEventListener('input', function() {
         const email = emailInput.value.trim();
-        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-        if (isValidEmail) {
-            continueBtn.disabled = false;
-            emailInput.classList.add('valid');
-        } else {
-            continueBtn.disabled = true;
-            emailInput.classList.remove('valid');
-        }
+        continueBtn.disabled = !isValid;
+        emailInput.classList.toggle('valid', isValid);
     });
-
-    </script>
-
-    <script>
-    async function handleGoogleLogin(response) {
-        console.log("GSI response:", response);
-        try {
-            const res = await fetch("/api/auth/google/", {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    credential: response.credential
-                })
-            });
-
-            if (!res.ok) throw new Error(await res.text());
-
-            // JWT cookies are now set
-            window.location.href = "/";
-        } catch (err) {
-            console.error("Google login failed:", err);
-        }
-    }
     </script>
 </body>
 </html>

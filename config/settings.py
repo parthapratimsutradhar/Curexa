@@ -198,6 +198,8 @@ CSRF_COOKIE_HTTPONLY = False      # JS must read it
 CSRF_COOKIE_SECURE = False
 
 # # Security Settings
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
+SECURE_REFERRER_POLICY = 'no-referrer-when-downgrade'
 # SECURE_SSL_REDIRECT = True
 # SESSION_COOKIE_SECURE = True
 # CSRF_COOKIE_SECURE = True
